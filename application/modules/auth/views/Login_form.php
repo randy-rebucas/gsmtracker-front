@@ -19,7 +19,7 @@
 	</div>
 	<div class="form-group mt-10">
 		<input type="checkbox" name="remember" id="remember" data-role="checkbox" data-caption="Remember me" class="place-right">
-		<button type="submit" id="submit" class="button">Submit form</button>
+		<button type="submit" id="submit" class="button"><?php echo lang('auth_submit');?></button>
 	</div>
 
 </form>

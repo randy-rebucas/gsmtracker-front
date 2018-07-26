@@ -8,12 +8,7 @@ class Auth extends Base_Controller
 
 		$this->config->load('auth/email');
 		$this->config->load('auth/tank_auth');
-		$this->load->helper(array('form', 'url'));
-		$this->load->library('form_validation');
-		$this->load->library('security');
 		$this->load->library('auth/tank_auth');
-		$this->lang->load('tank_auth');
-
 	}
 
 	function index()
@@ -50,6 +45,7 @@ class Auth extends Base_Controller
 	}
 
 	function doLogin() {
+		
 		$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
 				$this->config->item('use_username', 'tank_auth'));
 		$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');

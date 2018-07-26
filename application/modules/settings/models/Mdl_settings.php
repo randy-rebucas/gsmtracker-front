@@ -33,25 +33,25 @@ class Mdl_Settings extends CI_Model {
 		if ($this->get($key) !== NULL)
 		{
 			$this->db->where('setting_key', $key);
-			$this->db->update('fi_settings', $db_array);
+			$this->db->update('settings', $db_array);
 		}
 		else
 		{
-			$this->db->insert('fi_settings', $db_array);
+			$this->db->insert('settings', $db_array);
 		}
 	}
 
 	public function delete($key)
 	{
 		$this->db->where('setting_key', $key);
-		$this->db->delete('fi_settings');
+		$this->db->delete('settings');
 	}
 
 	public function load_settings()
 	{
-		$fi_settings = $this->db->get('fi_settings')->result();
+		$settings = $this->db->get('settings')->result();
 
-		foreach ($fi_settings as $data)
+		foreach ($settings as $data)
 		{
 			$this->settings[$data->setting_key] = $data->setting_value;
 		}

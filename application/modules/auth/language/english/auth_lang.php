@@ -1,5 +1,5 @@
 <?php
-
+$lang['auth_submit'] = 'Submit form';
 // Errors
 $lang['auth_incorrect_password'] = 'Incorrect password';
 $lang['auth_incorrect_login'] = 'Incorrect login';
@@ -38,3 +38,5 @@ $lang['auth_subject_change_email'] = 'Your new email address on %s';
 
 /* End of file tank_auth_lang.php */
 /* Location: ./application/language/english/tank_auth_lang.php */
+
+?>

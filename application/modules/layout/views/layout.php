@@ -24,7 +24,7 @@
 		<script src='<?php echo base_url(); ?>bower_components/jquery-validation/dist/jquery.validate.min.js'></script>
 		<script src='<?php echo base_url(); ?>bower_components/jquery-form/dist/jquery.form.min.js'></script>
 		<script src='<?php echo base_url(); ?>bower_components/jquery-mask-plugin/dist/jquery.mask.min.js'></script>
-		<script src="<?php echo base_url(); ?>assets/default/js/global.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/global.js"></script>
 
 		<title><?php echo $title;?></title>
 
@@ -44,16 +44,7 @@
 			}
 		</style>
 		<script type="text/javascript">
-			jsArray = {};
-			function loadScript(a, b) {
-				if (jsArray[a]) b && (debugState && root.root.console.log("This script was already loaded %c: " + a, debugStyle_warning), b());
-				else {
-					jsArray[a] = !0;
-					var c = document.getElementsByTagName("body")[0],
-						d = document.createElement("script");
-					d.type = "text/javascript", d.src = a, d.onload = b, c.appendChild(d)
-				}
-			}
+			
 		</script>
 	</head>
 	<body class="">
