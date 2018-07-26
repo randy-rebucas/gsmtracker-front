@@ -11,7 +11,7 @@
  */
 class Mdl_attempts extends CI_Model
 {
-	private $table_name = 'fi_login_attempts';
+	private $table_name = 'login_attempts';
 
 	function __construct()
 	{

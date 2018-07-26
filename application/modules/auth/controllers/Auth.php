@@ -31,16 +31,17 @@ class Auth extends Base_Controller
 
 		} else {
 
-			$this->layout->set(
-				array(
-					'title' => 'Login',
-					'author' => 'Randy Rebucas',
-					'description' => '',
-					'keywords' => ''
-				)
-			);
-			$this->layout->buffer('content', 'auth/login_form');
-        	$this->layout->render('blank');
+			// $this->layout->set(
+			// 	array(
+			// 		'title' => 'Login',
+			// 		'author' => 'Randy Rebucas',
+			// 		'description' => '',
+			// 		'keywords' => ''
+			// 	)
+			// );
+			// $this->layout->buffer('content', 'auth/login_form');
+   //      	$this->layout->render('blank');
+        	$this->load->view('auth/login_form');
 		}
 	}
 
