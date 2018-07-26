@@ -12,8 +12,8 @@
  */
 class Mdl_Auth extends CI_Model
 {
-	private $table               = 'users';
-    private $primary_key         = 'users.id';
+	private $table               = 'fi_users';
+    private $primary_key         = 'fi_users.id';
 	// private $table_name			= 'users';			// user accounts
 	// private $profile_table_name	= 'user_profiles';	// user profiles
 

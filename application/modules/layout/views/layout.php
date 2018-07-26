@@ -1,212 +1,103 @@
-<!doctype html>
-
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<meta charset="utf-8">
+		<meta name="author" content="<?php echo $author;?>">
+		<meta name="description" content="<?php echo $description;?>">
+		<meta name="keywords" content="<?php echo $keywords;?>">
 
-		<!-- Use the .htaccess and remove these lines to avoid edge case issues -->
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon">
 
-		<title>FusionInvoice</title>
-		<meta name="description" content="">
-		<meta name="author" content="William G. Rivera">
+		<!-- Metro 4 -->
+		<link rel="stylesheet" href="<?php echo base_url(); ?>bower_components/metro/build/css/metro-all.min.css">
+		<script type="text/javascript">
+			var BASE_URL = '<?php echo base_url();?>';
+		</script>
+		<!-- jQuery first, then Metro UI JS -->
+		<!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+		<script src="<?php echo base_url(); ?>bower_components/jquery/dist/jquery.min.js"></script>	
+		<script src="<?php echo base_url(); ?>bower_components/metro/build/js/metro.min.js"></script>	
 
-		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<script src='<?php echo base_url(); ?>bower_components/jquery-validation/dist/jquery.validate.min.js'></script>
+		<script src='<?php echo base_url(); ?>bower_components/jquery-form/dist/jquery.form.min.js'></script>
+		<script src='<?php echo base_url(); ?>bower_components/jquery-mask-plugin/dist/jquery.mask.min.js'></script>
+		<script src="<?php echo base_url(); ?>assets/default/js/global.js"></script>
 
-		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/default/css/style.css">
+		<title><?php echo $title;?></title>
 
-		<script src="<?php echo base_url(); ?>assets/default/js/libs/modernizr-2.0.6.js"></script>
-		<script src="<?php echo base_url(); ?>assets/default/js/libs/jquery-1.7.1.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/default/js/libs/jquery-ui-1.10.3.min.js"></script>
-		<script src="<?php echo base_url(); ?>assets/default/js/libs/bootstrap.min.js"></script>
-
-        <script type="text/javascript">
-
-            $(function()
-            {
-                $('.nav-tabs').tab();
-                $('.tip').tooltip();
-				
-                $('.datepicker').datepicker({ format: '<?php echo date_format_datepicker(); ?>'});
-		
-                $('.create-invoice').click(function() {
-                    $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_create_invoice'); ?>");
-                });
-				
-                $('.create-quote').click(function() {
-                    $('#modal-placeholder').load("<?php echo site_url('quotes/ajax/modal_create_quote'); ?>");
-                });
-				
-                $('#btn_quote_to_invoice').click(function() {
-                    quote_id = $(this).data('quote-id');
-                    $('#modal-placeholder').load("<?php echo site_url('quotes/ajax/modal_quote_to_invoice'); ?>/" + quote_id);
-                });
-				
-                $('#btn_copy_invoice').click(function() {
-                    invoice_id = $(this).data('invoice-id');
-                    $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_copy_invoice'); ?>", {invoice_id: invoice_id});
-                });
-                
-                $('#btn_copy_quote').click(function() {
-                    quote_id = $(this).data('quote-id');
-                    $('#modal-placeholder').load("<?php echo site_url('quotes/ajax/modal_copy_quote'); ?>", {quote_id: quote_id});
-                });
-                
-                $('.client-create-invoice').click(function() {
-                    $('#modal-placeholder').load("<?php echo site_url('invoices/ajax/modal_create_invoice'); ?>", {
-                        client_name: $(this).data('client-name')
-                    });
-                });
-                $('.client-create-quote').click(function() {
-                    $('#modal-placeholder').load("<?php echo site_url('quotes/ajax/modal_create_quote'); ?>", {
-                        client_name: $(this).data('client-name')
-                    });
-                });
-				$(document).on('click', '.invoice-add-payment', function() {
-                    invoice_id = $(this).data('invoice-id');
-                    invoice_balance = $(this).data('invoice-balance');
-                    $('#modal-placeholder').load("<?php echo site_url('payments/ajax/modal_add_payment'); ?>", {invoice_id: invoice_id, invoice_balance: invoice_balance });
-                });
-
-            });
-
-        </script>
-
+		<style>
+			.sidebar-header>.que {
+				font-size: 12px;
+				font-weight: 300;
+				top: 116px;
+				right:10%;
+				display: block;
+				position: absolute;
+				color: #fff;
+			}
+			.action {
+				float: left;
+				margin-right: 1em;
+			}
+		</style>
+		<script type="text/javascript">
+			jsArray = {};
+			function loadScript(a, b) {
+				if (jsArray[a]) b && (debugState && root.root.console.log("This script was already loaded %c: " + a, debugStyle_warning), b());
+				else {
+					jsArray[a] = !0;
+					var c = document.getElementsByTagName("body")[0],
+						d = document.createElement("script");
+					d.type = "text/javascript", d.src = a, d.onload = b, c.appendChild(d)
+				}
+			}
+		</script>
 	</head>
-
-	<body>
-
-		<nav class="navbar navbar-inverse">
-
-			<div class="navbar-inner">
-
-				<div class="container">
-
-					<ul class="nav">
-
-						<li><?php echo anchor('dashboard', lang('dashboard')); ?></li>
-
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo lang('clients'); ?><b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><?php echo anchor('clients/form', lang('add_client')); ?></li>
-								<li><?php echo anchor('clients/index', lang('view_clients')); ?></li>
-							</ul>
-						</li>
-
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo lang('quotes'); ?><b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="#" class="create-quote"><?php echo lang('create_quote'); ?></a></li>
-								<li><?php echo anchor('quotes/index', lang('view_quotes')); ?></li>
-							</ul>
-						</li>
-
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo lang('invoices'); ?><b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="#" class="create-invoice"><?php echo lang('create_invoice'); ?></a></li>
-								<li><?php echo anchor('invoices/index', lang('view_invoices')); ?></li>
-                                <li><?php echo anchor('invoices/recurring/index', lang('view_recurring_invoices')); ?></li>
-							</ul>
-						</li>
-
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo lang('payments'); ?><b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><?php echo anchor('payments/form', lang('enter_payment')); ?></li>
-								<li><?php echo anchor('payments/index', lang('view_payments')); ?></li>
-							</ul>
-						</li>
-
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo lang('reports'); ?><b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><?php echo anchor('reports/invoice_aging', lang('invoice_aging')); ?></li>
-								<li><?php echo anchor('reports/payment_history', lang('payment_history')); ?></li>
-								<li><?php echo anchor('reports/sales_by_client', lang('sales_by_client')); ?></li>
-							</ul>
-						</li>
-
-					</ul>
-
-					<?php if (isset($filter_display) and $filter_display == TRUE) { ?>
-					<?php $this->layout->load_view('filter/jquery_filter'); ?>
-					<form class="navbar-search pull-left">
-						<input type="text" class="search-query" id="filter" placeholder="<?php echo $filter_placeholder; ?>">
-					</form>
-					<?php } ?>
-
-					<ul class="nav pull-right settings">
-                        <li><a href="#"><?php echo lang('welcome') . ' ' . $this->session->userdata('user_name'); ?></a></li>
-                        <li class="divider-vertical"></li>
-                        <li><a href="http://docs.fusioninvoice.com/1.3/" target="_blank" class="tip icon" data-original-title="Documentation" data-placement="bottom"><i class="icon-question-sign"></i></a></li>
-						<li class="divider-vertical"></li>
-						<li class="dropdown">
-							<a href="#" class="tip icon dropdown-toggle" data-toggle="dropdown" data-original-title="<?php echo lang('settings'); ?>" data-placement="bottom"><i class="icon-cog"></i></a>
-							<ul class="dropdown-menu">
-                                <li><?php echo anchor('custom_fields/index', lang('custom_fields')); ?></li>
-								<li><?php echo anchor('email_templates/index', lang('email_templates')); ?></li>
-                                <li><?php echo anchor('import', lang('import_data')); ?></li>
-								<li><?php echo anchor('invoice_groups/index', lang('invoice_groups')); ?></li>
-                                <li><?php echo anchor('item_lookups/index', lang('item_lookups')); ?></li>
-								<li><?php echo anchor('payment_methods/index', lang('payment_methods')); ?></li>
-								<li><?php echo anchor('tax_rates/index', lang('tax_rates')); ?></li>
-								<li><?php echo anchor('users/index', lang('user_accounts')); ?></li>
-                                <li class="divider"></li>
-                                <li><?php echo anchor('settings', lang('system_settings')); ?></li>
-							</ul>
-						</li>
-						<li class="divider-vertical"></li>
-						<li><a href="<?php echo site_url('sessions/logout'); ?>" class="tip icon logout" data-original-title="<?php echo lang('logout'); ?>" data-placement="bottom"><i class="icon-off"></i></a></li>
-					</ul>
-
+	<body class="">
+		<aside class="sidebar pos-absolute z-2 open"
+			data-role="sidebar"
+			data-toggle="#sidebar-toggle-3"
+			id="sb3"
+			data-shift=".shifted-content">
+			<div class="sidebar-header" data-image="images/sb-bg-1.jpg">
+				<div class="avatar">
+					<img data-role="gravatar" data-email="sergey@pimenov.com.ua">
 				</div>
-
+				<span class="title fg-white"><?php echo lang('welcome') . ' ' . $username; ?></span>
+				<span class="subtitle fg-white"> loged as admin</span>
+				<span class="que fg-white" data-counts="0"></span>
+			</div>
+			<ul class="sidebar-menu">
+				<li><a href="<?php echo site_url('dashboard'); ?>"><span class="mif-home icon"></span>Dashboard</a></li>
+				<li><a href="<?php echo site_url('patients'); ?>"><span class="mif-users icon"></span>My Patients</a></li>
+				<li><a href="<?php echo site_url('appointments'); ?>"><span class="mif-files-empty icon"></span>Appointments</a></li>
+				<li class="group-title">Settings</li>
+				<li><a href="<?php echo site_url('settings'); ?>"><span class="mif-cogs icon"></span>Preferences</a></li>
+				<li><a href="<?php echo site_url('profile'); ?>"><span class="mif-user icon"></span>Profile</a></li>
+				<li class="divider"></li>
+				<li><a href="<?php echo site_url('auth/logout'); ?>"><span class="mif-exit icon"></span>Logout</a></li>
+			</ul>
+		</aside>
+		
+		<div class="shifted-content h-100 p-ab" style="left: 280px;">
+			<div class="app-bar pos-absolute bg-red z-1" data-role="appbar">
+				<button class="app-bar-item c-pointer" id="sidebar-toggle-3">
+					<span class="mif-menu fg-white"></span>
+				</button>
 			</div>
 
-		</nav>
-
-		<div class="sidebar">
-
-			<ul>
-				<li><a href="<?php echo site_url('dashboard'); ?>"><img alt="" src="<?php echo base_url(); ?>assets/default/img/icons/dashboard24x24.png" title="<?php echo lang('dashboard'); ?>" /></a></li>
-				<li><a href="<?php echo site_url('clients/index'); ?>"><img alt="" src="<?php echo base_url(); ?>assets/default/img/icons/clients24x24.png" title="<?php echo lang('clients'); ?>" /></a></li>
-				<li><a href="<?php echo site_url('quotes/index'); ?>"><img alt="" src="<?php echo base_url(); ?>assets/default/img/icons/quotes24x24.png" title="<?php echo lang('quotes'); ?>" /></a></li>
-				<li><a href="<?php echo site_url('invoices/index'); ?>"><img alt="" src="<?php echo base_url(); ?>assets/default/img/icons/invoices24x24.png" title="<?php echo lang('invoices'); ?>" /></a></li>
-				<li><a href="<?php echo site_url('payments/index'); ?>"><img alt="" src="<?php echo base_url(); ?>assets/default/img/icons/payments24x24.png" title="<?php echo lang('payments'); ?>" /></a></li>
-			</ul>
-
+			<div class="h-100 p-4">
+				<?php echo $content; ?>
+			</div>
 		</div>
 
-		<div class="main-area">
-
-			<div id="modal-placeholder"></div>
-			
-			<?php echo $content; ?>
-
-		</div><!--end.content-->
-
-		<script defer src="<?php echo base_url(); ?>assets/default/js/plugins.js"></script>
-		<script defer src="<?php echo base_url(); ?>assets/default/js/script.js"></script>
-		<script src="<?php echo base_url(); ?>assets/default/js/bootstrap-datepicker.js"></script>
-
-		<!--[if lt IE 7 ]>
-			<script src="<?php echo base_url(); ?>assets/default/js/dd_belatedpng.js"></script>
-			<script type="text/javascript"> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
-		<![endif]-->
-
-		<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
-			 chromium.org/developers/how-tos/chrome-frame-getting-started -->
-		<!--[if lt IE 7 ]>
-		  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-		  <script type="text/javascript">window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-		<![endif]-->
-
+		<script type="text/javascript">
+			$(document).ready(function() {
+				mcs.init();
+			});
+		</script>
 	</body>
 </html>

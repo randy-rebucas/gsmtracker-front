@@ -11,8 +11,8 @@
  */
 class Mdl_Autologin extends CI_Model
 {
-	private $table_name			= 'users_autologin';
-	private $users_table_name	= 'users';
+	private $table_name			= 'fi_users_autologin';
+	private $users_table_name	= 'fi_users';
 
 	function __construct()
 	{

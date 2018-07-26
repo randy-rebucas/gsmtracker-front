@@ -29,58 +29,93 @@ class Auth extends Base_Controller
 	function login()
 	{
 		if ($this->tank_auth->is_logged_in()) {									// logged in
-			redirect('welcome');
+			redirect('dashboard');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/auth/send_again/');
 
 		} else {
-			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
-					$this->config->item('use_username', 'tank_auth'));
-			$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
 
-			$this->form_validation->set_rules('login', 'Login', 'trim|required');
-			$this->form_validation->set_rules('password', 'Password', 'trim|required');
-			$this->form_validation->set_rules('remember', 'Remember me', 'integer');
-
-			// Get login for counting attempts to login
-			if ($this->config->item('login_count_attempts', 'tank_auth') AND
-					($login = $this->input->post('login'))) {
-				$login = $this->security->xss_clean($login);
-			} else {
-				$login = '';
-			}
-
-			$data['errors'] = array();
-
-			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->login(
-						$this->form_validation->set_value('login'),
-						$this->form_validation->set_value('password'),
-						$this->form_validation->set_value('remember'),
-						$data['login_by_username'],
-						$data['login_by_email'])) {								// success
-					redirect('setup');
-
-				} else {
-					$errors = $this->tank_auth->get_error_message();
-					if (isset($errors['banned'])) {								// banned user
-						$this->_show_message($this->lang->line('auth_message_banned').' '.$errors['banned']);
-
-					} elseif (isset($errors['not_activated'])) {				// not activated user
-						redirect('/auth/send_again/');
-
-					} else {													// fail
-						foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
-					}
-				}
-			}
-			
-			$this->load->view('login_form', $data);
-
+			$this->layout->set(
+				array(
+					'title' => 'Login',
+					'author' => 'Randy Rebucas',
+					'description' => '',
+					'keywords' => ''
+				)
+			);
+			$this->layout->buffer('content', 'auth/login_form');
+        	$this->layout->render('blank');
 		}
 	}
 
+	function doLogin() {
+		$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
+				$this->config->item('use_username', 'tank_auth'));
+		$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
+
+		$this->form_validation->set_rules('email', 'Email', 'trim|required');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required');
+		$this->form_validation->set_rules('remember', 'Remember me', 'integer');
+
+		// Get login for counting attempts to login
+		if ($this->config->item('login_count_attempts', 'tank_auth') AND
+				($login = $this->input->post('email'))) {
+			$login = $this->security->xss_clean($login);
+		} else {
+			$login = '';
+		}
+
+		$data['errors'] = array();
+
+		if ($this->form_validation->run()) {								// validation ok
+
+			if ($this->tank_auth->login(
+					$this->input->post('email'),
+					$this->input->post('password'),
+					$this->input->post('remember'),
+					$data['login_by_username'],
+					$data['login_by_email'])) {								// success
+
+					$response = array(
+						'success'       => true,
+						'message'  => array('exist'=>'Please wait...')
+					);
+
+			} else {
+
+				$errors = $this->tank_auth->get_error_message();
+
+				if (isset($errors['banned'])) {								// banned user
+					$response = array(
+						'success'       => false,
+						'message'  => array('not_activated'=>$this->lang->line('auth_message_banned').' '.$errors['banned'])
+					);
+				} elseif (isset($errors['not_activated'])) {				// not activated user
+					$response = array(
+						'success'       => false,
+						'message'  => array('not_activated'=>'Account is not yet activated!')
+					);
+				} else {													// fail
+					$return = array();
+
+					foreach ($errors as $k => $v)	{
+						$return[$k] = $this->lang->line($v);
+					}
+
+					$response = array(
+						'success'           => false,
+						'validation_errors' => $return
+					);
+				}
+			}
+
+			
+		}
+
+		echo json_encode($response);
+
+	}
 	/**
 	 * Logout user
 	 *

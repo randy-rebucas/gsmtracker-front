@@ -5,10 +5,10 @@ if (!defined('BASEPATH'))
 
 class Mdl_Users extends Response_Model {
 
-    public $table               = 'users';
-    public $primary_key         = 'users.id';
-    public $date_created_field  = 'created';
-    public $date_modified_field = 'modified';
+    public $table               = 'fi_users';
+    public $primary_key         = 'fi_users.id';
+    public $date_created_field  = 'user_date_created';
+    public $date_modified_field = 'user_date_modified';
 
     public function user_types()
     {
@@ -20,41 +20,77 @@ class Mdl_Users extends Response_Model {
 
     public function default_select()
     {
-        $this->db->select('SQL_CALC_FOUND_ROWS users_profiles.*, users.*', FALSE);
+        $this->db->select('SQL_CALC_FOUND_ROWS fi_user_custom.*, fi_users.*', FALSE);
     }
 
     public function default_join()
     {
-        $this->db->join('users_profiles', 'users_profiles.user_id = users.id', 'left');
+        $this->db->join('fi_user_custom', 'fi_user_custom.user_id = fi_users.id', 'left');
+        $this->db->join('fi_users_profiles', 'fi_users_profiles.user_id = fi_users.id', 'left');
     }
 
     public function default_order_by()
     {
-        $this->db->order_by('users.username');
+        $this->db->order_by('fi_users.user_name');
     }
 
     public function validation_rules()
     {
         return array(
-            'email'     => array(
-                'field' => 'email',
+            'user_type'      => array(
+                'field' => 'user_type',
+                'label' => lang('user_type'),
+                'rules' => 'required'
+            ),
+            'user_email'     => array(
+                'field' => 'user_email',
                 'label' => lang('email'),
-                'rules' => 'trim|required|valid_email'
+                'rules' => 'required|valid_email'
             ),
-            'username'      => array(
-                'field' => 'username',
-                'label' => lang('username'),
-                'rules' => 'trim|required|min_length[8]|max_length[8]|alpha_dash'
+            'user_name'      => array(
+                'field' => 'user_name',
+                'label' => lang('name'),
+                'rules' => 'required'
             ),
-            'password'  => array(
-                'field' => 'password',
+            'user_password'  => array(
+                'field' => 'user_password',
                 'label' => lang('password'),
-                'rules' => 'trim|required|min_length[8]|max_length[8]|alpha_dash'
+                'rules' => 'required'
             ),
-            'confirm_password' => array(
-                'field' => 'confirm_password',
-                'label' => lang('confirm_password'),
-                'rules' => 'trim|required|matches[password]'
+            'user_passwordv' => array(
+                'field' => 'user_passwordv',
+                'label' => lang('verify_password'),
+                'rules' => 'required|matches[user_password]'
+            ),
+            'user_address_1' => array(
+                'field' => 'user_address_1'
+            ),
+            'user_address_2' => array(
+                'field' => 'user_address_2'
+            ),
+            'user_city'      => array(
+                'field' => 'user_city'
+            ),
+            'user_state'     => array(
+                'field' => 'user_state'
+            ),
+            'user_zip'       => array(
+                'field' => 'user_zip'
+            ),
+            'user_country'   => array(
+                'field' => 'user_country'
+            ),
+            'user_phone'     => array(
+                'field' => 'user_phone'
+            ),
+            'user_fax'       => array(
+                'field' => 'user_fax'
+            ),
+            'user_mobile'    => array(
+                'field' => 'user_mobile'
+            ),
+            'user_web'       => array(
+                'field' => 'user_web'
             )
         );
     }
@@ -62,15 +98,50 @@ class Mdl_Users extends Response_Model {
     public function validation_rules_existing()
     {
         return array(
-            'email'     => array(
-                'field' => 'email',
-                'label' => lang('email'),
-                'rules' => 'trim|required|valid_email'
+            'user_type'      => array(
+                'field' => 'user_type',
+                'label' => lang('user_type'),
+                'rules' => 'required'
             ),
-            'username'      => array(
-                'field' => 'username',
-                'label' => lang('username'),
-                'rules' => 'trim|required|min_length[8]|max_length[8]|alpha_dash'
+            'user_email'     => array(
+                'field' => 'user_email',
+                'label' => lang('email'),
+                'rules' => 'required|valid_email'
+            ),
+            'user_name'      => array(
+                'field' => 'user_name',
+                'label' => lang('name'),
+                'rules' => 'required'
+            ),
+            'user_address_1' => array(
+                'field' => 'user_address_1'
+            ),
+            'user_address_2' => array(
+                'field' => 'user_address_2'
+            ),
+            'user_city'      => array(
+                'field' => 'user_city'
+            ),
+            'user_state'     => array(
+                'field' => 'user_state'
+            ),
+            'user_zip'       => array(
+                'field' => 'user_zip'
+            ),
+            'user_country'   => array(
+                'field' => 'user_country'
+            ),
+            'user_phone'     => array(
+                'field' => 'user_phone'
+            ),
+            'user_fax'       => array(
+                'field' => 'user_fax'
+            ),
+            'user_mobile'    => array(
+                'field' => 'user_mobile'
+            ),
+            'user_web'       => array(
+                'field' => 'user_web'
             )
         );
     }
@@ -78,15 +149,15 @@ class Mdl_Users extends Response_Model {
     public function validation_rules_change_password()
     {
         return array(
-            'password'  => array(
-                'field' => 'password',
+            'user_password'  => array(
+                'field' => 'user_password',
                 'label' => lang('password'),
-                'rules' => 'trim|required|min_length[8]|max_length[8]|alpha_dash'
+                'rules' => 'required'
             ),
-            'confirm_password' => array(
-                'field' => 'confirm_password',
-                'label' => lang('confirm_password'),
-                'rules' => 'trim|required|matches[password]'
+            'user_passwordv' => array(
+                'field' => 'user_passwordv',
+                'label' => lang('verify_password'),
+                'rules' => 'required|matches[user_password]'
             )
         );
     }
