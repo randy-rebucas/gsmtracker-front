@@ -1,8 +1,10 @@
 .DS_Store
 
+/application/cache/*
 application/cache/*
 !application/cache/index.html
 
+/application/logs/*
 application/logs/*
 !application/logs/index.html
 
@@ -29,3 +31,22 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+/application/config/config.php
+/application/config/database_empty.php
+/application/config/database.php
+/vendor/*
+/cash-it.biz
+/help
+/kidzklinika
+/kidzklinika.zip
+/randycrebucas.com
+/ubt-wiki
+/forum
+/ticket
+/secure
+/uploads/*
+/arrowchat/includes/config.php
+/error_log.txt
+/staging
+/demo
