@@ -27,7 +27,7 @@ class Patients extends Admin_Controller {
             $this->Mdl_patients->$function();
         }
 
-        $this->Mdl_patients->with_total_balance()->paginate(site_url('patients/status/' . $status), $page);
+        $this->Mdl_patients->get()->paginate(site_url('patients/status/' . $status), $page);
         $patients = $this->Mdl_patients->result();
 
         $this->layout->set(
@@ -161,6 +161,36 @@ class Patients extends Admin_Controller {
         redirect('patients');
     }
 
+    function load_ajax() 
+	{
+        
+        $this->load->library('datatables');
+        $isfiltered = $this->input->post('filter');
+
+        $this->datatables->select("u.id as id, 
+        CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, 
+        username, 
+        email, 
+        DATE_FORMAT(u.created, '%M %d, %Y') as created,  
+        DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday,
+        address, 
+        mobile, 
+        DATE_FORMAT(u.last_login, '%M %d, %Y') as last_login",
+        false);
+        
+        $this->datatables->where('ur.role_id', 1);
+        if($isfiltered > 0){
+            $this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
+        }
+        $this->datatables->join('users_profiles as up', 'u.id = up.user_id', 'left', false);
+        $this->datatables->join('users_role as ur', 'u.id = ur.user_id', 'left', false);
+        $this->datatables->order_by('lastname', 'DESC');
+
+        $this->datatables->from('users as u');
+
+        echo $this->datatables->generate('json', 'UTF-8');
+    	
+    }
 }
 
 ?>

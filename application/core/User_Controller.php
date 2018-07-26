@@ -17,6 +17,7 @@ class User_Controller extends Base_Controller {
 
 		$data['user_id']	= $this->tank_auth->get_user_id();
 		$data['username']	= $this->tank_auth->get_username();
+		$data['role_id']	= $this->tank_auth->get_role_id();
 
 		$this->load->vars($data);
 

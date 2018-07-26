@@ -13,8 +13,8 @@
  */
 class Mdl_Queings extends Response_Model
 {	
-    public $table               = 'fi_queings';
-    public $primary_key         = 'fi_queings.queing_id';
+    public $table               = 'queings';
+    public $primary_key         = 'queings.queing_id';
 	
 	public function validation_rules()
     {

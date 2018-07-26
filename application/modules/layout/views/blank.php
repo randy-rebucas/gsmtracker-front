@@ -21,7 +21,6 @@
 
     <script src='<?php echo base_url(); ?>bower_components/jquery-validation/dist/jquery.validate.min.js'></script>
     <script src='<?php echo base_url(); ?>bower_components/jquery-form/dist/jquery.form.min.js'></script>
-    <script src='<?php echo base_url(); ?>bower_components/jquery-mask-plugin/dist/jquery.mask.min.js'></script>
 
     <title><?php echo $title;?></title>
 

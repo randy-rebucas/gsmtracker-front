@@ -31,22 +31,21 @@ class Auth extends Base_Controller
 
 		} else {
 
-			// $this->layout->set(
-			// 	array(
-			// 		'title' => 'Login',
-			// 		'author' => 'Randy Rebucas',
-			// 		'description' => '',
-			// 		'keywords' => ''
-			// 	)
-			// );
-			// $this->layout->buffer('content', 'auth/login_form');
-   //      	$this->layout->render('blank');
-        	$this->load->view('auth/login_form');
+			$this->layout->set(
+				array(
+					'title' => 'Login',
+					'author' => 'Randy Rebucas',
+					'description' => '',
+					'keywords' => ''
+				)
+			);
+			$this->layout->buffer('content', 'auth/login_form');
+        	$this->layout->render('blank');
 		}
 	}
 
 	function doLogin() {
-		
+
 		$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
 				$this->config->item('use_username', 'tank_auth'));
 		$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
@@ -63,7 +62,7 @@ class Auth extends Base_Controller
 			$login = '';
 		}
 
-		$data['errors'] = array();
+		$response = array();
 
 		if ($this->form_validation->run()) {								// validation ok
 
@@ -133,7 +132,7 @@ class Auth extends Base_Controller
 	function register()
 	{
 		if ($this->tank_auth->is_logged_in()) {									// logged in
-			redirect('');
+			redirect('dashboard');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/auth/send_again/');
@@ -142,57 +141,87 @@ class Auth extends Base_Controller
 			$this->_show_message($this->lang->line('auth_message_registration_disabled'));
 
 		} else {
-			$use_username = $this->config->item('use_username', 'tank_auth');
-			if ($use_username) {
-				$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
-			}
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
-			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[password]');
 
-			$data['errors'] = array();
+			$this->layout->set(
+				array(
+					'title' => 'Register',
+					'author' => 'Randy Rebucas',
+					'description' => '',
+					'keywords' => ''
+				)
+			);
+			$this->layout->buffer('content', 'auth/register_form');
+			$this->layout->render('blank');
 
-			$email_activation = $this->config->item('email_activation', 'tank_auth');
-
-			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->create_user(
-						$use_username ? $this->form_validation->set_value('username') : '',
-						$this->form_validation->set_value('email'),
-						$this->form_validation->set_value('password'),
-						$email_activation))) {									// success
-
-					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
-
-					if ($email_activation) {									// send "activate" email
-						$data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
-
-						$this->_send_email('activate', $data['email'], $data);
-
-						unset($data['password']); // Clear password (just for any case)
-
-						$this->_show_message($this->lang->line('auth_message_registration_completed_1'));
-
-					} else {
-						if ($this->config->item('email_account_details', 'tank_auth')) {	// send "welcome" email
-
-							$this->_send_email('welcome', $data['email'], $data);
-						}
-						unset($data['password']); // Clear password (just for any case)
-
-						$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
-					}
-				} else {
-					$errors = $this->tank_auth->get_error_message();
-					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
-				}
-			}
-			
-			$data['use_username'] = $use_username;
-			
-			$this->load->view('auth/register_form', $data);
 		}
 	}
 
+	function doRegister() {
+
+		$use_username = $this->config->item('use_username', 'tank_auth');
+		if ($use_username) {
+			$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
+		}
+		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
+		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[password]');
+
+		$response = array();
+
+		$email_activation = $this->config->item('email_activation', 'tank_auth');
+
+		if ($this->form_validation->run()) {								// validation ok
+			if (!is_null($data = $this->tank_auth->create_user(
+					$use_username ? $this->form_validation->set_value('username') : '',
+					$this->form_validation->set_value('email'),
+					$this->form_validation->set_value('password'),
+					$email_activation))) {									// success
+
+				$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+
+				if ($email_activation) {									// send "activate" email
+					$data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
+
+					$this->_send_email('activate', $data['email'], $data);
+
+					unset($data['password']); // Clear password (just for any case)
+
+					// $this->_show_message($this->lang->line('auth_message_registration_completed_1'));
+					$response = array(
+						'success'       => true,
+						'message'  => array('register_complete'=>$this->lang->line('auth_message_registration_completed_1'))
+					);
+
+				} else {
+					if ($this->config->item('email_account_details', 'tank_auth')) {	// send "welcome" email
+
+						$this->_send_email('welcome', $data['email'], $data);
+					}
+					unset($data['password']); // Clear password (just for any case)
+
+					// $this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+
+					$response = array(
+						'success'       => true,
+						'message'  => array('register_complete'=>$this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'))
+					);
+				}
+			} else {
+				$return = array();
+
+				foreach ($errors as $k => $v)	{
+					$return[$k] = $this->lang->line($v);
+				}
+
+				$response = array(
+					'success'           => false,
+					'validation_errors' => $return
+				);
+			}
+		}
+
+		echo json_encode($response);
+	}
 	/**
 	 * Send activation email again, to the same or new email address
 	 *
@@ -245,34 +274,34 @@ class Auth extends Base_Controller
 
 		// Activate user
 		if ($this->tank_auth->activate_user($user_id, $new_email_key)) {		// success
-			/**
-			* @ Process 
-			* Generate client config file
-			* Create client DB
-			*/
-			$this->load->model('users/Mdl_users');
-			$this->load->model('setup/Mdl_setup');
+			// /**
+			// * @ Process 
+			// * Generate client config file
+			// * Create client DB
+			// */
+			// $this->load->model('users/Mdl_users');
+			// $this->load->model('setup/Mdl_setup');
 
-			$client = $this->Mdl_users->get_by_id($user_id);
+			// $client = $this->Mdl_users->get_by_id($user_id);
 			
-			$path = APPPATH . 'clients/'.$client->username.'/config';
+			// $path = APPPATH . 'clients/'.$client->username.'/config';
 
-		    if(!is_dir($path)) //create the folder if it's not already exists
-		    {
-		      	mkdir($path, 0755, TRUE);
+		    // if(!is_dir($path)) //create the folder if it's not already exists
+		    // {
+		    //   	mkdir($path, 0755, TRUE);
 
-		      	$db_file = read_file(APPPATH . 'config/database_empty.php');
-		        $db_file = str_replace('__HOSTNAME__', $this->db->hostname, $db_file);
-		        $db_file = str_replace('__USERNAME__', $this->db->username, $db_file);
-		        $db_file = str_replace('__PASSWORD__', $this->db->password, $db_file);
-		        $db_file = str_replace('__DATABASE__', 'client_'.$client->id, $db_file);
+		    //   	$db_file = read_file(APPPATH . 'config/database_empty.php');
+		    //     $db_file = str_replace('__HOSTNAME__', $this->db->hostname, $db_file);
+		    //     $db_file = str_replace('__USERNAME__', $this->db->username, $db_file);
+		    //     $db_file = str_replace('__PASSWORD__', $this->db->password, $db_file);
+		    //     $db_file = str_replace('__DATABASE__', 'client_'.$client->id, $db_file);
 		      
-		        write_file(APPPATH . 'clients/'.$client->username.'/config/client_db.php', $db_file);
+		    //     write_file(APPPATH . 'clients/'.$client->username.'/config/client_db.php', $db_file);
 
-		    } 
+		    // } 
 
- 			$this->load->dbforge();
- 			$this->dbforge->create_database('client_'.$client->id);
+ 			// $this->load->dbforge();
+ 			// $this->dbforge->create_database('client_'.$client->id);
 
 		    $this->tank_auth->logout();
 			$this->_show_message($this->lang->line('auth_message_activation_completed').' '.anchor('/auth/login/', 'Login'));

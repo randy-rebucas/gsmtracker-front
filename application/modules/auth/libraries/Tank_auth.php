@@ -45,16 +45,7 @@ class Tank_auth
 	{
 		if ((strlen($login) > 0) AND (strlen($password) > 0)) {
 
-			// Which function to use to login (based on config)
-			if ($login_by_username AND $login_by_email) {
-				$get_user_func = 'get_user_by_login';
-			} else if ($login_by_username) {
-				$get_user_func = 'get_user_by_username';
-			} else {
-				$get_user_func = 'get_user_by_email';
-			}
-
-			if (!is_null($user = $this->ci->Mdl_auth->$get_user_func($login))) {	// login ok
+			if (!is_null($user = $this->ci->Mdl_auth->get_user_by_email($login))) {	// login ok
 
 				// Does password match hash in database?
 				if ($this->ci->my_crypt->check_password($user->password, $password)) {		// password ok
@@ -63,9 +54,11 @@ class Tank_auth
 						$this->error = array('banned' => $user->ban_reason);
 
 					} else {
+						$this->load->model('users/Mdl_users');
 						$this->ci->session->set_userdata(array(
 								'user_id'	=> $user->id,
 								'username'	=> $user->username,
+								'role_id'	=> $this->Mdl_users->get_by_id($user->id)->role_id,
 								'status'	=> ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
 						));
 
@@ -142,6 +135,16 @@ class Tank_auth
 	function get_username()
 	{
 		return $this->ci->session->userdata('username');
+	}
+
+	/**
+	 * Get role_id
+	 *
+	 * @return	string
+	 */
+	function get_role_id()
+	{
+		return $this->ci->session->userdata('role_id');
 	}
 
 	/**

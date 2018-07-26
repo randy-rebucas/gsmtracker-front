@@ -5,19 +5,6 @@ var mcs = (function() {
     that.init = function() {
         console.log('Global initialized!');
 
-
-        jsArray = {};
-
-        function loadScript(a, b) {
-            if (jsArray[a]) b && (debugState && root.root.console.log("This script was already loaded %c: " + a, debugStyle_warning), b());
-            else {
-                jsArray[a] = !0;
-                var c = document.getElementsByTagName("body")[0],
-                    d = document.createElement("script");
-                d.type = "text/javascript", d.src = a, d.onload = b, c.appendChild(d)
-            }
-        }
-
         setInterval(function() {
 
             var counts = $('.que').attr('data-counts');

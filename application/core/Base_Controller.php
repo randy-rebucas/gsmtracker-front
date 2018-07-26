@@ -30,11 +30,14 @@ class Base_Controller extends MX_Controller {
         $this->load->helper('number');
         $this->load->helper('date');   
         $this->load->helper('directory');
+
+        $this->load->helper('pager');
         // Load setting model and load settings
         $this->load->model('settings/Mdl_settings');
         $this->Mdl_settings->load_settings();
 
         $this->lang->load('common', $this->Mdl_settings->setting('default_language'));
+        $this->lang->load('_', $this->Mdl_settings->setting('default_language'));
 
         $modules = directory_map(APPPATH . '/modules', TRUE);
 

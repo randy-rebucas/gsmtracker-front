@@ -13,6 +13,7 @@
 
 		<!-- Metro 4 -->
 		<link rel="stylesheet" href="<?php echo base_url(); ?>bower_components/metro/build/css/metro-all.min.css">
+		<link rel="stylesheet" href="<?php echo base_url(); ?>bower_components/metro/build/css/third-party/datatables.css">
 		<script type="text/javascript">
 			var BASE_URL = '<?php echo base_url();?>';
 		</script>
@@ -23,7 +24,6 @@
 
 		<script src='<?php echo base_url(); ?>bower_components/jquery-validation/dist/jquery.validate.min.js'></script>
 		<script src='<?php echo base_url(); ?>bower_components/jquery-form/dist/jquery.form.min.js'></script>
-		<script src='<?php echo base_url(); ?>bower_components/jquery-mask-plugin/dist/jquery.mask.min.js'></script>
 		<script src="<?php echo base_url(); ?>assets/js/global.js"></script>
 
 		<title><?php echo $title;?></title>
@@ -38,13 +38,19 @@
 				position: absolute;
 				color: #fff;
 			}
-			.action {
-				float: left;
-				margin-right: 1em;
-			}
 		</style>
 		<script type="text/javascript">
-			
+			jsArray = {};
+
+			function loadScript(a, b) {
+				if (jsArray[a]) b && (debugState && root.root.console.log("This script was already loaded %c: " + a, debugStyle_warning), b());
+				else {
+					jsArray[a] = !0;
+					var c = document.getElementsByTagName("body")[0],
+						d = document.createElement("script");
+					d.type = "text/javascript", d.src = a, d.onload = b, c.appendChild(d)
+				}
+			}
 		</script>
 	</head>
 	<body class="">
@@ -53,12 +59,12 @@
 			data-toggle="#sidebar-toggle-3"
 			id="sb3"
 			data-shift=".shifted-content">
-			<div class="sidebar-header" data-image="images/sb-bg-1.jpg">
+			<div class="sidebar-header" data-image="/images/sb-bg-1.jpg">
 				<div class="avatar">
-					<img data-role="gravatar" data-email="sergey@pimenov.com.ua">
+					<img data-role="gravatar" data-email="rebucasrandy1986@gmail.com">
 				</div>
 				<span class="title fg-white"><?php echo lang('welcome') . ' ' . $username; ?></span>
-				<span class="subtitle fg-white"> loged as admin</span>
+				<span class="subtitle fg-white"> loged as <?php echo $role_id;?></span>
 				<span class="que fg-white" data-counts="0"></span>
 			</div>
 			<ul class="sidebar-menu">
@@ -73,13 +79,7 @@
 			</ul>
 		</aside>
 		
-		<div class="shifted-content h-100 p-ab" style="left: 280px;">
-			<div class="app-bar pos-absolute bg-red z-1" data-role="appbar">
-				<button class="app-bar-item c-pointer" id="sidebar-toggle-3">
-					<span class="mif-menu fg-white"></span>
-				</button>
-			</div>
-
+		<div class="shifted-content h-100" style="left: 280px; width: 85.5%;">
 			<div class="h-100 p-4">
 				<?php echo $content; ?>
 			</div>

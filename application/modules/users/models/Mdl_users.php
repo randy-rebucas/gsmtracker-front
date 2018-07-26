@@ -5,10 +5,10 @@ if (!defined('BASEPATH'))
 
 class Mdl_Users extends Response_Model {
 
-    public $table               = 'fi_users';
-    public $primary_key         = 'fi_users.id';
-    public $date_created_field  = 'user_date_created';
-    public $date_modified_field = 'user_date_modified';
+    public $table               = 'users';
+    public $primary_key         = 'users.id';
+    // public $date_created_field  = 'user_date_created';
+    // public $date_modified_field = 'user_date_modified';
 
     public function user_types()
     {
@@ -20,18 +20,18 @@ class Mdl_Users extends Response_Model {
 
     public function default_select()
     {
-        $this->db->select('SQL_CALC_FOUND_ROWS fi_user_custom.*, fi_users.*', FALSE);
+        $this->db->select('SQL_CALC_FOUND_ROWS users_role.*, users_profiles.*, users.*', FALSE);
     }
 
     public function default_join()
     {
-        $this->db->join('fi_user_custom', 'fi_user_custom.user_id = fi_users.id', 'left');
-        $this->db->join('fi_users_profiles', 'fi_users_profiles.user_id = fi_users.id', 'left');
+        $this->db->join('users_role', 'users_role.user_id = users.id', 'left');
+        $this->db->join('users_profiles', 'users_profiles.user_id = users.id', 'left');
     }
 
     public function default_order_by()
     {
-        $this->db->order_by('fi_users.user_name');
+        $this->db->order_by('users.username');
     }
 
     public function validation_rules()
