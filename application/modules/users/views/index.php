@@ -1,4 +1,4 @@
-<div class="headerbar">
+<!-- <div class="headerbar">
 	<h1><?php echo lang('users'); ?></h1>
 
 	<div class="pull-right">
@@ -57,4 +57,4 @@
 
 	</table>
 
-</div>
+</div> -->

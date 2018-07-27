@@ -66,6 +66,7 @@ class Layout extends MX_Controller {
 
 	public function render($view = 'layout')
 	{
+		$this->load->model('roles/Mdl_roles');
 		$this->load->view('layout/' . $view, $this->view_data);
 	}
 

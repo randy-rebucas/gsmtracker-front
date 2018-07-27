@@ -54,11 +54,11 @@ class Tank_auth
 						$this->error = array('banned' => $user->ban_reason);
 
 					} else {
-						$this->load->model('users/Mdl_users');
+						
 						$this->ci->session->set_userdata(array(
 								'user_id'	=> $user->id,
 								'username'	=> $user->username,
-								'role_id'	=> $this->Mdl_users->get_by_id($user->id)->role_id,
+								'role_id'	=> $user->role_id,
 								'status'	=> ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
 						));
 

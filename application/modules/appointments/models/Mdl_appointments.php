@@ -5,23 +5,23 @@ if (!defined('BASEPATH'))
 
 class Mdl_Appointments extends Response_Model {
 
-    public $table               = 'fi_appointments';
-    public $primary_key         = 'fi_appointments.appointment_id';
+    public $table               = 'appointments';
+    public $primary_key         = 'appointments.appointment_id';
 
     public function statuses()
     {
         return array(
-            '1' => array(
+            'Pending' => array(
                 'label' => lang('appointments_pending'),
                 'class' => 'pending',
                 'href'  => 'quotes/status/pending'
             ),
-            '2' => array(
+            'Approve' => array(
                 'label' => lang('appointments_approved'),
                 'class' => 'approved',
                 'href'  => 'quotes/status/approved'
             ),
-            '3' => array(
+            'Cancel' => array(
                 'label' => lang('appointments_canceled'),
                 'class' => 'canceled',
                 'href'  => 'quotes/status/canceled'
@@ -29,22 +29,9 @@ class Mdl_Appointments extends Response_Model {
         );
     }
 
-    public function default_select()
-    {
-        $this->db->select('fi_appointments.*, fi_users.*', FALSE);
-    }
-
     public function default_order_by()
     {
-        $this->db->order_by('fi_appointments.appointment_id');
-    }
-
-    public function default_join()
-    {
-        //@ todo
-        // Change this to patients table and doctors table
-        $this->db->join('fi_patients', 'fi_patients.patient_id = fi_appointments.appointment_patient_id', 'left');
-        $this->db->join('fi_users', 'fi_users.id = fi_appointments.appointment_doctor_id', 'left');
+        $this->db->order_by('appointments.appointment_id');
     }
 
     public function validation_rules()
@@ -52,21 +39,30 @@ class Mdl_Appointments extends Response_Model {
         return array(
             'appointment_date' => array(
                 'field' => 'appointment_date',
-                'label' => lang('date'),
+                'label' => lang('appointment_date'),
                 'rules' => 'required'
             ),
             'appointment_time' => array(
                 'field' => 'appointment_time',
-                'label' => lang('time')
+                'label' => lang('appointment_time')
             ),
-            'appointment_title' => array(
-                'field' => 'appointment_title',
-                'label' => lang('title'),
+            'appointment_subject' => array(
+                'field' => 'appointment_subject',
+                'label' => lang('appointment_subject'),
                 'rules' => 'required'
             ),
-            'appointment_description' => array(
-                'field' => 'appointment_description',
-                'label' => lang('description')
+            'appointment_message' => array(
+                'field' => 'appointment_message',
+                'label' => lang('appointment_message')
+            ),
+            'appointment_from' => array(
+                'field' => 'appointment_from',
+                'label' => lang('appointment_from'),
+                'rules' => 'required'
+            ),
+            'appointment_to' => array(
+                'field' => 'appointment_to',
+                'label' => lang('appointment_to')
             )
         );
     }
@@ -85,34 +81,34 @@ class Mdl_Appointments extends Response_Model {
 
     public function is_approved()
     {
-        $this->filter_where('appointment_status', 2);
+        $this->filter_where('appointment_status', 'Approve');
         return $this;
     }
 
     public function is_pending()
     {
-        $this->filter_where('appointment_status', 1);
+        $this->filter_where('appointment_status', 'Pending');
         return $this;
     }
 
     public function is_canceled()
     {
-        $this->filter_where('appointment_status', 3);
+        $this->filter_where('appointment_status', 'Cancel');
         return $this;
     }
  
     public function mark_approved($id)
     {
         $this->db->where('appointment_id', $id);
-        $this->db->set('appointment_status', 2);
-        $this->db->update('fi_appoinments');     
+        $this->db->set('appointment_status', 'Approve');
+        $this->db->update('appoinments');     
     }
     
     public function mark_canceled($id)
     {
         $this->db->where('appointment_id', $id);
-        $this->db->set('appointment_status', 3);
-        $this->db->update('fi_appoinments');  
+        $this->db->set('appointment_status', 'Cancel');
+        $this->db->update('appoinments');  
     }
 
 }

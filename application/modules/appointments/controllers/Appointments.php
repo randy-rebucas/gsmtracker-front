@@ -15,7 +15,20 @@ class Appointments extends Admin_Controller {
     public function index()
     {
         // Display all quotes by default
-        redirect('appointments/status/all');
+        // redirect('appointments/status/all');
+        // $this->layout->set(
+        //     array(
+        //         'title' => 'Appointments',
+        //         'author' => 'Randy Rebucas',
+        //         'description' => '',
+        //         'keywords' => ''
+        //     )
+        // );
+
+        // $this->layout->buffer('content', 'appointments/index');
+        // $this->layout->render();
+
+        $this->load->view('appointments/index');
     }
 
     public function status($status = 'all', $page = 0)
@@ -118,16 +131,6 @@ class Appointments extends Admin_Controller {
         redirect('quotes/index');
     }
 
-    public function delete_item($quote_id, $item_id)
-    {
-        // Delete quote item
-        $this->load->model('Mdl_quote_items');
-        $this->Mdl_quote_items->delete($item_id);
-
-        // Redirect to quote view
-        redirect('quotes/view/' . $quote_id);
-    }
-
     public function generate_pdf($quote_id, $stream = TRUE, $quote_template = NULL)
     {
         $this->load->helper('pdf');
@@ -140,30 +143,26 @@ class Appointments extends Admin_Controller {
         generate_quote_pdf($quote_id, $stream, $quote_template);
     }
 
-    public function delete_quote_tax($quote_id, $quote_tax_rate_id)
-    {
-        $this->load->model('Mdl_quote_tax_rates');
-        $this->Mdl_quote_tax_rates->delete($quote_tax_rate_id);
+    function load_ajax() 
+	{
+        
+        $this->load->library('datatables');
+        $isfiltered = $this->input->post('filter');
 
-        $this->load->model('Mdl_quote_amounts');
-        $this->Mdl_quote_amounts->calculate($quote_id);
-
-        redirect('quotes/view/' . $quote_id);
-    }
-
-    public function recalculate_all_quotes()
-    {
-        $this->db->select('quote_id');
-        $quote_ids = $this->db->get('fi_quotes')->result();
-
-        $this->load->model('Mdl_quote_amounts');
-
-        foreach ($quote_ids as $quote_id)
-        {
-            $this->Mdl_quote_amounts->calculate($quote_id->quote_id);
+        $this->datatables->select("*",
+        false);
+        
+        if($isfiltered > 0){
+            $this->datatables->where('appointment_status', $isfiltered);
         }
-    }
+      
+        $this->datatables->order_by('appointment_date', 'DESC');
 
+        $this->datatables->from('appoinments');
+
+        echo $this->datatables->generate('json', 'UTF-8');
+    	
+    }
 }
 
 ?>

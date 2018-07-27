@@ -14,17 +14,18 @@ class Dashboard extends Admin_Controller {
     public function index()
     {
       
-        $this->layout->set(
-            array(
-                'title' => 'Dashboard',
-                'author' => 'Randy Rebucas',
-                'description' => '',
-                'keywords' => ''
-            )
-        );
+        // $this->layout->set(
+        //     array(
+        //         'title' => 'Dashboard',
+        //         'author' => 'Randy Rebucas',
+        //         'description' => '',
+        //         'keywords' => ''
+        //     )
+        // );
 
-        $this->layout->buffer('content', 'dashboard/index');
-        $this->layout->render();
+        // $this->layout->buffer('content', 'dashboard/index');
+        // $this->layout->render();
+        $this->load->view('dashboard/index');
     }
 
 }

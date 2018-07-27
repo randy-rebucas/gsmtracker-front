@@ -29,15 +29,6 @@
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
 			<th>&nbsp;</th>
-			<!-- {mData: 'id'},   
-		            {mData: 'fullname'},         
-		            {mData: 'username'},
-		            {mData: 'email'},
-		            {mData: 'created'},
-					{mData: 'birthday'},
-					{mData: 'address'},
-					{mData: 'mobile'},
-					{mData: null}, -->
 		</tr>
 	</thead>
 	<tbody>
@@ -50,24 +41,7 @@
 	var user_link = '<?php echo site_url('settings/encryptID/');?>';
 	
 	var pagefunction = function() {
-		//console.log("cleared");
-		/* // DOM Position key index //
-		
-			l - Length changing (dropdown)
-			f - Filtering input (search)
-			t - The Table! (datatable)
-			i - Information (records)
-			p - Pagination (paging)
-			r - pRocessing 
-			< and > - div elements
-			<"#id" and > - div with an id
-			<"class" and > - div with a class
-			<"#id.class" and > - div with an id and class
-			
-			Also see: http://legacy.datatables.net/usage/features
-		*/	
 
-		/* BASIC ;*/
 			var responsiveHelper_dt_basic = undefined;
 			var responsiveHelper_datatable_fixed_column = undefined;
 			var responsiveHelper_datatable_col_reorder = undefined;

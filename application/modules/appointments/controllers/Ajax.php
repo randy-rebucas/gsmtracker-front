@@ -48,26 +48,10 @@ class Ajax extends Admin_Controller {
         echo json_encode($response);
     }
 
-    public function modal_create_appointment()
-    {
-        $this->load->module('layout');
-
-        $this->load->model('invoice_groups/mdl_invoice_groups');
-        $this->load->model('tax_rates/mdl_tax_rates');
-
-        $data = array(
-            'invoice_groups' => $this->mdl_invoice_groups->get()->result(),
-            'tax_rates'      => $this->mdl_tax_rates->get()->result(),
-            'client_name'    => $this->input->post('client_name')
-        );
-
-        $this->layout->load_view('appointments/modal_create_appointment', $data);
-    }
-
     public function get()
 	{
-        $this->load->model('appointments/mdl_appointments');
-		echo json_encode($this->mdl_appointments->get()->result_array());
+        $this->load->model('appointments/Mdl_appointments');
+		echo json_encode($this->Mdl_appointments->get()->result_array());
 
 	}
 

@@ -82,6 +82,7 @@ class Mdl_Auth extends CI_Model
 	function get_user_by_email($email)
 	{
 		$this->db->where('LOWER(email)=', strtolower($email));
+		$this->db->join('users_role', 'users_role.user_id = users.id', 'left');
 		$query = $this->db->get($this->table);
 		if ($query->num_rows() == 1) return $query->row();
 		return NULL;

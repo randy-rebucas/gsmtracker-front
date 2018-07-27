@@ -5,58 +5,50 @@ $().ready(function() {
     });
 });  
 </script>
+<script type="text/javascript">
+    $(function()
+    {
+        $('#btn_generate_cron_key').click(function()
+        {
+            $.post("<?php echo site_url('settings/ajax/get_cron_key'); ?>", function(data) {
+                $('#cron_key').val(data);
+            });
+        });
+    });
+</script>
 
-<div class="headerbar">
-    <h1><?php echo lang('settings'); ?></h1>
-    <?php $this->layout->load_view('layout/header_buttons'); ?>
-</div>
+<form action="settings/doSettings" method="post" class="form-horizontal" id="form-settings" enctype="multipart/form-data">
 
-
-
-<form method="post" class="form-horizontal" id="form-settings" enctype="multipart/form-data">
-
-	<div class="tabbable tabs-below">
-
-		<div class="tab-content">
-
-			<div id="settings-general" class="tab-pane active">
-                
-                <?php $this->layout->load_view('layout/alerts'); ?>
-                
-				<?php $this->layout->load_view('settings/partial_settings_general'); ?>
-			</div>
-
-			<div id="settings-invoices" class="tab-pane">
-				<?php $this->layout->load_view('settings/partial_settings_invoices'); ?>
-			</div>
-			
-			<div id="settings-quotes" class="tab-pane">
-				<?php $this->layout->load_view('settings/partial_settings_quotes'); ?>
-			</div>
-            
-			<div id="settings-taxes" class="tab-pane">
-				<?php $this->layout->load_view('settings/partial_settings_taxes'); ?>
-			</div>
-
-			<div id="settings-email" class="tab-pane">
-				<?php $this->layout->load_view('settings/partial_settings_email'); ?>
-			</div>
-            
-			<div id="settings-merchant" class="tab-pane">
-				<?php $this->layout->load_view('settings/partial_settings_merchant'); ?>
-			</div>
-
-		</div>
-
-		<ul class="nav-tabs">
-			<li class="active"><a data-toggle="tab" href="#settings-general"><?php echo lang('general'); ?></a></li>
-			<li><a data-toggle="tab" href="#settings-invoices"><?php echo lang('invoices'); ?></a></li>
-			<li><a data-toggle="tab" href="#settings-quotes"><?php echo lang('quotes'); ?></a></li>
-            <li><a data-toggle="tab" href="#settings-taxes"><?php echo lang('taxes'); ?></a></li>
-			<li><a data-toggle="tab" href="#settings-email"><?php echo lang('email'); ?></a></li>
-            <li><a data-toggle="tab" href="#settings-merchant"><?php echo lang('merchant_account'); ?></a></li>
-		</ul>
-
+    <div class="form-group">
+        <label><?php echo lang('language'); ?></label>
+        <?php 
+				$languages = array(
+					'english'=>'English'
+				);
+				echo form_dropdown('settings[default_language]', $languages, $this->Mdl_settings->setting('default_language'));
+			?>
+        <small class="text-muted">Select a language.</small>
 	</div>
-	
+	<div class="form-group">
+        <label><?php echo lang('language'); ?></label>
+        <select name="settings[date_format]">
+			<?php foreach ($date_formats as $date_format) { ?>
+			<option value="<?php echo $date_format['setting']; ?>" <?php if ($this->Mdl_settings->setting('date_format') == $date_format['setting']) { ?>selected="selected"<?php } ?>><?php echo $current_date->format($date_format['setting']); ?></option>
+			<?php } ?>
+		</select>
+        <small class="text-muted">Select a date format.</small>
+	</div>
+	<div class="form-group">
+		<label><?php echo lang('login_logo'); ?></label>
+		<?php if ($this->Mdl_settings->setting('login_logo')) { ?>
+            <img src="<?php echo base_url(); ?>uploads/<?php echo $this->Mdl_settings->setting('login_logo'); ?>"><br>
+            <?php echo anchor('settings/remove_logo/login', 'Remove Logo'); ?><br>
+        <?php } ?>
+        <input type="file" name="login_logo" dir="rtl" data-role="file">
+        <small class="text-muted">Upload logo</small>
+	</div>
+	<div class="form-group">
+        <button class="button success">Submit data</button>
+        <input type="button" class="button" value="Cancel">
+    </div>
 </form>

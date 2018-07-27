@@ -16,35 +16,41 @@ class Patients extends Admin_Controller {
     public function index()
     {
         // Display active patients by default
-        redirect('patients/status/active');
+        // redirect('patients/status/active');
+        if(!$this->input->is_ajax_request()){
+            $this->load_layout();
+        }
+        $this->load->view('patients/index');
     }
 
-    public function status($status = 'active', $page = 0)
+    public function status()
     {
-        if (is_numeric(array_search($status, array('active', 'inactive'))))
-        {
-            $function = 'is_' . $status;
-            $this->Mdl_patients->$function();
-        }
+        // if (is_numeric(array_search($status, array('active', 'inactive'))))
+        // {
+        //     $function = 'is_' . $status;
+        //     $this->Mdl_patients->$function();
+        // }
 
-        $this->Mdl_patients->get()->paginate(site_url('patients/status/' . $status), $page);
-        $patients = $this->Mdl_patients->result();
+        // $this->Mdl_patients->get()->paginate(site_url('patients/status/' . $status), $page);
+        // $patients = $this->Mdl_patients->result();
 
-        $this->layout->set(
-            array(
-                'records'            => $patients,
-                'filter_display'     => TRUE,
-                'filter_placeholder' => lang('filter_patients'),
-                'filter_method'      => 'filter_patients',
-                'title' => 'Patients',
-                'author' => 'Randy Rebucas',
-                'description' => '',
-                'keywords' => ''
-            )
-        );
+        // $this->layout->set(
+        //     array(
+        //         'records'            => $patients,
+        //         'filter_display'     => TRUE,
+        //         'filter_placeholder' => lang('filter_patients'),
+        //         'filter_method'      => 'filter_patients',
+        //         'title' => 'Patients',
+        //         'author' => 'Randy Rebucas',
+        //         'description' => '',
+        //         'keywords' => ''
+        //     )
+        // );
 
-        $this->layout->buffer('content', 'patients/index');
-        $this->layout->render();
+        // $this->layout->buffer('content', 'patients/index');
+        // $this->layout->render();
+
+        
     }
 
     public function form($id = NULL)
@@ -178,7 +184,7 @@ class Patients extends Admin_Controller {
         DATE_FORMAT(u.last_login, '%M %d, %Y') as last_login",
         false);
         
-        $this->datatables->where('ur.role_id', 1);
+        $this->datatables->where('ur.role_id', 2);
         if($isfiltered > 0){
             $this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
         }

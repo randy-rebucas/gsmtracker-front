@@ -21,13 +21,10 @@ class Welcome extends Admin_Controller {
 
 		$this->layout->set(
             array(
-                // 'invoice_status_totals' => $this->Mdl_invoice_amounts->get_status_totals(),
-                // 'quote_status_totals'   => $this->Mdl_quote_amounts->get_status_totals(),
-                // 'invoices'              => $this->Mdl_invoices->limit(10)->get()->result(),
-                // 'quotes'                => $this->Mdl_quotes->limit(10)->get()->result(),
-                // 'invoice_statuses'      => $this->Mdl_invoices->statuses(),
-                // 'quote_statuses'        => $this->Mdl_quotes->statuses(),
-                // 'overdue_invoices'      => $this->Mdl_invoices->is_overdue()->limit(10)->get()->result()
+                'title' => 'Welcome',
+                'author' => 'Randy Rebucas',
+                'description' => '',
+                'keywords' => ''
             )
         );
         

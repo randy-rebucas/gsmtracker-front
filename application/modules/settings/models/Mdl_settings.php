@@ -11,7 +11,7 @@ class Mdl_Settings extends CI_Model {
 	{
 		$this->db->select('setting_value');
 		$this->db->where('setting_key', $key);
-		$query = $this->db->get('fi_settings');
+		$query = $this->db->get('settings');
 
 		if ($query->row())
 		{

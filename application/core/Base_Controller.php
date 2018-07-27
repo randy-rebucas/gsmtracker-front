@@ -23,7 +23,7 @@ class Base_Controller extends MX_Controller {
         $this->load->library('security');
         $this->load->helper('url');
         $this->load->helper(array('form', 'url'));
-
+        $this->load->helper('string');
 
         $this->load->database();
         $this->load->library('form_validation');
@@ -52,6 +52,21 @@ class Base_Controller extends MX_Controller {
         $this->load->module('layout');
 
         
+    }
+
+    function load_layout() {
+        
+        $this->layout->set(
+            array(
+                'title' => 'Welcome',
+                'author' => 'Randy Rebucas',
+                'description' => '',
+                'keywords' => ''
+            )
+        );
+        
+        $this->layout->buffer('content', 'welcome/index');
+        $this->layout->render();
     }
 
 }
