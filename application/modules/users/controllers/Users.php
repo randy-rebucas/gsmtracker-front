@@ -123,23 +123,24 @@ class Users extends Admin_Controller {
 
     public function profile()
     {
+
+        $data = array();
+        $this->_set_layout('default', $data);
+        if(!$this->input->is_ajax_request()){
+            $this->template->build('users/profile');
+        } else {
+            $this->load->view('users/profile');
+        }
+    }
+
+    function doSaveProfile()
+    {
         if ($this->Mdl_users->run_validation('validation_rules_profile'))
         {
             $this->Mdl_users->save_change_password($user_id, $this->input->post('user_password'));
             redirect('users/form/' . $user_id);
         }
-        $this->layout->set(
-            array(
-                'title' => 'Profile',
-                'author' => 'Randy Rebucas',
-                'description' => '',
-                'keywords' => ''
-            )
-        );
-        $this->layout->buffer('content', 'users/profile');
-        $this->layout->render();
     }
-
 }
 
 ?>

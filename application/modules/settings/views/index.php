@@ -1,20 +1,11 @@
 <script type="text/javascript">
-$().ready(function() {
+$(document).ready(function() {
     $('#btn-submit').click(function() {
         $('#form-settings').submit();
     });
+
+    // $('.file').find('.rtl').remove();
 });  
-</script>
-<script type="text/javascript">
-    $(function()
-    {
-        $('#btn_generate_cron_key').click(function()
-        {
-            $.post("<?php echo site_url('settings/ajax/get_cron_key'); ?>", function(data) {
-                $('#cron_key').val(data);
-            });
-        });
-    });
 </script>
 
 <form action="settings/doSettings" method="post" class="form-horizontal" id="form-settings" enctype="multipart/form-data">
@@ -29,15 +20,7 @@ $().ready(function() {
 			?>
         <small class="text-muted">Select a language.</small>
 	</div>
-	<div class="form-group">
-        <label><?php echo lang('language'); ?></label>
-        <select name="settings[date_format]">
-			<?php foreach ($date_formats as $date_format) { ?>
-			<option value="<?php echo $date_format['setting']; ?>" <?php if ($this->Mdl_settings->setting('date_format') == $date_format['setting']) { ?>selected="selected"<?php } ?>><?php echo $current_date->format($date_format['setting']); ?></option>
-			<?php } ?>
-		</select>
-        <small class="text-muted">Select a date format.</small>
-	</div>
+
 	<div class="form-group">
 		<label><?php echo lang('login_logo'); ?></label>
 		<?php if ($this->Mdl_settings->setting('login_logo')) { ?>
@@ -48,7 +31,6 @@ $().ready(function() {
         <small class="text-muted">Upload logo</small>
 	</div>
 	<div class="form-group">
-        <button class="button success">Submit data</button>
-        <input type="button" class="button" value="Cancel">
+        <button type="submit" class="button success">Submit</button>
     </div>
 </form>

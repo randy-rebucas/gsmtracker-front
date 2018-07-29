@@ -1,4 +1,6 @@
 {
-    "require": {},
+    "require": {
+        "kenjis/codeigniter-ss-twig": "^1.0@dev"
+    },
     "minimum-stability": "dev"
 }

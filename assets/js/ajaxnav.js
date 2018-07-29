@@ -13,12 +13,12 @@ $.bread_crumb = $('#ribbon ol.breadcrumb');
 if ($.navAsAjax) {
 
     window.onpopstate = function(event) {
-        if (event.state) {
+       if (event.state) {
             checkURL();
-        }
-    }
+       }
+   }
 
-    checkURL();
+    // checkURL();
 
     $(document).on('click', '.sidebar-menu li a[target="_blank"]', function(e) {
         e.preventDefault();

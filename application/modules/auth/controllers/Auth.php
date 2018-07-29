@@ -30,17 +30,11 @@ class Auth extends Base_Controller
 			redirect('/auth/send_again/');
 
 		} else {
+			
+			$data = array();
+            $this->_set_layout('empty', $data);
+            $this->template->build('auth/login_form');
 
-			$this->layout->set(
-				array(
-					'title' => 'Login',
-					'author' => 'Randy Rebucas',
-					'description' => '',
-					'keywords' => ''
-				)
-			);
-			$this->layout->buffer('content', 'auth/login_form');
-        	$this->layout->render('blank');
 		}
 	}
 
@@ -142,16 +136,9 @@ class Auth extends Base_Controller
 
 		} else {
 
-			$this->layout->set(
-				array(
-					'title' => 'Register',
-					'author' => 'Randy Rebucas',
-					'description' => '',
-					'keywords' => ''
-				)
-			);
-			$this->layout->buffer('content', 'auth/register_form');
-			$this->layout->render('blank');
+			$data = array();
+            $this->_set_layout('empty', $data);
+            $this->template->build('auth/register_form');
 
 		}
 	}

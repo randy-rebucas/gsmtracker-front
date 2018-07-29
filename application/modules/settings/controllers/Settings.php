@@ -15,22 +15,20 @@ class Settings extends Admin_Controller {
     public function index()
     {
 
-        $this->layout->set(
-            array(
-                'date_formats'             => date_formats(),
-                'current_date'             => new DateTime(),
-                'title' => 'Settings',
-                'author' => 'Randy Rebucas',
-                'description' => '',
-                'keywords' => ''
-            )
-        );
-
-        $this->layout->buffer('content', 'settings/index');
-        $this->layout->render();
+        redirect('preferences');
 
     }
 
+    function preferences () {
+        $data = array();
+        $this->_set_layout('default', $data);
+
+        if(!$this->input->is_ajax_request()){
+            $this->template->build('settings/index', $data);
+        } else {
+            $this->load->view('settings/index', $data);
+        }
+    }
     function doSettings () {
 
         $settings = $this->input->post('settings');
@@ -44,7 +42,7 @@ class Settings extends Admin_Controller {
         }
 
         $upload_config = array(
-            'upload_path'   => './uploads/',
+            'upload_path'   => APPPATH.'uploads/',
             'allowed_types' => '*',
             'max_size'      => '9999',
             'max_width'     => '9999',
@@ -74,7 +72,7 @@ class Settings extends Admin_Controller {
 
     public function remove_logo($type)
     {
-        unlink('./uploads/' . $this->Mdl_settings->setting($type . '_logo'));
+        unlink(APPPATH.'uploads/' . $this->Mdl_settings->setting($type . '_logo'));
 
         $this->Mdl_settings->save($type . '_logo', '');
 

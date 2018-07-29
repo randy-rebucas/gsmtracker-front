@@ -14,21 +14,14 @@ class Appointments extends Admin_Controller {
 
     public function index()
     {
-        // Display all quotes by default
-        // redirect('appointments/status/all');
-        // $this->layout->set(
-        //     array(
-        //         'title' => 'Appointments',
-        //         'author' => 'Randy Rebucas',
-        //         'description' => '',
-        //         'keywords' => ''
-        //     )
-        // );
+        $data = array();
+        $this->_set_layout('default', $data);
+        if(!$this->input->is_ajax_request()){
+            $this->template->build('appointments/index');
+        } else {
+            $this->load->view('appointments/index');
+        }
 
-        // $this->layout->buffer('content', 'appointments/index');
-        // $this->layout->render();
-
-        $this->load->view('appointments/index');
     }
 
     public function status($status = 'all', $page = 0)

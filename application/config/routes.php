@@ -54,3 +54,4 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['profile'] = 'users/profile';
+$route['preferences'] = 'settings/preferences';

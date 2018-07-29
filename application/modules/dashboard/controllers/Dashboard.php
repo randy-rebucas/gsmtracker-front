@@ -13,19 +13,15 @@ class Dashboard extends Admin_Controller {
 
     public function index()
     {
-      
-        // $this->layout->set(
-        //     array(
-        //         'title' => 'Dashboard',
-        //         'author' => 'Randy Rebucas',
-        //         'description' => '',
-        //         'keywords' => ''
-        //     )
-        // );
 
-        // $this->layout->buffer('content', 'dashboard/index');
-        // $this->layout->render();
-        $this->load->view('dashboard/index');
+        $data = array();
+        $this->_set_layout('default', $data);
+        if(!$this->input->is_ajax_request()){
+            $this->template->build('dashboard/index');
+        } else {
+            $this->load->view('dashboard/index');
+        }
+        
     }
 
 }

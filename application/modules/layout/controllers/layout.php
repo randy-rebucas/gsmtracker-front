@@ -20,6 +20,12 @@ class Layout extends MX_Controller {
 
 	public $view_data = array();
 
+	public function __construct()
+    {
+        parent::__construct();
+
+    }
+    
 	public function buffer()
 	{
 		$args = func_get_args();

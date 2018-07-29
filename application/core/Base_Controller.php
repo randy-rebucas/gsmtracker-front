@@ -19,6 +19,8 @@ class Base_Controller extends MX_Controller {
             exit;
         }
 
+        $this->load->library('template');
+
         $this->load->library('session');
         $this->load->library('security');
         $this->load->helper('url');
@@ -33,6 +35,8 @@ class Base_Controller extends MX_Controller {
 
         $this->load->helper('pager');
         // Load setting model and load settings
+        $this->load->model('roles/Mdl_roles');
+
         $this->load->model('settings/Mdl_settings');
         $this->Mdl_settings->load_settings();
 
@@ -40,35 +44,30 @@ class Base_Controller extends MX_Controller {
         $this->lang->load('_', $this->Mdl_settings->setting('default_language'));
 
         $modules = directory_map(APPPATH . '/modules', TRUE);
-
-        foreach ($modules as $module) { $module = str_replace('\\', '', $module);
+ 
+        foreach ($modules as $module) { 
+            $module = stripslashes(str_replace('/', '', $module));
             if(file_exists(APPPATH . '/modules/'.$module.'/language/'.$this->Mdl_settings->setting('default_language').'/'.$module.'_lang.php')){
                 $this->lang->load($module.'/'.$module, $this->Mdl_settings->setting('default_language'));
+
             }
+
         }
- 
+       
         $this->load->helper('language');
-
-        $this->load->module('layout');
-
         
     }
 
-    function load_layout() {
-        
-        $this->layout->set(
-            array(
-                'title' => 'Welcome',
-                'author' => 'Randy Rebucas',
-                'description' => '',
-                'keywords' => ''
-            )
-        );
-        
-        $this->layout->buffer('content', 'welcome/index');
-        $this->layout->render();
+    public function _set_layout($layout = 'default', $data = array())
+    {
+ 
+        $this->template->set_partial('header', 'include/header', $data) ;
+        $this->template->set_partial('sidebar', 'include/sidebar', $data) ;
+        $this->template->set_partial('footer', 'include/footer', $data) ; 
+        $this->template->set_metadata('author', 'Randy Rebucas');
+        // $this->template->set_theme('metro');
+        $this->template->set_layout($layout);
     }
-
 }
  /* End of file: Base_Controller.php */
  /* Location: ./application/core/Base_Controller.php */

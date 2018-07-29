@@ -17,19 +17,15 @@ class Welcome extends Admin_Controller {
 
 	public function index()
 	{
-        
 
-		$this->layout->set(
-            array(
-                'title' => 'Welcome',
-                'author' => 'Randy Rebucas',
-                'description' => '',
-                'keywords' => ''
-            )
-        );
-        
-        $this->layout->buffer('content', 'welcome/index');
-        $this->layout->render();
+        $data = array();
+        $this->_set_layout('default', $data);
+
+        if(!$this->input->is_ajax_request()){
+            $this->template->build('welcome/index', $data);
+        } else {
+            $this->load->view('welcome/index', $data);
+        }
 	}
 
 }

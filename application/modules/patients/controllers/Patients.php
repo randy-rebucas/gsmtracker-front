@@ -15,42 +15,13 @@ class Patients extends Admin_Controller {
 
     public function index()
     {
-        // Display active patients by default
-        // redirect('patients/status/active');
+        $data = array();
+        $this->_set_layout('default', $data);
         if(!$this->input->is_ajax_request()){
-            $this->load_layout();
+            $this->template->build('patients/index');
+        } else {
+            $this->load->view('patients/index');
         }
-        $this->load->view('patients/index');
-    }
-
-    public function status()
-    {
-        // if (is_numeric(array_search($status, array('active', 'inactive'))))
-        // {
-        //     $function = 'is_' . $status;
-        //     $this->Mdl_patients->$function();
-        // }
-
-        // $this->Mdl_patients->get()->paginate(site_url('patients/status/' . $status), $page);
-        // $patients = $this->Mdl_patients->result();
-
-        // $this->layout->set(
-        //     array(
-        //         'records'            => $patients,
-        //         'filter_display'     => TRUE,
-        //         'filter_placeholder' => lang('filter_patients'),
-        //         'filter_method'      => 'filter_patients',
-        //         'title' => 'Patients',
-        //         'author' => 'Randy Rebucas',
-        //         'description' => '',
-        //         'keywords' => ''
-        //     )
-        // );
-
-        // $this->layout->buffer('content', 'patients/index');
-        // $this->layout->render();
-
-        
     }
 
     public function form($id = NULL)
