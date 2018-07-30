@@ -1,3 +1,0 @@
-<?php
-$lang['users']     = 'Users';
-?>

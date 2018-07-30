@@ -1,3 +1,0 @@
-<?php
-$lang['settings']     = 'Settings';
-?>
