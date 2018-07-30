@@ -1,0 +1,8 @@
+ALTER TABLE `records` ADD `suffix` CHAR(50) NULL DEFAULT NULL AFTER `type`, ADD `ico` CHAR(50) NULL DEFAULT NULL AFTER `suffix`;
+
+ALTER TABLE `records_allergies` CHANGE `allergies` `name` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+ALTER TABLE `records` ADD `sort` TINYINT(5) NULL DEFAULT NULL AFTER `created`;
+----------
+
+RENAME TABLE `mcs`.`records_blood_pressure` TO `mcs`.`records_blood_pressure_kjfh2rehs5`;
