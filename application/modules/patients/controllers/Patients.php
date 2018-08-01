@@ -1,6 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
-
 /*
  * MyClinicSoft
  * 
@@ -14,7 +12,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * 
  */
 
-class Patients extends Secure 
+class Patients extends Admin_Controller 
 {
 
 	function __construct() 
@@ -40,26 +38,25 @@ class Patients extends Secure
 	
 	function index()
 	{
+		$data['module'] = 'Patients';
 		$this->layout->title('Patients');
+		$this->set_layout();
 
-		$data['module'] = get_class();
-
-		if ($this->input->is_ajax_request()) 
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('manage', $data);
+			$this->load->view('patients/manage', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('manage', $data);
+			$this->layout->build('patients/manage', $data);
 		}
 	}
 
 	function load_ajax() 
 	{
 	
-		if ($this->is_ajax) 
-		{	
+		// if ($this->input->is_ajax_request()) 
+		// {	
 			$this->load->library('datatables');
 	        $isfiltered = $this->input->post('filter');
 
@@ -78,12 +75,12 @@ class Patients extends Secure
 	        $this->datatables->from('patients as p');
 
 	        echo $this->datatables->generate('json', 'UTF-8');
-    	}
-    	else
-    	{
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-            redirect(strtolower(get_class()));
-	    }
+    	// }
+    	// else
+    	// {
+	    // 	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
+        //     redirect(strtolower(get_class()));
+	    // }
     }
 	
    function view($id = -1)

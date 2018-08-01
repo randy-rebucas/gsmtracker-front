@@ -111,6 +111,7 @@ class User_model extends CI_Model
 		
 		$this->db->from('users_profiles');	
 		$this->db->join('users','users.id = users_profiles.user_id');
+		$this->db->join('users_role','users_role.user_id = users_profiles.user_id');
 		$this->db->where('users_profiles.user_id',$id);
 		$query = $this->db->get();
 		

@@ -84,8 +84,8 @@ class Users extends CI_Model
 	function get_user_by_email($email)
 	{
 		$this->db->where('LOWER(email)=', strtolower($email));
-
-		$query = $this->db->get($this->table_name);
+		$this->db->join('users_role as ur', 'ur.user_id = u.id');
+		$query = $this->db->get($this->table_name. ' as u');
 		if ($query->num_rows() == 1) return $query->row();
 		return NULL;
 	}
@@ -177,25 +177,17 @@ class Users extends CI_Model
 					'role_slug'	=> 'patient',
 					'role_desc' => 'Access personal record' ,
 					'client_id' => $data['client_id']
-				),
-				array(
-					'role_name' => 'Information Desk',
-					'role_slug'	=> 'information-desk',
-					'role_desc' => 'Can access Patient module' ,
-					'client_id' => $data['client_id']
 				)
 			);
 			 
 			if($this->db->insert_batch('roles', $role_data))
 			{
-				$this->load->model('roles/Role');
-				$data['role_id'] = $this->Role->get_by_role_slug('administrator', $data['client_id']);
-				
+
 				if ($this->db->insert($this->table_name, $data)) 
 				{
 					$user_id = $this->db->insert_id();
 	
-					$this->create_profile($user_id);
+					$this->create_profile($user_id, $data['client_id']);
 					
 					return array('user_id' => $user_id);
 				}
@@ -466,10 +458,17 @@ class Users extends CI_Model
 	 * @return	bool
 	 */
 	
-	private function create_profile($user_id)
+	private function create_profile($user_id, $client_id)
 	{
 		$this->db->set('user_id', $user_id);
-		return $this->db->insert($this->profile_table_name);
+		if($this->db->insert($this->profile_table_name)){
+
+			$this->load->model('roles/Role');
+			$this->db->set('role_id', $this->Role->get_by_role_slug('administrator', $client_id));
+			$this->db->set('user_id', $user_id);
+			return $this->db->insert('users_role');
+		}
+		
 	}
 
 	function update_visibility($id, $state)

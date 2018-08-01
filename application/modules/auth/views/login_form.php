@@ -35,7 +35,7 @@ $remember = array(
 			<div class="well no-padding">
 				<?php echo form_open('auth/doLogin', 'id="login-form" class="smart-form client-form"'); ?>
 					<header>
-						<?php echo $this->lang->line('__signin');?>
+						<?php echo $this->lang->line('__signin');?> or <a href="<?php echo site_url('auth/register');?>" class="link"> Register </a>
 					</header>
 
 					<fieldset>
@@ -64,8 +64,7 @@ $remember = array(
 						</section>
 					</fieldset>
 					<footer>
-						<!-- <a href="<?php //echo $loginUrl;?>" class="btn btn-primary hidden"> <i class="fa fa-facebook"></i> Register </a> -->
-						<a href="<?php echo site_url('auth/register');?>" class="btn btn-primary"> Register </a>
+					
 						<button type="submit" id="submit" class="btn btn-primary">
 							<?php echo $this->lang->line('__signin');?> 
 						</button>

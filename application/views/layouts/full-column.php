@@ -112,10 +112,9 @@
 
 		<script type="text/javascript">
 			var BASE_URL = '<?php echo base_url();?>';
-			var client_id = '<?php echo $this->client_id;?>';
-			var is_login = '<?php echo $this->is_login;?>';
-			var user_id = '<?php echo $this->user_id;?>';
-			var role_id = '<?php echo $this->role_id;?>';
+			var client_id = '<?php echo $user_info->client_id;?>';
+			var user_id = '<?php echo $user_info->user_id;?>';
+			var role_id = '<?php echo $user_info->role_id;?>';
 		</script>
 	</head>
 
@@ -263,9 +262,6 @@
 			
 			
 		</script>
-		
-		<script type="text/javascript" src="/arrowchat/external.php?type=djs" charset="utf-8"></script>
-		<script type="text/javascript" src="/arrowchat/external.php?type=js" charset="utf-8"></script>
 
 	</body>
 
