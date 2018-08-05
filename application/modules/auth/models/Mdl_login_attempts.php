@@ -9,7 +9,7 @@
  * @package	Tank_auth
  * @author	Ilya Konyukhov (http://konyukhov.com/soft/)
  */
-class Login_attempts extends CI_Model
+class Mdl_Login_Attempts extends CI_Model
 {
 	private $table_name = 'login_attempts';
 

@@ -5,7 +5,7 @@ class Auth extends MX_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('auth/users');
+		$this->load->model('auth/Mdl_auth');
 		// modules::run('login/is_logged_in');
 		$this->load->language('auth/tank_auth');
 		$this->load->library('auth/tank_auth');
@@ -80,7 +80,7 @@ class Auth extends MX_Controller
 	 */
 	function logout()
 	{
-		$this->users->update_visibility($this->tank_auth->get_user_id(), 0);
+		$this->Mdl_auth->update_visibility($this->tank_auth->get_user_id(), 0);
 		
 		$this->tank_auth->logout();
 

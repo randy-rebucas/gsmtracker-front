@@ -9,9 +9,9 @@
  * @package	Tank_auth
  * @author	Ilya Konyukhov (http://konyukhov.com/soft/)
  */
-class User_Autologin extends CI_Model
+class Mdl_User_Autologin extends CI_Model
 {
-	private $table_name			= 'user_autologin';
+	private $table_name			= 'users_autologin';
 	private $users_table_name	= 'users';
 
 	function __construct()

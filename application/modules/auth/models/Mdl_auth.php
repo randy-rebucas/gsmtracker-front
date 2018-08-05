@@ -10,7 +10,7 @@
  * @package	Tank_auth
  * @author	Ilya Konyukhov (http://konyukhov.com/soft/)
  */
-class Users extends CI_Model
+class Mdl_Auth extends CI_Model
 {
 	private $table_name			= 'users';			// user accounts
 	private $client_table			= 'clients';			// user accounts

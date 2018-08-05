@@ -25,7 +25,7 @@ class Tank_auth
 		$this->ci =& get_instance();
 		$this->ci->load->library('session');
 		$this->ci->load->config('auth/tank_auth', TRUE);
-		$this->ci->load->model('auth/users');
+		$this->ci->load->model('auth/Mdl_auth');
 
 		// Try to autologin
 		$this->autologin();
@@ -44,7 +44,7 @@ class Tank_auth
 	{
 		if ((strlen($login) > 0) AND (strlen($password) > 0)) {
 
-			if (!is_null($user = $this->ci->users->get_user_by_email($login))) {	// login ok
+			if (!is_null($user = $this->ci->Mdl_auth->get_user_by_email($login))) {	// login ok
 
 				
 				if (!$isSocial) {
@@ -66,7 +66,7 @@ class Tank_auth
 				
 						} else {												// success
 				
-							$this->ci->users->update_login_info(
+							$this->ci->Mdl_auth->update_login_info(
 									$user->id,
 									$this->ci->config->item('login_record_ip', 'tank_auth'),
 									$this->ci->config->item('login_record_time', 'tank_auth'));
@@ -91,7 +91,7 @@ class Tank_auth
 						'status'	=> 1,
 					));
 
-					$this->ci->users->update_login_info(
+					$this->ci->Mdl_auth->update_login_info(
 							$user->id,
 							$this->ci->config->item('login_record_ip', 'tank_auth'),
 							$this->ci->config->item('login_record_time', 'tank_auth'));
@@ -115,6 +115,8 @@ class Tank_auth
 	
 	function checkPoint($password, $dbPassword){
 		// Does password match hash in database?
+		// $this->load->library('auth/my_crypt');
+		// return $this->my_crypt->check_password($dbPassword, $password);
 		$hasher = new PasswordHash(
 		$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
 		$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
@@ -124,15 +126,18 @@ class Tank_auth
 	
 	function get_user_by_email($email){
 	
-		return $this->ci->users->get_user_by_email($email);
+		return $this->ci->Mdl_auth->get_user_by_email($email);
 		
 	}
 	
 	function check_password($confirm_password, $recent_password){
+		
 		$hasher = new PasswordHash(
 				$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
 				$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
 		if ($hasher->CheckPassword($confirm_password, $recent_password)) {
+		// $this->load->library('auth/my_crypt');
+		// if ($this->my_crypt->check_password($confirm_password, $recent_password)) {
 			return TRUE;
 		}else{
 			return FALSE;
@@ -140,7 +145,7 @@ class Tank_auth
 	}
 
 	function update_types($id, $type){
-		$this->ci->users->update_profile_type($id, $type);
+		$this->ci->Mdl_auth->update_profile_type($id, $type);
 	}
 
 	function update_notifications($id, $notifications){
@@ -167,7 +172,7 @@ class Tank_auth
 	 * @return	void
 	 */
 	function update_status($id, $status){
-		$this->ci->users->update_visibility($id, $status);
+		$this->ci->Mdl_auth->update_visibility($id, $status);
 	}
 	/**
 	 * Logout user from the site
@@ -247,13 +252,13 @@ class Tank_auth
 	 */
 	function create_user($business, $fullname, $address, $username, $email, $password, $email_activation)
 	{
-		if ((strlen($username) > 0) AND !$this->ci->users->is_username_available($username)) {
+		if ((strlen($username) > 0) AND !$this->ci->Mdl_auth->is_username_available($username)) {
 			$this->error = array('username' => 'auth_username_in_use');
 
-		} elseif (!$this->ci->users->is_email_available($email)) {
+		} elseif (!$this->ci->Mdl_auth->is_email_available($email)) {
 			$this->error = array('email' => 'auth_email_in_use');
 
-		} elseif (!$this->ci->users->is_business_available($business)) {
+		} elseif (!$this->ci->Mdl_auth->is_business_available($business)) {
 			$this->error = array('business' => 'auth_business_in_use');
 
 		}  else {
@@ -280,7 +285,7 @@ class Tank_auth
 			if ($email_activation) {
 				$data['new_email_key'] = md5(rand().microtime());
 			}
-			if (!is_null($res = $this->ci->users->create_user($data, $client_data, !$email_activation))) {
+			if (!is_null($res = $this->ci->Mdl_auth->create_user($data, $client_data, !$email_activation))) {
 				$data['user_id'] = $res['user_id'];
 				$data['password'] = $password;
 				unset($data['last_ip']);
@@ -291,7 +296,7 @@ class Tank_auth
 	}
 	
 	function save_queries($quries){
-		return $this->ci->users->create_queries($quries);
+		return $this->ci->Mdl_auth->create_queries($quries);
 	}
 	/**
 	 * Check if username available for registering.
@@ -302,7 +307,7 @@ class Tank_auth
 	 */
 	function is_username_available($username)
 	{
-		return ((strlen($username) > 0) AND $this->ci->users->is_username_available($username));
+		return ((strlen($username) > 0) AND $this->ci->Mdl_auth->is_username_available($username));
 	}
 
 	/**
@@ -314,7 +319,7 @@ class Tank_auth
 	 */
 	function is_email_available($email)
 	{
-		return ((strlen($email) > 0) AND $this->ci->users->is_email_available($email));
+		return ((strlen($email) > 0) AND $this->ci->Mdl_auth->is_email_available($email));
 	}
 
 	/**
@@ -326,13 +331,13 @@ class Tank_auth
 	 */
 	function is_business_available($business)
 	{
-		return ((strlen($business) > 0) AND $this->ci->users->is_business_available($business));
+		return ((strlen($business) > 0) AND $this->ci->Mdl_auth->is_business_available($business));
 	}
 
 	/**
 	 * Change email for activation and return some data about user:
 	 * user_id, username, email, new_email_key.
-	 * Can be called for not activated users only.
+	 * Can be called for not activated Mdl_auth only.
 	 *
 	 * @param	string
 	 * @return	array
@@ -341,7 +346,7 @@ class Tank_auth
 	{
 		$user_id = $this->ci->session->userdata('user_id');
 
-		if (!is_null($user = $this->ci->users->get_user_by_id($user_id, FALSE))) {
+		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, FALSE))) {
 
 			$data = array(
 				'user_id'	=> $user_id,
@@ -352,9 +357,9 @@ class Tank_auth
 				$data['new_email_key'] = $user->new_email_key;
 				return $data;
 
-			} elseif ($this->ci->users->is_email_available($email)) {
+			} elseif ($this->ci->Mdl_auth->is_email_available($email)) {
 				$data['new_email_key'] = md5(rand().microtime());
-				$this->ci->users->set_new_email($user_id, $email, $data['new_email_key'], FALSE);
+				$this->ci->Mdl_auth->set_new_email($user_id, $email, $data['new_email_key'], FALSE);
 				return $data;
 
 			} else {
@@ -374,10 +379,10 @@ class Tank_auth
 	 */
 	function activate_user($user_id, $activation_key, $activate_by_email = TRUE)
 	{
-		$this->ci->users->purge_na($this->ci->config->item('email_activation_expire', 'tank_auth'));
+		$this->ci->Mdl_auth->purge_na($this->ci->config->item('email_activation_expire', 'tank_auth'));
 
 		if ((strlen($user_id) > 0) AND (strlen($activation_key) > 0)) {
-			return $this->ci->users->activate_user($user_id, $activation_key, $activate_by_email);
+			return $this->ci->Mdl_auth->activate_user($user_id, $activation_key, $activate_by_email);
 		}
 		return FALSE;
 	}
@@ -393,7 +398,7 @@ class Tank_auth
 	function forgot_password($login)
 	{
 		if (strlen($login) > 0) {
-			if (!is_null($user = $this->ci->users->get_user_by_login($login))) {
+			if (!is_null($user = $this->ci->Mdl_auth->get_user_by_login($login))) {
 
 				$data = array(
 					'user_id'		=> $user->id,
@@ -402,7 +407,7 @@ class Tank_auth
 					'new_pass_key'	=> md5(rand().microtime()),
 				);
 
-				$this->ci->users->set_password_key($user->id, $data['new_pass_key']);
+				$this->ci->Mdl_auth->set_password_key($user->id, $data['new_pass_key']);
 				return $data;
 
 			} else {
@@ -422,7 +427,7 @@ class Tank_auth
 	function can_reset_password($user_id, $new_pass_key)
 	{
 		if ((strlen($user_id) > 0) AND (strlen($new_pass_key) > 0)) {
-			return $this->ci->users->can_reset_password(
+			return $this->ci->Mdl_auth->can_reset_password(
 				$user_id,
 				$new_pass_key,
 				$this->ci->config->item('forgot_password_expire', 'tank_auth'));
@@ -442,7 +447,7 @@ class Tank_auth
 	{
 		if ((strlen($user_id) > 0) AND (strlen($new_pass_key) > 0) AND (strlen($new_password) > 0)) {
 
-			if (!is_null($user = $this->ci->users->get_user_by_id($user_id, TRUE))) {
+			if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 				// Hash password using phpass
 				$hasher = new PasswordHash(
@@ -450,15 +455,15 @@ class Tank_auth
 						$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
 				$hashed_password = $hasher->HashPassword($new_password);
 
-				if ($this->ci->users->reset_password(
+				if ($this->ci->Mdl_auth->reset_password(
 						$user_id,
 						$hashed_password,
 						$new_pass_key,
 						$this->ci->config->item('forgot_password_expire', 'tank_auth'))) {	// success
 
 					// Clear all user's autologins
-					$this->ci->load->model('tank_auth/user_autologin');
-					$this->ci->user_autologin->clear($user->id);
+					$this->ci->load->model('auth/Mdl_user_autologin');
+					$this->ci->Mdl_user_autologin->clear($user->id);
 
 					return array(
 						'user_id'		=> $user_id,
@@ -483,7 +488,7 @@ class Tank_auth
 	{
 		$user_id = $this->ci->session->userdata('user_id');
 
-		if (!is_null($user = $this->ci->users->get_user_by_id($user_id, TRUE))) {
+		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 			// Check if old password correct
 			$hasher = new PasswordHash(
@@ -495,7 +500,7 @@ class Tank_auth
 				$hashed_password = $hasher->HashPassword($new_pass);
 
 				// Replace old password with new one
-				$this->ci->users->change_password($user_id, $hashed_password);
+				$this->ci->Mdl_auth->change_password($user_id, $hashed_password);
 				return TRUE;
 
 			} else {															// fail
@@ -518,7 +523,7 @@ class Tank_auth
 	{
 		$user_id = $this->ci->session->userdata('user_id');
 
-		if (!is_null($user = $this->ci->users->get_user_by_id($user_id, TRUE))) {
+		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 			// Check if password correct
 			$hasher = new PasswordHash(
@@ -539,9 +544,9 @@ class Tank_auth
 					$data['new_email_key'] = $user->new_email_key;
 					return $data;
 
-				} elseif ($this->ci->users->is_email_available($new_email)) {
+				} elseif ($this->ci->Mdl_auth->is_email_available($new_email)) {
 					$data['new_email_key'] = md5(rand().microtime());
-					$this->ci->users->set_new_email($user_id, $new_email, $data['new_email_key'], TRUE);
+					$this->ci->Mdl_auth->set_new_email($user_id, $new_email, $data['new_email_key'], TRUE);
 					return $data;
 
 				} else {
@@ -567,7 +572,7 @@ class Tank_auth
 	{
 		$user_id = $this->ci->session->userdata('user_id');
 
-		if (!is_null($user = $this->ci->users->get_user_by_id($user_id, TRUE))) {
+		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 			// Check if password correct
 			$hasher = new PasswordHash(
@@ -583,9 +588,9 @@ class Tank_auth
 				if ($user->username == $new_username) {
 					$this->error = array('email' => 'auth_current_email');
 
-				} elseif ($this->ci->users->is_username_available($new_username)) {
+				} elseif ($this->ci->Mdl_auth->is_username_available($new_username)) {
 
-					$this->ci->users->set_new_username($user_id, $new_username);
+					$this->ci->Mdl_auth->set_new_username($user_id, $new_username);
 					return $data;
 
 				} else {
@@ -607,7 +612,7 @@ class Tank_auth
 	function activate_new_email($user_id, $new_email_key)
 	{
 		if ((strlen($user_id) > 0) AND (strlen($new_email_key) > 0)) {
-			return $this->ci->users->activate_new_email(
+			return $this->ci->Mdl_auth->activate_new_email(
 					$user_id,
 					$new_email_key);
 		}
@@ -625,7 +630,7 @@ class Tank_auth
 		$client_id = $this->ci->session->userdata('client_id');
 		$user_id = $this->ci->session->userdata('user_id');
 
-		if (!is_null($user = $this->ci->users->get_user_by_id($user_id, TRUE))) {
+		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 			// Check if password correct
 			$hasher = new PasswordHash(
@@ -633,7 +638,7 @@ class Tank_auth
 					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
 			if ($hasher->CheckPassword($password, $user->password)) {			// success
 
-				$this->ci->users->delete_user($client_id);
+				$this->ci->Mdl_auth->delete_user($client_id);
 
 				$this->logout();
 				return TRUE;
@@ -667,10 +672,10 @@ class Tank_auth
 		$this->ci->load->helper('cookie');
 		$key = substr(md5(uniqid(rand().get_cookie($this->ci->config->item('sess_cookie_name')))), 0, 16);
 
-		$this->ci->load->model('tank_auth/user_autologin');
-		$this->ci->user_autologin->purge($user_id);
+		$this->ci->load->model('auth/Mdl_user_autologin');
+		$this->ci->Mdl_user_autologin->purge($user_id);
 
-		if ($this->ci->user_autologin->set($user_id, md5($key))) {
+		if ($this->ci->Mdl_user_autologin->set($user_id, md5($key))) {
 			set_cookie(array(
 					'name' 		=> $this->ci->config->item('autologin_cookie_name', 'tank_auth'),
 					'value'		=> serialize(array('user_id' => $user_id, 'key' => $key)),
@@ -693,8 +698,8 @@ class Tank_auth
 
 			$data = unserialize($cookie);
 
-			$this->ci->load->model('tank_auth/user_autologin');
-			$this->ci->user_autologin->delete($data['user_id'], md5($data['key']));
+			$this->ci->load->model('auth/Mdl_user_autologin');
+			$this->ci->Mdl_user_autologin->delete($data['user_id'], md5($data['key']));
 
 			delete_cookie($this->ci->config->item('autologin_cookie_name', 'tank_auth'));
 		}
@@ -716,8 +721,8 @@ class Tank_auth
 
 				if (isset($data['key']) AND isset($data['user_id'])) {
 
-					$this->ci->load->model('tank_auth/user_autologin');
-					if (!is_null($user = $this->ci->user_autologin->get($data['user_id'], md5($data['key'])))) {
+					$this->ci->load->model('auth/Mdl_user_autologin');
+					if (!is_null($user = $this->ci->Mdl_user_autologin->get($data['user_id'], md5($data['key'])))) {
 
 						// Login user
 						$this->ci->session->set_userdata(array(
@@ -726,14 +731,14 @@ class Tank_auth
 								'status'	=> STATUS_ACTIVATED,
 						));
 
-						// Renew users cookie to prevent it from expiring
+						// Renew Mdl_auth cookie to prevent it from expiring
 						set_cookie(array(
 								'name' 		=> $this->ci->config->item('autologin_cookie_name', 'tank_auth'),
 								'value'		=> $cookie,
 								'expire'	=> $this->ci->config->item('autologin_cookie_life', 'tank_auth'),
 						));
 
-						$this->ci->users->update_login_info(
+						$this->ci->Mdl_auth->update_login_info(
 								$user->id,
 								$this->ci->config->item('login_record_ip', 'tank_auth'),
 								$this->ci->config->item('login_record_time', 'tank_auth'));
@@ -754,8 +759,8 @@ class Tank_auth
 	function is_max_login_attempts_exceeded($login)
 	{
 		if ($this->ci->config->item('login_count_attempts', 'tank_auth')) {
-			$this->ci->load->model('tank_auth/login_attempts');
-			return $this->ci->login_attempts->get_attempts_num($this->ci->input->ip_address(), $login)
+			$this->ci->load->model('auth/Mdl_login_attempts');
+			return $this->ci->Mdl_login_attempts->get_attempts_num($this->ci->input->ip_address(), $login)
 					>= $this->ci->config->item('login_max_attempts', 'tank_auth');
 		}
 		return FALSE;
@@ -772,8 +777,8 @@ class Tank_auth
 	{
 		if ($this->ci->config->item('login_count_attempts', 'tank_auth')) {
 			if (!$this->is_max_login_attempts_exceeded($login)) {
-				$this->ci->load->model('tank_auth/login_attempts');
-				$this->ci->login_attempts->increase_attempt($this->ci->input->ip_address(), $login);
+				$this->ci->load->model('auth/Mdl_login_attempts');
+				$this->ci->Mdl_login_attempts->increase_attempt($this->ci->input->ip_address(), $login);
 			}
 		}
 	}
@@ -788,8 +793,8 @@ class Tank_auth
 	private function clear_login_attempts($login)
 	{
 		if ($this->ci->config->item('login_count_attempts', 'tank_auth')) {
-			$this->ci->load->model('tank_auth/login_attempts');
-			$this->ci->login_attempts->clear_attempts(
+			$this->ci->load->model('auth/Mdl_login_attempts');
+			$this->ci->Mdl_login_attempts->clear_attempts(
 					$this->ci->input->ip_address(),
 					$login,
 					$this->ci->config->item('login_attempt_expire', 'tank_auth'));
