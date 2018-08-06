@@ -26,8 +26,7 @@
 	<!-- end col -->
 </div>
 <!-- end row -->
-<section id="widget-grid">
-	<div class="row">
+
 		<!-- NEW WIDGET START -->
 		<article class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 			<!-- Widget ID (each widget will need unique ID)-->
@@ -121,8 +120,7 @@
 
 		</article>
 		<!-- WIDGET END -->
-	</div>
-</section>
+
 <script type="text/javascript">
 
 	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('import', $this->role_id, 'view',   $this->client_id) : true; ?>';

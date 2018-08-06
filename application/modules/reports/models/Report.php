@@ -72,10 +72,9 @@ class Report extends CI_Model
 	}
 	function count_all($dates, $client_id)
 	{
-		$this->db->from($this->table);
+		$this->db->from('records');
 		$this->db->where('client_id', $client_id);
-		$this->db->where('status', 1);
-		$this->db->where('month(visit_date)', date('m', strtotime($dates)));
+		$this->db->where('month(record_date)', date('m', strtotime($dates)));
 		return $this->db->count_all_results();
 	}
 	

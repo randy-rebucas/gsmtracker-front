@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
 /*
  * MyClinicSoft
  * 
@@ -12,7 +11,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Settings extends Secure 
+class Settings extends Admin_Controller 
 {
 
 	function __construct() 
@@ -33,15 +32,13 @@ class Settings extends Secure
 
     function _remap($method, $params = array()) 
     {
- 
+    	
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         }
 
-        $directory = getcwd();
-        $class_name = get_class($this);
-        $this->display_error_log($directory,$class_name,$method);
-    }
+        $this->display_error_log(getcwd(), get_class($this), $method);
+	}
 
 	function index()
 	{
@@ -51,18 +48,17 @@ class Settings extends Secure
 
 	function profile() {
 
+		$data['module'] = 'Profile';
 		$this->layout->title('Profile');
-		
-		$data['module'] = 'Profile'; 
-		
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('profile', $data);
+			$this->load->view('settings/profile', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('billing', $data);
+			$this->layout->build('settings/profile', $data);
 		}
 	}
 
@@ -171,18 +167,18 @@ class Settings extends Secure
 	}
 
 	function account() {
+
+		$data['module'] = 'Account';
 		$this->layout->title('Account');
-		
-		$data['module'] = 'Account'; 
-		
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('account', $data);
+			$this->load->view('settings/account', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('billing', $data);
+			$this->layout->build('settings/account', $data);
 		}
 	}
 
@@ -307,18 +303,18 @@ class Settings extends Secure
 	}
 
 	function emails() {
+
+		$data['module'] = 'Emails';
 		$this->layout->title('Emails');
-		
-		$data['module'] = 'Emails'; 
-		
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('emails', $data);
+			$this->load->view('settings/emails', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('billing', $data);
+			$this->layout->build('settings/emails', $data);
 		}
 	}
 
@@ -339,18 +335,18 @@ class Settings extends Secure
 	}
 
 	function notifications() {
+
+		$data['module'] = 'Notifications';
 		$this->layout->title('Notifications');
-		
-		$data['module'] = 'Notifications'; 
-		
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('notifications', $data);
+			$this->load->view('settings/notifications', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('notifications', $data);
+			$this->layout->build('settings/notifications', $data);
 		}
 	}
 
@@ -372,34 +368,32 @@ class Settings extends Secure
 	}
 
 	function billing() {
+		$data['module'] = 'Billing';
 		$this->layout->title('Billing Overview');
-		
-		$data['module'] = 'Billing'; 
-		
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('billing', $data);
+			$this->load->view('settings/billing', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('billing', $data);
+			$this->layout->build('settings/billing', $data);
 		}
 	} 
 
 	function configurations() {
+		$data['module'] = 'Configurations';
 		$this->layout->title('Configurations');
-	
-		$data['module'] = 'Configurations'; 
-		
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('configuration', $data);
+			$this->load->view('settings/configuration', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('configuration', $data);
+			$this->layout->build('settings/configuration', $data);
 		}
 	} 
 
@@ -482,18 +476,18 @@ class Settings extends Secure
 	}
 
 	function upgrade(){
+
+		$data['module'] = 'Upgrade your plan';
 		$this->layout->title('Upgrade your plan');
-		
-		$data['module'] = 'Upgrade your plan'; 
-		
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			$this->load->view('upgrade', $data);
+			$this->load->view('settings/upgrade', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('upgrade', $data);
+			$this->layout->build('settings/upgrade', $data);
 		}
 	}
 

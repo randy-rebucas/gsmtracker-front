@@ -11,8 +11,27 @@
 <!-- row -->
 
 <div class="row">
-
 	<div class="col-sm-12 col-md-12 col-lg-12">
+		<table class="table table-striped" id="table-appointments">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Status</th>
+					<th>Token</th>
+					<th>Patient</th>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+	<div class="hidden col-sm-12 col-md-4 col-lg-4">
 
 		<!-- new widget -->
 		<div class="jarviswidget jarviswidget-color-blueDark">
@@ -87,6 +106,12 @@
 <!-- end row -->
 
 <script type="text/javascript">
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('appointments', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('appointments', $this->role_id, 'update',   $this->client_id) : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('appointments', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	
+	var admin_role_id = '<?php echo $this->admin_role_id;?>';
+	var patient_role_id = '<?php echo $this->patient_role_id;?>';
 
 	var fullviewcalendar;
 
@@ -281,8 +306,230 @@
 			$('#td').click(function () {
 			    $('#calendar').fullCalendar('changeView', 'agendaDay');
 			});	
-					
+	};
+	var table = function() {
+		/* BASIC ;*/
+		var responsiveHelper_dt_basic = undefined;
+		var responsiveHelper_datatable_fixed_column = undefined;
+		var responsiveHelper_datatable_col_reorder = undefined;
+		var responsiveHelper_datatable_tabletools = undefined;
 		
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+		
+		$('#table-appointments').dataTable({
+			'destroy': true,
+			'filter': true,
+			'processing': true, 
+			"serverSide": true,        
+			"paging": true,
+			"bSort" : false,
+			"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
+					"t"+
+					"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+			"ajax": {
+				url: BASE_URL + 'appointments/load_ajax/',
+				type: 'POST',
+			},
+			"oLanguage": {
+				"sSearch": '<span class="input-group-addon"><i class="fa fa-search"></i></span>',
+				"sProcessing": '<i class="fa fa-spinner fa-pulse fa-fw"></i> <?php echo $this->lang->line('__dt_sLoadingRecords');?>', //add a loading image,simply putting <img src="/img/ajax-loader.gif" /> tag.
+				"sInfo": '<?php echo $this->lang->line('__dt_sInfo');?>',
+				"sEmptyTable": '<?php echo $this->lang->line('__dt_sEmptyTable');?>',
+				"sInfoEmpty": '<?php echo $this->lang->line('__dt_sInfoEmpty');?>',
+				"sInfoFiltered": '<?php echo $this->lang->line('__dt_sInfoFiltered');?>',
+				"sLengthMenu": '<?php echo $this->lang->line('__dt_sLengthMenu');?>',
+				"sLoadingRecords": '<?php echo $this->lang->line('__dt_sLoadingRecords');?>',
+				"sProcessing": '<?php echo $this->lang->line('__dt_sProcessing');?>',
+				"sZeroRecords": '<?php echo $this->lang->line('__dt_sZeroRecords');?>'
+			},		
+			"autoWidth" : true,
+			"preDrawCallback" : function() {
+				// Initialize the responsive datatables helper once.
+				if (!responsiveHelper_dt_basic) {
+					responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#table-appointments'), breakpointDefinition);
+				}
+			},
+			"rowCallback" : function(nRow) {
+				responsiveHelper_dt_basic.createExpandIcon(nRow);
+			},
+			"drawCallback" : function(oSettings) {
+				responsiveHelper_dt_basic.respond();
+				$('#table-appointments').find('td:first').css('width', '40px');
+				$('#table-appointments').css('width', '100%');
+				
+				mcs.init_dialog();
+				mcs.init_action();
+
+				$("[rel=tooltip]").tooltip();
+			},
+			//run on first time when datatable create
+			"initComplete": function (row) {
+				
+			},
+			//End
+			// Internationalisation. For more info refer to http://datatables.net/manual/i18n
+			
+			"order": [
+				[0, 'asc']
+			],
+			"aLengthMenu": [
+				[10, 20, 30, 40, 50],
+				[10, 20, 30, 40, 50] // change per page values here
+			],
+			// set the initial value
+			"pageLength": 10,
+			//{"appointment_id":"2","client_id":"00000000010","appointment_date":"2018-08-13 00:00:00","appointment_title":"test","appointment_description":"terdt","appointment_patient_id":"13","appointment_doctor_id":"13","appointment_status":"1","appointment_token":"fser5543w"}
+			aoColumns: [
+				{mData: 'appointment_id'},   
+				{mData: 'appointment_title'},
+				{mData: 'appointment_description'},         
+				{mData: 'appointment_date'},
+				{mData: 'appointment_status'},
+				{mData: 'appointment_token'},
+				{mData: 'fullname'},
+				{mData: null}, //appointment_doctor_id
+				{mData: 'client_id'},
+			],
+			"aoColumnDefs": [
+				{'bSearchable': false, 'aTargets': [0]},
+				{'bSearchable': true, 'aTargets': [1]},
+				{
+					"targets": [0, 5, 8],
+					"visible": false,
+					"searchable": false,
+				},
+				
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 0`.
+					"render": function (data, type, row) {
+	
+						newData =  row['appointment_id'];
+						
+						return newData;
+					},
+					"targets": 0
+				},
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 1`.
+					//row['statuses'] != 0
+					"render": function (data, type, row) {
+
+						newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+BASE_URL+'appointments/details/'+row['appointment_id']+'" class="preview link">'+row['appointment_title']+'</a>';
+						return newData;
+
+					},
+					"targets": 1
+				},
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 1`.
+					//row['statuses'] != 0
+					"render": function (data, type, row) {
+						newData = row['appointment_description'];
+						return newData;
+
+					},
+					"targets": 2
+				},
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 1`.
+					//row['statuses'] != 0
+					"render": function (data, type, row) {
+						
+						newData  = row['appointment_date'];
+						return newData;
+
+					},
+					"targets": 3
+				},
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 1`.
+					//row['statuses'] != 0
+					"render": function (data, type, row) {
+						newData = "";
+						if(row['appointment_status'] == 0){
+							s = '<span class="label label-success">Confirmed</span>';
+						}else if(row['appointment_status'] == 1) {
+							s = '<span class="label label-danger">Cancel</span>';
+						}else {
+							s = '<span class="label label-danger">Pending</span>';
+						}
+						
+						newData  = s;
+						
+						return newData;
+
+					},
+					"targets": 4
+				},
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 1`.
+					//row['statuses'] != 0
+					"render": function (data, type, row) {
+
+						newData = row['appointment_token'];
+						
+						return newData;
+
+					},
+					"targets": 5
+				},
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 1`.
+					//row['statuses'] != 0
+					"render": function (data, type, row) {
+
+						newData = row['fullname'];
+						
+						return newData;
+
+					},
+					"targets": 6
+				},
+				{
+					// The `data` parameter refers to the data for the cell (defined by the
+					// `data` option, which defaults to the column being worked with, in
+					// this case `data: 4`.
+					"render": function (data, type, row) {
+						newData = "";
+
+						if(can_delete){
+							newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'appointments/delete/'+row['appointment_id']+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+						}
+						if(can_update){
+							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'appointments/view/'+row['appointment_id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>';
+						}
+						
+						return newData;
+					},
+					"targets": 7
+				},
+			],
+			"createdRow": function (row, data, index)
+			{
+				//var temp_split = data['temp_rad'].split(':rad:');
+				
+			}
+		
+		});
+
+		/* END BASIC */
 	};
 	
 	// end pagefunction
@@ -324,6 +571,12 @@
 		loadScript(BASE_URL+"js/plugin/fullcalendar/jquery.fullcalendar.min.js", pagefunction);
 	});
 
-
+	loadScript(BASE_URL+"js/bootbox.min.js", function(){
+		loadScript(BASE_URL+"js/plugin/datatables/jquery.dataTables.min.js", function(){
+			loadScript(BASE_URL+"js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+				loadScript(BASE_URL+"js/plugin/datatable-responsive/datatables.responsive.min.js", table)
+			});
+		});
+	});
 
 </script>

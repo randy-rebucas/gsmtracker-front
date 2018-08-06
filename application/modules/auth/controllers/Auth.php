@@ -13,12 +13,7 @@ class Auth extends MX_Controller
 
 	function index()
 	{
-		if ($message = $this->session->flashdata('message')) {
-			$this->load->view('auth/general_message', array('message' => $message));
-		} else {
-			redirect('/auth/login/');
-			// modules::run('auth/login');
-		}
+		redirect('/auth/login/');
 	}
 
 	/**
@@ -31,45 +26,49 @@ class Auth extends MX_Controller
 		if ($this->tank_auth->is_logged_in()) {									// logged in
 			redirect('dashboard');
 
-		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
-			redirect('/auth/send_again/');
-
 		} else {
-			$data = [];
+
 			$this->layout
-			->title('Login') //$article->title
-			->prepend_metadata('<script src="/js/jquery.js"></script>')
-			->append_metadata('<script src="/js/jquery.flot.js"></script>')
-			// application/views/some_folder/header
-			//->set_partial('header', 'includes/widgets') //third param optional $data
-			// application/views/some_folder/header
-			//->inject_partial('header', '<h1>Hello World!</h1>')  //third param optional $data
-			->set_layout('empty') // application/views/layouts/two_col.php
-			->build('login_form', $data); // views/welcome_message
+			->title('Login') 
+			->set_layout('empty') 
+			->build('login_form');
 		}
 	}
 	
 	function doLogin(){
 		$this->load->library('auth/tank_auth');
-		
-							// validation ok
-		if ($this->tank_auth->login(
+
+		if($this->tank_auth->is_logged_in(FALSE)){
+			$response = array(
+				'success' => false,
+				'message' => 'Account not activated!'
+            );
+		}else{
+
+			if ($this->tank_auth->login(
 				$this->input->post('login'),
 				$this->input->post('password'),
 				$this->input->post('remember') ? 1 : 0)) {								// success
-			echo json_encode(array('success' => true, 'message' => 'Loged In Successfully! Redirecting .....'));
-			///exit();
-		} else {
-			$data['error'] = array();  
-			$errors = $this->tank_auth->get_error_message();
-			                                                   // fail
-			foreach ($errors as $k => $v) {
-				$data['error'][$k] = $this->lang->line($v);
+				$response = array(
+					'success' => true, 
+					'message' => 'Loged In Successfully! Redirecting .....'
+				);
+			} else {
+				$data['error'] = array();  
+				$errors = $this->tank_auth->get_error_message();
+																// fail
+				foreach ($errors as $k => $v) {
+					$data['error'][$k] = $this->lang->line($v);
+				}
+			
+				$response = array(
+					'success' => false, 
+					'message' => $data['error']
+				);
 			}
-		
-			echo json_encode(array('success' => false, 'message' => $data['error']));
-			//exit();
 		}
+		
+		echo json_encode($response);
 	}
 	
 	
@@ -98,22 +97,12 @@ class Auth extends MX_Controller
 		if ($this->tank_auth->is_logged_in()) {									// logged in
 			redirect('dashboard');
 
-		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
-			redirect('/auth/send_again/');
-
 		} else {
-			
-			$data[] = '';
-
 
 			$this->layout
-			->title('Register') //$article->title
-			// application/views/some_folder/header
-			//->set_partial('header', 'includes/widgets') //third param optional $data
-			// application/views/some_folder/header
-			//->inject_partial('header', '<h1>Hello World!</h1>')  //third param optional $data
-			->set_layout('empty') // application/views/layouts/two_col.php
-			->build('register_form', $data); // views/welcome_message
+			->title('Register') 
+			->set_layout('empty') 
+			->build('register_form');
 		}
 	}
 	
@@ -249,13 +238,7 @@ class Auth extends MX_Controller
 			}
 
 			$this->layout
-			->title('Login') //$article->title
-			->prepend_metadata('<script src="/js/jquery.js"></script>')
-			->append_metadata('<script src="/js/jquery.flot.js"></script>')
-			// application/views/some_folder/header
-			//->set_partial('header', 'includes/widgets') //third param optional $data
-			// application/views/some_folder/header
-			//->inject_partial('header', '<h1>Hello World!</h1>')  //third param optional $data
+			->title('Send Again') //$article->title
 			->set_layout('empty') // application/views/layouts/two_col.php
 			->build('send_again_form', $data); // views/welcome_message
 		}

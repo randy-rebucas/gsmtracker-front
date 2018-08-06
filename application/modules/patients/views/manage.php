@@ -9,31 +9,16 @@
 <div class="row">
 
 	<!-- col -->
-	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4"> 
-		<h1 class="page-title txt-color-blueDark"><!-- PAGE HEADER --><?php echo $module ;?> <small></small></h1>
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<h1 class="page-title txt-color-blueDark">
+			<?php echo sprintf($this->lang->line(strtolower($module).'_welcome'), $user_info->username);?> 
+		</h1>
 	</div>
+	<!-- end col -->
 
-	<!-- end col -->
-<!-- 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8 text-right">
-		<div class="btn-group">
-			
-			<button type="button" class="btn btn-primary">Record</button>
-			<button type="button" class="btn btn-primary">Delete</button>
-			<button type="button" class="btn btn-primary">Update</button>
-			
-			
-		</div>
-	</div> -->
-	<!-- right side of the page with the sparkline graphs -->
-	<!-- col -->
-	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-		
-	</div>
-	<!-- end col -->
 </div>
 <!-- end row -->
-<section id="widget-grid">
-	<div class="row">
+
 		<!-- NEW WIDGET START -->
 		<article class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
 			<!-- Widget ID (each widget will need unique ID)-->
@@ -132,9 +117,7 @@
 
 		</article>
 		<!-- WIDGET END -->
-	</div>
-</section>
-
+	
 <script type="text/javascript">
 	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true; ?>';
 	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'update',   $this->client_id) : true; ?>';

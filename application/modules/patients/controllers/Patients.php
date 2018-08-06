@@ -55,8 +55,8 @@ class Patients extends Admin_Controller
 	function load_ajax() 
 	{
 	
-		// if ($this->input->is_ajax_request()) 
-		// {	
+		if ($this->input->is_ajax_request()) 
+		{	
 			$this->load->library('datatables');
 	        $isfiltered = $this->input->post('filter');
 
@@ -75,12 +75,12 @@ class Patients extends Admin_Controller
 	        $this->datatables->from('patients as p');
 
 	        echo $this->datatables->generate('json', 'UTF-8');
-    	// }
-    	// else
-    	// {
-	    // 	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-        //     redirect(strtolower(get_class()));
-	    // }
+    	}
+    	else
+    	{
+	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
+            redirect(strtolower(get_class()));
+	    }
     }
 	
    function view($id = -1)

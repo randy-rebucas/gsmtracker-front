@@ -1,6 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
-
 /*
  * MyClinicSoft
  * 
@@ -14,7 +12,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * 
  */
 
-class Appointments extends Secure 
+class Appointments extends Admin_Controller 
 {
 
 	function __construct() 
@@ -26,35 +24,58 @@ class Appointments extends Secure
         $this->load->language('appointments', 'english');
 
     }
-
+	
     function _remap($method, $params = array()) 
     {
- 
+    	
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         }
 
-        $directory = getcwd();
-        $class_name = get_class($this);
-        $this->display_error_log($directory,$class_name,$method);
-    }
+        $this->display_error_log(getcwd(), get_class($this), $method);
+	}
 
 	function index()
 	{
-		$this->layout->title('Appointments');
-		$data['module'] = 'Appointments';
 
-		if ($this->is_ajax) 
+		$data['module'] = 'Appointments';
+		$this->layout->title('Appointments');
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			
-			$this->load->view('manage', $data);
+			$this->load->view('appointments/manage', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('manage', $data);
-			
+			$this->layout->build('appointments/manage', $data);
 		}
+	}
+	
+	function load_ajax() 
+	{
+	
+		if ($this->input->is_ajax_request()) 
+		{	
+			$this->load->library('datatables');
+	       
+	        $this->datatables->select("appointments.*, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname", false);
+	        
+	        $this->datatables->where('client_id', $this->client_id);
+			
+			$this->datatables->join('users_profiles as up', 'appointments.appointment_patient_id = up.user_id', 'left', false);
+
+	        $this->datatables->from('appointments');
+
+	        echo $this->datatables->generate('json', 'UTF-8');
+	        
+    	}
+    	else
+    	{
+
+	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
+            redirect(strtolower(get_class()));
+	    }
 	}
 	
 	function get()

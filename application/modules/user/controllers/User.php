@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
 /*
  * MyClinicSoft
  * 
@@ -12,7 +11,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * @link        http://www.myclinicsoft.com
  * 
  */
-class User extends Secure 
+class User extends Admin_Controller 
 {
 
 	function __construct() 
@@ -23,31 +22,29 @@ class User extends Secure
         $this->load->language('common/common', 'english');
     }
 
-    function _remap($method, $params = array()) 
+	function _remap($method, $params = array()) 
     {
- 
+    	
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         }
 
-        $directory = getcwd();
-        $class_name = get_class($this);
-        $this->display_error_log($directory,$class_name,$method);
-    }
+        $this->display_error_log(getcwd(), get_class($this), $method);
+	}
 
-	function index($slug = FALSE)
+	function index()
 	{
+		$data['module'] = 'Users';
 		$this->layout->title('Users');
-		$data['module'] = get_class();
-		if ($this->input->is_ajax_request()) 
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			
-			$this->load->view('manage', $data);
+			$this->load->view('user/manage', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('manage', $data);
+			$this->layout->build('user/manage', $data);
 		}
 	}
 
@@ -73,7 +70,8 @@ class User extends Secure
 				$this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
 			}
 			$this->datatables->join('users_profiles as up', 'users.id = up.user_id', 'left', false);
-			$this->datatables->join('roles as r', 'users.role_id = r.role_id', 'left', false);
+			$this->datatables->join('users_role as ur', 'users.id = ur.user_id', 'left', false);
+			$this->datatables->join('roles as r', 'ur.role_id = r.role_id', 'left', false);
 			
 	        $this->datatables->from('users');
 

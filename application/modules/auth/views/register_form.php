@@ -90,13 +90,8 @@
 
 		</div>
 
-		<?php //if($this->session->userdata('islogin')){ ?>
+		<a href="<?php echo site_url('auth/login');?>">← <?php echo sprintf($this->lang->line('__cancel_and_return'), $this->config->item('app_name'));?></a>
 
-			<!--<a href="<?php //echo $this->session->userdata('logoutUrl') ;?>">← <?php //echo $this->lang->line('__cancel_and_return');?></a>-->
-		    
-		<?php //}else{ ?>
-			<a href="<?php echo site_url('auth/login');?>">← <?php echo sprintf($this->lang->line('__cancel_and_return'), $this->config->item('app_name'));?></a>
-		<?php //} ?>
 	</div>
 </div>
 

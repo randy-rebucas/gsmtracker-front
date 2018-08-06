@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
 /*
  * MyClinicSoft
  * 
@@ -12,7 +11,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Roles extends Secure 
+class Roles extends Admin_Controller 
 {
 
 	function __construct() 
@@ -20,35 +19,32 @@ class Roles extends Secure
         parent::__construct();
 
         $this->load->model('Role');
-    }
-
-    function _remap($method, $params = array()) 
+	}
+	
+	function _remap($method, $params = array()) 
     {
- 
+    	
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         }
 
-        $directory = getcwd();
-        $class_name = get_class($this);
-        $this->display_error_log($directory,$class_name,$method);
-    }
+        $this->display_error_log(getcwd(), get_class($this), $method);
+	}
 
 	function index()
 	{
+
+		$data['module'] = 'Roles';
 		$this->layout->title('Roles');
-		$data['module'] = get_class();
+		$this->set_layout();
 
-		if ($this->input->is_ajax_request()) 
+		if ($this->input->is_ajax_request())  
 		{
-			
-			$this->load->view('manage', $data);
-
+			$this->load->view('roles/manage', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('manage', $data);
+			$this->layout->build('roles/manage', $data);
 		}
 	}
 

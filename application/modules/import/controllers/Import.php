@@ -1,6 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
-
 /*
  * MyClinicSoft
  * 
@@ -14,7 +12,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * 
  */
 
-class Import extends Secure {
+class Import extends Admin_Controller {
 	
 	public function __construct()
 	{
@@ -22,37 +20,36 @@ class Import extends Secure {
 		
 	}
 	
-	function _remap($method, $params = array()) {
- 
-        if (method_exists($this, $method)) 
-        {
+	function _remap($method, $params = array()) 
+    {
+    	
+        if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         }
 
         $this->display_error_log(getcwd(), get_class($this), $method);
-    }
+	}
 
-	function index()
+    function index()
 	{
-		$this->layout->title('Import');
-		$data['module'] = 'Import';
 
-		if ($this->is_ajax) 
+		$data['module'] = 'Import';
+		$this->layout->title('Import');
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
 		{
-			
-			$this->load->view('manage', $data);
+			$this->load->view('import/manage', $data);
         } 
 		else
 		{
-			$this->_set_layout($data);
-			$this->layout->build('manage', $data);
-			
+			$this->layout->build('import/manage', $data);
 		}
 	}
 
 	function load_ajax() {
 	
-		if ($this->is_ajax) 
+		if ($this->input->is_ajax_request()) 
 		{	
 			$this->load->library('datatables');
 	       

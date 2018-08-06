@@ -3,27 +3,13 @@
 <div class="row">
 
 	<!-- col -->
-	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4"> 
-		<h1 class="page-title txt-color-blueDark"><!-- PAGE HEADER --><?php echo $module ;?> <small></small></h1>
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<h1 class="page-title txt-color-blueDark">
+			<?php echo sprintf($this->lang->line(strtolower($module).'_welcome'), $user_info->username);?> 
+		</h1>
 	</div>
+	<!-- end col -->
 
-	<!-- end col -->
-<!-- 	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8 text-right">
-		<div class="btn-group">
-			
-			<button type="button" class="btn btn-primary">Record</button>
-			<button type="button" class="btn btn-primary">Delete</button>
-			<button type="button" class="btn btn-primary">Update</button>
-			
-			
-		</div>
-	</div> -->
-	<!-- right side of the page with the sparkline graphs -->
-	<!-- col -->
-	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-		
-	</div>
-	<!-- end col -->
 </div>
 <!-- end row -->
 
