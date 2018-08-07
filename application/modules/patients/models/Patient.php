@@ -34,7 +34,7 @@ class Patient extends User_model
 		$this->db->from('users as u');			
 		$this->db->join('users_profiles as up','up.user_id = u.id');
 		$this->db->join('users_custom as uc', 'uc.user_id = u.id');
-		$this->db->where('u.client_id',$this->client_id);
+		//$this->db->where('u.client_id',$this->client_id);
 		if($role){
 			$this->db->where('u.role_id', $role);	
 		}	
@@ -80,7 +80,7 @@ class Patient extends User_model
 		}
 	}
 
-	function save(&$user_data, &$profile_data, &$custom_data, $id=false)
+	function save(&$user_data, &$profile_data, &$custom_data, $role_id, $id=false)
 	{
 		$success=false;
 		
@@ -101,9 +101,19 @@ class Patient extends User_model
 						'patient_pin'    => random_string('numeric',6)
 					);
 					
-					$success = $this->db->insert('patients', $patient_data);
+					if($this->db->insert('patients', $patient_data))
+					{
+						$_data=array(
+							'user_id'     => $custom_data['user_id'],
+							'role_id'     => $role_id
+						);
+						
+						$success = $this->db->insert('users_role', $_data);
+					}
+					
 				}
 
+				
 			}
 			else
 			{

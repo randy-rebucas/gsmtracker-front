@@ -6,7 +6,12 @@ if (!defined('BASEPATH'))
 class Base_Controller extends MX_Controller {
 
     public $ajax_controller = false;
-    
+    public $client_id;
+    public $role_id;
+	public $user_id;
+	public $username;
+    public $admin_role_id;
+	public $patient_role_id;
     
     public function __construct()
     {
@@ -35,6 +40,12 @@ class Base_Controller extends MX_Controller {
         // $this->lang->load('common', $this->Mdl_settings->setting('default_language'));
         
        	//add this on config
+        $this->load->library('auth/tank_auth');
+
+        $this->username	= $this->tank_auth->get_username();
+        $this->client_id 	= $this->tank_auth->get_client_id();
+        $this->role_id    = $this->tank_auth->get_role_id();
+        $this->user_id	= $this->tank_auth->get_user_id();
 
         
 

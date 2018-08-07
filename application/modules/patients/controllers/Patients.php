@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH'))
+exit('No direct script access allowed');
 /*
  * MyClinicSoft
  * 
@@ -14,8 +16,7 @@
 
 class Patients extends Admin_Controller 
 {
-
-	function __construct() 
+	public function __construct() 
 	{
 
         parent::__construct();
@@ -86,7 +87,7 @@ class Patients extends Admin_Controller
    function view($id = -1)
    {
    	
-        if ($this->is_ajax) 
+        if ($this->input->is_ajax_request()) 
 		{
 
 			$this->load->model('custom_fields/Custom_field');
@@ -120,7 +121,6 @@ class Patients extends Admin_Controller
 				'email'         =>($this->input->post('email') != '') ? $this->input->post('email') : 'patient@myclinicsoft.com',
 				'password'      =>$this->pass_secured->encrypt($this->input->post('password')),
 				'client_id'		=>$this->client_id,
-				'role_id'		=>$this->patient_role_id,
 				'last_ip'       =>$this->input->ip_address(),
 				'created'       => date('Y-m-d H:i:s'),
 				'token'			=> date('Ymd').'-'.random_string('numeric',8)
@@ -190,7 +190,7 @@ class Patients extends Admin_Controller
 				echo json_encode(array('success'=>false,'message'=>$this->upload->display_errors()));
 			}
 		}
-		if($this->Patient->save($user_data, $profile_data, $custom_data, $id))
+		if($this->Patient->save($user_data, $profile_data, $custom_data, $this->patient_role_id, $id))
 		{
 			if($id==-1)
 			{
