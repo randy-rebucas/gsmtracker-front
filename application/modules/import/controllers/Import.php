@@ -12,7 +12,7 @@
  * 
  */
 
-class Import extends Admin_Controller {
+class Import extends Secure_Controller {
 	
 	public function __construct()
 	{
@@ -20,16 +20,6 @@ class Import extends Admin_Controller {
 		
 	}
 	
-	function _remap($method, $params = array()) 
-    {
-    	
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
-	}
-
     function index()
 	{
 

@@ -12,7 +12,7 @@
  * 
  */
 
-class Appointments extends Admin_Controller 
+class Appointments extends Secure_Controller 
 {
 
 	function __construct() 
@@ -24,16 +24,6 @@ class Appointments extends Admin_Controller
         $this->load->language('appointments', 'english');
 
     }
-	
-    function _remap($method, $params = array()) 
-    {
-    	
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
-	}
 
 	function index()
 	{

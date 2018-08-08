@@ -1,6 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
-
 /*
  * MyClinicSoft
  * 
@@ -14,7 +12,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * 
  */
 
-class Custom_Fields extends Secure {
+class Custom_Fields extends Secure_Controller {
 	
 	public function __construct()
 	{

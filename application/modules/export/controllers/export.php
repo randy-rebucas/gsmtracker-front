@@ -1,6 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
-
 /*
  * MyClinicSoft
  * 
@@ -14,23 +12,13 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * 
  */
 
-class Export extends Secure {
+class Export extends Secure_Controller {
 	
 	public function __construct()
 	{
 		parent::__construct();
 		
 	}
-	
-	function _remap($method, $params = array()) {
- 
-        if (method_exists($this, $method)) 
-        {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
-    }
 
 	function index()
 	{

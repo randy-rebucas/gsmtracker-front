@@ -12,7 +12,7 @@
  * 
  */
 
-class Dashboard extends Admin_Controller 
+class Dashboard extends Secure_Controller 
 {
 
 	function __construct() 
@@ -20,15 +20,6 @@ class Dashboard extends Admin_Controller
         parent::__construct();
 
         $this->load->language('dashboard', 'english');
-    }
-
-    function _remap($method, $params = array()) 
-    {
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
     }
 
 	function index()

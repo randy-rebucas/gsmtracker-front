@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
 /*
  * MyClinicSoft
  * 
@@ -12,7 +11,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Messages extends Secure 
+class Messages extends Secure_Controller 
 {
 
 	function __construct() 
