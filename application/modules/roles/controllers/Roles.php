@@ -11,7 +11,7 @@
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Roles extends Admin_Controller 
+class Roles extends Secure_Controller 
 {
 
 	function __construct() 
@@ -19,16 +19,6 @@ class Roles extends Admin_Controller
         parent::__construct();
 
         $this->load->model('Role');
-	}
-	
-	function _remap($method, $params = array()) 
-    {
-    	
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
 	}
 
 	function index()

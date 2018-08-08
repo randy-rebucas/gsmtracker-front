@@ -20,16 +20,6 @@ class Custom_Fields extends Secure_Controller {
 		
 		$this->load->model('Custom_field');
 	}
-	
-	function _remap($method, $params = array()) {
- 
-        if (method_exists($this, $method)) 
-        {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
-    }
 
 	function index()
 	{

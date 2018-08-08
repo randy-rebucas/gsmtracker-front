@@ -11,7 +11,7 @@
  * @link        http://www.myclinicsoft.com
  * 
  */
-class User extends Admin_Controller 
+class User extends Secure_Controller 
 {
 
 	function __construct() 

@@ -11,7 +11,7 @@
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Settings extends Admin_Controller 
+class Settings extends Secure_Controller 
 {
 
 	function __construct() 
@@ -29,16 +29,6 @@ class Settings extends Admin_Controller
 		$this->load->library('auth/tank_auth');
 		// $this->load->module('auth');
     }
-
-    function _remap($method, $params = array()) 
-    {
-    	
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
-	}
 
 	function index()
 	{

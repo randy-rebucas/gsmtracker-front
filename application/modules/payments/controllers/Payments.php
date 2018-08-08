@@ -1,6 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
-
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
 
@@ -35,7 +33,7 @@ use PayPal\Api\PaymentExecution;
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Payments extends Secure 
+class Payments extends Secure_Controller 
 {
     public $apiContext;
 
@@ -44,18 +42,6 @@ class Payments extends Secure
         parent::__construct();
 
         $this->apiContext = $this->getApiContext($this->config->item('clientId'), $this->config->item('clientSecret'));
-    }
-
-    function _remap($method, $params = array()) 
-    {
- 
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $directory = getcwd();
-        $class_name = get_class($this);
-        $this->display_error_log($directory,$class_name,$method);
     }
 
 	function index()

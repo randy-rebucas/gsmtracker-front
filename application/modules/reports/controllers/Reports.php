@@ -15,22 +15,12 @@ set_time_limit(120);
 use Dompdf\Dompdf;
 //use Dompdf\Css\Stylesheet;
 
-class Reports extends Admin_Controller {
+class Reports extends Secure_Controller {
 
 	function __construct() {
         parent::__construct();
 		$this->load->model('Report');
     }
-
-	function _remap($method, $params = array()) 
-    {
-    	
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $this->display_error_log(getcwd(), get_class($this), $method);
-	}
 
 	function index()
 	{

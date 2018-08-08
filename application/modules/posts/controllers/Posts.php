@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH. 'modules/secure/controllers/Secure.php';
 /*
  * MyClinicSoft
  * 
@@ -12,7 +11,7 @@ require_once APPPATH. 'modules/secure/controllers/Secure.php';
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Posts extends Secure 
+class Posts extends Secure_Controller 
 {
 	
 	function __construct() 
@@ -22,18 +21,6 @@ class Posts extends Secure
 		$this->load->model('Post');
     }
 
-    function _remap($method, $params = array()) 
-    {
- 
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        $directory = getcwd();
-        $class_name = get_class($this);
-        $this->display_error_log($directory,$class_name,$method);
-    }
-	
 	function index()
 	{
 		

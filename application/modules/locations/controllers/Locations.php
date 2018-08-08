@@ -20,16 +20,6 @@ class Locations extends Secure_Controller
         $this->load->library('location_lib');
     }
 
-    function _remap($method, $params = array()) 
-    {
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-        $directory = getcwd();
-        $class_name = get_class($this);
-        $this->display_error_log($directory, $class_name, $method);
-    }
-
     public function index() 
     {
 
