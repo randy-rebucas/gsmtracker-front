@@ -11,7 +11,7 @@
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Patient extends Response_Model
+class Mdl_Patient extends Response_Model
 {
 	public $table               = 'users';
     public $primary_key         = 'users.id';

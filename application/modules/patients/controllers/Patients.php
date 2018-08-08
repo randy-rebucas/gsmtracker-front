@@ -14,7 +14,7 @@ exit('No direct script access allowed');
  * 
  */
 
-class Patients extends Admin_Controller 
+class Patients extends Secure_Controller 
 {
 	public function __construct() 
 	{

@@ -202,6 +202,12 @@ class MY_Model extends CI_Model {
         return $this->where($this->primary_key, $id)->get()->row();
     }
 
+    public function get_by_val($key, $val, $client_id)
+    {
+        $array = array($key => $val, 'client_id' => $client_id);
+        return $this->where($array)->get()->row();
+    }
+
     public function save($id = NULL, $db_array = NULL)
     {
         if (!$db_array)
@@ -428,6 +434,16 @@ class MY_Model extends CI_Model {
     {
         $this->id = $id;
     }
+
+    function exists($user_id, $client_id)
+	{
+		$this->db->from($this->table);	
+		$this->db->where($this->table.'.client_id', $client_id);
+		$this->db->where($this->primary_key, $id);
+		$query = $this->db->get();
+		
+		return ($query->num_rows()==1);
+	}
 
 }
 

@@ -68,10 +68,10 @@
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
 									<a href="<?php echo site_url('export/');?>" class="btn btn-warning btn-sm"><i class="fas fa-lg fa-fw fa-file-export"></i>&nbsp;<span class="hidden-mobile">Export</span> </a>
 
-									<?php if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
+									<?php //if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
 										<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
 										
-									<?php } ?>
+									<?php //} ?>
 								</div>
 								
 							</div>
@@ -119,9 +119,9 @@
 		<!-- WIDGET END -->
 	
 <script type="text/javascript">
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'update',   $this->client_id) : true; ?>';
-	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	// var can_view = 	'<?php //echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	// var can_update = '<?php //echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'update',   $this->client_id) : true; ?>';
+	// var can_delete = '<?php //echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 
 	pageSetUp();
 
@@ -169,7 +169,7 @@
 						"t"+
 						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
 		        "ajax": {
-		            url: BASE_URL + 'patients/load_ajax/',
+		            url: BASE_URL + 'patients/ajax/get_data/',
 		            type: 'POST',
 		            data: {
 		                filter: 0
@@ -265,11 +265,11 @@
 		                "render": function (data, type, row) {
 		                    newData = "";
 							
-							if(can_view){
+							// if(can_view){
 								newData += '<a rel="tooltip" data-placement="top" data-original-title="<?php echo $this->lang->line('__common_details');?>" href="'+user_link+'/'+row['id']+'">'+ row['fullname'] + '</a>';
-							}else{
-								newData += row['fullname']
-							}
+							// }else{
+								// newData += row['fullname']
+							// }
 		                   
 		                    return newData;
 
@@ -342,12 +342,12 @@
 		                "render": function (data, type, row) {
 		                    newData = "";
 
-							if(can_delete){
+							// if(can_delete){
 								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'patients/delete/'+row['id']+'/" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
-							}
-							if(can_update){
+							// }
+							// if(can_update){
 								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/view/'+row['id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
-							}
+							// }
 							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="Que" href="'+BASE_URL+'patients/patients/que/'+row['id']+'" class="preview"><i class="fas fa-book fa-lg"></i></a>&nbsp;';
 		                    return newData;
 		                },
