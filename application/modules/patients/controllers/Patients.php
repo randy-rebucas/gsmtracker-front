@@ -29,6 +29,9 @@ class Patients extends Secure_Controller
 
 	function index()
 	{
+		$this->load->model('patients/Mdl_patients');
+		$this->load->model('custom_fields/Mdl_Custom_Fields');
+
 		$data['module'] = 'Patients';
 		$this->layout->title('Patients');
 		$this->set_layout();
@@ -43,60 +46,60 @@ class Patients extends Secure_Controller
 		}
 	}
 
-	function load_ajax() 
-	{
+	// function load_ajax() 
+	// {
 	
-		if ($this->input->is_ajax_request()) 
-		{	
-			$this->load->library('datatables');
-	        $isfiltered = $this->input->post('filter');
+	// 	if ($this->input->is_ajax_request()) 
+	// 	{	
+	// 		$this->load->library('datatables');
+	//         $isfiltered = $this->input->post('filter');
 
-	        $this->datatables->select("u.id as id, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, username, email, DATE_FORMAT(u.created, '%M %d, %Y') as created, avatar, DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday, address, mobile, DATE_FORMAT(u.last_login, '%M %d, %Y') as last_login, u.client_id as client_id", false);
+	//         $this->datatables->select("u.id as id, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, username, email, DATE_FORMAT(u.created, '%M %d, %Y') as created, avatar, DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday, address, mobile, DATE_FORMAT(u.last_login, '%M %d, %Y') as last_login, u.client_id as client_id", false);
 	        
-			$this->datatables->where('u.deleted', 0);
-			$this->datatables->where('u.client_id', $this->client_id);
-			if($isfiltered > 0){
-				$this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
-			}
-			$this->datatables->join('users as u', 'p.patient_id = u.id', 'left', false);
-			$this->datatables->join('users_profiles as up', 'p.patient_id = up.user_id', 'left', false);
-			$this->datatables->join('users_custom as uc', 'p.patient_id = uc.user_id', 'left', false);
-	        $this->datatables->order_by('lastname', 'DESC');
+	// 		$this->datatables->where('u.deleted', 0);
+	// 		$this->datatables->where('u.client_id', $this->client_id);
+	// 		if($isfiltered > 0){
+	// 			$this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
+	// 		}
+	// 		$this->datatables->join('users as u', 'p.patient_id = u.id', 'left', false);
+	// 		$this->datatables->join('users_profiles as up', 'p.patient_id = up.user_id', 'left', false);
+	// 		$this->datatables->join('users_custom as uc', 'p.patient_id = uc.user_id', 'left', false);
+	//         $this->datatables->order_by('lastname', 'DESC');
 
-	        $this->datatables->from('patients as p');
+	//         $this->datatables->from('patients as p');
 
-	        echo $this->datatables->generate('json', 'UTF-8');
-    	}
-    	else
-    	{
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-            redirect(strtolower(get_class()));
-	    }
-    }
+	//         echo $this->datatables->generate('json', 'UTF-8');
+    // 	}
+    // 	else
+    // 	{
+	//     	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
+    //         redirect(strtolower(get_class()));
+	//     }
+    // }
 	
-   function view($id = -1)
-   {
+//    function view($id = -1)
+//    {
    	
-        if ($this->input->is_ajax_request()) 
-		{
+//         if ($this->input->is_ajax_request()) 
+// 		{
 
-			$this->load->model('custom_fields/Custom_field');
-			$this->load->library('location_lib');
+// 			$this->load->model('custom_fields/Custom_field');
+// 			$this->load->library('location_lib');
 
-	        $data['info'] = $this->Patient->get_info($id);
+// 	        $data['info'] = $this->Patient->get_info($id);
 
-			$data['option'] = $this->session->userdata('option');
+// 			$data['option'] = $this->session->userdata('option');
 			
-			$data['custom_fields'] = $this->Custom_field->get_custom('users_custom')->result();
+// 			$data['custom_fields'] = $this->Custom_field->get_custom('users_custom')->result();
 			
-	        $this->load->view("form", $data);
-	    }
-	    else
-	    {
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-            redirect(strtolower(get_class()));
-	    }
-    }
+// 	        $this->load->view("form", $data);
+// 	    }
+// 	    else
+// 	    {
+// 	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
+//             redirect(strtolower(get_class()));
+// 	    }
+//     }
 	
 	function doSave($id = -1)
 	{

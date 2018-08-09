@@ -60,27 +60,7 @@ class MY_Model extends CI_Model {
     public $last_offset;
     public $id;
     public $filter                   = array();
-    public $ClientDB;
-    public $Client_DB;
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $hasClientDb = false;
-      
-        if (file_exists(APPPATH .'clients/'.$this->session->userdata('username').'/config/database.php')) {
-            $this->db->close();
-            require_once APPPATH .'clients/'.$this->session->userdata('username').'/config/database.php';
-            $ClientDB = $this->load->database($dbconfig, TRUE);
-            $hasClientDb = true;
-        }
-       
-        $this->Client_DB = ($hasClientDb) ? $this->ClientDB : $this->db;
-        //$ClientDB->query(); 
-        //$ClientDB->result(); etc...
-    }
-    
     public function __call($name, $arguments)
     {
         if (substr($name, 0, 7) == 'filter_')
@@ -89,7 +69,7 @@ class MY_Model extends CI_Model {
         }
         else
         {
-            call_user_func_array(array($this->Client_DB, $name), $arguments);
+            call_user_func_array(array($this->db, $name), $arguments);
         }
         return $this;
     }
@@ -108,7 +88,7 @@ class MY_Model extends CI_Model {
 
         $this->run_filters();
 
-        $this->query = $this->Client_DB->get($this->table);
+        $this->query = $this->db->get($this->table);
 
         $this->filter = array();
 
@@ -119,7 +99,7 @@ class MY_Model extends CI_Model {
     {
         foreach ($this->filter as $filter)
         {
-            call_user_func_array(array($this->Client_DB, $filter[0]), $filter[1]);
+            call_user_func_array(array($this->db, $filter[0]), $filter[1]);
         }
 
         /**
@@ -168,10 +148,10 @@ class MY_Model extends CI_Model {
         $this->set_defaults();
         $this->run_filters();
 
-        $this->Client_DB->limit($per_page, $this->offset);
-        $this->query = $this->Client_DB->get($this->table);
+        $this->db->limit($per_page, $this->offset);
+        $this->query = $this->db->get($this->table);
 
-        $this->total_rows      = $this->Client_DB->query("SELECT FOUND_ROWS() AS num_rows")->row()->num_rows;
+        $this->total_rows      = $this->db->query("SELECT FOUND_ROWS() AS num_rows")->row()->num_rows;
         $this->total_pages     = ceil($this->total_rows / $per_page);
         $this->previous_offset = $this->offset - $per_page;
         $this->next_offset     = $this->offset + $per_page;
@@ -201,18 +181,26 @@ class MY_Model extends CI_Model {
     {
         return $this->where($this->primary_key, $id)->get()->row();
     }
-
-    public function get_by_val($key, $val, $client_id)
+	
+	public function get_by_val($key, $val, $client_id)
     {
         $array = array($key => $val, 'client_id' => $client_id);
         return $this->where($array)->get()->row();
+    }
+
+    /**
+     * Retrieves a single record based on field keys.
+     */
+    public function get_by_field($field, $val)
+    {
+        return $this->where($field, $val)->get()->row();
     }
 
     public function save($id = NULL, $db_array = NULL)
     {
         if (!$db_array)
         {
-            $db_array = $this->Client_DB_array();
+            $db_array = $this->db_array();
         }
 
         $datetime = date('Y-m-d H:i:s');
@@ -252,9 +240,9 @@ class MY_Model extends CI_Model {
                 }
             }
 
-            $this->Client_DB->insert($this->table, $db_array);
+            $this->db->insert($this->table, $db_array);
 
-            return $this->Client_DB->insert_id();
+            return $this->db->insert_id();
         }
         else
         {
@@ -270,8 +258,8 @@ class MY_Model extends CI_Model {
                 }
             }
 
-            $this->Client_DB->where($this->primary_key, $id);
-            $this->Client_DB->update($this->table, $db_array);
+            $this->db->where($this->primary_key, $id);
+            $this->db->update($this->table, $db_array);
 
             return $id;
         }
@@ -304,8 +292,8 @@ class MY_Model extends CI_Model {
      */
     public function delete($id)
     {
-        $this->Client_DB->where($this->primary_key, $id);
-        $this->Client_DB->delete($this->table);
+        $this->db->where($this->primary_key, $id);
+        $this->db->delete($this->table);
     }
 
     /**
@@ -353,6 +341,21 @@ class MY_Model extends CI_Model {
         return $this->query->num_rows();
     }
 
+    /**
+     * Returns CI bool
+     * $this->model_name->exist(5);
+     */
+
+	function exists($user_id, $client_id)
+	{
+		$this->db->from($this->table);	
+		$this->db->where($this->table.'.client_id', $client_id);
+		$this->db->where($this->primary_key, $id);
+		$query = $this->db->get();
+		
+		return ($query->num_rows()==1);
+	}
+	
     /**
      * Used to retrieve record by ID and populate $this->form_values.
      * @param int $id 
@@ -435,17 +438,6 @@ class MY_Model extends CI_Model {
         $this->id = $id;
     }
 
-    function exists($user_id, $client_id)
-	{
-		$this->db->from($this->table);	
-		$this->db->where($this->table.'.client_id', $client_id);
-		$this->db->where($this->primary_key, $id);
-		$query = $this->db->get();
-		
-		return ($query->num_rows()==1);
-	}
-
 }
 
- /* End of file: MY_Model.php */
- /* Location: ./application/core/MY_Model.php */
+?>

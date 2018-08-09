@@ -30,9 +30,12 @@ class Secure_Controller extends Base_Controller {
 
         $this->load->model('roles/Mdl_roles');
 
-        $this->admin_role_id    = $this->Mdl_roles->get_by_val('role_slug', 'administrator', $this->client_id);
-        $this->patient_role_id  = $this->Mdl_roles->get_by_val('role_slug', 'patient', $this->client_id);
+        $this->admin_role_id    = $this->Mdl_roles->get_by_val('role_slug', 'administrator', $this->client_id)->role_id;
+        $this->patient_role_id  = $this->Mdl_roles->get_by_val('role_slug', 'patient', $this->client_id)->role_id;
 
+        // echo '<pre>';
+        // print_r($this->patient_role_id);
+        // echo '</pre>';
         //$this->user_info 	    = $this->User_model->get_profile_info($this->client_id);
         $this->load->model('settings/Mdl_settings');
         //$this->client_info      = $this->Setting->get_client_info($this->client_id);

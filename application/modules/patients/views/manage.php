@@ -69,7 +69,7 @@
 									<a href="<?php echo site_url('export/');?>" class="btn btn-warning btn-sm"><i class="fas fa-lg fa-fw fa-file-export"></i>&nbsp;<span class="hidden-mobile">Export</span> </a>
 
 									<?php //if(($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
-										<a href="<?php echo site_url('patients/view/-1/');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
+										<a href="<?php echo site_url('patients/ajax/modal_create_patient');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
 										
 									<?php //} ?>
 								</div>
@@ -346,7 +346,7 @@
 								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'patients/delete/'+row['id']+'/" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 							// }
 							// if(can_update){
-								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/view/'+row['id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
+								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/ajax/modal_edit_patient/'+row['id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
 							// }
 							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="Que" href="'+BASE_URL+'patients/patients/que/'+row['id']+'" class="preview"><i class="fas fa-book fa-lg"></i></a>&nbsp;';
 		                    return newData;

@@ -15,142 +15,109 @@ class Ajax extends Secure_Controller {
         $this->datatables->select("u.id as id, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, username, email, DATE_FORMAT(u.created, '%M %d, %Y') as created, avatar, DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday, address, mobile, DATE_FORMAT(u.last_login, '%M %d, %Y') as last_login, u.client_id as client_id", false);
         
         $this->datatables->where('u.deleted', 0);
+        $this->datatables->where('ur.role_id', $this->patient_role_id);
         $this->datatables->where('u.client_id', $this->client_id);
         if($isfiltered > 0){
             $this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
         }
-        $this->datatables->join('users as u', 'p.patient_id = u.id', 'left', false);
-        $this->datatables->join('users_profiles as up', 'p.patient_id = up.user_id', 'left', false);
-        $this->datatables->join('users_custom as uc', 'p.patient_id = uc.user_id', 'left', false);
+        $this->datatables->join('users_profiles as up', 'u.id = up.user_id', 'left', false);
+        $this->datatables->join('users_role as ur', 'u.id = ur.user_id', 'left', false);
+        $this->datatables->join('users_custom as uc', 'u.id = uc.user_id', 'left', false);
         $this->datatables->order_by('lastname', 'DESC');
 
-        $this->datatables->from('patients as p');
+        $this->datatables->from('users as u');
 
         echo $this->datatables->generate('json', 'UTF-8');
     }
 
-    public function save()
+    public function modal_create_patient()
     {
-        $this->load->model('quotes/Mdl_quote_items');
-        $this->load->model('quotes/Mdl_quotes');
-        $this->load->model('item_lookups/Mdl_item_lookups');
+        // $this->load->model('custom_fields/Custom_field');
+        $this->load->library('location_lib');
 
-        $quote_id = $this->input->post('quote_id');
+        // $this->load->model('patients/Mdl_patients');
+        // $this->load->model('custom_fields/Mdl_Custom_Fields');
 
-        $this->Mdl_quotes->set_id($quote_id);
+        // $data['info'] = $this->Mdl_patients->get_info($patient_id);
 
-        if ($this->Mdl_quotes->run_validation('validation_rules_save_quote'))
-        {
-            $items = json_decode($this->input->post('items'));
+        // $data['custom_fields'] = $this->Mdl_Custom_Fields->get_by_val('custom_field_table', 'users_custom')->get()->result();
+        
+        $this->load->view("patients/form");
+    }
 
-            foreach ($items as $item)
-            {
-                if ($item->item_name)
-                {
-                    $item->item_quantity = standardize_amount($item->item_quantity);
-                    $item->item_price    = standardize_amount($item->item_price);
+    public function modal_edit_patient($patient_id)
+    {
+        // $this->load->model('custom_fields/Custom_field');
+        $this->load->library('location_lib');
 
-                    $item_id = ($item->item_id) ? : NULL;
+        $this->load->model('patients/Mdl_patients');
+        // $this->load->model('custom_fields/Mdl_Custom_Fields');
 
-                    $save_item_as_lookup = (isset($item->save_item_as_lookup)) ? $item->save_item_as_lookup : 0;
+        $data['info'] = $this->Mdl_patients->get_by_id($patient_id);
 
-                    unset($item->item_id, $item->save_item_as_lookup);
+        // $data['custom_fields'] = $this->Mdl_Custom_Fields->get_by_val('custom_field_table', 'users_custom')->get()->result();
+        
+        $this->load->view("patients/form");
+    }
 
-                    $this->Mdl_quote_items->save($quote_id, $item_id, $item);
+    function doSave($id = -1)
+	{
 
-                    if ($save_item_as_lookup)
-                    {
-                        $db_array = array(
-                            'item_name'        => $item->item_name,
-                            'item_description' => $item->item_description,
-                            'item_price'       => $item->item_price
-                        );
+        $this->load->model('patients/Mdl_patients');
+        
+		if ($id==-1) 
+		{
+			$db_array=array(
+				'client_id'		=>  $this->client_id,
+				'last_ip'       =>  $this->input->ip_address(),
+				'created'       =>  date('Y-m-d H:i:s'),
+				'token'			=>  date('Ymd').'-'.random_string('numeric',8)
+			);
+		} 
+		else 
+		{
+			$db_array=array(
+				'last_ip'       =>  $this->input->ip_address(),
+				'modified'      =>  date('Y-m-d H:i:s')
+			);
+        }
 
-                        $this->Mdl_item_lookups->save(NULL, $db_array);
-                    }
-                }
-            }
+        if($patient_id = $this->Mdl_patients->save(null, $db_array)){
 
             $db_array = array(
-                'quote_number'       => $this->input->post('quote_number'),
-                'quote_date_created' => date_to_mysql($this->input->post('quote_date_created')),
-                'quote_date_expires' => date_to_mysql($this->input->post('quote_date_expires')),
-                'quote_status_id'    => $this->input->post('quote_status_id')
+                'user_id'		=>  $patient_id,
+                'firstname'		=>  $this->input->post('first_name'),
+                'mi'			=>  $this->input->post('mi'),
+                'lastname'		=>  $this->input->post('last_name'),
+                'bMonth'		=>  $this->input->post('month'),
+                'bDay'			=>  $this->input->post('day'),
+                'bYear'			=>  $this->input->post('year'),
+                'gender'		=>  $this->input->post('gender'),
+                'mobile'		=>  $this->input->post('mobile'),
+                'address'		=>  $this->input->post('address'),
+                'zip'			=>  $this->input->post('zip'),
+                'city'			=>  $this->input->post('city'),
+                'state'			=>  $this->input->post('state'),
+                'country'		=>  $this->input->post('country')
             );
 
-            $this->Mdl_quotes->save($quote_id, $db_array);
-
-            $response = array(
-                'success' => 1
-            );
-        }
-        else
-        {
-            $this->load->helper('json_error');
-            $response = array(
-                'success'           => 0,
-                'validation_errors' => json_errors()
-            );
-        }
-
-        if ($this->input->post('custom'))
-        {
-            $db_array = array();
-
-            foreach ($this->input->post('custom') as $custom)
-            {
-                // I hate myself for this...
-                $db_array[str_replace(']', '', str_replace('custom[', '', $custom['name']))] = $custom['value'];
+            if($this->Mdl_patients->create($db_array, $this->patient_role_id)){
+                if($id==-1)
+                {
+                    echo json_encode(array('success'=>true,'message'=>$db_array['lastname']));
+                }
+                else //previous
+                {
+                    echo json_encode(array('success'=>true,'message'=>$db_array['lastname']));
+                }
             }
-
-            $this->load->model('custom_fields/mdl_quote_custom');
-            $this->Mdl_quote_custom->save_custom($quote_id, $db_array);
+        }
+        else//failure
+        {	
+            echo json_encode(array('success'=>false,'message'=>'Failed to save data.'));
         }
 
-        echo json_encode($response);
-    }
-
-    public function create()
-    {
-        $this->load->model('patients/Mdl_patients');
-
-        if ($this->Mdl_patients->run_validation())
-        {
-            $patient_id = $this->Mdl_patients->create();
-
-            $response = array(
-                'success'  => 1,
-                'quote_id' => $patient_id
-            );
-        }
-        else
-        {
-            $this->load->helper('json_error');
-            $response = array(
-                'success'           => 0,
-                'validation_errors' => json_errors()
-            );
-        }
-
-        echo json_encode($response);
-    }
-
-    public function modal_create_quote()
-    {
-        $this->load->module('layout');
-
-        $this->load->model('invoice_groups/Mdl_invoice_groups');
-        $this->load->model('tax_rates/Mdl_tax_rates');
-
-        $data = array(
-            'invoice_groups' => $this->Mdl_invoice_groups->get()->result(),
-            'tax_rates'      => $this->Mdl_tax_rates->get()->result(),
-            'patient_name'    => $this->input->post('patient_name')
-        );
-
-        $this->layout->load_view('quotes/modal_create_quote', $data);
-    }
-
+	}
 }
 
 ?>

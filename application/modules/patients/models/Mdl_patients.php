@@ -11,7 +11,7 @@
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Mdl_Patient extends Response_Model
+class Mdl_Patients extends Response_Model
 {
 	public $table               = 'users';
     public $primary_key         = 'users.id';
@@ -26,7 +26,43 @@ class Mdl_Patient extends Response_Model
     //     }
 
     //     return $db_array;
-	// }
+    // }
+
+    public function default_order_by()
+    {
+        $this->db->order_by('users.username DESC');
+    }
+
+    // public function default_join()
+    // {
+	// 	$this->db->join('users_profiles',	'users_profiles.user_id = users.id', 'left');		
+    // }
+    public function validation_rules()
+    {
+        return array(
+            'client_id'        => array(
+                'field' => 'client_id',
+                'label' => lang('patient'),
+                'rules' => 'required'
+            ),
+            'last_ip' => array(
+                'field' => 'last_ip',
+                'label' => lang('quote_date'),
+                'rules' => 'required'
+            ),
+            'created'   => array(
+                'field' => 'created',
+                'label' => lang('quote_group'),
+                'rules' => 'required'
+            ),
+            'token'            => array(
+                'field' => 'token',
+                'label' => lang('user'),
+                'rule'  => 'required'
+            )
+        );
+    }
+
 	public function patient_lookup($patient_name)
     {
         $patients = $this->Mdl_patients->where('patient_name', $patient_name)->get();
@@ -56,56 +92,19 @@ class Mdl_Patient extends Response_Model
 
 	}
 
-	public function create($db_array = NULL)
+	public function create($db_array = NULL, $patient_role_id)
     {
-        $quote_id = parent::save(NULL, $db_array);
 
-        // Create an quote amount record
-        $db_array = array(
-            'quote_id' => $quote_id
-        );
-
-        $this->db->insert('fi_quote_amounts', $db_array);
-
-        // Create the default invoice tax record if applicable
-        if ($this->Mdl_settings->setting('default_invoice_tax_rate'))
+        if($this->db->insert('users_profiles', $db_array))
         {
             $db_array = array(
-                'quote_id'              => $quote_id,
-                'tax_rate_id'           => $this->Mdl_settings->setting('default_invoice_tax_rate'),
-                'include_item_tax'      => $this->Mdl_settings->setting('default_include_item_tax'),
-                'quote_tax_rate_amount' => 0
+                'role_id'           => $patient_role_id,
+                'user_id'           => $db_array['user_id']
             );
-
-            $this->db->insert('fi_quote_tax_rates', $db_array);
+            return $this->db->insert('users_role', $db_array);
         }
-
-        return $quote_id;
 	}
 	
-	public function db_array()
-    {
-        $db_array = parent::db_array();
-
-        // Get the patients id for the submitted quote
-        $this->load->model('patients/Mdl_patients');
-        $db_array['patient_id'] = $this->Mdl_patients->patient_lookup($db_array['patient_name']);
-        unset($db_array['patient_name']);
-
-        $db_array['quote_date_created'] = date_to_mysql($db_array['quote_date_created']);
-        $db_array['quote_date_expires'] = $this->get_date_due($db_array['quote_date_created']);
-        $db_array['quote_number']       = $this->get_quote_number($db_array['invoice_group_id']);
-
-        if (!isset($db_array['quote_status_id']))
-        {
-            $db_array['quote_status_id'] = 1;
-        }
-
-        // Generate the unique url key
-        $db_array['quote_url_key'] = $this->get_url_key();
-
-        return $db_array;
-    }
 	// function save(&$user_data, &$profile_data, &$custom_data, $role_id, $id=false)
 	// {
 	// 	$success=false;
