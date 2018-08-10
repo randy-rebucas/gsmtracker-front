@@ -74,8 +74,7 @@ class Tank_auth
 							$this->update_status($user->id, 1);
 							return TRUE;
 						}
-						//$this->get_user_data($user->id, $user->username, $user->role_id, $user->client_id, $user->activated, $login, $remember);
-	
+						
 					} else {
 																			// fail - wrong 
 						$this->error = array('password' => 'auth_incorrect_password');
@@ -114,9 +113,6 @@ class Tank_auth
 	}
 	
 	function checkPoint($password, $dbPassword){
-		// Does password match hash in database?
-		// $this->load->library('auth/my_crypt');
-		// return $this->my_crypt->check_password($dbPassword, $password);
 		$hasher = new PasswordHash(
 		$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
 		$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
@@ -136,44 +132,12 @@ class Tank_auth
 				$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
 				$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
 		if ($hasher->CheckPassword($confirm_password, $recent_password)) {
-		// $this->load->library('auth/my_crypt');
-		// if ($this->my_crypt->check_password($confirm_password, $recent_password)) {
 			return TRUE;
 		}else{
 			return FALSE;
 		}
 	}
 
-	function update_types($id, $type){
-		$this->ci->Mdl_auth->update_profile_type($id, $type);
-	}
-
-	function update_notifications($id, $notifications){
-		$success = FALSE;
-
-		//Run these queries as a transaction, we want to make sure we do all or nothing
-		$this->ci->db->trans_start();
-
-			$success = $this->ci->db->delete('email_prefferences', array('user_id' => $id));
-			foreach($notifications as $notification)
-			{
-				$success = $this->ci->db->insert('email_prefferences', array('name' => $notification, 'user_id' => $id));
-			}
-
-		$this->ci->db->trans_complete();
-
-		$success = $this->ci->db->trans_status();
-
-		return $success;
-	}
-	/**
-	 * Update status
-	 *
-	 * @return	void
-	 */
-	function update_status($id, $status){
-		$this->ci->Mdl_auth->update_visibility($id, $status);
-	}
 	/**
 	 * Logout user from the site
 	 *
@@ -294,10 +258,7 @@ class Tank_auth
 		}
 		return NULL;
 	}
-	
-	function save_queries($quries){
-		return $this->ci->Mdl_auth->create_queries($quries);
-	}
+
 	/**
 	 * Check if username available for registering.
 	 * Can be called for instant form validation.

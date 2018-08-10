@@ -27,6 +27,8 @@ class Settings extends Secure_Controller
 		$this->load->config('auth/tank_auth', TRUE);
 		$this->load->language('auth/tank_auth');
 		$this->load->library('auth/tank_auth');
+
+		$this->load->model('settings/Mdl_settings');
 		// $this->load->module('auth');
     }
 
@@ -297,7 +299,7 @@ class Settings extends Secure_Controller
 		$data['module'] = 'Emails';
 		$this->layout->title('Emails');
 		$this->set_layout();
-
+		$this->load->model('settings/Mdl_settings');
 		if ($this->input->is_ajax_request())  
 		{
 			$this->load->view('settings/emails', $data);
@@ -310,11 +312,7 @@ class Settings extends Secure_Controller
 
 	function doUpdateEmailPref(){
 
-		$batch_save_data=array(
-			'email_pref' => $this->input->post('email_pref'),
-		);
-
-		if($this->Setting->batch_save($batch_save_data )){
+		if($this->Mdl_settings->save('email_pref', $this->input->post('email_pref'))){
 
 			echo json_encode(array('success'=>true,'message'=>'Email preferences succesfully updated!'));
 

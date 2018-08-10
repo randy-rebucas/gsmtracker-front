@@ -90,11 +90,11 @@ the <section></section> and you can use wells or panels instead
 								<legend>Emails preferences</legend>
 								<br/>
 									<section>
-				
 										<label class="radio">
 											<input type="radio" name="email_pref" value="1" <?php 
-											if($this->config->item('email_pref')) {
-												if($this->config->item('email_pref') == 1) {
+											
+											if($this->Mdl_settings->setting('email_pref')) {
+												if($this->Mdl_settings->setting('email_pref') == 1) {
 													echo 'checked="checked"';
 												} 
 											}else{
@@ -105,8 +105,8 @@ the <section></section> and you can use wells or panels instead
 										<label class="radio">
 											<input type="radio" name="email_pref" value="2" 
 											<?php 
-											if($this->config->item('email_pref')) {
-												if($this->config->item('email_pref') == 2) {
+											if($this->Mdl_settings->setting('email_pref')) {
+												if($this->Mdl_settings->setting('email_pref') == 2) {
 													echo 'checked="checked"';
 												} 
 											} ;?>>
