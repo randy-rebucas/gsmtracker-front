@@ -37,44 +37,6 @@ class Import extends Secure_Controller {
 		}
 	}
 
-	function load_ajax() {
-	
-		if ($this->input->is_ajax_request()) 
-		{	
-			$this->load->library('datatables');
-	       
-	        $this->datatables->select("import_id as id, filename, created, success_count, failed_count, total_records as total", false);
-	        
-			$this->datatables->where('client_id', $this->client_id);
-	        
-	        $this->datatables->from('import');
-
-	        echo $this->datatables->generate('json', 'UTF-8');
-	        
-    	}else{
-
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-            redirect(strtolower(get_class()));
-	    }
-    }
-
-	function view() {
-        $data = array();
-
-        $data['title'] = 'Patient';
-        $data['notes'] = '<br /><b>Instructions for import the patients</b><br /> 
-                                <b>Add new patient</b><br />
-                                <ul><li>To add new patient keep column (Login E-mail) as blank and enter rest of information.</li>
-                                </ul>
-                                <i>
-							After changing the fields save the file and import the file.</i>';
-        $data['template_path'] = 'export-data/export-vendors';
-        
-        $data['upload_path'] = 'import_data/import_csv';
-      
-        $this->load->view('form', $data);
-    }
-	
 	public function import_csv() {
 		$this->load->model('patients/Patient');
 		$this->load->model('import/Import_mdl');
@@ -243,20 +205,6 @@ class Import extends Secure_Controller {
             ),
             'custom_data' => array()
         );
-    }
-
-	function delete($id)
-	{
-
-    	if ($res = $this->Custom_field->delete($id)) 
-    	{
-			echo json_encode(array('success' => true, 'message' => 'Custom fiels successfully deletd!'));
-		} 
-		else 
-		{
-			echo json_encode(array('success' => false, 'message' => $res ));
-		}
-
     }
 
 }

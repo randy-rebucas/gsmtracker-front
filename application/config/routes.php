@@ -60,16 +60,11 @@ if(!in_array($_SERVER['REMOTE_ADDR'], $this->config->item('maintenance_ips')) &&
     $route['404_override'] = '';
     $route['translate_uri_dashes'] = FALSE;
 
-    $route['users'] = 'user';
-
     $route['details/(:any)'] 			= 'settings/my_profile/$1';
     $route['settings'] 					= 'settings';
     $route['settings/(:any)'] 			= 'settings/$1';
     $route['account/upgrade']           = 'settings/upgrade';
 
-    $route['records/default'] 			= 'records/default_records';
-    $route['records/custom'] 			= 'records/custom_records';
-
-    $route['users/(:any)'] 			= 'user/index/$1';
+    $route['users/(:any)'] 			= 'users/index/$1';
 
 }

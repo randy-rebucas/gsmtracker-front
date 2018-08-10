@@ -10,37 +10,32 @@ class Ajax extends Secure_Controller {
     public function get_data() 
     {
         $this->load->library('datatables');
-        $isfiltered = $this->input->post('filter');
-
-        $this->datatables->select("u.id as id, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname, username, email, DATE_FORMAT(u.created, '%M %d, %Y') as created, avatar, DATE_FORMAT(CONCAT(IF(up.bYear != '', up.bYear, ''),'-',IF(up.bMonth != '', up.bMonth, ''),'-',IF(up.bDay != '', up.bDay, '')), '%M %d, %Y') as birthday, address, mobile, DATE_FORMAT(u.last_login, '%M %d, %Y') as last_login, u.client_id as client_id", false);
+	       
+        $this->datatables->select("import_id as id, filename, created, success_count, failed_count, total_records as total", false);
         
-        $this->datatables->where('u.deleted', 0);
-        $this->datatables->where('ur.role_id', $this->patient_role_id);
-        $this->datatables->where('u.client_id', $this->client_id);
-        if($isfiltered > 0){
-            $this->datatables->where('DATE(created) BETWEEN ' . $this->db->escape($isfiltered) . ' AND ' . $this->db->escape($isfiltered));
-        }
-        $this->datatables->join('users_profiles as up', 'u.id = up.user_id', 'left', false);
-        $this->datatables->join('users_role as ur', 'u.id = ur.user_id', 'left', false);
-        $this->datatables->join('users_custom as uc', 'u.id = uc.user_id', 'left', false);
-        $this->datatables->order_by('lastname', 'DESC');
-
-        $this->datatables->from('users as u');
+        $this->datatables->where('client_id', $this->client_id);
+        
+        $this->datatables->from('import');
 
         echo $this->datatables->generate('json', 'UTF-8');
     }
 
-    public function modal_create_patient($patient_id = -1)
+    public function modal_import()
     {
-        $this->load->library('location_lib');
+        $data = array();
 
-        $this->load->model('patients/Mdl_patients');
-        $data['info'] =  $this->Mdl_patients->get_info($patient_id);
-
-        // $this->load->model('custom_fields/Mdl_Custom_Fields');
-        // $data['custom_fields'] = $this->Mdl_Custom_Fields->get_by_val('custom_field_table', 'users_custom')->get()->result();
+        $data['title'] = 'Patient';
+        $data['notes'] = '<br /><b>Instructions for import the patients</b><br /> 
+                                <b>Add new patient</b><br />
+                                <ul><li>To add new patient keep column (Login E-mail) as blank and enter rest of information.</li>
+                                </ul>
+                                <i>
+							After changing the fields save the file and import the file.</i>';
+        $data['template_path'] = 'export-data/export-vendors';
         
-        $this->load->view("patients/form", $data);
+        $data['upload_path'] = 'import_data/import_csv';
+      
+        $this->load->view('form', $data);
     }
 
     function doSave($id = -1)

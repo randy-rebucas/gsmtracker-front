@@ -3,21 +3,14 @@
     text-align: left;
 }
 </style>
-<?php echo form_open('appointments/doSave/'.$info->app_id,'class="smart-form" id="appointment-form"');?>
+<?php echo form_open('appointments/doSave/'.$info->appointment_id,'class="smart-form" id="appointment-form"');?>
    
 	<fieldset> 
 		<div class="row">
 			<section class="col col-4">	
 				<label for="schedule_date">Date</label>
 				<label class="input">
-					<input type="text" name="schedule_date" id="schedule_date" class="datepicker" value="<?php echo set_value('schedule_date', ($info->schedule_date) ? $info->schedule_date : date('Y-m-d') );?>" tabindex="1" data-dateformat="yy-mm-dd" aria-invalid="false">
-					
-				</label>
-			</section>
-			<section class="col col-4">	
-				<label for="schedule_time">Time<?php //echo $this->lang->line('common_last_name');?></label>
-				<label class="input">
-					<input type="text" name="schedule_time" id="schedule_time" value="<?php echo set_value('schedule_time', $info->schedule_time);?>" class="form-control timepicker timepicker-no-seconds" tabindex="2">
+					<input type="text" name="schedule_date" id="schedule_date" class="datepicker" value="<?php echo set_value('schedule_date', ($info->appointment_date) ? $info->appointment_date : date('Y-m-d') );?>" tabindex="1" data-dateformat="yy-mm-dd" aria-invalid="false">
 					
 				</label>
 			</section>
@@ -30,19 +23,11 @@
 						'Pending'	=> 'Pending',
 						'Approve'	=> 'Approve'
 					);	
-					echo form_dropdown('status',$status, ($info->status) ? $info->status : 'Pending',' id="status" tabindex="3"'); ?>
+					echo form_dropdown('status',$status, ($info->appointment_status) ? $info->appointment_status : 'Pending',' id="status" tabindex="3"'); ?>
 					<i></i>
 				</label>
 			</section>
 		</div>
-		
-		<section>
-			<label for="gender">Doctor(s)</label>
-			<label class="select">
-				<?php echo form_dropdown('license_key',$doctors, ($this->admin_role_id != $this->role_id) ? $info->license_key : $this->license_id,' id="license_key" tabindex="4"'); ?>
-				<i></i>
-			</label>
-		</section>
 		
 		<section class="<?php if($this->admin_role_id != $this->role_id) echo 'hidden';?>">
 			<label for="gender">Patient(s)</label>
@@ -56,7 +41,7 @@
 		<section>
 			<label for="title">Title</label>
 			<label class="input">
-				<input type="text" name="title" id="title" value="<?php echo set_value('title', $info->title);?>" placeholder="Title" tabindex="6">
+				<input type="text" name="title" id="title" value="<?php echo set_value('title', $info->appointment_title);?>" placeholder="Title" tabindex="6">
 				
 			</label>
 		</section>
@@ -64,24 +49,10 @@
 		<section>
 			<label for="description">Description</label>
 			<label class="textarea">
-				<textarea name="description" class="custom-scroll" id="description" placeholder="Description" tabindex="7"><?php echo $info->description;?></textarea>
+				<textarea name="description" class="custom-scroll" id="description" placeholder="Description" tabindex="7"><?php echo $info->appointment_description;?></textarea>
 			</label>	
 		</section>
 
-		<section class="<?php if($this->admin_role_id != $this->role_id) echo 'hidden';?>">
-			<label for="doctor_note">Doctor Note</label>
-			<label class="textarea">
-				<textarea name="doctor_note" class="custom-scroll" id="doctor_note" placeholder="Note" tabindex="8"><?php echo $info->doctor_note;?></textarea>
-			</label>	
-		</section>
-
-		<section class="<?php if($this->admin_role_id == $this->role_id) echo 'hidden';?>">
-			<label for="patient_note">Patient Note</label>
-			<label class="textarea">
-				<textarea name="patient_note" class="custom-scroll" id="patient_note" placeholder="Note" tabindex="9"><?php echo $info->patient_note;?></textarea>
-			</label>	
-		</section>
-		
 		<button type="submit" id="submit" class="btn btn-primary btn-sm">Submit</button>
 	</fieldset>
 	

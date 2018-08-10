@@ -16,27 +16,43 @@ class Mdl_Patients extends Response_Model
 	public $table               = 'users';
     public $primary_key         = 'users.id';
 
-	// public function db_array()
-    // {
-    //     $db_array = parent::db_array();
-
-    //     if (!isset($db_array['patient_active']))
-    //     {
-    //         $db_array['patient_active'] = 0;
-    //     }
-
-    //     return $db_array;
-    // }
-
     public function default_order_by()
     {
         $this->db->order_by('users.username DESC');
     }
 
-    // public function default_join()
-    // {
-	// 	$this->db->join('users_profiles',	'users_profiles.user_id = users.id', 'left');		
-    // }
+    function get_info($patient_id)
+	{
+        $this->db->from('users');	
+		$this->db->join('users_custom', 'users_custom.user_id = users.id', 'left');
+        $this->db->join('users_profiles', 'users_profiles.user_id = users.id', 'left');
+        $this->db->join('users_role', 'users_role.user_id = users.id', 'left');
+		$this->db->where('users.id',$patient_id);
+		$query = $this->db->get();
+		
+		if($query->num_rows()==1)
+		{
+			return $query->row();
+		}
+		else
+		{
+			$obj=new stdClass();
+            
+            $u = $this->db->list_fields('users');
+            $uCustom = $this->db->list_fields('users_custom');
+            $uProfile = $this->db->list_fields('users_profiles');
+            $uRole = $this->db->list_fields('users_role');
+            $fields = array_merge($u, $uCustom, $uProfile, $uRole);
+
+			foreach ($fields as $field)
+			{
+				$obj->$field='';
+			}
+			
+			return $obj;
+		}
+    }
+
     public function validation_rules()
     {
         return array(
@@ -104,60 +120,5 @@ class Mdl_Patients extends Response_Model
             return $this->db->insert('users_role', $db_array);
         }
 	}
-	
-	// function save(&$user_data, &$profile_data, &$custom_data, $role_id, $id=false)
-	// {
-	// 	$success=false;
-		
-	// 	$this->db->trans_start();
-			
-	// 	if(parent::save_profile($user_data, $profile_data, $id))
-	// 	{
-	// 		if (!$id or !$this->exists($id))
-	// 		{
-				
-	// 			$custom_data['user_id'] = $id = $user_data['id'];
-				
-	// 			if($this->db->insert('users_custom', $custom_data)) 
-	// 			{
 
-	// 				$patient_data=array(
-	// 					'patient_id'     => $custom_data['user_id'],
-	// 					'patient_pin'    => random_string('numeric',6)
-	// 				);
-					
-	// 				if($this->db->insert('patients', $patient_data))
-	// 				{
-	// 					$_data=array(
-	// 						'user_id'     => $custom_data['user_id'],
-	// 						'role_id'     => $role_id
-	// 					);
-						
-	// 					$success = $this->db->insert('users_role', $_data);
-	// 				}
-					
-	// 			}
-
-				
-	// 		}
-	// 		else
-	// 		{
-
-	// 			$this->db->set('user_id', $id);
-	// 			$success = $this->db->update('users_custom', $custom_data);
-				
-	// 		}
-			
-	// 	}
-		
-	// 	$this->db->trans_complete();		
-	// 	return $success;
-		
-	// }
-
-	// function delete($id)
-	// {
-	// 	$this->db->where('id', $id);
-	// 	return $this->db->delete('users');
-	// }
 }

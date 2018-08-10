@@ -55,6 +55,23 @@ class Mdl_Roles extends Response_Model {
         // $this->db->join('fi_quote_custom', 'fi_quote_custom.quote_id = fi_quotes.quote_id', 'left');
     }
 
+    function has_permission($module, $role_id, $action, $client_id)
+	{
+
+		$this->db->where('section',$module);
+		$this->db->where('role_id',$role_id);
+		$this->db->where('action',$action);
+		$this->db->where('client_id',$client_id);
+		$query = $this->db->get('roles_permissions');
+		
+		if( $query->num_rows() > 0 ){ 
+			return TRUE;
+		} else { 
+			return FALSE; 
+		}
+
+    }
+
     public function validation_rules()
     {
         return array(

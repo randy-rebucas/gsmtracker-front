@@ -3,13 +3,12 @@
     padding: 10px;
 }
 </style>
-<?php echo form_open_multipart('patients/ajax/doSave','class="smart-form" id="members-form"');?>
+<?php echo form_open_multipart('patients/ajax/doSave/'.$info->id,'class="smart-form" id="members-form"');?>
    
 
 	<?php $this->load->view('include/common_form_ints');?>
+
 	<fieldset> 
-
-
 		<button type="submit" name="submit" id="submit" class="btn btn-primary btn-sm"><?php echo $this->lang->line('__common_submit');?></button>
 		
 		<button type="button" id="cancel" class="btn btn-warning btn-sm" data-dismiss="modal"><?php echo $this->lang->line('__common_cancel');?></button>
@@ -18,9 +17,9 @@
   
 <script type="text/javascript">
 
-	var country = '';
-	var state = '';
-	var city = '';
+	var country = '<?php echo $info->country;?>';
+	var state = '<?php echo $info->state;?>';
+	var city = '<?php echo $info->city;?>';
 
 	mcs.init_location(country, city, state);
 

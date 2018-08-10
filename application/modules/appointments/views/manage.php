@@ -9,106 +9,105 @@
 	</div>
 </div>
 <!-- row -->
-
-<div class="row">
-	<div class="col-sm-12 col-md-12 col-lg-12">
-		<table class="table table-striped" id="table-appointments">
-			<thead>
-				<tr>
-					<th>&nbsp;</th>
-					<th>Title</th>
-					<th>Description</th>
-					<th>Date</th>
-					<th>Status</th>
-					<th>Token</th>
-					<th>Patient</th>
-					<th>&nbsp;</th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-			<tbody>
-				
-			</tbody>
-		</table>
-	</div>
-	<div class="hidden col-sm-12 col-md-4 col-lg-4">
-
-		<!-- new widget -->
-		<div class="jarviswidget jarviswidget-color-blueDark">
-
-			<!-- widget options:
-			usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-			data-widget-colorbutton="false"
-			data-widget-editbutton="false"
-			data-widget-togglebutton="false"
-			data-widget-deletebutton="false"
-			data-widget-fullscreenbutton="false"
-			data-widget-custombutton="false"
-			data-widget-collapsed="true"
-			data-widget-sortable="false"
-
-			-->
-			<header>
-				<span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-				<h2> My Calendar </h2>
-				<div class="widget-toolbar">
-					<!-- add: non-hidden - to disable auto hide -->
-					<div class="btn-group">
-						<button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
-							Showing <i class="fa fa-caret-down"></i>
-						</button>
-						<ul class="dropdown-menu js-status-update pull-right">
-							<li>
-								<a href="javascript:void(0);" id="mt">Month</a>
-							</li>
-							<li>
-								<a href="javascript:void(0);" id="ag">Agenda</a>
-							</li>
-							<li>
-								<a href="javascript:void(0);" id="td">Today</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</header>
-
-			<!-- widget div-->
-			<div>
-
-				<div class="widget-body no-padding">
-					<!-- content goes here -->
-					<div class="widget-body-toolbar">
-
-						<div id="calendar-buttons">
-
-							<div class="btn-group">
-								<a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
-								<a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
-							</div>
-						</div>
-					</div>
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-colorbutton="true" data-widget-editbutton="false">
+				<!-- widget options:
+					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 					
-					<div id="calendar"></div>
+					data-widget-colorbutton="false"	
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="true" 
+					data-widget-sortable="false"
+					
+				-->
+			<!-- 	<header>
+					<h2><strong>Fixed</strong> <i>Height</i></h2>				
+					
+				</header> -->
 
-					<!-- end content -->
-				</div>
+				<!-- widget div-->
+				<div>
+					
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						<input class="form-control" type="text">
+						<span class="note"><i class="fa fa-check text-success"></i> Change title to update and save instantly!</span>
+						
+					</div>
+					<!-- end widget edit box -->
+					
+					<!-- widget content -->
+					<div class="widget-body no-padding">
+						<div class="widget-body-toolbar">
+							
+							<div class="row">
+								
+								<div class="col-xs-9 col-sm-5 col-md-5 col-lg-5">
+									<!-- <div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-search"></i></span>
+										<input class="form-control" id="prepend" placeholder="Filter" type="text">
+									</div> -->
+								</div>
+								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
+								
+									<?php if(($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'create',  $this->client_id) : true) { ?>
+										<a href="<?php echo site_url('patients/ajax/modal_create_patient');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
+										
+									<?php } ?>
+								</div>
+								
+							</div>
+							
+								
 
-			</div>
-			<!-- end widget div -->
-		</div>
-		<!-- end widget -->
-
-	</div>
-
-</div>
+						</div>
+						
+						<div class="custom-scroll table-responsive" style="overflow-y: scroll;">
+							<table class="table table-striped" id="table-appointments">
+								<thead>
+									<tr>
+										<th>&nbsp;</th>
+										<th>Title</th>
+										<th>Description</th>
+										<th>Date</th>
+										<th>Status</th>
+										<th>Token</th>
+										<th>Patient</th>
+										<th>&nbsp;</th>
+										<th>&nbsp;</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+							</table>
+							</div>	
+							
+							</div>
+							<!-- end widget content -->
+							
+						</div>
+						<!-- end widget div -->
+						
+					</div>
+					<!-- end widget -->
+		
+				</article>
+				<!-- WIDGET END -->
 
 <!-- end row -->
 
 <script type="text/javascript">
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('appointments', $this->role_id, 'view',   $this->client_id) : true; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('appointments', $this->role_id, 'update',   $this->client_id) : true; ?>';
-	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Role->has_permission('appointments', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'view',   $this->client_id) : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'update',   $this->client_id) : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'delete',   $this->client_id) : true; ?>';
 	
 	var admin_role_id = '<?php echo $this->admin_role_id;?>';
 	var patient_role_id = '<?php echo $this->patient_role_id;?>';
@@ -330,7 +329,7 @@
 					"t"+
 					"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
 			"ajax": {
-				url: BASE_URL + 'appointments/load_ajax/',
+				url: BASE_URL + 'appointments/ajax/get_data/',
 				type: 'POST',
 			},
 			"oLanguage": {
@@ -510,10 +509,10 @@
 						newData = "";
 
 						if(can_delete){
-							newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'appointments/delete/'+row['appointment_id']+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
+							newData = '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_delete');?>" href="'+BASE_URL+'appointments/ajax/remove/'+row['appointment_id']+'" class="direct"><i class="far fa-trash-alt fa-lg"></i></a>&nbsp;';
 						}
 						if(can_update){
-							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'appointments/view/'+row['appointment_id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>';
+							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'appointments/ajax/modal_create/'+row['appointment_id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>';
 						}
 						
 						return newData;

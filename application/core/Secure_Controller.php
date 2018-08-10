@@ -12,7 +12,7 @@ class Secure_Controller extends Base_Controller {
 	public $username;
     public $admin_role_id;
     public $patient_role_id;
-    
+
 	public function __construct()
 	{
         parent::__construct();

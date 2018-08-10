@@ -181,19 +181,13 @@ class MY_Model extends CI_Model {
     {
         return $this->where($this->primary_key, $id)->get()->row();
     }
-	
+	/**
+     * Retrieves a single record based on field keys.
+     */
 	public function get_by_val($key, $val, $client_id)
     {
         $array = array($key => $val, 'client_id' => $client_id);
         return $this->where($array)->get()->row();
-    }
-
-    /**
-     * Retrieves a single record based on field keys.
-     */
-    public function get_by_field($field, $val)
-    {
-        return $this->where($field, $val)->get()->row();
     }
 
     public function save($id = NULL, $db_array = NULL)

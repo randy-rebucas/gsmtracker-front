@@ -97,7 +97,7 @@ var mcs = (function() {
     }
 
     that.init_dialog = function() {
-        
+
         $('.preview').click(function(e) {
             var title = ($(this).attr('data-original-title')) ? $(this).attr('data-original-title') : $(this).attr('title');
             var link = $(this).attr('href');
@@ -120,13 +120,13 @@ var mcs = (function() {
                         className: 'dialog-' + w
                     });
                     dialog.init(function() {
-                        setTimeout(function(){
+                        setTimeout(function() {
                             dialog.find('.bootbox-body').html(response);
                         }, 3000);
                     });
                 }
             });
-            
+
         });
     }
 
@@ -137,7 +137,7 @@ var mcs = (function() {
                 url: $(this).attr('href'),
                 success: function(response) {
                     var obj = JSON.parse(response);
-
+                    console.log(response);
                     if (obj.success) {
                         that.init_smallBox("success", obj.message);
                         checkURL();
@@ -148,7 +148,7 @@ var mcs = (function() {
             });
         });
 
-        
+
     }
 
     that.init_location = function(country, city, state) {
