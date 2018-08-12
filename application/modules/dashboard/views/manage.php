@@ -255,7 +255,7 @@ the <section></section> and you can use wells or panels instead
 </div>
 
 <script type="text/javascript">
-
+	var BASE_URL = '<?php echo base_url();?>';
 	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
 	 *
 	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
@@ -297,7 +297,7 @@ the <section></section> and you can use wells or panels instead
 
 		//load all patients encounter today	
 		$.ajax({
-			url: BASE_URL+'patients/load_ajax/',
+			url: BASE_URL+'patients/ajax/get_data/',
 			type: 'post', 
 			data: {
 				filter: '<?php echo date('Y-m-d');?>'
@@ -309,7 +309,7 @@ the <section></section> and you can use wells or panels instead
 				$.each(response.data, function(index, val) {
 					
 					if(val.avatar){
-						picture =  '<img src="'+BASE_URL+'uploads/'+client_id+'/profile-picture/'+val.avatar+'" alt="'+val.username+'" style="width:50px;" />';
+						picture =  '<img src="'+BASE_URL+'uploads/profile-picture/'+val.avatar+'" alt="'+val.username+'" style="width:50px;" />';
 					}else{
 						picture =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 50);?>" />';
 					}
@@ -329,39 +329,39 @@ the <section></section> and you can use wells or panels instead
 		});
 
 		//load all patients appointments
-		$.ajax({
-			url: BASE_URL+'appointments/get/',
-			type: 'post', 
-			data: {
-				filter: '<?php echo date('Y-m-d');?>'
-			},               
-			dataType: 'json',
-			success: function (response) {
+		// $.ajax({
+		// 	url: BASE_URL+'appointments/ajax/get/',
+		// 	type: 'post', 
+		// 	data: {
+		// 		filter: '<?php echo date('Y-m-d');?>'
+		// 	},               
+		// 	dataType: 'json',
+		// 	success: function (response) {
 				
-				console.log(response);
-				var items = [];
-				//[{"id":"1","title":"Test","description":"sample only","start":"2018-06-24"}]
-				$.each(response.data, function(index, val) {
+		// 		console.log(response);
+		// 		var items = [];
+		// 		//[{"id":"1","title":"Test","description":"sample only","start":"2018-06-24"}]
+		// 		$.each(response.data, function(index, val) {
 					
-					if(val.avatar){
-						picture =  '<img src="'+BASE_URL+'uploads/'+client_id+'/profile-picture/'+val.avatar+'" alt="'+val.username+'" style="width:50px;" />';
-					}else{
-						picture =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 50);?>" />';
-					}
+		// 			if(val.avatar){
+		// 				picture =  '<img src="'+BASE_URL+'uploads/profile-picture/'+val.avatar+'" alt="'+val.username+'" style="width:50px;" />';
+		// 			}else{
+		// 				picture =  '<img src="<?php //echo $this->gravatar->get("'+row['email']+'", 50);?>" />';
+		// 			}
 						
-					item =	'<div class="user" title="'+val.email+'">'+
-								picture+'<a href="javascript:void(0);">'+val.fullname+'</a>'+
-								'<div class="email">'+val.email+'</div>'+
-							'</div>';	
+		// 			item =	'<div class="user" title="'+val.email+'">'+
+		// 						picture+'<a href="javascript:void(0);">'+val.fullname+'</a>'+
+		// 						'<div class="email">'+val.email+'</div>'+
+		// 					'</div>';	
 
-					items.push(item);
-				});
+		// 			items.push(item);
+		// 		});
 
-				$('#appointments-count').html('No appointments as of today!');
-				$('#appointments').append(items);
+		// 		$('#appointments-count').html('No appointments as of today!');
+		// 		$('#appointments').append(items);
 
-			}
-		});
+		// 	}
+		// });
 	};
 	
 	// end pagefunction

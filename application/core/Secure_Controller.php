@@ -6,7 +6,7 @@ if (!defined('BASEPATH'))
 
 class Secure_Controller extends Base_Controller {
 
-    public $client_id;
+    //public $client_id;
     public $role_id;
 	public $user_id;
 	public $username;
@@ -25,18 +25,15 @@ class Secure_Controller extends Base_Controller {
         
         $this->user_id	= $this->tank_auth->get_user_id();
         $this->username	= $this->tank_auth->get_username();
-		$this->client_id 	= $this->tank_auth->get_client_id();
+		//$this->client_id 	= $this->tank_auth->get_client_id();
         $this->role_id    = $this->tank_auth->get_role_id();
 
         $this->load->model('roles/Mdl_roles');
 
-        $this->admin_role_id    = $this->Mdl_roles->get_by_val('role_slug', 'administrator', $this->client_id)->role_id;
-        $this->patient_role_id  = $this->Mdl_roles->get_by_val('role_slug', 'patient', $this->client_id)->role_id;
+        $this->admin_role_id    = $this->Mdl_roles->get_by_val('role_slug', 'administrator')->role_id;
+        $this->patient_role_id  = $this->Mdl_roles->get_by_val('role_slug', 'patient')->role_id;
 
         $this->load->model('settings/Mdl_settings');
-        
-        $this->load->model('clients/Mdl_Clients');
-        $data['client_info']      = $this->Mdl_Clients->get_info($this->client_id);
 
         $this->load->model('users/Mdl_users');
         $data['user_info']	= $this->Mdl_users->get_by_id($this->user_id);

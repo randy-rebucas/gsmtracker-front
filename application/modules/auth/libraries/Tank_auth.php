@@ -55,7 +55,7 @@ class Tank_auth
 						$this->ci->session->set_userdata(array(
 							'user_id'	=> $user->id,
 							'username'	=> $user->username,
-							'client_id' => $user->client_id,
+							//'client_id' => $user->client_id,
 							'role_id' 	=> $user->role_id,
 							'status'	=> ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
 						));
@@ -71,7 +71,7 @@ class Tank_auth
 									$this->ci->config->item('login_record_ip', 'tank_auth'),
 									$this->ci->config->item('login_record_time', 'tank_auth'));
 				
-							$this->update_status($user->id, 1);
+							//$this->update_status($user->id, 1);
 							return TRUE;
 						}
 						
@@ -85,7 +85,7 @@ class Tank_auth
 					$this->ci->session->set_userdata(array(
 						'user_id'	=> $user->id,
 						'username'	=> $user->username,
-						'client_id' 	=> $user->client_id,
+						//'client_id' 	=> $user->client_id,
 						'role_id' 	=> $user->role_id,
 						'status'	=> 1,
 					));
@@ -95,7 +95,7 @@ class Tank_auth
 							$this->ci->config->item('login_record_ip', 'tank_auth'),
 							$this->ci->config->item('login_record_time', 'tank_auth'));
 		
-					$this->update_status($user->id, 1);
+					//$this->update_status($user->id, 1);
 					return TRUE;
 					
 				}
@@ -186,16 +186,6 @@ class Tank_auth
 	}
 	
 	/**
-	 * Get client id
-	 *
-	 * @return	string
-	 */
-	function get_client_id()
-	{
-		return $this->ci->session->userdata('client_id');
-	}
-
-	/**
 	 * Get role id
 	 *
 	 * @return	string
@@ -203,6 +193,11 @@ class Tank_auth
 	function get_role_id()
 	{
 		return $this->ci->session->userdata('role_id');
+	}
+
+	function save_request($data)
+	{
+		return $this->ci->Mdl_auth->save_request($data);
 	}
 	/**
 	 * Create new user on the site and return some data about it:
@@ -214,16 +209,13 @@ class Tank_auth
 	 * @param	bool
 	 * @return	array
 	 */
-	function create_user($business, $fullname, $address, $username, $email, $password, $email_activation)
+	function create_user($firstname, $mi, $lastname, $address, $username, $email, $password, $email_activation)
 	{
 		if ((strlen($username) > 0) AND !$this->ci->Mdl_auth->is_username_available($username)) {
 			$this->error = array('username' => 'auth_username_in_use');
 
 		} elseif (!$this->ci->Mdl_auth->is_email_available($email)) {
 			$this->error = array('email' => 'auth_email_in_use');
-
-		} elseif (!$this->ci->Mdl_auth->is_business_available($business)) {
-			$this->error = array('business' => 'auth_business_in_use');
 
 		}  else {
 			// Hash password using phpass
@@ -240,16 +232,17 @@ class Tank_auth
 				'token'			=> date('Ymd')
 			);
 
-			$client_data = array(
-				'client_business_name'	=> $business,
-				'client_name'	=> $fullname,
-				'client_address'	=> $address
+			$profile_data = array(
+				'firstname'	=> $firstname,
+				'mi'	=> $mi,
+				'lastname'	=> $lastname,
+				'address'	=> $address
 			);
 
 			if ($email_activation) {
 				$data['new_email_key'] = md5(rand().microtime());
 			}
-			if (!is_null($res = $this->ci->Mdl_auth->create_user($data, $client_data, !$email_activation))) {
+			if (!is_null($res = $this->ci->Mdl_auth->create_user($data, $profile_data, !$email_activation))) {
 				$data['user_id'] = $res['user_id'];
 				$data['password'] = $password;
 				unset($data['last_ip']);

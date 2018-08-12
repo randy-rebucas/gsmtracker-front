@@ -13,26 +13,35 @@
 					<?php echo $this->lang->line('__register');?>
 				</header>
 					<fieldset>
-						<legend>Business Details</legend>
+						<legend>Personal Details</legend>
+						<div class="row">
+							<section class="col col-5">
+		
+								<label for="firstname">Firstname</label>
+								<label class="input"> 
+									<input type="text" name="firstname" id="firstname" value="<?php echo set_value('firstname'); ?>" placeholder="John" tabindex="1" >
+									<b class="tooltip tooltip-bottom-right">Firstname</b> 
+								</label>
+							</section>
+							<section class="col col-2">
+								<label for="mi">MI</label>
+								<label class="input"> 
+									<input type="text" name="mi" id="mi" value="<?php echo set_value('mi'); ?>" placeholder="I" tabindex="2" >
+									<b class="tooltip tooltip-bottom-right">Middle Initial</b> 
+								</label>
+							</section>
+							<section class="col col-5">
+								<label for="lastname">Lastname</label>
+								<label class="input"> 
+									<input type="text" name="lastname" id="lastname" value="<?php echo set_value('lastname'); ?>" placeholder="Doe" tabindex="2" >
+									<b class="tooltip tooltip-bottom-right">Lastname</b> 
+								</label>
+							</section>
+						</div>
 						<section>
-							<label for="client_business_name"><?php echo $this->lang->line('__client_business_name');?></label>
-							<label class="input"> <i class="icon-append fa fa-building"></i>
-								<input type="text" name="client_business_name" id="client_business_name" value="<?php echo set_value('client_business_name'); ?>" placeholder="<?php echo $this->lang->line('__client_business_name');?>" tabindex="1" >
-								<b class="tooltip tooltip-bottom-right"><?php echo $this->lang->line('__client_business_name');?></b> 
-							</label>
-						</section>
-						<section>
-							<label for="client_fullname"><?php echo $this->lang->line('__client_fullname');?></label>
-							<label class="input"> <i class="icon-append fa fa-building"></i>
-								<input type="text" name="client_fullname" id="client_fullname" value="<?php echo set_value('client_fullname'); ?>" placeholder="<?php echo $this->lang->line('__client_fullname');?>" tabindex="2" >
-								<b class="tooltip tooltip-bottom-right"><?php echo $this->lang->line('__client_fullname');?></b> 
-							</label>
-						</section>
-						
-						<section>
-							<label for="client_address"><?php echo $this->lang->line('__client_address');?></label>
+							<label for="address">Address</label>
 							<label class="textarea"> <i class="icon-append fa fa-list"></i>
-								<textarea name="client_address" class="custom-scroll" id="client_address" placeholder="<?php echo $this->lang->line('__client_address');?>" tabindex="4"><?php echo set_value('client_address');?></textarea>
+								<textarea name="address" class="custom-scroll" id="address" placeholder="Address" tabindex="4"><?php echo set_value('address');?></textarea>
 							</label>
 						</section>
 					</fieldset>

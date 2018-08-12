@@ -43,18 +43,14 @@ class Ajax extends Secure_Controller {
 
     function doSave($id = -1)
 	{
-
-        
 		$appointment_data = array(
 			'schedule_date'		=>$this->input->post('schedule_date'),
 			'schedule_time'		=>$this->input->post('schedule_time'),
 			'description'		=>$this->input->post('description'),
 			'title'				=>$this->input->post('title'),
-			'user_id'			=>$this->input->post('user_id') ? $this->input->post('user_id') : $this->user_id,
+			'user_id'			=>$this->input->post('user_id'),
 			'client_id'			=>$this->input->post('client_id'),
-			'status'			=>$this->input->post('status'),
-			'doctor_note'		=>$this->input->post('doctor_note'),
-			'patient_note'		=>$this->input->post('patient_note')
+			'status'			=>$this->input->post('status')
 		);
 		
 		if($this->Appointment->save($appointment_data, $this->client_id, $id))
@@ -90,8 +86,8 @@ class Ajax extends Secure_Controller {
 
     function get()
 	{
-
-		echo json_encode($this->Appointment->get_all($this->client_id)->result_array());
+        $this->load->model('appointments/Mdl_appointments');
+		echo json_encode($this->Mdl_appointments->get()->result_array());
 
     }
     

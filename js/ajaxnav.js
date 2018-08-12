@@ -37,7 +37,15 @@ if($.navAsAjax)
 	    e.preventDefault();
     });
 
-	$(document).on('click', 'nav a[href!="#"], a.ajaxSoft', function(e) {
+	$(document).on('click', '.ajaxify', function(e) {
+
+		var link = $(this).attr('href');
+	    history.pushState(null, null, link);
+		checkURL();
+
+    });
+
+	$(document).on('click', 'nav a[href!="#"], a.ajaxify', function(e) {
 
 		history.pushState(null, null, this.href);
 		checkURL();

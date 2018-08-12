@@ -35,7 +35,7 @@ $remember = array(
 			<div class="well no-padding">
 				<?php echo form_open('auth/doLogin', 'id="login-form" class="smart-form client-form"'); ?>
 					<header>
-						<?php echo $this->lang->line('__signin');?> or <a href="<?php echo site_url('auth/register');?>" class="link"> Register </a>
+						<?php echo $this->lang->line('__signin');?> or <a href="<?php echo site_url('auth/request');?>" class="link"> Request for DEMO </a>
 					</header>
 
 					<fieldset>

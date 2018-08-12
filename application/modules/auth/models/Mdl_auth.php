@@ -154,47 +154,39 @@ class Mdl_Auth extends CI_Model
 	 * @param	bool
 	 * @return	array
 	 */
-	function create_user($data, $client_data, $activated = TRUE)
+	function create_user($data, $profile_data, $activated = TRUE)
 	{
 
-		$client_data['client_license'] = random_string('numeric',8);
+		$data['created'] 	= date('Y-m-d H:i:s');
+		$data['activated'] 	= $activated ? 1 : 0;
+		//create role;
+		$role_data = array(
+			array(
+			   'role_name' => 'Administrator',
+			   'role_slug'	=> 'administrator',
+			   'role_desc' => 'Allowed all modules and actions' 
+			),
+			array(
+				'role_name' => 'Patient',
+				'role_slug'	=> 'patient',
+				'role_desc' => 'Access personal record'
+			)
+		);
+		 
+		if($this->db->insert_batch('roles', $role_data))
+		{
 
-		if ($this->db->insert($this->client_table, $client_data)) {
-			
-			$data['created'] 	= date('Y-m-d H:i:s');
-			$data['activated'] 	= $activated ? 1 : 0;
-			$data['client_id']   = $this->db->insert_id();
-			//create role;
-			$role_data = array(
-				array(
-				   'role_name' => 'Administrator',
-				   'role_slug'	=> 'administrator',
-				   'role_desc' => 'Allowed all modules and actions' ,
-				   'client_id' => $data['client_id']
-				),
-				array(
-					'role_name' => 'Patient',
-					'role_slug'	=> 'patient',
-					'role_desc' => 'Access personal record' ,
-					'client_id' => $data['client_id']
-				)
-			);
-			 
-			if($this->db->insert_batch('roles', $role_data))
+			if ($this->db->insert($this->table_name, $data)) 
 			{
+				$user_id = $this->db->insert_id();
 
-				if ($this->db->insert($this->table_name, $data)) 
-				{
-					$user_id = $this->db->insert_id();
-	
-					$this->create_profile($user_id, $data['client_id']);
-					
-					return array('user_id' => $user_id);
-				}
+				$this->create_profile($user_id, $profile_data);
+				
+				return array('user_id' => $user_id);
 			}
-
+			return NULL;
 		}
-		return NULL;
+
 	}
 
 	
@@ -451,6 +443,10 @@ class Mdl_Auth extends CI_Model
 		));
 	}
 
+	public function save_request($data)
+	{
+		return $this->db->insert('request', $data);
+	}
 	/**
 	 * Create an empty profile for a new user
 	 *
@@ -458,13 +454,13 @@ class Mdl_Auth extends CI_Model
 	 * @return	bool
 	 */
 	
-	private function create_profile($user_id, $client_id)
+	private function create_profile($user_id, $profile_data)
 	{
 		$this->db->set('user_id', $user_id);
-		if($this->db->insert($this->profile_table_name)){
+		if($this->db->insert($this->profile_table_name, $profile_data)){
 
-			$this->load->model('roles/Role');
-			$this->db->set('role_id', $this->Role->get_by_role_slug('administrator', $client_id));
+			$this->load->model('roles/Mdl_roles');
+			$this->db->set('role_id', $this->Mdl_roles->get_by_val('role_slug', 'administrator')->role_id);
 			$this->db->set('user_id', $user_id);
 			return $this->db->insert('users_role');
 		}

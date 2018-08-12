@@ -11,9 +11,9 @@
  * @link        http://www.myclinicsoft.com
  * 
  */
-class Mdl_Records extends Response_Model
+class Mdl_Records_Medications extends Response_Model
 {
-	public $table               = 'records';
-    public $primary_key         = 'records.record_id';
+	public $table               = 'records_medications';
+    public $primary_key         = 'records_medications.records_medications_id';
 
 }

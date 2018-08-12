@@ -68,7 +68,7 @@
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
 									<a href="<?php echo site_url('export/');?>" class="btn btn-warning btn-sm"><i class="fas fa-lg fa-fw fa-file-export"></i>&nbsp;<span class="hidden-mobile">Export</span> </a>
 
-									<?php if(($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'create',  $this->client_id) : true) { ?>
+									<?php if(($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'create') : true) { ?>
 										<a href="<?php echo site_url('patients/ajax/modal_create_patient');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
 										
 									<?php } ?>
@@ -90,7 +90,6 @@
 										<th>Birth Date</th>
 										<th><?php echo $this->lang->line('common_address');?></th>
 										<th><?php echo $this->lang->line('common_contacts');?></th>
-										<th>&nbsp;</th>
 										<th>&nbsp;</th>
 										<th>&nbsp;</th>
 										<th>&nbsp;</th>
@@ -120,9 +119,9 @@
 	
 <script type="text/javascript">
 
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'view',   $this->client_id) : true; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'update',   $this->client_id) : true; ?>';
-	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'view') : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'update') : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'delete') : true; ?>';
 
 	pageSetUp();
 
@@ -234,13 +233,12 @@
 					{mData: 'birthday'},
 					{mData: 'address'},
 					{mData: 'mobile'},
-					{mData: 'client_id'},
 					{mData: null},
 		        ],
 		        "aoColumnDefs": [
-		            {'bSearchable': true, 'aTargets': [0, 1, 2, 3, 8, 9]},
+		            {'bSearchable': true, 'aTargets': [0, 1, 2, 3, 8]},
 		            {
-		                "targets": [6,7,8,9,10],
+		                "targets": [6,7,8,9],
 		                "visible": false,
 		                "searchable": false,
 		            },
@@ -250,7 +248,7 @@
 		                // this case `data: 0`.
 		                "render": function (data, type, row) {
 							if(row['avatar']){
-								newData =  '<img src="'+BASE_URL+'uploads/'+row['client_id']+'/profile-picture/'+row['avatar']+'" alt="'+row['username']+'" style="width:25px; height:25px;" />';
+								newData =  '<img src="'+BASE_URL+'uploads/profile-picture/'+row['avatar']+'" alt="'+row['username']+'" style="width:25px; height:25px;" />';
 							}else{ 
 								newData =  '<img src="<?php echo $this->gravatar->get("'+row['email']+'", 25);?>" />';
 							}
@@ -349,7 +347,7 @@
 							if(can_update){
 								newData += '<a rel="tooltip" data-placement="bottom" data-original-title="<?php echo $this->lang->line('__common_update');?>"  href="'+BASE_URL+'patients/ajax/modal_create_patient/'+row['id']+'/" class="preview"><i class="far fa-edit fa-lg"></i></a>&nbsp;';
 							}
-							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="Que" href="'+BASE_URL+'patients/patients/que/'+row['id']+'" class="preview"><i class="fas fa-book fa-lg"></i></a>&nbsp;';
+							newData += '<a rel="tooltip" data-placement="bottom" data-original-title="Record" href="'+BASE_URL+'patients/record/'+row['id']+'" c><i class="fas fa-book fa-lg"></i></a>&nbsp;';
 		                    return newData;
 		                },
 		                "targets": 5

@@ -86,21 +86,54 @@ class Auth extends MX_Controller
 		$this->_show_message($this->lang->line('auth_message_logged_out'));
 	}
 
+	function request()
+	{
+		$this->layout
+			->title('Send Request') 
+			->set_layout('empty') 
+			->build('request_form');
+	}
+
+	function doRequest()
+	{
+		
+		$data = array(
+			'request_name'		=> $this->input->post('name'),
+			'request_email'		=> $this->input->post('email'),
+			'request_message'	=> $this->input->post('message')
+		);
+		
+		if($this->tank_auth->save_request($data)){
+			$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+
+			if ($this->input->post('copy')) {// send "activate" email
+				
+				$this->_send_email('request', $request_data['request_email'], $data);
+
+			}
+
+			$this->_send_email('request', $this->config->item('dev_email'), $data);
+
+			echo json_encode(array('success' => true, 'message' => 'Request sent!'));
+		}	
+
+	}
 	/**
 	 * Register user on the site
 	 *
 	 * @return void
 	 */
-	function register()
+	function newclient()
 	{
-	
+		//redirect('auth/login');
+
 		if ($this->tank_auth->is_logged_in()) {									// logged in
 			redirect('dashboard');
 
 		} else {
 
 			$this->layout
-			->title('Register') 
+			->title('Register New Client') 
 			->set_layout('empty') 
 			->build('register_form');
 		}
@@ -113,9 +146,10 @@ class Auth extends MX_Controller
 		$email_activation = $this->config->item('email_activation', 'tank_auth');
 				
 		if (!is_null($data = $this->tank_auth->create_user(
-				$this->input->post('client_business_name'),
-				$this->input->post('client_fullname'),
-				$this->input->post('client_address'),
+				$this->input->post('firstname'),
+				$this->input->post('mi'),
+				$this->input->post('lastname'),
+				$this->input->post('address'),
 				$this->input->post('username'),
 				$this->input->post('email'),
 				$this->input->post('password'),

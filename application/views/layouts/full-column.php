@@ -3,9 +3,9 @@
 	
 	<head>
 		<script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
-		<link type="text/css" rel="stylesheet" id="arrowchat_css" media="all" href="/arrowchat/external.php?type=css" charset="utf-8" />
+<!-- 		<link type="text/css" rel="stylesheet" id="arrowchat_css" media="all" href="/arrowchat/external.php?type=css" charset="utf-8" />
 		<script type="text/javascript" src="/arrowchat/includes/js/jquery.js"></script>
-		<script type="text/javascript" src="/arrowchat/includes/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="/arrowchat/includes/js/jquery-ui.js"></script> -->
 		<meta charset="utf-8">
 		<title><?php echo $template['title']; ?></title>
 		<meta name="google-site-verification" content="rWQKdkTjUlQrUfn2u19c2VIi8j8mcVFi7P3YUd_JqA4" />
@@ -45,9 +45,7 @@
 		<!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		
-		<script src="https://use.fontawesome.com/bbf18deec2.js"></script>
-		
+	
 		<!-- Startup image for web apps -->
 		<link rel="apple-touch-startup-image" href="<?php echo base_url(); ?>img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
 		<link rel="apple-touch-startup-image" href="<?php echo base_url(); ?>img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
@@ -112,7 +110,6 @@
 
 		<script type="text/javascript">
 			var BASE_URL = '<?php echo base_url();?>';
-			var client_id = '<?php echo $user_info->client_id;?>';
 			var user_id = '<?php echo $user_info->user_id;?>';
 			var role_id = '<?php echo $user_info->role_id;?>';
 		</script>

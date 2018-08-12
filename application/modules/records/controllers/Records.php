@@ -18,262 +18,26 @@ class Records extends Secure_Controller
     {
         parent::__construct();
 
-		$this->load->model('Custom');
-		$this->load->model('Record');
-		$this->load->model('medias/Media');
-		$this->load->model('vaccines/Vaccine');
-		$this->load->model('doses/Dose');
 		
-
-		$this->load->helper('encode');
     }
 
 	function index()
 	{
-		redirect('records/default');
-	}
-
-	function default_records() 
-	{
-
-		$this->layout->title('Default');
-		
-		$data['module'] = 'Default'; 
-		
-		if ($this->input->is_ajax_request()) 
-		{
-			$this->load->view('default', $data);
-        } 
-		else
-		{
-			$this->_set_layout($data);
-			$this->layout->build('default', $data);
-		}
-	}
-
-	function custom_records() 
-	{
-
-		$this->layout->title('Custom');
-		
-		$data['module'] = 'Custom'; 
-		
-		if ($this->input->is_ajax_request()) 
-		{
-			$this->load->view('custom', $data);
-        } 
-		else
-		{
-			$this->_set_layout($data);
-			$this->layout->build('custom', $data);
-		}
-	}
-
-	function switch_status() {
-
-		$status = $this->input->post('status');
-		$type = $this->input->post('type');
-		$id = $this->input->post('id');
-
-		if($this->Record->switch_status($status, $type, $id))
-		{
-			echo json_encode(array('success'=>true));
-		}
-		else 
-		{
-			echo json_encode(array('success'=>false));
-		}
-	}
-
-	function load_ajax() 
-	{
-	
-		if ($this->input->is_ajax_request()) 
-		{	
-			$this->load->library('datatables');
-			$type = $this->input->post('type');
-	       	if($type == 'default'){ //type
-
-	       		$this->datatables->select("record_id, name, description, status, created, slug, type", false);
-	        
-	        	$this->datatables->from('records');
-	       	} else {
-
-	       		$this->datatables->select("record_id, name, description, status, created, slug, type, client_id", false);
-	        
-	        	$this->datatables->from('custom_records');
-	       	}
-
-	        echo $this->datatables->generate('json', 'UTF-8');
-	        
-    	}
-    	else
-    	{
-
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-            redirect(strtolower(get_class()));
-	    }
-    }
-	
-    function view($id = -1, $client_id = null)
-    {
-
-        if ($this->input->is_ajax_request()) 
-		{
-			$this->load->model('custom_fields/Custom_field');
-
-			$table = ($client_id != null) ? 'custom_records' : 'records';
-			$data['info'] = $this->Record->get_info_by_id($id, $table);
-
-			if ($client_id != null) {
-				$data['fields'] = $this->Custom_field->get_custom('records_'.$data['info']->slug.'_'.$this->client_id);
-			} else {
-				$data['fields'] = $this->Custom_field->get_custom('records_'.$data['info']->slug);
-			}
-	        $this->load->view("form", $data);
-	    }
-	    else
-	    {
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-            redirect(strtolower(get_class()));
-	    }
-    }
-	
-	function doSave($id = -1)
-	{
-		$this->load->helper('url');
-
-    	$slug = url_title($this->input->post('name'), 'underscore', TRUE);
-		$record_data = array(
-			'name'			=>$this->input->post('name'),
-			'description'	=>$this->input->post('description'),
-			'slug'			=>$slug,
-			'status'		=>$this->input->post('status') ? 1 : 0,
-			'client_id'		=>$this->client_id
-		);
-
-		if($this->Record->save_table($record_data, $this->client_id, $id))
-		{
-			if($id==-1)
-			{
-				echo json_encode(array('success'=>true,'message'=>$record_data['name']));
-			}
-			else 
-			{
-				echo json_encode(array('success'=>true,'message'=>$record_data['name']));
-			}
-		}
-		else//failure
-		{	
-			echo json_encode(array('success'=>false,'message'=>$record_data['name']));
-		}
-			
-	}
-	
-	function details($id = -1, $client_id = null)
-	{
-    	if ($this->input->is_ajax_request()) 
-		{
-	    	$this->load->model('custom_fields/Custom_field');
-
-			$table = ($client_id != null) ? 'custom_records' : 'records';
-			$data['info'] = $this->Record->get_info_by_id($id, $table);
-
-			if ($client_id != null) {
-				$data['fields'] = $this->Custom_field->get_custom('records_'.$data['info']->slug.'_'.$this->client_id);
-			} else {
-				$data['fields'] = $this->Custom_field->get_custom('records_'.$data['info']->slug);
-			}
-	        $this->load->view("detail", $data);
-
-	    }
-	    else
-	    {
-
-	    	$this->session->set_flashdata('alert_error', 'Sorry! Page cannot open by new tab');
-
-            redirect(strtolower(get_class())); 
-	    }
-    }
-	
-    function delete_record($id)
-    {
-    	if ($res = $this->Record->delete_record($id, 'custom_records')) 
-    	{
-
-			echo json_encode(array('success' => true, 'message' => 'Record successfully deleted!'));
-
-		} 
-		else 
-		{
-
-			echo json_encode(array('success' => false, 'message' => $res ));
-
-		}
-
-    }
-
-    function delete_custom_field($id, $type)
-    {
-
-    	if ($this->Custom->delete($id, $type)) 
-    	{
-
-			echo json_encode(array('success' => true, 'message' => 'Record successfully deleted!'));
-
-		} 
-		else 
-		{
-
-			echo json_encode(array('success' => false, 'message' => 'failed to save record!' ));
-
-		}
-
-    }
-
-    function get_records()
-	{
-		$this->load->model('records/Custom');
-
-		$user_id = $this->input->post('id');
-		$limit = $this->input->post('limit');
-		$type = $this->input->post('type');
-
-		echo json_encode($this->Custom->get_record($type, $user_id, $limit, date('Y-m-d')));
-	}
-
-	function types($type, $user_id)
-	{
-		$data['type'] = $type;
-		$data['latest'] = $this->Record->get_current_data($type, $user_id, date('Y-m-d'));
-		$data['result'] = $this->Record->get_all_data($type, $user_id);//segment 3 
-		$this->load->view('ajax/records/'.$type.'/manage', $data);
-	}
-	
-	function get_all_complaints()
-	{
-		$this->load->model('records/Custom');
-
-		$user_id = url_base64_decode($this->input->post('id'));
-		echo json_encode($this->Custom->get_all_data('complaint_'.$this->license_id, $user_id));
 		
 	}
-	
-	function get_complaints()
-	{
-		$user_id = $this->input->post('id');
-		echo json_encode($this->Record->get_all_data('conditions', $user_id));
-		
-	}
-	
-	function get_all_medications()
-	{
-		$complaint_date = $this->input->post('complaint_date');
-		$user_id = $this->input->post('user_id');
-		
-		echo json_encode($this->Record->get_current_data('medications', $user_id, $complaint_date));
-	}
 
+	function doSaveVitalSigns(){
+
+		if ($this->mdl_clients->run_validation())
+        {
+            $id = $this->mdl_clients->save($id);
+            $this->load->model('custom_fields/Mdl_records_vital_signs_customs');
+            $this->Mdl_records_vital_signs_customs->save_custom($id, $this->input->post('custom'));
+            redirect('clients/view/' . $id);
+        }
+
+	}
+	
 	function create_custom($type, $user_id, $cdate = null, $client_id = null)
 	{ 
 		$data['user_id'] = $user_id;
@@ -412,64 +176,6 @@ class Records extends Secure_Controller
 		echo json_encode($this->Record->get_test($this->license_id)->result_array());
 	}
 	
-	function view_test()
-	{
-		
-		$data['title'] = sprintf($this->lang->line('records_title'), 'Test');
-		
-		$this->load->view('ajax/records/lab_test_results/request', $data);
-		
-	}
-	
-	function create_test()
-	{
-		
-		$test_data = array(
-			'name'			=> $this->input->post('lab_test'),
-			'license_key'	=> $this->license_id
-		);
-		
-		if($res = $this->Record->save_test($test_data))
-		{
-		
-			echo json_encode(array('success'=>true, 'id'=>$res['test_id'], 'message'=>'Created'));
-			
-		}
-		else//failure
-		{	
-			echo json_encode(array('success'=>false, 'id'=>$res['test_id'], 'message'=>'Created'));
-		}
-	}
-	
-	function delete_test($id)
-	{
-		
-		if($this->Record->delete_test($id))
-		{
-		
-			echo json_encode(array('success'=>true, 'message'=>'deleted'));
-			
-		}
-		else//failure
-		{	
-			echo json_encode(array('success'=>false, 'message'=>'deleted'));
-		}
-	}
-	
-	function delete($id, $type)
-	{
-		
-		
-		if($this->Record->delete($id, $type))
-		{
-			echo json_encode(array('success'=>true,'message'=>sprintf($this->lang->line('records_response_delete_success_message'), $this->lang->line('records_'.strtolower(str_replace(' ', '_', $type))))));
-			
-		}
-		else
-		{
-			echo json_encode(array('success'=>false,'message'=>sprintf($this->lang->line('records_response_delete_failed_message'), $this->lang->line('records_'.strtolower(str_replace(' ', '_', $type))))));
-		}
-	}
 	
 	function get_vaccine_source_ajax() 
 	{
@@ -503,28 +209,4 @@ class Records extends Secure_Controller
 
     }
 	
-	function get_suggest_records($type, $fields)
-	{
-
-		echo json_encode($this->Record->get_suggest_record($type, $fields)->result_array());
-
-	}
-	
-	function docs($id)
-	{
-		
-		$this->load->model('templates/Template');
-
-		$templates = array('' => 'Select');
-		$array = array($this->license_id, 'system');
-
-		foreach ($this->Template->get_all_forms($array)->result_array() as $row) 
-		{
-			$templates[$row['tid']] = $row['tname'];
-		}
-
-		$data['templates'] = $templates;
-
-		$this->load->view('ajax/print', $data);
-	}
 }

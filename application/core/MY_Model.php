@@ -184,9 +184,9 @@ class MY_Model extends CI_Model {
 	/**
      * Retrieves a single record based on field keys.
      */
-	public function get_by_val($key, $val, $client_id)
+	public function get_by_val($key, $val)
     {
-        $array = array($key => $val, 'client_id' => $client_id);
+        $array = array($key => $val);
         return $this->where($array)->get()->row();
     }
 
