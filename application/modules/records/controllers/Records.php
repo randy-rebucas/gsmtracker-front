@@ -26,18 +26,6 @@ class Records extends Secure_Controller
 		
 	}
 
-	function doSaveVitalSigns(){
-
-		if ($this->mdl_clients->run_validation())
-        {
-            $id = $this->mdl_clients->save($id);
-            $this->load->model('custom_fields/Mdl_records_vital_signs_customs');
-            $this->Mdl_records_vital_signs_customs->save_custom($id, $this->input->post('custom'));
-            redirect('clients/view/' . $id);
-        }
-
-	}
-	
 	function create_custom($type, $user_id, $cdate = null, $client_id = null)
 	{ 
 		$data['user_id'] = $user_id;

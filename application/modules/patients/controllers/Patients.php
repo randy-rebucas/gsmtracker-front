@@ -46,7 +46,7 @@ class Patients extends Secure_Controller
 		}
 	}
 
-	public function record($patient_id)
+	public function record($patient_id, $record_id = -1)
 	{
 		$this->load->model('patients/Mdl_patients');
 		$this->load->model('records/Mdl_records_vital_signs');
