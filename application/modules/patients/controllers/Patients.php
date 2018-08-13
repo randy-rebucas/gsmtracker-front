@@ -50,6 +50,9 @@ class Patients extends Secure_Controller
 	{
 		$this->load->model('patients/Mdl_patients');
 
+		$this->load->model('records/Mdl_records');
+		$data['all_record']  = $this->Mdl_records->get()->result();
+
 		$this->load->model('records/Mdl_records_vital_signs');
 		$data['cur_vital_sign']  = $this->Mdl_records_vital_signs->is_current()->get()->result();
 		$data['all_vital_sign']  = $this->Mdl_records_vital_signs->get()->result();
@@ -76,6 +79,9 @@ class Patients extends Secure_Controller
 
 		$data['module'] = 'Record: '.$data['info']->firstname;
 		$this->layout->title('Record: '.$data['info']->firstname);
+
+		$this->load->library('records/record_lib');
+		$data['tab'] = $this->record_lib->get_tab();
 
 		$this->set_layout();
 

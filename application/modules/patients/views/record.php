@@ -161,24 +161,24 @@
 										<header role="heading">
 											<h2>Records</h2>
 											<ul id="widget-tab-2" class="nav nav-tabs pull-right">
-												<li class="active">
+												<li <?php if($tab == 'vital-signs') echo 'class="active"';?>>
 
-													<a data-toggle="tab" href="#vital-signs"> 
+													<a data-toggle="tab" href="#vital-signs" data-id="vital-signs"> 
 														<i class="fa fa-fw fa-gear"></i>
 														<span class="hidden-mobile hidden-tablet"> Vital Signs </span> </a>
 												</li>
-												<li>
-													<a data-toggle="tab" href="#symptoms"> 
+												<li <?php if($tab == 'symptoms') echo 'class="active"';?>>
+													<a data-toggle="tab" href="#symptoms" data-id="symptoms"> 
 														<i class="fa fa-fw fa-gear"></i>
 														<span class="hidden-mobile hidden-tablet"> Symptoms </span> </a>
 												</li>
-												<li>
-													<a data-toggle="tab" href="#investigation"> 
+												<li <?php if($tab == 'investigation') echo 'class="active"';?>>
+													<a data-toggle="tab" href="#investigation" data-id="investigation"> 
 														<i class="fa fa-fw fa-gear"></i>
 														<span class="hidden-mobile hidden-tablet"> Investigation </span> </a>
 												</li>
-												<li>
-													<a data-toggle="tab" href="#medication"> 
+												<li <?php if($tab == 'medication') echo 'class="active"';?>>
+													<a data-toggle="tab" href="#medication" data-id="medication"> 
 														<i class="fa fa-fw fa-gear"></i>
 														<span class="hidden-mobile hidden-tablet"> Medication </span> </a>
 												</li>
@@ -186,8 +186,8 @@
 												<li class="dropdown">
 													<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More ... <b class="caret"></b></a>
 													<ul class="dropdown-menu">
-														<li>
-															<a data-toggle="tab" href="#advice"> Advice </a>
+														<li <?php if($tab == 'advice') echo 'class="active"';?>>
+															<a data-toggle="tab" href="#advice" data-id="advice"> Advice </a>
 														</li>
 													</ul>
 												</li>
@@ -581,26 +581,29 @@
 												
 												
 												<div class="custom-scroll table-responsive" style="height:290px; overflow-y: scroll;">
-													
-
-													<table class="table table-bordered">
-														<thead>
-															<tr>
-																<th><i class="fa fa-key text-warning"></i> License Key</th>
-																<th>Username <i class="text-danger">!</i></th>
-																<th>Date</th>
-															</tr>
-														</thead>
-														<tbody>
-															<tr>
-																<td>C87E48EF-605A-B4FF</td>
-																<td>erat@montesnasceturridiculus.org</td>
-																<td>10/03/13</td>
-															</tr>
-															
-														</tbody>
-													</table>
 												
+													<?php if(count($all_record)){ ?>						
+														<table class="table table-bordered">
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Time</th>
+																	<th>Status</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php foreach($all_record as $row){ ?>
+																	<tr>
+																		<td><?php echo $row->record_date;?></td>
+																		<td><?php echo $row->record_time;?></td>
+																		<td><?php echo ($row->record_status == 1) ? 'Finished':'Canceled';?></td>
+																	</tr>
+																<?php } ?>
+															</tbody>
+														</table>
+													<?php } else { ?>
+														<h2 class="text-center">no record histories found!</h2>
+													<?php } ?>
 												</div>
 												
 												
@@ -636,12 +639,14 @@
 
 	pageSetUp();
 
-	$(document).on('click', '.ajaxify', function(e) {
+	$( document ).ready(function() {
 
+		$( "ul#widget-tab-2 li a" ).bind( "click", function() {
+			var curtab = $(this).attr('data-id');
+			$.post(BASE_URL+'records/ajax/set_tab', { tab: curtab} );
+		});
 
-		e.preventDefault();
-
-    });
+	});
 
 	var validatefunction = function() {
 
@@ -728,7 +733,6 @@
                         if(response.success)
                         {
                             mcs.init_smallBox("Success", response.message);
-							$('.bootbox-close-button').trigger('click');
                             checkURL();
                         }
                         else
@@ -742,13 +746,6 @@
                 });
             }
         });
-		
-		$('.is_required').each(function() {
-		    $(this).rules('add', {
-		        required: true,  // example rule
-		        // another rule, etc.
-		    });
-		});
 
 		$("#symptoms-form").validate({
             // Rules for form validation
@@ -801,7 +798,6 @@
                         if(response.success)
                         {
                             mcs.init_smallBox("success", response.message);
-							$('.bootbox-close-button').trigger('click');
                             checkURL();
                         }
                         else
@@ -859,7 +855,6 @@
                         if(response.success)
                         {
                             mcs.init_smallBox("success", response.message);
-							$('.bootbox-close-button').trigger('click');
                             checkURL();
                         }
                         else
@@ -941,7 +936,6 @@
                         if(response.success)
                         {
                             mcs.init_smallBox("success", response.message);
-							$('.bootbox-close-button').trigger('click');
                             checkURL();
                         }
                         else
@@ -1005,7 +999,6 @@
                         if(response.success)
                         {
                             mcs.init_smallBox("success", response.message);
-							$('.bootbox-close-button').trigger('click');
                             checkURL();
                         }
                         else
@@ -1019,6 +1012,13 @@
                 });
             }
         });
+
+		$('.is_required').each(function() {
+		    $(this).rules('add', {
+		        required: true,  // example rule
+		        // another rule, etc.
+		    });
+		});
     }
 
 	loadScript(BASE_URL+"js/plugin/jquery-validate/jquery.validate.min.js", function(){

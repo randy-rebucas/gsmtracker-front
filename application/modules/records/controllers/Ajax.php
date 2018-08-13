@@ -20,6 +20,27 @@ class Ajax extends Secure_Controller {
 
     public $ajax_controller = TRUE;
 
+    public function set_tab($tab) 
+    {
+        $this->load->library('records/record_lib');
+        $tab = $this->input->post('tab');
+        if($this->record_lib->set_tab($tab))
+        {
+            echo json_encode(array('success' => 1, 'message'=>''));
+        }
+    }
+
+    public function get_tab()
+    {
+        $tab = $this->input->post('tab');
+
+        if($this->session->userdata('tab')){
+            $this->set_tab($tab);
+        }
+
+        echo json_encode(array('selected-tab'=>$this->session->userdata('tab')));
+    }
+
     public function save_vital_signs()
     {
         $this->load->model('records/Mdl_records_vital_signs');
