@@ -51,6 +51,114 @@ class Ajax extends Secure_Controller {
         echo json_encode($response);
     }
 
+    public function save_symptoms()
+    {
+        $this->load->model('records/Mdl_records_symptoms');
+
+        $db_array = array(
+            'records_symptoms_signs'        => $this->input->post('sign_symptoms'),
+            'records_symptoms_diagnosis'    => $this->input->post('diagnoses'),
+            'records_symptoms_date'         => date('Y-m-d')
+        );
+
+        if ($this->Mdl_records_symptoms->save(NULL, $db_array))
+        {
+            $response = array(
+                'success' => 1
+            );
+        }
+        else
+        {
+            $this->load->helper('json_error');
+            $response = array(
+                'success'           => 0,
+                'validation_errors' => json_errors()
+            );
+        }
+        echo json_encode($response);
+    }
+
+    public function save_investigation()
+    {
+        $this->load->model('records/Mdl_records_investigations');
+
+        $db_array = array(
+            'records_investigations_investigation'=> $this->input->post('investigations'),
+            'records_investigations_date'         => date('Y-m-d')
+        );
+
+        if ($this->Mdl_records_investigations->save(NULL, $db_array))
+        {
+            $response = array(
+                'success' => 1
+            );
+        }
+        else
+        {
+            $this->load->helper('json_error');
+            $response = array(
+                'success'           => 0,
+                'validation_errors' => json_errors()
+            );
+        }
+        echo json_encode($response);
+    }
+
+    public function save_medication()
+    {
+        $this->load->model('records/Mdl_records_medications');
+
+        $db_array = array(
+            'records_medications_medicine'      => $this->input->post('medicine'),
+            'records_medications_preparation'   => $this->input->post('preparation'),
+            'records_medications_sig'           => $this->input->post('sig'),
+            'records_medications_qty'           => $this->input->post('quantity'),
+            'records_medications_date'          => date('Y-m-d')
+        );
+
+        if ($this->Mdl_records_medications->save(NULL, $db_array))
+        {
+            $response = array(
+                'success' => 1
+            );
+        }
+        else
+        {
+            $this->load->helper('json_error');
+            $response = array(
+                'success'           => 0,
+                'validation_errors' => json_errors()
+            );
+        }
+        echo json_encode($response);
+    }
+
+    public function save_advice()
+    {
+        $this->load->model('records/Mdl_records_advice');
+
+        $db_array = array(
+            'records_advice_advice'         => $this->input->post('advices'),
+            'records_advice_follow_up_date' => $this->input->post('followup_date'),
+            'records_advice_date'           => date('Y-m-d')
+        );
+
+        if ($this->Mdl_records_advice->save(NULL, $db_array))
+        {
+            $response = array(
+                'success' => 1
+            );
+        }
+        else
+        {
+            $this->load->helper('json_error');
+            $response = array(
+                'success'           => 0,
+                'validation_errors' => json_errors()
+            );
+        }
+        echo json_encode($response);
+    }
 }
 
 ?>

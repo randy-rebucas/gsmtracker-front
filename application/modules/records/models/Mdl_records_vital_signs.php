@@ -52,25 +52,15 @@ class Mdl_Records_Vital_Signs extends Response_Model
         );
     }
 
-    public function create($db_array = NULL)
+    public function default_order_by()
     {
-        $quote_id = parent::save(NULL, $db_array);
-        // Create an quote amount record
-        $db_array = array(
-            'quote_id' => $quote_id
-        );
-        $this->db->insert('fi_quote_amounts', $db_array);
-        // Create the default invoice tax record if applicable
-        if ($this->mdl_settings->setting('default_invoice_tax_rate'))
-        {
-            $db_array = array(
-                'quote_id'              => $quote_id,
-                'tax_rate_id'           => $this->mdl_settings->setting('default_invoice_tax_rate'),
-                'include_item_tax'      => $this->mdl_settings->setting('default_include_item_tax'),
-                'quote_tax_rate_amount' => 0
-            );
-            $this->db->insert('fi_quote_tax_rates', $db_array);
-        }
-        return $quote_id;
+        $this->db->order_by('records_vital_signs.records_vital_signs_date DESC');
     }
+
+    public function is_current()
+    {
+        $this->filter_where('records_vital_signs_date', date('Y-m-d'));
+        return $this;
+    }
+
 }

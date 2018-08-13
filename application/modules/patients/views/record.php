@@ -26,6 +26,12 @@
 	    color: #fff !important;
 	    background-color: #3276b1;
 	}
+	tr.current td span {
+		background: #3276b1;
+		float: right;
+		padding: .1em 1em;
+		color: #fff;
+	}
 </style>
 <!-- Bread crumb is created dynamically -->
 <!-- row -->
@@ -209,13 +215,13 @@
 										                        <section class="col col-6">
 																	<label class="label">Weight (kg)</label>
 																	<label class="input">
-																		<input type="text" name="weight" id="weight" value="">
+																		<input type="text" name="weight" id="weight" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_weight : '';?>">
 																	</label>
 																</section>
 																<section class="col col-6">
 																	<label class="label">Height (Cm)</label>
 																	<label class="input">
-																		<input type="text" name="height" id="height" value="">
+																		<input type="text" name="height" id="height" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_height : '';?>">
 																	</label>
 																</section>
 									                    	</div>
@@ -223,13 +229,13 @@
 										                        <section class="col col-6">
 																	<label class="label">Tempature (F)</label>
 																	<label class="input">
-																		<input type="text" name="tempature" id="tempature" value="">
+																		<input type="text" name="tempature" id="tempature" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_temp : '';?>">
 																	</label>
 																</section>
 																<section class="col col-6">
 																	<label class="label">B.P. (mm, hg)</label>
 																	<label class="input">
-																		<input type="text" name="bp" id="bp" value="">
+																		<input type="text" name="bp" id="bp" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_bp : '';?>">
 																	</label>
 																</section>
 									                    	</div>
@@ -237,13 +243,13 @@
 										                        <section class="col col-6">
 																	<label class="label">Pulse (bpm)</label>
 																	<label class="input">
-																		<input type="text" name="pulse" id="pulse" value="">
+																		<input type="text" name="pulse" id="pulse" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_pulse : '';?>">
 																	</label>
 																</section>
 																<section class="col col-6">
 																	<label class="label">BMI (Kg/M^2)</label>
 																	<label class="input">
-																		<input type="text" name="bmi" id="bmi" value="">
+																		<input type="text" name="bmi" id="bmi" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_bmi : '';?>">
 																	</label>
 																</section>
 									                    	</div>
@@ -263,14 +269,46 @@
 																</button>
 															</footer>
 									                    </form>
+														<br/>
+														<?php if(count($all_vital_sign)) { ?>				
+														<table class="table">
+															<thead>
+																<tr>
+																	<th>date</th>
+																	<th class="text-center">weight</th>
+																	<th class="text-center">height</th>
+																	<th class="text-center">temp</th>
+																	<th class="text-center">bp</th>
+																	<th class="text-center">pulse</th>
+																	<th class="text-center">bmi</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php foreach($all_vital_sign as $row) { ?>
+																	<tr <?php if($row->records_vital_signs_date == date('Y-m-d')) echo 'class="current"';?>>
+																		<td>
+																			<?php echo $row->records_vital_signs_date;?>
+																			<?php if($row->records_vital_signs_date == date('Y-m-d')) echo '<span>current</span>';?>
+																		</td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_weight;?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_height;?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_temp;?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_bp;?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_pulse;?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_bmi;?></td>
+																	</tr>
+																<?php } ?>		
+															</tbody>
+														</table>
+														<?php } ?>
 													</div>
 													<div class="tab-pane fade" id="symptoms">
 														
-														<form action="" class="smart-form" _lpchecked="1">
+														<?php echo form_open('records/ajax/save_symptoms','class="smart-form" id="symptoms-form"');?>
 															<section>
 																<label class="label">Signs and Symptoms</label>
 																<label class="textarea"> 										
-																	<textarea rows="3" class="custom-scroll" name="sign_symptoms" id="sign_symptoms"></textarea> 
+																	<textarea rows="3" class="custom-scroll" name="sign_symptoms" id="sign_symptoms"><?php echo (count($cur_symptoms)) ? $cur_symptoms[0]->records_symptoms_signs : '';?></textarea> 
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -279,7 +317,7 @@
 															<section>
 																<label class="label">Diagnoses</label>
 																<label class="textarea"> 										
-																	<textarea rows="3" class="custom-scroll" name="diagnoses" id="diagnoses"></textarea> 
+																	<textarea rows="3" class="custom-scroll" name="diagnoses" id="diagnoses"><?php echo (count($cur_symptoms)) ? $cur_symptoms[0]->records_symptoms_diagnosis : '';?></textarea> 
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -291,14 +329,37 @@
 																</button>
 															</footer>
 														</form>
-						
+														<br/>
+														<?php if(count($all_symptoms)) { ?>				
+														<table class="table">
+															<thead>
+																<tr>
+																	<th>date</th>
+																	<th>Signs / Symptoms</th>
+																	<th>Diagnoses</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php foreach($all_symptoms as $row) { ?>
+																	<tr <?php if($row->records_symptoms_date == date('Y-m-d')) echo 'class="current"';?>>
+																		<td>
+																			<?php echo $row->records_symptoms_date;?>
+																			<?php if($row->records_symptoms_date == date('Y-m-d')) echo '<span>current</span>';?>
+																		</td>
+																		<td><?php echo $row->records_symptoms_signs;?></td>
+																		<td><?php echo $row->records_symptoms_diagnosis;?></td>
+																	</tr>
+																<?php } ?>		
+															</tbody>
+														</table>
+														<?php } ?>					
 													</div>
 													<div class="tab-pane fade" id="investigation">
-														<form action="" class="smart-form" _lpchecked="1">
+														<?php echo form_open('records/ajax/save_investigation','class="smart-form" id="investigation-form"');?>
 															<section>
 																<label class="label">Investigation</label>
-																<label class="input">
-																	<input type="text" class="input-sm">
+																<label class="textarea"> 										
+																	<textarea rows="3" class="custom-scroll" name="investigations" id="investigations"><?php echo (count($cur_investigations)) ? $cur_investigations[0]->records_investigations_investigation : '';?></textarea> 
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -310,39 +371,60 @@
 																</button>
 															</footer>
 														</form>
+
+														<br/>
+														<?php if(count($all_investigations)) { ?>				
+														<table class="table">
+															<thead>
+																<tr>
+																	<th>date</th>
+																	<th>Investigations</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php foreach($all_investigations as $row) { ?>
+																	<tr <?php if($row->records_investigations_date == date('Y-m-d')) echo 'class="current"';?>>
+																		<td>
+																			<?php echo $row->records_investigations_date;?>
+																			<?php if($row->records_investigations_date == date('Y-m-d')) echo '<span>current</span>';?>
+																		</td>
+																		<td><?php echo $row->records_investigations_investigation;?></td>
+																	</tr>
+																<?php } ?>		
+															</tbody>
+														</table>
+														<?php } ?>	
 													</div>
 													<div class="tab-pane fade" id="medication">
-														<form action="" id="checkout-form" class="smart-form" novalidate="novalidate">
 
+														<?php echo form_open('records/ajax/save_medication','class="smart-form" id="medication-form"');?>
 															<fieldset>
 																<section>
 																	<label class="label">Medicine</label>
 																	<label class="input">
-																		<input type="text" name="name">
+																		<input type="text" name="medicine" id="medicine">
 																	</label>
 																</section>
 																<div class="row">
-																	
 																	<section class="col col-5">
 																		<label class="label">Preparation</label>
 																		<label class="input">
-																			<input type="email" name="email">
+																			<input type="text" name="preparation"  id="preparation">
 																		</label>
 																	</section>
 																	<section class="col col-5">
 																		<label class="label">Sig</label>
 																		<label class="input">
-																			<input type="url" name="url">
+																			<input type="text" name="sig"  id="sig">
 																		</label>
 																	</section>
 																	<section class="col col-2">
 																		<label class="label">Quantiy</label>
 																		<label class="input">
-																			<input type="url" name="url">
+																			<input type="text" name="quantity"  id="quantity">
 																		</label>
 																	</section>
 																</div>
-
 																<section>
 																	<label class="checkbox">
 																		<input type="checkbox" name="maintenanble" id="maintenanble">
@@ -357,13 +439,51 @@
 																</button>
 															</footer>
 														</form>
+														<br/>
+														<?php if(count($cur_medications)) { ?>				
+															<div class="medication-items">
+																<?php foreach($cur_medications as $row) { ?>
+																	<div class="medication-item">
+																		<table class="table">
+																			<thead>
+																				<tr>
+																					<th>Medicine</th>
+																					<th>Preparation</th>
+																					<th>Sig</th>
+																					<th>Qty</th>
+																					<th>Maintenable</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<?php foreach($this->Mdl_records_medications->get_all($row->records_medications_date)->result() as $medicine) { ?>
+																					<tr>
+																						<td><?php echo $medicine->records_medications_medicine;?></td>
+																						<td><?php echo $medicine->records_medications_preparation;?></td>
+																						<td><?php echo $medicine->records_medications_sig;?></td>
+																						<td><?php echo $medicine->records_medications_qty;?></td>
+																						<td><?php echo ($medicine->records_medications_mainteinable == 1) ? 'Yes':'No';?></td>
+																					</tr>
+																				<?php } ?>		
+																			</tbody>
+																			<tfoot>
+																				<tr>
+																					<td colspan="4"><?php echo $row->records_medications_date;?></td>
+																					<td class="text-right"><a href="" class="btn btn-xs btn-success">Print</a></td>
+																				</tr>
+																			</tfoot>
+																		</table>
+																	</div>
+																<?php } ?>	
+															</div>
+														<?php } ?>					
+														
 													</div>
 													<div class="tab-pane fade" id="advice">
-														<form action="" class="smart-form" _lpchecked="1">
+														<?php echo form_open('records/ajax/save_advice','class="smart-form" id="advice-form"');?>
 															<section>
 																<label class="label">Advice</label>
 																<label class="textarea"> 										
-																	<textarea rows="3" class="custom-scroll" name="advices" id="advices"></textarea> 
+																	<textarea rows="3" class="custom-scroll" name="advices" id="advices"><?php echo (count($cur_advice)) ? $cur_advice[0]->records_advice_advice : '';?></textarea> 
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -374,7 +494,7 @@
 																<section class="col col-4">
 																	<label class="label">Follow-Up Date</label>
 																	<label class="input"> 										
-																		<input type="input" name="followup_date" class="datepicker" data-dateformat="dd/mm/yy">
+																		<input type="input" name="followup_date" id="followup_date" value="<?php echo (count($cur_advice)) ? $cur_advice[0]->records_advice_follow_up_date : '';?>" class="datepicker" data-dateformat="yy-mm-dd">
 																	</label>
 																	<!-- <div class="note">
 																		<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -388,6 +508,31 @@
 																</button>
 															</footer>
 														</form>
+
+														<br/>
+														<?php if(count($all_advice)) { ?>				
+														<table class="table">
+															<thead>
+																<tr>
+																	<th>date</th>
+																	<th>Advice</th>
+																	<th>Next visit</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php foreach($all_advice as $row) { ?>
+																	<tr <?php if($row->records_advice_date == date('Y-m-d')) echo 'class="current"';?>>
+																		<td>
+																			<?php echo $row->records_advice_date;?>
+																			<?php if($row->records_advice_date == date('Y-m-d')) echo '<span>current</span>';?>
+																		</td>
+																		<td><?php echo $row->records_advice_advice;?></td>
+																		<td><?php echo $row->records_advice_follow_up_date;?></td>
+																	</tr>
+																<?php } ?>		
+															</tbody>
+														</table>
+														<?php } ?>
 													</div>
 												</div>
 											</div>
@@ -597,13 +742,283 @@
                 });
             }
         });
-
+		
 		$('.is_required').each(function() {
 		    $(this).rules('add', {
 		        required: true,  // example rule
 		        // another rule, etc.
 		    });
 		});
+
+		$("#symptoms-form").validate({
+            // Rules for form validation
+            rules : {
+                sign_symptoms : {
+                    required : true,
+                    maxlength: 1000
+                },
+                diagnoses : {
+                    required : true,
+                    maxlength: 3000
+                }
+            },
+            // Messages for form validation
+            messages : {
+                sign_symptoms : {
+                    required : '<i class="fa fa-times-circle"></i> Please add symptoms',
+                    maxlength: '<i class="fa fa-times-circle"></i> The symptoms can not exceed 1000 characters in length.'
+                },
+                diagnoses : {
+                    required : '<i class="fa fa-times-circle"></i> Please add diagnoses',
+                    maxlength: '<i class="fa fa-times-circle"></i> The diagnoses can not exceed 3000 characters in length.'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+            // Ajax form submition
+            submitHandler : function(form) {
+                
+                $(form).ajaxSubmit({
+                    beforeSend: function () {
+                        $(form).find('#submit').html('Please wait...');
+                        $(form).find('#submit').attr("disabled", "disabled");
+                    },
+                    success:function(response)
+                    {
+                        if(response.success)
+                        {
+                            mcs.init_smallBox("success", response.message);
+							$('.bootbox-close-button').trigger('click');
+                            checkURL();
+                        }
+                        else
+                        {
+                            mcs.init_smallBox("error", response.message);
+                        }                   
+                        $(form).find('#submit').text('Submit');
+                        $(form).find('#submit').removeAttr("disabled");
+                    },
+                    dataType:'json'
+                });
+            }
+        });
+		
+		$("#investigation-form").validate({
+            // Rules for form validation
+            rules : {
+                investigations : {
+                    required : true,
+                    maxlength: 250
+                }
+            },
+            // Messages for form validation
+            messages : {
+                investigations : {
+                    required : '<i class="fa fa-times-circle"></i> Please add investigation',
+                    maxlength: '<i class="fa fa-times-circle"></i> The investigation can not exceed 250 characters in length.'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+            // Ajax form submition
+            submitHandler : function(form) {
+                
+                $(form).ajaxSubmit({
+                    beforeSend: function () {
+                        $(form).find('#submit').html('Please wait...');
+                        $(form).find('#submit').attr("disabled", "disabled");
+                    },
+                    success:function(response)
+                    {
+                        if(response.success)
+                        {
+                            mcs.init_smallBox("success", response.message);
+							$('.bootbox-close-button').trigger('click');
+                            checkURL();
+                        }
+                        else
+                        {
+                            mcs.init_smallBox("error", response.message);
+                        }                   
+                        $(form).find('#submit').text('Submit');
+                        $(form).find('#submit').removeAttr("disabled");
+                    },
+                    dataType:'json'
+                });
+            }
+        });
+		
+		$("#medication-form").validate({
+            // Rules for form validation
+            rules : {
+                medicine : {
+                    required : true,
+                    maxlength: 250
+                },
+				preparation : {
+                    required : true,
+					maxlength: 250
+                },
+				sig : {
+                    required : true,
+                    maxlength: 250
+                },
+				quantity : {
+                    required : true,
+					maxlength: 10
+                }
+            },
+            // Messages for form validation
+            messages : {
+                medicine : {
+                    required : '<i class="fa fa-times-circle"></i> Please add medicine',
+                    maxlength: '<i class="fa fa-times-circle"></i> The medicine can not exceed 250 characters in length.'
+                },
+				preparation : {
+                    required : '<i class="fa fa-times-circle"></i> Please add preparation',
+					maxlength: '<i class="fa fa-times-circle"></i> The preparation can not exceed 250 characters in length.'
+                },
+				sig : {
+                    required : '<i class="fa fa-times-circle"></i> Please add sig',
+                    maxlength: '<i class="fa fa-times-circle"></i> The sig can not exceed 250 characters in length.'
+                },
+				quantity : {
+                    required : '<i class="fa fa-times-circle"></i> Please add quantity',
+					maxlength: '<i class="fa fa-times-circle"></i> The quantity can not exceed 5 characters in length.'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+            // Ajax form submition
+            submitHandler : function(form) {
+                
+                $(form).ajaxSubmit({
+                    beforeSend: function () {
+                        $(form).find('#submit').html('Please wait...');
+                        $(form).find('#submit').attr("disabled", "disabled");
+                    },
+                    success:function(response)
+                    {
+                        if(response.success)
+                        {
+                            mcs.init_smallBox("success", response.message);
+							$('.bootbox-close-button').trigger('click');
+                            checkURL();
+                        }
+                        else
+                        {
+                            mcs.init_smallBox("error", response.message);
+                        }                   
+                        $(form).find('#submit').text('Submit');
+                        $(form).find('#submit').removeAttr("disabled");
+                    },
+                    dataType:'json'
+                });
+            }
+        });
+
+		$("#advice-form").validate({
+            // Rules for form validation
+            rules : {
+                advices : {
+                    required : true,
+                    maxlength: 1000
+                },
+				followup_date : {
+                    required : true
+                }
+            },
+            // Messages for form validation
+            messages : {
+                advices : {
+                    required : '<i class="fa fa-times-circle"></i> Please add advices',
+                    maxlength: '<i class="fa fa-times-circle"></i> The advices can not exceed 1000 characters in length.'
+                },
+				followup_date : {
+                    required : '<i class="fa fa-times-circle"></i> Please add followup date'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+            // Ajax form submition
+            submitHandler : function(form) {
+                
+                $(form).ajaxSubmit({
+                    beforeSend: function () {
+                        $(form).find('#submit').html('Please wait...');
+                        $(form).find('#submit').attr("disabled", "disabled");
+                    },
+                    success:function(response)
+                    {
+                        if(response.success)
+                        {
+                            mcs.init_smallBox("success", response.message);
+							$('.bootbox-close-button').trigger('click');
+                            checkURL();
+                        }
+                        else
+                        {
+                            mcs.init_smallBox("error", response.message);
+                        }                   
+                        $(form).find('#submit').text('Submit');
+                        $(form).find('#submit').removeAttr("disabled");
+                    },
+                    dataType:'json'
+                });
+            }
+        });
     }
 
 	loadScript(BASE_URL+"js/plugin/jquery-validate/jquery.validate.min.js", function(){

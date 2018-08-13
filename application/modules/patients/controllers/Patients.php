@@ -46,13 +46,30 @@ class Patients extends Secure_Controller
 		}
 	}
 
-	public function record($patient_id, $record_id = -1)
+	public function record($patient_id)
 	{
 		$this->load->model('patients/Mdl_patients');
+
 		$this->load->model('records/Mdl_records_vital_signs');
+		$data['cur_vital_sign']  = $this->Mdl_records_vital_signs->is_current()->get()->result();
+		$data['all_vital_sign']  = $this->Mdl_records_vital_signs->get()->result();
+
+		$this->load->model('records/Mdl_records_symptoms');
+		$data['cur_symptoms']  = $this->Mdl_records_symptoms->is_current()->get()->result();
+		$data['all_symptoms']  = $this->Mdl_records_symptoms->get()->result();
+
+		$this->load->model('records/Mdl_records_investigations');
+		$data['cur_investigations']  = $this->Mdl_records_investigations->is_current()->get()->result();
+		$data['all_investigations']  = $this->Mdl_records_investigations->get()->result();
+
+		$this->load->model('records/Mdl_records_medications');
+		$data['cur_medications']  = $this->Mdl_records_medications->get()->result();
+
+		$this->load->model('records/Mdl_records_advice');
+		$data['cur_advice']  = $this->Mdl_records_advice->is_current()->get()->result();
+		$data['all_advice']  = $this->Mdl_records_advice->get()->result();
 
 		$this->load->model('custom_fields/Mdl_custom_fields');
-
 		$data['custom_fields'] = $this->Mdl_custom_fields->by_table('records_vital_signs')->get()->result();
 
 		$data['info'] = $this->Mdl_patients->get_info($patient_id);
