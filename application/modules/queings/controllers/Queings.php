@@ -37,6 +37,7 @@ class Queings extends Secure_Controller
         
 	}
 	
+	
 	function move_in()
 	{
 		

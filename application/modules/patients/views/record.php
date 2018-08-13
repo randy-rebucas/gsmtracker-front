@@ -95,7 +95,7 @@
 									</div> -->
 								</div>
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
-									<a href="<?php echo site_url('queings/create');?>" class="btn btn-warning btn-sm"><i class="fas fa-lg fa-fw fa-users"></i>&nbsp;<span class="hidden-mobile">Que</span> </a>
+									<a href="<?php echo site_url('queings/ajax/move_in/'.$this->uri->segment(3));?>" class="btn btn-warning btn-sm" id="move-in"><i class="fas fa-lg fa-fw fa-users"></i>&nbsp;<span class="hidden-mobile">Que</span> </a>
 
 								</div>
 								
@@ -109,8 +109,15 @@
 							<div class="row">
 								
 								<div class="col-md-3">
-									<img src="<?php echo base_url();?>img/avatar.png" class="img-fluid"/>
-									
+									<?php if($info->avatar != '')
+									{
+										$img = base_url().'uploads/profile-picture/'.$info->avatar;
+									}
+									else
+									{ 
+										$img = $this->gravatar->get($info->email, 200);
+									} ?>
+									<img src="<?php echo $img;?>" class="img-fluid"/>
 									<h3><?php echo $info->firstname.' '.$info->mi.', '.$info->lastname;?></h3>
 									<dl class="row">
 									  	<dt class="col-sm-3">Token</dt>
@@ -646,6 +653,34 @@
 			$.post(BASE_URL+'records/ajax/set_tab', { tab: curtab} );
 		});
 
+		$(document).on('click','#move-in',function(e) {
+		    var href = $(this).attr('href');
+			
+			$.ajax({
+				url: href,
+				success: function (response)
+				{
+					console.log(response);
+					checkURL();
+				}
+			});
+
+			e.preventDefault();
+		});
+		// $('#move-in').click(function (e) {
+		// 	var href = $(this).attr('href');
+			
+		// 	$.ajax({
+		// 		url: href,
+		// 		success: function (response)
+		// 		{
+		// 			console.log(response);
+		// 			checkURL();
+		// 		}
+		// 	});
+
+		// 	e.preventDefault();
+		// });
 	});
 
 	var validatefunction = function() {
