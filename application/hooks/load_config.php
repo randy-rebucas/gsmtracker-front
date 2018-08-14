@@ -4,13 +4,13 @@ function load_config()
 {
     $CI =& get_instance();
 
-    $CI->load->model('settings/Setting');
-    $CI->load->library('auth/tank_auth');
+    // $CI->load->model('settings/Setting');
+    // $CI->load->library('auth/tank_auth');
 
-    foreach( $CI->Setting->get_all($CI->tank_auth->get_client_id())->result() as $app_config )
-    {
-        $CI->config->set_item( $app_config->key, $app_config->value );
-    }
+    // foreach( $CI->Setting->get_all($CI->tank_auth->get_client_id())->result() as $app_config )
+    // {
+    //     $CI->config->set_item( $app_config->key, $app_config->value );
+    // }
     
     
     //Set timezone from config database
@@ -20,19 +20,19 @@ function load_config()
     }
     else
     {
-        date_default_timezone_set( 'Asia/Hong_Kong' );
+        date_default_timezone_set('Asia/Manila');
     }
 	
-	//Set dateformat from config database
-    if ( $CI->config->item( 'dateformat' ) == '')
-    {
-		$CI->config->set_item( 'dateformat', 'd/m/Y');
-    }
+	// //Set dateformat from config database
+    // if ( $CI->config->item( 'dateformat' ) == '')
+    // {
+	// 	$CI->config->set_item( 'dateformat', 'd/m/Y');
+    // }
     
-	//Set dateformat from config database
-    if ( $CI->config->item( 'timeformat' ) == '' )
-    {
-		$CI->config->set_item( 'timeformat', 'h:i:s a' );
-    }
+	// //Set dateformat from config database
+    // if ( $CI->config->item( 'timeformat' ) == '' )
+    // {
+	// 	$CI->config->set_item( 'timeformat', 'h:i:s a' );
+    // }
 }
 ?>

@@ -29,23 +29,13 @@ class Ajax extends Secure_Controller {
             echo json_encode(array('success' => 1, 'message'=>''));
         }
     }
-
-    public function get_tab()
-    {
-        $tab = $this->input->post('tab');
-
-        if($this->session->userdata('tab')){
-            $this->set_tab($tab);
-        }
-
-        echo json_encode(array('selected-tab'=>$this->session->userdata('tab')));
-    }
-
+    
     public function save_vital_signs()
     {
         $this->load->model('records/Mdl_records_vital_signs');
 
         $db_array = array(
+            'record_id'                     => $this->input->post('record_id'),
             'records_vital_signs_weight'    => $this->input->post('weight'),
             'records_vital_signs_height'    => $this->input->post('height'),
             'records_vital_signs_temp'      => $this->input->post('tempature'),
@@ -77,6 +67,7 @@ class Ajax extends Secure_Controller {
         $this->load->model('records/Mdl_records_symptoms');
 
         $db_array = array(
+            'record_id'                     => $this->input->post('record_id'),
             'records_symptoms_signs'        => $this->input->post('sign_symptoms'),
             'records_symptoms_diagnosis'    => $this->input->post('diagnoses'),
             'records_symptoms_date'         => date('Y-m-d')
@@ -104,6 +95,7 @@ class Ajax extends Secure_Controller {
         $this->load->model('records/Mdl_records_investigations');
 
         $db_array = array(
+            'record_id'                     => $this->input->post('record_id'),
             'records_investigations_investigation'=> $this->input->post('investigations'),
             'records_investigations_date'         => date('Y-m-d')
         );
@@ -130,6 +122,7 @@ class Ajax extends Secure_Controller {
         $this->load->model('records/Mdl_records_medications');
 
         $db_array = array(
+            'record_id'                     => $this->input->post('record_id'),
             'records_medications_medicine'      => $this->input->post('medicine'),
             'records_medications_preparation'   => $this->input->post('preparation'),
             'records_medications_sig'           => $this->input->post('sig'),
@@ -159,6 +152,7 @@ class Ajax extends Secure_Controller {
         $this->load->model('records/Mdl_records_advice');
 
         $db_array = array(
+            'record_id'                     => $this->input->post('record_id'),
             'records_advice_advice'         => $this->input->post('advices'),
             'records_advice_follow_up_date' => $this->input->post('followup_date'),
             'records_advice_date'           => date('Y-m-d')

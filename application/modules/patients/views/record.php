@@ -32,6 +32,15 @@
 		padding: .1em 1em;
 		color: #fff;
 	}
+	.patient_details_wrap {
+		display: grid;
+		grid-template-columns: 30% 70%;
+		grid-gap: 1em;
+		padding-bottom: 1em;
+	}
+	.patient_details h3 {
+		margin: 0;
+	}
 </style>
 <!-- Bread crumb is created dynamically -->
 <!-- row -->
@@ -49,7 +58,7 @@
 <!-- end row -->
 
 		<!-- NEW WIDGET START -->
-		<article class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<!-- Widget ID (each widget will need unique ID)-->
 			<div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="true" data-widget-editbutton="false">
 				<!-- widget options:
@@ -95,8 +104,9 @@
 									</div> -->
 								</div>
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
+									
 									<a href="<?php echo site_url('queings/ajax/move_in/'.$this->uri->segment(3));?>" class="btn btn-warning btn-sm" id="move-in"><i class="fas fa-lg fa-fw fa-users"></i>&nbsp;<span class="hidden-mobile">Que</span> </a>
-
+							
 								</div>
 								
 							</div>
@@ -108,48 +118,35 @@
 						<div class="custom-scroll">
 							<div class="row">
 								
-								<div class="col-md-3">
-									<?php if($info->avatar != '')
-									{
-										$img = base_url().'uploads/profile-picture/'.$info->avatar;
-									}
-									else
-									{ 
-										$img = $this->gravatar->get($info->email, 200);
-									} ?>
-									<img src="<?php echo $img;?>" class="img-fluid"/>
-									<h3><?php echo $info->firstname.' '.$info->mi.', '.$info->lastname;?></h3>
-									<dl class="row">
-									  	<dt class="col-sm-3">Token</dt>
-									  	<dd class="col-sm-9 text-truncate">: <?php echo $info->token;?></dd>
+								<div class="col-md-4">
+									<div class="patient_details_wrap">
+										<div class="patient_details">
+											<?php $img = ($info->avatar != '') ? base_url().'uploads/profile-picture/'.$info->avatar : $this->gravatar->get($info->email, 200);?>
+											<img src="<?php echo $img;?>" class="img-fluid"/>
+										</div>
+										<div class="patient_details">
+											<h3><?php echo $info->firstname.' '.$info->mi.', '.$info->lastname;?></h3>
+											<dl class="row">
+												<dt class="col-sm-3">Token</dt>
+												<dd class="col-sm-9 text-truncate">: <?php echo $info->token;?></dd>
 
-									  	<dt class="col-sm-3">Gender</dt>
-									  	<dd class="col-sm-9">: <?php echo ($info->gender == 1) ? 'Male': 'Female';?></dd>
+												<dt class="col-sm-3">Gender</dt>
+												<dd class="col-sm-9">: <?php echo ($info->gender == 1) ? 'Male': 'Female';?></dd>
 
-									  	<dt class="col-sm-3">Birthdate</dt>
-									  	<dd class="col-sm-9 text-truncate">: <?php echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
+												<dt class="col-sm-3">Birthdate</dt>
+												<dd class="col-sm-9 text-truncate">: <?php echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
 
-									  	<dt class="col-sm-3">Country</dt>
-									  	<dd class="col-sm-9">: <?php echo ($info->country) ? $info->country: '--';?></dd>
+												<dt class="col-sm-3">Address</dt>
+												<dd class="col-sm-9">: <?php echo ($info->address) ? $info->address: '--';?></dd>
 
-									  	<dt class="col-sm-3">City</dt>
-									  	<dd class="col-sm-9">: <?php echo ($info->city) ? $info->city: '--';?></dd>
+												<dt class="col-sm-3">Mobile</dt>
+												<dd class="col-sm-9">: <?php echo ($info->mobile) ? $info->mobile: '--';?></dd>
+											</dl>
 
-									  	<dt class="col-sm-3">State</dt>
-									  	<dd class="col-sm-9">: <?php echo ($info->state) ? $info->state: '--';?></dd>
-
-									  	<dt class="col-sm-3">Zip</dt>
-									  	<dd class="col-sm-9">: <?php echo ($info->zip) ? $info->zip: '--';?></dd>
-
-									  	<dt class="col-sm-3">Address</dt>
-									  	<dd class="col-sm-9">: <?php echo ($info->address) ? $info->address: '--';?></dd>
-
-									  	<dt class="col-sm-3">Mobile</dt>
-									  	<dd class="col-sm-9">: <?php echo ($info->mobile) ? $info->mobile: '--';?></dd>
-									</dl>
-
+										</div>
+									</div>
 								</div>
-								<div class="col-md-9">
+								<div class="col-md-8">
 									<div class="jarviswidget" id="widget-records" role="widget">
 										<!-- widget options:
 										usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
@@ -215,9 +212,15 @@
 											<!-- widget content -->
 											<div class="widget-body">
 												<div class="tab-content padding-10-0">
-													
-													<div class="tab-pane fade active in" id="vital-signs">
+												
+													<div class="tab-pane fade <?php if($tab == 'vital-signs') echo 'active in';?>" id="vital-signs">
 														<?php echo form_open('records/ajax/save_vital_signs','class="smart-form" id="vital-signs-form"');?>
+															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
+															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+																<div class="alert alert-info">
+																	<p>Please move first in que to continue!</p>
+																</div>
+															<?php } ?>
 															<div class="row">
 										                        <section class="col col-6">
 																	<label class="label">Weight (kg)</label>
@@ -271,7 +274,8 @@
 										                        <?php } ?>
 									                    	</div>
 									                    	<footer>
-																<button type="submit" class="btn btn-primary">
+																
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -309,9 +313,15 @@
 														</table>
 														<?php } ?>
 													</div>
-													<div class="tab-pane fade" id="symptoms">
+													<div class="tab-pane fade <?php if($tab == 'symptoms') echo 'active in';?>" id="symptoms">
 														
 														<?php echo form_open('records/ajax/save_symptoms','class="smart-form" id="symptoms-form"');?>
+															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
+															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+																<div class="alert alert-info">
+																	<p>Please move first to que to continue!</p>
+																</div>
+															<?php } ?>
 															<section>
 																<label class="label">Signs and Symptoms</label>
 																<label class="textarea"> 										
@@ -331,7 +341,7 @@
 																</div> -->
 															</section>
 															<footer>
-																<button type="submit" class="btn btn-primary">
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -361,8 +371,14 @@
 														</table>
 														<?php } ?>					
 													</div>
-													<div class="tab-pane fade" id="investigation">
+													<div class="tab-pane fade <?php if($tab == 'investigation') echo 'active in';?>" id="investigation">
 														<?php echo form_open('records/ajax/save_investigation','class="smart-form" id="investigation-form"');?>
+															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
+															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+																<div class="alert alert-info">
+																	<p>Please move first in que to continue!</p>
+																</div>
+															<?php } ?>
 															<section>
 																<label class="label">Investigation</label>
 																<label class="textarea"> 										
@@ -373,7 +389,7 @@
 																</div> -->
 															</section>
 															<footer>
-																<button type="submit" class="btn btn-primary">
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -402,9 +418,15 @@
 														</table>
 														<?php } ?>	
 													</div>
-													<div class="tab-pane fade" id="medication">
+													<div class="tab-pane fade <?php if($tab == 'medication') echo 'active in';?>" id="medication">
 
 														<?php echo form_open('records/ajax/save_medication','class="smart-form" id="medication-form"');?>
+															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
+															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+																<div class="alert alert-info">
+																	<p>Please move first in que to continue!</p>
+																</div>
+															<?php } ?>
 															<fieldset>
 																<section>
 																	<label class="label">Medicine</label>
@@ -441,7 +463,7 @@
 															</fieldset>
 
 															<footer>
-																<button type="submit" class="btn btn-primary">
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -485,8 +507,14 @@
 														<?php } ?>					
 														
 													</div>
-													<div class="tab-pane fade" id="advice">
+													<div class="tab-pane fade <?php if($tab == 'advice') echo 'active in';?>" id="advice">
 														<?php echo form_open('records/ajax/save_advice','class="smart-form" id="advice-form"');?>
+															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
+															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+																<div class="alert alert-info">
+																	<p>Please move first in que to continue!</p>
+																</div>
+															<?php } ?>
 															<section>
 																<label class="label">Advice</label>
 																<label class="textarea"> 										
@@ -510,7 +538,7 @@
 
 															</div>
 															<footer>
-																<button type="submit" class="btn btn-primary">
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -593,6 +621,7 @@
 														<table class="table table-bordered">
 															<thead>
 																<tr>
+																	<th>ID</th>
 																	<th>Date</th>
 																	<th>Time</th>
 																	<th>Status</th>
@@ -601,9 +630,10 @@
 															<tbody>
 																<?php foreach($all_record as $row){ ?>
 																	<tr>
+																		<td><?php echo $row->record_id;?></td>
 																		<td><?php echo $row->record_date;?></td>
 																		<td><?php echo $row->record_time;?></td>
-																		<td><?php echo ($row->record_status == 1) ? 'Finished':'Canceled';?></td>
+																		<td><?php echo ($row->record_status == 1) ? 'Finished':'Progress...';?></td>
 																	</tr>
 																<?php } ?>
 															</tbody>
@@ -658,29 +688,26 @@
 			
 			$.ajax({
 				url: href,
+				type: 'post',
+				dataType: "json",
 				success: function (response)
 				{
-					console.log(response);
-					checkURL();
+					console.log(response.message);
+					if(response)
+					{
+						mcs.init_smallBox("success", response.message);
+						checkURL();
+					}
+					else
+					{
+						mcs.init_smallBox("error", response.message);
+					}  
 				}
 			});
 
 			e.preventDefault();
 		});
-		// $('#move-in').click(function (e) {
-		// 	var href = $(this).attr('href');
-			
-		// 	$.ajax({
-		// 		url: href,
-		// 		success: function (response)
-		// 		{
-		// 			console.log(response);
-		// 			checkURL();
-		// 		}
-		// 	});
 
-		// 	e.preventDefault();
-		// });
 	});
 
 	var validatefunction = function() {

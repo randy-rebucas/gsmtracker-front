@@ -16,4 +16,9 @@ class Mdl_Queings extends Response_Model
 	public $table               = 'queing';
     public $primary_key         = 'queing.que_id';
 
+    public function in_que($patient_id)
+    {
+        $this->filter_where('user_id', $patient_id);
+        return $this;
+    }
 }

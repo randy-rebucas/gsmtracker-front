@@ -48,29 +48,36 @@ class Patients extends Secure_Controller
 
 	public function record($patient_id)
 	{
+		$record_id = null;
+
+		$this->load->model('queings/Mdl_queings');
+		$this->load->model('records/Mdl_records');
 		$this->load->model('patients/Mdl_patients');
 
-		$this->load->model('records/Mdl_records');
-		$data['all_record']  = $this->Mdl_records->get()->result();
+		if($this->Mdl_queings->in_que($patient_id)->get()->num_rows()){
+			$record_id = $this->Mdl_records->record_from($patient_id)->is_current()->get()->row()->record_id;
+		}
+
+		$data['all_record']  = $this->Mdl_records->record_from($patient_id)->get()->result();
 
 		$this->load->model('records/Mdl_records_vital_signs');
-		$data['cur_vital_sign']  = $this->Mdl_records_vital_signs->is_current()->get()->result();
-		$data['all_vital_sign']  = $this->Mdl_records_vital_signs->get()->result();
+		$data['cur_vital_sign']  = $this->Mdl_records_vital_signs->by_record_id($record_id)->is_current()->get()->result();
+		$data['all_vital_sign']  = $this->Mdl_records_vital_signs->by_record_id($record_id)->get()->result();
 
 		$this->load->model('records/Mdl_records_symptoms');
-		$data['cur_symptoms']  = $this->Mdl_records_symptoms->is_current()->get()->result();
-		$data['all_symptoms']  = $this->Mdl_records_symptoms->get()->result();
+		$data['cur_symptoms']  = $this->Mdl_records_symptoms->by_record_id($record_id)->is_current()->get()->result();
+		$data['all_symptoms']  = $this->Mdl_records_symptoms->by_record_id($record_id)->get()->result();
 
 		$this->load->model('records/Mdl_records_investigations');
-		$data['cur_investigations']  = $this->Mdl_records_investigations->is_current()->get()->result();
-		$data['all_investigations']  = $this->Mdl_records_investigations->get()->result();
+		$data['cur_investigations']  = $this->Mdl_records_investigations->by_record_id($record_id)->is_current()->get()->result();
+		$data['all_investigations']  = $this->Mdl_records_investigations->by_record_id($record_id)->get()->result();
 
 		$this->load->model('records/Mdl_records_medications');
-		$data['cur_medications']  = $this->Mdl_records_medications->get()->result();
+		$data['cur_medications']  = $this->Mdl_records_medications->by_record_id($record_id)->get()->result();
 
 		$this->load->model('records/Mdl_records_advice');
-		$data['cur_advice']  = $this->Mdl_records_advice->is_current()->get()->result();
-		$data['all_advice']  = $this->Mdl_records_advice->get()->result();
+		$data['cur_advice']  = $this->Mdl_records_advice->by_record_id($record_id)->is_current()->get()->result();
+		$data['all_advice']  = $this->Mdl_records_advice->by_record_id($record_id)->get()->result();
 
 		$this->load->model('custom_fields/Mdl_custom_fields');
 		$data['custom_fields'] = $this->Mdl_custom_fields->by_table('records_vital_signs')->get()->result();
@@ -82,6 +89,8 @@ class Patients extends Secure_Controller
 
 		$this->load->library('records/record_lib');
 		$data['tab'] = $this->record_lib->get_tab();
+
+		$data['record_id'] = $record_id;
 
 		$this->set_layout();
 

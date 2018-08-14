@@ -340,10 +340,9 @@ class MY_Model extends CI_Model {
      * $this->model_name->exist(5);
      */
 
-	function exists($user_id, $client_id)
+	function exists($user_id)
 	{
 		$this->db->from($this->table);	
-		$this->db->where($this->table.'.client_id', $client_id);
 		$this->db->where($this->primary_key, $id);
 		$query = $this->db->get();
 		

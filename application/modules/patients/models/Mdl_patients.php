@@ -21,6 +21,13 @@ class Mdl_Patients extends Response_Model
         $this->db->order_by('users.username DESC');
     }
 
+    public function default_join()
+    {
+        $this->db->join('users_profiles', 'users_profiles.user_id = users.id');
+        $this->db->join('users_role', 'users_role.user_id = users.id');
+        $this->db->join('users_custom', 'users_custom.user_id = users.id', 'left');
+    }
+
     function get_info($patient_id)
 	{
         $this->db->from('users');	

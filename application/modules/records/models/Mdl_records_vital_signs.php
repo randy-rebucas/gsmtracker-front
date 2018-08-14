@@ -63,4 +63,10 @@ class Mdl_Records_Vital_Signs extends Response_Model
         return $this;
     }
 
+    public function by_record_id($record_id)
+    {
+        $this->filter_where('record_id', $record_id);
+        return $this;
+    }
+
 }

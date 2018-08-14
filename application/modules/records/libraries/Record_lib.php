@@ -35,7 +35,6 @@ class Record_Lib {
 
 	public function set_tab($tab)
 	{
-        $tab = $this->ci->input->post('tab');
 		$this->ci->session->set_userdata('tab_mode', $tab);
 	}
 

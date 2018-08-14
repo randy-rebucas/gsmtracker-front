@@ -16,4 +16,15 @@ class Mdl_Records extends Response_Model
 	public $table               = 'records';
     public $primary_key         = 'records.record_id';
 
+    public function is_current()
+    {
+        $this->filter_where('record_date', date('Y-m-d'));
+        return $this;
+    }
+
+    public function record_from($patient_id)
+    {
+        $this->filter_where('patient_id', $patient_id);
+        return $this;
+    }
 }

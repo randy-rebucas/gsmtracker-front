@@ -37,4 +37,10 @@ class Mdl_Records_Investigations extends Response_Model
         $this->filter_where('records_investigations_date', date('Y-m-d'));
         return $this;
     }
+
+    public function by_record_id($record_id)
+    {
+        $this->filter_where('record_id', $record_id);
+        return $this;
+    }
 }
