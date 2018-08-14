@@ -70,6 +70,30 @@ class Ajax extends Secure_Controller {
  
         echo json_encode($response);
     }
+
+    function get_counts()
+	{
+        $this->load->model('queings/Mdl_queings');
+		echo json_encode(array('counts' => $this->Mdl_queings->get()->num_rows()));
+    }
+    
+    function get_que()
+    {
+        $this->load->model('queings/Mdl_queings');
+        $data['results'] = $this->Mdl_queings->get()->result_array();
+        $this->load->view('manage', $data);
+    }
+
+    function clear_all()
+    {
+        $this->load->model('queings/Mdl_queings');
+        if($this->Mdl_queings->clear()){
+            $response = array(
+                'success' => true
+            );
+        }
+        
+    }
 }
 
 ?>

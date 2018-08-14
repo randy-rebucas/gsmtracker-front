@@ -41,6 +41,19 @@
 	.patient_details h3 {
 		margin: 0;
 	}
+	.widget-body .well {
+		margin-bottom: 1em;
+	}
+	.jarviswidget.well header {
+		display: block;
+	}
+	.jarviswidget.well header a {
+		float: right;
+		width: 25px;
+		height: 25px;
+		padding: 3px 0;
+		margin: 4px;
+	}
 </style>
 <!-- Bread crumb is created dynamically -->
 <!-- row -->
@@ -127,8 +140,11 @@
 										<div class="patient_details">
 											<h3><?php echo $info->firstname.' '.$info->mi.', '.$info->lastname;?></h3>
 											<dl class="row">
-												<dt class="col-sm-3">Token</dt>
-												<dd class="col-sm-9 text-truncate">: <?php echo $info->token;?></dd>
+											
+												<dt class="col-sm-3">Age</dt>
+												<dd class="col-sm-9 text-truncate">: <?php echo (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
+												? ((date("Y") - $info->bYear) - 1)
+												: (date("Y") - $info->bYear)); ?> - <?php echo ($info->bYear < date('Y')) ? 'years': (date('m') - $info->bMonth) .' month old';?></dd>
 
 												<dt class="col-sm-3">Gender</dt>
 												<dd class="col-sm-9">: <?php echo ($info->gender == 1) ? 'Male': 'Female';?></dd>
@@ -141,10 +157,100 @@
 
 												<dt class="col-sm-3">Mobile</dt>
 												<dd class="col-sm-9">: <?php echo ($info->mobile) ? $info->mobile: '--';?></dd>
+
+												<dt class="col-sm-3">Token</dt>
+												<dd class="col-sm-9 text-truncate">: <?php echo $info->token;?></dd>
 											</dl>
 
 										</div>
 									</div>
+
+									<!-- Widget ID (each widget will need unique ID)-->
+									<div class="jarviswidget well" id="wid-id-4" data-widget-colorbutton="true" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+										<!-- widget options:
+										usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+						
+										data-widget-colorbutton="false"
+										data-widget-editbutton="false"
+										data-widget-togglebutton="false"
+										data-widget-deletebutton="false"
+										data-widget-fullscreenbutton="false"
+										data-widget-custombutton="false"
+										data-widget-collapsed="true"
+										data-widget-sortable="false"
+						
+										-->
+										<header>
+											<span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+											<h2>Allergies</h2>
+											<a href="" class="btn btn-success btn-xs btn-circle"><i class="fa fa-plus"></i></a>
+										</header>
+						
+										<!-- widget div-->
+										<div>
+						
+											<!-- widget edit box -->
+											<div class="jarviswidget-editbox">
+												<!-- This area used as dropdown edit box -->
+						
+											</div>
+											<!-- end widget edit box -->
+						
+											<!-- widget content -->
+											<div class="widget-body">
+											
+						
+											</div>
+											<!-- end widget content -->
+						
+										</div>
+										<!-- end widget div -->
+						
+									</div>
+									<!-- end widget -->
+
+									<!-- Widget ID (each widget will need unique ID)-->
+									<div class="jarviswidget well" id="wid-id-4" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+										<!-- widget options:
+										usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+						
+										data-widget-colorbutton="false"
+										data-widget-editbutton="false"
+										data-widget-togglebutton="false"
+										data-widget-deletebutton="false"
+										data-widget-fullscreenbutton="false"
+										data-widget-custombutton="false"
+										data-widget-collapsed="true"
+										data-widget-sortable="false"
+						
+										-->
+										<header>
+											<span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+											<h2>Family histories </h2>
+											<a href="" class="btn btn-success btn-xs btn-circle float-right"><i class="fa fa-plus"></i></a>
+										</header>
+						
+										<!-- widget div-->
+										<div>
+						
+											<!-- widget edit box -->
+											<div class="jarviswidget-editbox">
+												<!-- This area used as dropdown edit box -->
+						
+											</div>
+											<!-- end widget edit box -->
+						
+											<!-- widget content -->
+											<div class="widget-body">
+												
+											</div>
+											<!-- end widget content -->
+						
+										</div>
+										<!-- end widget div -->
+						
+									</div>
+									<!-- end widget -->
 								</div>
 								<div class="col-md-8">
 									<div class="jarviswidget" id="widget-records" role="widget">

@@ -113,25 +113,6 @@ class Queings extends Secure_Controller
 			echo json_encode(array('success' => false, 'message' => 'Encounter error in cleaning!'));
 		}
 	}
-	
-	function get_in()
-	{
-		
-		$this->load->view('manage');
-
-	}
-	
-	function get_list()
-	{
-		
-		$this->load->view('list');
-
-	}
-	
-	function get_counts()
-	{
-		echo json_encode(array('counts' => $this->cart->total_items()));
-	}
 
 	function preview($rowId, $date, $mainteinable = false)
 	{

@@ -289,7 +289,14 @@ class MY_Model extends CI_Model {
         $this->db->where($this->primary_key, $id);
         $this->db->delete($this->table);
     }
-
+    /**
+     * Clean table record.
+     * $this->model_name->clear();
+     */
+    public function clear()
+    {
+        $this->db->empty_table($this->table);
+    }
     /**
      * Returns the CI query result object.
      * $this->model_name->get()->result();

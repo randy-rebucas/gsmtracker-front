@@ -8,7 +8,7 @@ var mcs = (function() {
 
             var counts = $('span#que-counts').html();
             var xcounts = 0;
-            xcounts = $.getValues(BASE_URL + 'queings/get_counts');
+            xcounts = $.getValues(BASE_URL + 'queings/ajax/get_counts');
             console.log(xcounts);
 
             if (counts != xcounts) {
@@ -17,6 +17,34 @@ var mcs = (function() {
             }
 
         }, 3000);
+
+        que_get();
+
+        function que_get() {
+            $.ajax({
+                url: BASE_URL + 'queings/ajax/get_que',
+                type: 'post',
+                dataType: 'html',
+                beforeSend: function() {
+                    $('.project-context').find('ul.dropdown-menu').remove();
+                },
+                success: function(response) {
+
+                    $.ajax({
+                        url: BASE_URL + 'queings/ajax/get_counts',
+                        type: 'post',
+                        dataType: 'json',
+                        success: function(res) {
+                            $('#que-counts').html(res.counts);
+                            console.log(res);
+                        }
+                    });
+
+                    $(response).appendTo($(".project-context"));
+                }
+            });
+        }
+
 
         jQuery.extend({
             getValues: function(url) {
@@ -33,35 +61,6 @@ var mcs = (function() {
                 return result;
             }
         });
-
-        que_counts();
-
-        function que_counts() {
-            $.ajax({
-                url: BASE_URL + 'queings/get_counts',
-                type: 'post',
-                dataType: 'json',
-                success: function(res) {
-                    $('#que-counts').html(res.counts);
-                }
-            });
-        }
-
-        que_get();
-
-        function que_get() {
-            $.ajax({
-                url: BASE_URL + 'queings/get_in',
-                type: 'post',
-                dataType: 'html',
-                beforeSend: function() {
-                    $('.project-context').find('ul.dropdown-menu').remove();
-                },
-                success: function(response) {
-                    $(response).appendTo($(".project-context"));
-                }
-            });
-        }
     }
 
     that.init_smallBox = function(_type, _content, _timeout = 3000) {
