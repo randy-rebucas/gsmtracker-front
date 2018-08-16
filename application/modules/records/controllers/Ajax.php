@@ -53,6 +53,41 @@ class Ajax extends Secure_Controller {
         $this->Mdl_records_family_histories->delete($id);
         echo json_encode(array('success'=>true));
     }
+    
+    public function remove_advice()
+    {
+        $this->load->model('records/Mdl_records_advice');
+        $this->Mdl_records_advice->delete($id);
+        echo json_encode(array('success'=>true));
+    }
+    
+    public function remove_medications()
+    {
+        $this->load->model('records/Mdl_records_medications');
+        $this->Mdl_records_medications->delete($id);
+        echo json_encode(array('success'=>true));
+    }
+
+    public function remove_investigations()
+    {
+        $this->load->model('records/Mdl_records_investigations');
+        $this->Mdl_records_investigations->delete($id);
+        echo json_encode(array('success'=>true));
+    }
+
+    public function remove_symptoms()
+    {
+        $this->load->model('records/Mdl_records_symptoms');
+        $this->Mdl_records_symptoms->delete($id);
+        echo json_encode(array('success'=>true));
+    }
+
+    public function remove_vital_signs()
+    {
+        $this->load->model('records/Mdl_records_vital_signs');
+        $this->Mdl_records_vital_signs->delete($id);
+        echo json_encode(array('success'=>true));
+    }
 
     public function save_allergies()
     {

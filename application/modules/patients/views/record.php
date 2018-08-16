@@ -440,7 +440,7 @@
 																		<td class="text-center"><?php echo $row->records_vital_signs_bp.' (mm, hg)';?></td>
 																		<td class="text-center"><?php echo $row->records_vital_signs_pulse.' (bpm)';?></td>
 																		<td class="text-center"><?php echo $row->records_vital_signs_bmi.' (Kg/M^2)';?></td>
-																		<td class="text-right"><a class="remove" href="records/ajax/remove_allergies/"><i class="far fa-trash-alt fa-lg"></i></a></td>
+																		<td class="text-right"><a class="remove" href="records/ajax/remove_vital_signs/<?php echo $row->records_vital_signs_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -488,6 +488,7 @@
 																	<th>date</th>
 																	<th>Signs / Symptoms</th>
 																	<th>Diagnoses</th>
+																	<th></th>
 																</tr>
 															</thead>
 															<tbody>
@@ -499,6 +500,7 @@
 																		</td>
 																		<td><?php echo $row->records_symptoms_signs;?></td>
 																		<td><?php echo $row->records_symptoms_diagnosis;?></td>
+																		<td class="text-right"><a class="remove" href="records/ajax/remove_symptoms/<?php echo $row->records_symptoms_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -536,6 +538,7 @@
 																<tr>
 																	<th>date</th>
 																	<th>Investigations</th>
+																	<th></th>
 																</tr>
 															</thead>
 															<tbody>
@@ -546,6 +549,7 @@
 																			<?php if($row->records_investigations_date == date('Y-m-d')) echo '<span class="label label-success">current</span>';?>
 																		</td>
 																		<td><?php echo $row->records_investigations_investigation;?></td>
+																		<td class="text-right"><a class="remove" href="records/ajax/remove_investigations/<?php echo $row->records_investigations_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -615,6 +619,7 @@
 																					<th>Sig</th>
 																					<th>Qty</th>
 																					<th>Maintenable</th>
+																					<th></th>
 																				</tr>
 																			</thead>
 																			<tbody>
@@ -625,6 +630,7 @@
 																						<td><?php echo $medicine->records_medications_sig;?></td>
 																						<td><?php echo $medicine->records_medications_qty;?></td>
 																						<td><?php echo ($medicine->records_medications_mainteinable == 1) ? 'Yes':'No';?></td>
+																						<td class="text-right"><a class="remove" href="records/ajax/remove_medications/<?php echo $row->records_medications_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																					</tr>
 																				<?php } ?>		
 																			</tbody>
@@ -686,6 +692,7 @@
 																	<th>date</th>
 																	<th>Advice</th>
 																	<th>Next visit</th>
+																	<th></th>
 																</tr>
 															</thead>
 															<tbody>
@@ -697,6 +704,7 @@
 																		</td>
 																		<td><?php echo $row->records_advice_advice;?></td>
 																		<td><?php echo $row->records_advice_follow_up_date;?></td>
+																		<td class="text-right"><a class="remove" href="records/ajax/remove_advice/<?php echo $row->records_advice_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
