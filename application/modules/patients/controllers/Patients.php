@@ -50,12 +50,18 @@ class Patients extends Secure_Controller
 	{
 		$record_id = null;
 
+		$this->load->model('locations/Mdl_countries');
+		$this->load->model('locations/Mdl_cities');
+		$this->load->model('locations/Mdl_states');
+
 		$this->load->model('queings/Mdl_queings');
 		$this->load->model('records/Mdl_records');
 		$this->load->model('patients/Mdl_patients');
 
-		if($this->Mdl_queings->in_que($patient_id)->get()->num_rows()){
-			$record_id = $this->Mdl_records->record_from($patient_id)->is_current()->get()->row()->record_id;
+		if($this->Mdl_queings->in_que($patient_id)->is_current()->get()->num_rows()){
+			if($this->Mdl_records->record_from($patient_id)->is_current()->get()->num_rows() > 0){
+				$record_id = $this->Mdl_records->record_from($patient_id)->is_current()->get()->row()->record_id;
+			}
 		}
 
 		$data['all_record']  = $this->Mdl_records->record_from($patient_id)->get()->result();

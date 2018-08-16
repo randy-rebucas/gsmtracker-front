@@ -191,7 +191,7 @@ var mcs = (function() {
 
                         for (r in response) {
                             // console.log(response);
-                            var state_id = response[r].location_id;
+                            var state_id = response[r].id;
                             var name = response[r].name;
                             if (state_id == state) {
                                 option += '<option selected="selected" value="' + state_id + '">' + name + '</option>';
@@ -211,7 +211,7 @@ var mcs = (function() {
 
         function getCities(state_id, city) {
             $.ajax({
-                url: BASE_URL + 'locations/populate_citie',
+                url: BASE_URL + 'locations/populate_cities',
                 data: {
                     id: state_id
                 },
@@ -224,7 +224,7 @@ var mcs = (function() {
                     var option = '';
 
                     for (r in response) {
-                        var city_id = response[r].location_id;
+                        var city_id = response[r].id;
                         var name = response[r].name;
                         if (city_id == city) {
                             option += '<option selected="selected" value="' + city_id + '">' + name + '</option>';

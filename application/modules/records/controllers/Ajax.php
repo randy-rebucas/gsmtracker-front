@@ -30,6 +30,84 @@ class Ajax extends Secure_Controller {
         }
     }
     
+    public function get_allergies()
+    {
+        $this->load->model('records/Mdl_records_allergies');
+        echo json_encode($this->Mdl_records_allergies->record_from($this->input->get('patient_id'))->get()->result());
+    }
+
+    public function remove_allergies($id){
+        $this->load->model('records/Mdl_records_allergies');
+        $this->Mdl_records_allergies->delete($id);
+        echo json_encode(array('success'=>true));
+    }
+
+    public function get_hestories()
+    {
+        $this->load->model('records/Mdl_records_family_histories');
+        echo json_encode($this->Mdl_records_family_histories->record_from($this->input->get('patient_id'))->get()->result());
+    }
+
+    public function remove_histories($id){
+        $this->load->model('records/Mdl_records_family_histories');
+        $this->Mdl_records_family_histories->delete($id);
+        echo json_encode(array('success'=>true));
+    }
+
+    public function save_allergies()
+    {
+        $this->load->model('records/Mdl_records_allergies');
+
+        $db_array = array(
+            'patient_id'                  => $this->input->post('patient_id'),
+            'records_allergies_medicine'  => $this->input->post('allergies'),
+            'records_allergies_date'      => date('Y-m-d')
+        );
+
+        if ($this->Mdl_records_allergies->save(NULL, $db_array))
+        {
+            $response = array(
+                'success' => 1
+            );
+        }
+        else
+        {
+            $this->load->helper('json_error');
+            $response = array(
+                'success'           => 0,
+                'validation_errors' => json_errors()
+            );
+        }
+        echo json_encode($response);
+    }
+
+    public function save_family_hitories()
+    {
+        $this->load->model('records/Mdl_records_family_histories');
+
+        $db_array = array(
+            'patient_id'                        => $this->input->post('patient_id'),
+            'records_family_histories_hitory'   => $this->input->post('family_hitories'),
+            'records_family_histories_date'     => date('Y-m-d')
+        );
+
+        if ($this->Mdl_records_family_histories->save(NULL, $db_array))
+        {
+            $response = array(
+                'success' => 1
+            );
+        }
+        else
+        {
+            $this->load->helper('json_error');
+            $response = array(
+                'success'           => 0,
+                'validation_errors' => json_errors()
+            );
+        }
+        echo json_encode($response);
+    }
+
     public function save_vital_signs()
     {
         $this->load->model('records/Mdl_records_vital_signs');

@@ -17,7 +17,7 @@ class Mdl_Records extends Response_Model
     public $primary_key         = 'records.record_id';
 
     public function is_current()
-    {
+    { 
         $this->filter_where('record_date', date('Y-m-d'));
         return $this;
     }
@@ -27,4 +27,5 @@ class Mdl_Records extends Response_Model
         $this->filter_where('patient_id', $patient_id);
         return $this;
     }
+
 }

@@ -14,11 +14,17 @@
 class Mdl_Queings extends Response_Model
 {
 	public $table               = 'queing';
-    public $primary_key         = 'queing.que_id';
+    public $primary_key         = 'queing.id';
 
     public function in_que($patient_id)
     {
         $this->filter_where('user_id', $patient_id);
+        return $this;
+    }
+
+    public function is_current()
+    {
+        $this->filter_where('que_date', date('Y-m-d'));
         return $this;
     }
 }

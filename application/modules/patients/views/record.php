@@ -27,10 +27,7 @@
 	    background-color: #3276b1;
 	}
 	tr.current td span {
-		background: #3276b1;
 		float: right;
-		padding: .1em 1em;
-		color: #fff;
 	}
 	.patient_details_wrap {
 		display: grid;
@@ -47,12 +44,23 @@
 	.jarviswidget.well header {
 		display: block;
 	}
-	.jarviswidget.well header a {
+	.jarviswidget.well header button {
 		float: right;
 		width: 25px;
 		height: 25px;
 		padding: 3px 0;
 		margin: 4px;
+	}
+	.jarviswidget .widget-body .list-group li {
+		position: relative;
+	}
+	.jarviswidget .widget-body .list-group li a {
+		position: absolute;
+		right: 3%;
+		visibility: hidden;
+	}
+	.jarviswidget .widget-body .list-group li:hover a {
+		visibility: visible;
 	}
 </style>
 <!-- Bread crumb is created dynamically -->
@@ -132,6 +140,7 @@
 							<div class="row">
 								
 								<div class="col-md-4">
+				
 									<div class="patient_details_wrap">
 										<div class="patient_details">
 											<?php $img = ($info->avatar != '') ? base_url().'uploads/profile-picture/'.$info->avatar : $this->gravatar->get($info->email, 200);?>
@@ -142,31 +151,34 @@
 											<dl class="row">
 											
 												<dt class="col-sm-3">Age</dt>
-												<dd class="col-sm-9 text-truncate">: <?php echo (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
+												<dd class="col-sm-9 text-truncate"><?php echo (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
 												? ((date("Y") - $info->bYear) - 1)
 												: (date("Y") - $info->bYear)); ?> - <?php echo ($info->bYear < date('Y')) ? 'years': (date('m') - $info->bMonth) .' month old';?></dd>
 
 												<dt class="col-sm-3">Gender</dt>
-												<dd class="col-sm-9">: <?php echo ($info->gender == 1) ? 'Male': 'Female';?></dd>
+												<dd class="col-sm-9"><?php echo ($info->gender == 1) ? 'Male': 'Female';?></dd>
 
 												<dt class="col-sm-3">Birthdate</dt>
-												<dd class="col-sm-9 text-truncate">: <?php echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
+												<dd class="col-sm-9 text-truncate"><?php echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
 
 												<dt class="col-sm-3">Address</dt>
-												<dd class="col-sm-9">: <?php echo ($info->address) ? $info->address: '--';?></dd>
-
-												<dt class="col-sm-3">Mobile</dt>
-												<dd class="col-sm-9">: <?php echo ($info->mobile) ? $info->mobile: '--';?></dd>
-
-												<dt class="col-sm-3">Token</dt>
-												<dd class="col-sm-9 text-truncate">: <?php echo $info->token;?></dd>
+												<dd class="col-sm-9">
+													<address>
+														<?php echo $info->address;?><br>
+														<?php echo $this->Mdl_countries->get_by_id($info->country)->name.', '.$this->Mdl_cities->get_by_id($info->city)->name.' '.$this->Mdl_states->get_by_id($info->state)->name;?><br>
+														<?php echo $info->zip;?><br>
+														<abbr title="Mobile">M:</abbr> <?php echo $info->mobile;?><br>
+														<abbr title="Work Phone">WP:</abbr> <?php echo $info->work_phone;?>
+													</address>
+												</dd>
+												
 											</dl>
 
 										</div>
 									</div>
 
 									<!-- Widget ID (each widget will need unique ID)-->
-									<div class="jarviswidget well" id="wid-id-4" data-widget-colorbutton="true" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+									<div class="jarviswidget well" id="wid-allergies" data-widget-colorbutton="true" data-widget-editbutton="true" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
 										<!-- widget options:
 										usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 						
@@ -183,16 +195,23 @@
 										<header>
 											<span class="widget-icon"> <i class="fa fa-comments"></i> </span>
 											<h2>Allergies</h2>
-											<a href="" class="btn btn-success btn-xs btn-circle"><i class="fa fa-plus"></i></a>
+											<button class="btn btn-success btn-xs btn-circle" data-toggle="collapse" data-target="#collapseallergies" aria-expanded="false" aria-controls="collapseallergies"><i class="fa fa-plus"></i></button>
 										</header>
 						
 										<!-- widget div-->
 										<div>
 						
 											<!-- widget edit box -->
-											<div class="jarviswidget-editbox">
+											<div class="jarviswidget-box collapse" id="collapseallergies">
 												<!-- This area used as dropdown edit box -->
-						
+												<?php echo form_open('records/ajax/save_allergies','class="smart-form" id="allergies-form"');?>
+													<input type="hidden" name="patient_id" id="patient_id" value="<?php echo $this->uri->segment(3);?>">
+													<section>
+														<label class="input">
+															<input type="text" name="allergies" id="allergies" value="" placeholder="press ENTER">
+														</label>
+													</section>
+												</form>
 											</div>
 											<!-- end widget edit box -->
 						
@@ -210,7 +229,7 @@
 									<!-- end widget -->
 
 									<!-- Widget ID (each widget will need unique ID)-->
-									<div class="jarviswidget well" id="wid-id-4" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+									<div class="jarviswidget well" id="wid-family-history" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
 										<!-- widget options:
 										usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 						
@@ -227,16 +246,23 @@
 										<header>
 											<span class="widget-icon"> <i class="fa fa-comments"></i> </span>
 											<h2>Family histories </h2>
-											<a href="" class="btn btn-success btn-xs btn-circle float-right"><i class="fa fa-plus"></i></a>
+											<button class="btn btn-success btn-xs btn-circle float-right" data-toggle="collapse" data-target="#collapsehistories" aria-expanded="false" aria-controls="collapsehistories"><i class="fa fa-plus"></i></button>
 										</header>
 						
 										<!-- widget div-->
 										<div>
 						
 											<!-- widget edit box -->
-											<div class="jarviswidget-editbox">
+											<div class="jarviswidget-box collapse" id="collapsehistories">
 												<!-- This area used as dropdown edit box -->
-						
+												<?php echo form_open('records/ajax/save_family_hitories','class="smart-form" id="family-hitories-form"');?>
+													<input type="hidden" name="patient_id" id="patient_id" value="<?php echo $this->uri->segment(3);?>">
+													<section>
+														<label class="input">
+															<input type="text" name="family_hitories" id="family_hitories" value="" placeholder="press ENTER">
+														</label>
+													</section>
+												</form>
 											</div>
 											<!-- end widget edit box -->
 						
@@ -398,6 +424,7 @@
 																	<th class="text-center">bp</th>
 																	<th class="text-center">pulse</th>
 																	<th class="text-center">bmi</th>
+																	<th></th>
 																</tr>
 															</thead>
 															<tbody>
@@ -405,14 +432,15 @@
 																	<tr <?php if($row->records_vital_signs_date == date('Y-m-d')) echo 'class="current"';?>>
 																		<td>
 																			<?php echo $row->records_vital_signs_date;?>
-																			<?php if($row->records_vital_signs_date == date('Y-m-d')) echo '<span>current</span>';?>
+																			<?php if($row->records_vital_signs_date == date('Y-m-d')) echo '<span class="label label-success">current</span>';?>
 																		</td>
-																		<td class="text-center"><?php echo $row->records_vital_signs_weight;?></td>
-																		<td class="text-center"><?php echo $row->records_vital_signs_height;?></td>
-																		<td class="text-center"><?php echo $row->records_vital_signs_temp;?></td>
-																		<td class="text-center"><?php echo $row->records_vital_signs_bp;?></td>
-																		<td class="text-center"><?php echo $row->records_vital_signs_pulse;?></td>
-																		<td class="text-center"><?php echo $row->records_vital_signs_bmi;?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_weight.' (kg)';?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_height.' (Cm)';?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_temp.' (F)';?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_bp.' (mm, hg)';?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_pulse.' (bpm)';?></td>
+																		<td class="text-center"><?php echo $row->records_vital_signs_bmi.' (Kg/M^2)';?></td>
+																		<td class="text-right"><a class="remove" href="records/ajax/remove_allergies/"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -467,7 +495,7 @@
 																	<tr <?php if($row->records_symptoms_date == date('Y-m-d')) echo 'class="current"';?>>
 																		<td>
 																			<?php echo $row->records_symptoms_date;?>
-																			<?php if($row->records_symptoms_date == date('Y-m-d')) echo '<span>current</span>';?>
+																			<?php if($row->records_symptoms_date == date('Y-m-d')) echo '<span class="label label-success">current</span>';?>
 																		</td>
 																		<td><?php echo $row->records_symptoms_signs;?></td>
 																		<td><?php echo $row->records_symptoms_diagnosis;?></td>
@@ -515,7 +543,7 @@
 																	<tr <?php if($row->records_investigations_date == date('Y-m-d')) echo 'class="current"';?>>
 																		<td>
 																			<?php echo $row->records_investigations_date;?>
-																			<?php if($row->records_investigations_date == date('Y-m-d')) echo '<span>current</span>';?>
+																			<?php if($row->records_investigations_date == date('Y-m-d')) echo '<span class="label label-success">current</span>';?>
 																		</td>
 																		<td><?php echo $row->records_investigations_investigation;?></td>
 																	</tr>
@@ -665,7 +693,7 @@
 																	<tr <?php if($row->records_advice_date == date('Y-m-d')) echo 'class="current"';?>>
 																		<td>
 																			<?php echo $row->records_advice_date;?>
-																			<?php if($row->records_advice_date == date('Y-m-d')) echo '<span>current</span>';?>
+																			<?php if($row->records_advice_date == date('Y-m-d')) echo '<span class="label label-success">current</span>';?>
 																		</td>
 																		<td><?php echo $row->records_advice_advice;?></td>
 																		<td><?php echo $row->records_advice_follow_up_date;?></td>
@@ -775,6 +803,121 @@
 		<!-- WIDGET END -->
 	
 <script type="text/javascript">
+	
+	$.fn.enterKey = function (fnc) {
+		return this.each(function () {
+			$(this).keypress(function (ev) {
+				var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+				if (keycode == '13') {
+					fnc.call(this, ev);
+				}
+			})
+		})
+	}
+
+	$("#allergies").enterKey(function () {
+		
+		$("#allergies-form").validate({
+            // Rules for form validation
+            rules : {
+                allergies : {
+                    required : true,
+                    maxlength: 150
+                }
+            },
+            // Messages for form validation
+            messages : {
+                allergies : {
+                    required : '<i class="fa fa-times-circle"></i> Please add allergies',
+                    maxlength: '<i class="fa fa-times-circle"></i> The allergies can not exceed 150 characters in length.'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+            // Ajax form submition
+            submitHandler : function(form) {
+                
+                $(form).ajaxSubmit({
+                    beforeSend: function () {
+                        $(form).find('input').attr("disabled", "disabled");
+                    },
+                    success:function(response)
+                    {
+                        if(response.success)
+                        {
+                            checkURL();
+                        }             
+                    },
+                    dataType:'json'
+                });
+            }
+        });
+	});
+
+	$("#family_hitories").enterKey(function () {
+		
+		$("#family-hitories-form").validate({
+            // Rules for form validation
+            rules : {
+                family_hitories : {
+                    required : true,
+                    maxlength: 150
+                }
+            },
+            // Messages for form validation
+            messages : {
+                family_hitories : {
+                    required : '<i class="fa fa-times-circle"></i> Please add family hitories',
+                    maxlength: '<i class="fa fa-times-circle"></i> The family hitories can not exceed 150 characters in length.'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+            // Ajax form submition
+            submitHandler : function(form) {
+                
+                $(form).ajaxSubmit({
+                    beforeSend: function () {
+                        $(form).find('input').attr("disabled", "disabled");
+                    },
+                    success:function(response)
+                    {
+                        if(response.success)
+                        {
+                            checkURL();
+                        }             
+                    },
+                    dataType:'json'
+                });
+            }
+        });
+	});
 
 	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'view') : true; ?>';
 	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('patients', $this->role_id, 'update') : true; ?>';
@@ -783,6 +926,7 @@
 	pageSetUp();
 
 	$( document ).ready(function() {
+		var patient_id = '<?php echo $info->id;?>';
 
 		$( "ul#widget-tab-2 li a" ).bind( "click", function() {
 			var curtab = $(this).attr('data-id');
@@ -813,7 +957,58 @@
 
 			e.preventDefault();
 		});
+		
+		get_allergies();
+		
+		function get_allergies(){
 
+			$.getJSON(BASE_URL+'records/ajax/get_allergies', { patient_id: patient_id }, function(data) {
+				var temp = '<ul class="list-group">';
+				if(data.length > 0){
+					$.each(data, function(index, element) {
+						temp += '<li class="list-group-item">'+element.records_allergies_medicine+'<a class="remove" href="'+BASE_URL+'records/ajax/remove_allergies/'+element.records_allergies_id+'"><i class="far fa-trash-alt fa-lg"></i></a></li>';
+						console.log(element);
+					});
+				} else {
+					temp += '<p>No record!</p>';
+				}
+				$('#wid-allergies').find('.widget-body').html('').append(temp);
+			});
+		}
+		
+		get_hestories();
+
+		function get_hestories(){
+
+			$.getJSON(BASE_URL+'records/ajax/get_hestories', { patient_id: patient_id }, function(data) {
+				var temp = '<ul class="list-group">';
+				if(data.length > 0){
+					$.each(data, function(index, element) {
+						temp += '<li class="list-group-item">'+element.records_family_histories_hitory+'<a class="remove" href="'+BASE_URL+'records/ajax/remove_histories/'+element.records_family_histories_id+'"><i class="far fa-trash-alt fa-lg"></i></a></li>';
+						console.log(element);
+					});
+				} else {
+					temp += '<p>No record!</p>';
+				}
+				$('#wid-family-history').find('.widget-body').html('').append(temp);
+			});
+		}
+
+		$(document).on('click','.remove',function(e) {
+			e.preventDefault();
+            $.ajax({
+                url: $(this).attr('href'),
+                success: function(response) {
+                    var obj = JSON.parse(response);
+                    console.log(response);
+                    if (obj.success) {
+                        checkURL();
+                    } else {
+                        mcs.init_smallBox("error", obj.message);
+                    }
+                }
+            });
+		});
 	});
 
 	var validatefunction = function() {

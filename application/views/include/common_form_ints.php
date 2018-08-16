@@ -119,7 +119,13 @@
 			<label for="country"><?php echo $this->lang->line('common_country');?></label>
 			<label class="select"> 
 				
-				<?php echo form_dropdown('country', $this->location_lib->countries(), $info->country,'id="country"');?> 
+				<?php 
+				$this->load->model('locations/Mdl_countries');
+				$location  = array(''=>'select');
+				foreach ($this->Mdl_countries->get()->result_array() as $row) {
+					$location[$row['id']] = ucfirst(strtolower($row['name']));
+				}
+				echo form_dropdown('country', $location, $info->country,'id="country"');?> 
 				<i></i>
 				
 			</label>

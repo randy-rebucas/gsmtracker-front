@@ -27,7 +27,7 @@ class Ajax extends Secure_Controller {
 
         $patient = $this->Mdl_patients->get_by_id($patient_id);
         //check if exist
-        if(!$this->Mdl_queings->in_que($patient->id)->get()->num_rows()){
+        if(!$this->Mdl_queings->in_que($patient->id)->is_current()->get()->num_rows()){
             
             $db_array = array(
                 'que_id'    => $this->Mdl_queings->get()->num_rows() + 1,
@@ -94,6 +94,42 @@ class Ajax extends Secure_Controller {
         }
         
     }
+
+    function process($que_id) 
+	{ 
+        $this->load->model('queings/Mdl_queings');
+        $this->load->model('records/Mdl_records');
+        $this->load->library('record_lib');
+
+        $que_info = $this->Mdl_queings->get_by_id($que_id);
+
+        $record = $this->Mdl_records->record_from($que_info->user_id)->is_current()->get()->row();
+
+        $db_array = array(
+            'records_status' => 1
+        );
+
+        if ($this->Mdl_records->save($record->record_id, $db_array)) {
+
+	        if($this->Mdl_queings->delete($que_info->id))
+	        {
+	        	$redirect = ($this->record_lib->next()) ? base_url().'patients/records/'.$this->record_lib->next() : site_url('patients');
+				echo json_encode(
+					array(
+						'success' => true, 
+						'message' => 'Patient successfully remove in wating list!', 
+						'redirect'=> $redirect
+					)
+				);
+			} 
+			else 
+			{
+				echo json_encode(array('success' => false, 'message' => 'Patient cannot be remove in wating list!'));
+			}
+
+    	}
+
+	}
 }
 
 ?>

@@ -295,7 +295,7 @@ class MY_Model extends CI_Model {
      */
     public function clear()
     {
-        $this->db->empty_table($this->table);
+        return $this->db->empty_table($this->table);
     }
     /**
      * Returns the CI query result object.

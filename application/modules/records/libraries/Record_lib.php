@@ -41,6 +41,18 @@ class Record_Lib {
 	public function clear_tab()
 	{
 		$this->ci->session->unset_userdata('tab_mode');
-    }
+	}
+	
+	function next() 
+	{
+		$this->ci->load->model('queings/Mdl_queings');
+		
+		if($this->ci->Mdl_queings->get()->num_rows() > 0){
+			$results = $this->ci->Mdl_queings->get()->result();
+			$que = reset($results);
+			return $que->user_id;
+		}
+		return null;
+	}
 }
 ?>

@@ -30,10 +30,10 @@
 				<h2>Serving</h2>
 
 				<div id="clock-large"></div>
-	   			<?php if($this->cart->contents()) {  $i = 1;?>
-					<?php foreach ($this->cart->contents() as $items){ ?>
+	   			<?php if(count($results)) {  $i = 1;?>
+					<?php foreach ($results as $items){ ?>
 					<div class="que-number" id="counts-<?php echo $i;?>">
-						<?php if($i == 1) echo ''; ?><?php echo $items['id'];?> <!--<span id="name"><?php //if($i == 1) echo $items['que_name']; ?></span>-->
+						<?php if($i == 1) echo ''; ?><?php echo $items['que_id'];?> <!--<span id="name"><?php //if($i == 1) echo $items['que_name']; ?></span>-->
 					</div>
 					<?php $i++; } ?>
 				<?php }else{ ?>
