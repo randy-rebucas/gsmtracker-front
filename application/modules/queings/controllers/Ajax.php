@@ -24,33 +24,35 @@ class Ajax extends Secure_Controller {
     {
         $this->load->model('queings/Mdl_queings');
         $this->load->model('patients/Mdl_patients');
+        $this->load->model('records/Mdl_records');
 
         $patient = $this->Mdl_patients->get_by_id($patient_id);
         //check if exist
         if(!$this->Mdl_queings->in_que($patient->id)->is_current()->get()->num_rows()){
             
+            
             $db_array = array(
-                'que_id'    => $this->Mdl_queings->get()->num_rows() + 1,
-                'user_id'   => $patient->id,
-                'que_name'  => $patient->firstname.', '.$patient->lastname,
-                'que_date'  => date('Y-m-d')
+                'patient_id'    => $patient->id,
+                'record_date'   => date('Y-m-d'),
+                'record_time'   => date('h:i:s')
             );
-    
-            if ($this->Mdl_queings->save(NULL, $db_array))
-            {
-                $this->load->model('records/Mdl_records');
 
-                $db_array = array(
-                    'patient_id'  => $patient->id,
-                    'record_date'  => date('Y-m-d'),
-                    'record_time'  => date('h:i:s')
-                );
+            if ($this->Mdl_records->save(NULL, $db_array))
+            {
                 
-                $this->Mdl_records->save(NULL, $db_array);
+                $db_array = array(
+                    'que_id'    => $this->Mdl_queings->get()->num_rows() + 1,
+                    'user_id'   => $patient->id,
+                    'que_name'  => $patient->firstname.', '.$patient->lastname,
+                    'que_date'  => date('Y-m-d')
+                );
+
+                $this->Mdl_queings->save(NULL, $db_array);
 
                 $response = array(
                     'success' => true
                 );
+
             }
             else
             {

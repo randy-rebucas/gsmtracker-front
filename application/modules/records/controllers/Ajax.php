@@ -30,6 +30,32 @@ class Ajax extends Secure_Controller {
         }
     }
     
+    public function get_medicines()
+    {
+        $this->load->model('records/Mdl_records_medications');
+        $query = $this->input->get('search');
+        $results = $this->Mdl_records_medications->select('records_medications_id as id, records_medications_medicine as name')->like('records_medications_medicine', $query)->order_by('records_medications_medicine')->get()->result_array();
+        echo json_encode($results);
+    }
+
+    public function get_preparation()
+    {
+
+        $this->load->model('records/Mdl_records_medications');
+        $query = $this->input->get('search');
+        $results = $this->Mdl_records_medications->select('records_medications_id as id, records_medications_preparation as name')->like('records_medications_preparation', $query)->order_by('records_medications_preparation')->get()->result_array();
+        echo json_encode($results);
+    }
+    
+    public function get_sig()
+    {
+
+        $this->load->model('records/Mdl_records_medications');
+        $query = $this->input->get('search');
+        $results = $this->Mdl_records_medications->select('records_medications_id as id,    records_medications_sig as name')->like('   records_medications_sig', $query)->order_by('   records_medications_sig')->get()->result_array();
+        echo json_encode($results);
+    }
+
     public function get_allergies()
     {
         $this->load->model('records/Mdl_records_allergies');
@@ -182,7 +208,7 @@ class Ajax extends Secure_Controller {
         $db_array = array(
             'record_id'                     => $this->input->post('record_id'),
             'records_symptoms_signs'        => $this->input->post('sign_symptoms'),
-            'records_symptoms_diagnosis'    => $this->input->post('diagnoses'),
+            'records_symptoms_diagnosis'    => $this->input->post('diagnosis'),
             'records_symptoms_date'         => date('Y-m-d')
         );
 

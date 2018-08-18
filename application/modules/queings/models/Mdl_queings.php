@@ -27,4 +27,21 @@ class Mdl_Queings extends Response_Model
         $this->filter_where('que_date', date('Y-m-d'));
         return $this;
     }
+
+    public function create($db_array = NULL) {
+
+        $patient_id = $db_array['user_id'];
+        
+        if(parent::save(NULL, $db_array)){
+
+            $db_array = array(
+                'patient_id'    => $patient_id,
+                'record_date'   => date('Y-m-d'),
+                'record_time'   => date('h:i:s')
+            );
+            
+            return $this->db->insert('records', $db_array);
+        }
+
+    }
 }

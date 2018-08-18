@@ -62,6 +62,56 @@
 	.jarviswidget .widget-body .list-group li:hover a {
 		visibility: visible;
 	}
+	
+</style>
+<link href="<?php echo base_url();?>vendor/select2/select2/dist/css/select2.min.css" rel="stylesheet" />
+<style type="text/css">
+	.select2-container .select2-choice .select2-arrow b:before, .select2-selection__arrow b:before {
+	    content: "";
+	    display: none;
+	}
+	.select2-container--default .select2-selection--single {
+	    border-radius: 0;
+	    height: 32px;
+    	padding: 1px 0px;
+	}
+	.select2-container--open .select2-dropdown, .select2-drop-active {
+	    border: 1px solid #a9a9a9;
+	    border-bottom-width: 1px;
+	    border-radius: 0;
+	}
+	.select2-container--default .select2-selection--single .select2-selection__arrow {
+	    height: 28px;
+	}
+	.select2-container {
+	    min-width: 100%;
+	}
+
+	.select2-container--default.select2-container--focus .select2-selection--multiple {
+	    border: solid #cbcbcb 1px;
+	    border-radius: 0;
+	}
+	.select2-container--default .select2-selection--multiple {
+	    border-radius: 0;
+	}
+	.select2-container--default .select2-selection--multiple .select2-selection__choice {
+	    background-color: #79a0cd;
+	    border: 1px solid #758ba3;
+	    border-radius: 0;
+	}
+	.select2-container--default .select2-selection--multiple .select2-selection__choice {
+	    background-color: #79a0cd;
+	    border: 1px solid #758ba3;
+	    border-radius: 0;
+	    padding: 0 20px 0 5px;
+	}
+	.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+	    color: red;
+	    margin-right: -4px;
+	}
+	.select2-container-multi .select2-search-choice-close:hover, .select2-selection__choice__remove:hover {
+	    background: none;
+	}
 </style>
 <!-- Bread crumb is created dynamically -->
 <!-- row -->
@@ -450,7 +500,7 @@
 													<div class="tab-pane fade <?php if($tab == 'symptoms') echo 'active in';?>" id="symptoms">
 														
 														<?php echo form_open('records/ajax/save_symptoms','class="smart-form" id="symptoms-form"');?>
-															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
+															<input type="hidden" name="record_id" id="record_id" value="<?php echo $record_id;?>"/>
 															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
 																<div class="alert alert-info">
 																	<p>Please move first to que to continue!</p>
@@ -458,17 +508,17 @@
 															<?php } ?>
 															<section>
 																<label class="label">Signs and Symptoms</label>
-																<label class="textarea"> 										
-																	<textarea rows="3" class="custom-scroll" name="sign_symptoms" id="sign_symptoms"><?php echo (count($cur_symptoms)) ? $cur_symptoms[0]->records_symptoms_signs : '';?></textarea> 
+																<label class="input"> 	
+																	<select name="sign_symptoms" id="sign_symptoms" class="select2-multiple" multiple="multiple"></select>									
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
 																</div> -->
 															</section>
 															<section>
-																<label class="label">Diagnoses</label>
-																<label class="textarea"> 										
-																	<textarea rows="3" class="custom-scroll" name="diagnoses" id="diagnoses"><?php echo (count($cur_symptoms)) ? $cur_symptoms[0]->records_symptoms_diagnosis : '';?></textarea> 
+																<label class="label">Diagnosis</label>
+																<label class="input"> 										
+																	<select name="diagnosis" id="diagnosis" class="select2-multiple" multiple="multiple"></select>
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -487,7 +537,7 @@
 																<tr>
 																	<th>date</th>
 																	<th>Signs / Symptoms</th>
-																	<th>Diagnoses</th>
+																	<th>Diagnosis</th>
 																	<th></th>
 																</tr>
 															</thead>
@@ -783,6 +833,7 @@
 													<?php } else { ?>
 														<h2 class="text-center">no record histories found!</h2>
 													<?php } ?>
+
 												</div>
 												
 												
@@ -1017,7 +1068,172 @@
                 }
             });
 		});
+
+		$('#symptoms-form').submit(function(event) {
+			var formData = {
+	            'record_id'    : $('#record_id').val(),
+	            'sign_symptoms': $('#sign_symptoms').select2('data'),
+	            'diagnosis'    : $('#diagnosis').select2('data')
+	        };
+
+			$.ajax({
+	            type : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+	            url : BASE_URL+'records/ajax/save_symptoms', // the url where we want to POST
+	            data : formData, // our data object
+	            dataType :'json', // what type of data do we expect back from the server
+	            encode : true
+	        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data); 
+
+                // here we will handle errors and validation messages
+            });
+	       	event.preventDefault();
+    	});
 	});
+
+	var select = function() {
+
+		$('#sign_symptoms').select2({
+		  	ajax: {
+	          	url: BASE_URL+'symptoms/ajax/get_suggest_symptoms',
+	          	dataType: 'json',
+	          	delay: 250,
+	          	data: function (params) {
+			      	var queryParameters = {
+				      	q: params.term
+				    }
+
+				    return queryParameters;
+			    },
+	          	processResults: function (data) {
+	            	return {
+	              		results: data
+	            	};
+	          	},
+	          	cache: true	
+	        },
+	        tags: "true",
+  			allowClear: true,
+	        placeholder: 'Select Symptoms',
+			minimumInputLength: 1
+		});
+
+		$('#diagnosis').select2({
+		  	ajax: {
+	          	url: BASE_URL+'diagnosis/ajax/get_suggest_diagnosis',
+	          	dataType: 'json',
+	          	delay: 250,
+	          	data: function (params) {
+			      	var queryParameters = {
+				      	q: params.term
+				    }
+
+				    return queryParameters;
+			    },
+	          	processResults: function (data) {
+	            	return {
+	              		results: data
+	            	};
+	          	},
+	          	cache: true	
+	        },
+	        tags: "true",
+  			allowClear: true,
+	        placeholder: 'Select Diagnosis',
+			minimumInputLength: 1
+		});
+		
+	}
+
+	loadScript(BASE_URL+'vendor/select2/select2/dist/js/select2.min.js', select);
+
+	var typeahead = function() {
+
+		$('#medicine').typeahead({
+			ajax: {
+				url: BASE_URL+'records/ajax/get_medicines',//var type = $(this).attr('id');
+				timeout: 500,
+				displayField: "name",
+				valueField: "id",
+				triggerLength: 1,
+				method: "get",
+				dataType: "json",
+				preDispatch: function (query) {
+					//showLoadingMask(true);
+					return {
+						search: query
+					}
+				},
+				preProcess: function (data) {
+
+					if (data.success === false) {
+						return false;
+					}else{
+						return data;    
+					}                
+				}               
+			}
+		});
+
+		$('#preparation').typeahead({
+			ajax: {
+				url: BASE_URL+'records/ajax/get_preparation',//var type = $(this).attr('id');
+				timeout: 500,
+				displayField: "name",
+				valueField: "id",
+				triggerLength: 1,
+				method: "get",
+				dataType: "json",
+				preDispatch: function (query) {
+					//showLoadingMask(true);
+					return {
+						search: query
+					}
+				},
+				preProcess: function (data) {
+
+					if (data.success === false) {
+						return false;
+					}else{
+						return data;    
+					}                
+				}               
+			}
+		});
+
+		$('#sig').typeahead({
+			ajax: {
+				url: BASE_URL+'records/ajax/get_sig',//var type = $(this).attr('id');
+				timeout: 500,
+				displayField: "name",
+				valueField: "id",
+				triggerLength: 1,
+				method: "get",
+				dataType: "json",
+				preDispatch: function (query) {
+					//showLoadingMask(true);
+					return {
+						search: query
+					}
+				},
+				preProcess: function (data) {
+
+					if (data.success === false) {
+						return false;
+					}else{
+						return data;    
+					}                
+				}               
+			}
+		});
+
+	}
+
+	loadScript(BASE_URL+"js/plugin/bootstrap-ajax-typeahead/js/bootstrap-typeahead.min.js", typeahead);
 
 	var validatefunction = function() {
 
@@ -1118,71 +1334,6 @@
             }
         });
 
-		$("#symptoms-form").validate({
-            // Rules for form validation
-            rules : {
-                sign_symptoms : {
-                    required : true,
-                    maxlength: 1000
-                },
-                diagnoses : {
-                    required : true,
-                    maxlength: 3000
-                }
-            },
-            // Messages for form validation
-            messages : {
-                sign_symptoms : {
-                    required : '<i class="fa fa-times-circle"></i> Please add symptoms',
-                    maxlength: '<i class="fa fa-times-circle"></i> The symptoms can not exceed 1000 characters in length.'
-                },
-                diagnoses : {
-                    required : '<i class="fa fa-times-circle"></i> Please add diagnoses',
-                    maxlength: '<i class="fa fa-times-circle"></i> The diagnoses can not exceed 3000 characters in length.'
-                }
-            },
-            highlight: function(element) {
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function(element) {
-                $(element).closest('.form-group').removeClass('has-error');
-            },
-            errorElement: 'span',
-            errorClass: 'text-danger',
-            errorPlacement: function(error, element) {
-                if(element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                }else{
-                    error.insertAfter(element);
-                }
-            },
-            // Ajax form submition
-            submitHandler : function(form) {
-                
-                $(form).ajaxSubmit({
-                    beforeSend: function () {
-                        $(form).find('#submit').html('Please wait...');
-                        $(form).find('#submit').attr("disabled", "disabled");
-                    },
-                    success:function(response)
-                    {
-                        if(response.success)
-                        {
-                            mcs.init_smallBox("success", response.message);
-                            checkURL();
-                        }
-                        else
-                        {
-                            mcs.init_smallBox("error", response.message);
-                        }                   
-                        $(form).find('#submit').text('Submit');
-                        $(form).find('#submit').removeAttr("disabled");
-                    },
-                    dataType:'json'
-                });
-            }
-        });
-		
 		$("#investigation-form").validate({
             // Rules for form validation
             rules : {
