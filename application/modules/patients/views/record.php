@@ -525,7 +525,7 @@
 																</div> -->
 															</section>
 															<footer>
-																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
+																<button type="submit" id="symptoms-submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -1068,31 +1068,31 @@
                 }
             });
 		});
+		$(document).on('click','#symptoms-submit',function(e) {
+			
+			$('#symptoms-form').submit(function(event) {
 
-		$('#symptoms-form').submit(function(event) {
-			var formData = {
-	            'record_id'    : $('#record_id').val(),
-	            'sign_symptoms': $('#sign_symptoms').select2('data'),
-	            'diagnosis'    : $('#diagnosis').select2('data')
-	        };
+				$.ajax({
+		            type : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+		            url : BASE_URL+'records/ajax/save_symptoms', // the url where we want to POST
+		            data : {
+			            record_id: $('#record_id').val(),
+			            sign_symptoms: $('#sign_symptoms').select2('data'),
+			            diagnosis: $('#diagnosis').select2('data')
+			        }, // our data object
+		            dataType :'json'
+		        })
+	            // using the done promise callback
+	            .done(function(data) {
 
-			$.ajax({
-	            type : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-	            url : BASE_URL+'records/ajax/save_symptoms', // the url where we want to POST
-	            data : formData, // our data object
-	            dataType :'json', // what type of data do we expect back from the server
-	            encode : true
-	        })
-            // using the done promise callback
-            .done(function(data) {
+	                // log data to the console so we can see
+	                console.log(data); 
 
-                // log data to the console so we can see
-                console.log(data); 
-
-                // here we will handle errors and validation messages
-            });
-	       	event.preventDefault();
-    	});
+	                // here we will handle errors and validation messages
+	            });
+		       	event.preventDefault();
+	    	});
+	    });
 	});
 
 	var select = function() {
