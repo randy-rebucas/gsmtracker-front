@@ -45,8 +45,4 @@ class Mdl_Queings extends Response_Model
 
     }
 
-    // public function remove($patient_id, $record_date){
-    //     $id = ->where('quote_id', $quote_id)->get()->result()
-
-    // }
 }
