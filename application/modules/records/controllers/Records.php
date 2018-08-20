@@ -26,6 +26,142 @@ class Records extends Secure_Controller
 		
 	}
 
+	public function rx_preview ($record_id) {
+		//preview/4/2018-6-1/no
+		$this->load->model('locations/Mdl_countries');
+		$this->load->model('locations/Mdl_cities');
+		$this->load->model('locations/Mdl_states');
+
+		$this->load->model('queings/Mdl_queings');
+		$this->load->model('records/Mdl_records');
+		$this->load->model('records/Mdl_records_advice');
+		$this->load->model('records/Mdl_records_medications');
+		$this->load->model('patients/Mdl_patients');
+
+		$record = $this->Mdl_records->get_by_id($record_id);
+		$info = $this->Mdl_patients->get_info($record->patient_id);
+		
+		$next_visit = $this->Mdl_records_advice->by_record_id($record_id)->is_current()->get()->row();
+
+		$age = (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
+				? ((date("Y") - $info->bYear) - 1)
+				: (date("Y") - $info->bYear));				
+	    
+		if($info->gender == 1){
+			$gender = 'Male';
+		}elseif($info->gender == 2){
+			$gender = 'Female';
+		}else{
+			$gender = 'Undefine';
+		}
+
+		$i = 1;
+		$prescriptions = '';
+	    $prescriptions.='<table id="rx-contents" width="100%"><tbody>';
+		foreach ($this->Mdl_records_medications->get_all($record->record_date)->result_array() as $medicine) {
+			$prescriptions.="<tr>";
+			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:10%; padding-bottom: 5px;"><strong>'. $i .'</strong></td>';
+			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:75%; padding-bottom: 5px;"><strong>' .  $medicine['records_medications_medicine'].' '.$medicine['records_medications_preparation']. '</strong><br> ';
+			$prescriptions.='<span style="font-weight: normal;font-size: 18px;font-style: italic;padding-left: 30px; padding-bottom: 5px;">Sig: '.$medicine['records_medications_sig'].'</span></td>';
+			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:15%; text-align: right; padding-bottom: 5px;"><strong># ' . $medicine['records_medications_qty'] . '</strong></td>';
+			$prescriptions.="</tr>";
+		$i++; 
+		} 
+		$prescriptions.="</tbody></table>";
+
+		//get default rxpad template
+		//rx_template
+		$tx_template = html_entity_decode(html_entity_decode($this->load->view('records/rx', '', TRUE)));
+		//$tx_template = ($this->config->item('rx_template') != '') ? $this->Template->get_info($this->config->item('rx_template'))->temp_content : $this->Presets->get_info(1)->temp_content;
+
+		//Replace variables from the Templates
+        $html_ = str_replace(
+			array(
+				//patient details
+				"{{patient_id}}",
+				"{{patient_name}}", 
+				"{{patient_gender}}", 
+				"{{patient_birthday}}",
+				"{{patient_age}}", 
+				"{{patient_address}}", 
+				"{{patient_country}}",
+				"{{patient_city}}",
+				"{{patient_state}}",
+				"{{patient_zip}}",
+				"{{patient_mobile}}",
+				//preserve details				
+				"{{consultation_date}}", 
+				//"{{next_visit}}",
+				"{{prescriptions}}",
+				//configuration details
+				"{{business_name}}", 
+				"{{business_owner}}", 
+				"{{business_address}}", 
+				"{{business_phone}}", 
+				"{{business_email}}", 
+				"{{business_fax}}", 
+				"{{prc}}", 
+				"{{ptr}}", 
+				"{{s2}}",
+				"{{business_morning_open_time}}", 
+				"{{business_morning_close_time}}", 
+				"{{business_afternoon_open_time}}", 
+				"{{business_afternoon_close_time}}", 
+				"{{business_weekend_open_time}}", 
+				"{{business_weekend_close_time}}"
+			), 
+			array(
+				//patient details
+				$info->id,
+				$info->lastname.' '.$info->firstname, 
+				$gender, 
+				$info->bYear. '-' .$info->bMonth. '-' .$info->bDay,
+				$age, 
+				($info->address) ? $info->address : '--',
+				($info->country) ? $this->Mdl_countries->get_by_id($info->country)->name : '--',			
+				($info->city) ? $this->Mdl_cities->get_by_id($info->city)->name : '--',
+				($info->state) ? $this->Mdl_states->get_by_id($info->state)->name : '--', 
+				($info->zip) ? $info->zip : '--',
+				($info->mobile) ? $info->mobile : '--',
+				//preserve details
+				date('m/d/Y'),
+				//(count($next_visit) > 0) ? date('m/d/Y', strtotime($next_visit[0]['next_visit'])) : '--',
+				$prescriptions,
+				//configuration details
+				($this->config->item('business_name')) ? $this->config->item('business_name') : '--',
+				($this->config->item('business_owner')) ? $this->config->item('business_owner') : '--', 
+				($this->config->item('business_address')) ? $this->config->item('business_address') : '--',
+				($this->config->item('business_phone')) ? $this->config->item('business_phone') : '--',
+				($this->config->item('business_email')) ? $this->config->item('business_email') : '--',
+				($this->config->item('business_fax')) ? $this->config->item('business_fax') : '--',
+				($this->config->item('prc')) ? $this->config->item('prc') : '--', 
+				($this->config->item('ptr')) ? $this->config->item('ptr') : '--', 
+				($this->config->item('s2')) ? $this->config->item('s2') : '--',
+				($this->config->item('morning_open_time')) ? $this->config->item('morning_open_time') : '--',
+				($this->config->item('morning_close_time')) ? $this->config->item('morning_close_time') : '--',
+				($this->config->item('afternoon_open_time')) ? $this->config->item('afternoon_open_time') : '--',
+				($this->config->item('afternoon_close_time')) ? $this->config->item('afternoon_close_time') : '--',
+				($this->config->item('week_end_open_time')) ? $this->config->item('week_end_open_time') : '--',
+				($this->config->item('week_end_close_time')) ? $this->config->item('week_end_close_time') : '--'
+			), $tx_template
+        );
+        //End 
+
+        $data['pdf_html'] = html_entity_decode(html_entity_decode($html_));
+		$data['module'] = 'RX';
+		$this->layout->title('RX Preview');
+		$this->set_layout();
+
+		if ($this->input->is_ajax_request())  
+		{
+			$this->load->view('records/rxpad', $data);
+        } 
+		else
+		{
+			$this->layout->build('records/rxpad', $data);
+		}
+	}
+
 	function create_custom($type, $user_id, $cdate = null, $client_id = null)
 	{ 
 		$data['user_id'] = $user_id;

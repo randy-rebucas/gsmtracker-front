@@ -58,7 +58,7 @@ class Patients extends Secure_Controller
 		$this->load->model('records/Mdl_records');
 		$this->load->model('patients/Mdl_patients');
 
-		if($this->Mdl_queings->in_que($patient_id)->is_current()->get()->num_rows()){
+		if($this->Mdl_queings->in_que($patient_id)->is_current()->get()->num_rows() > 0){
 			if($this->Mdl_records->record_from($patient_id)->is_current()->get()->num_rows() > 0){
 				$record_id = $this->Mdl_records->record_from($patient_id)->is_current()->get()->row()->record_id;
 			}

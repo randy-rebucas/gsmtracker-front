@@ -97,23 +97,23 @@ class Ajax extends Secure_Controller {
         
     }
 
-    function process($que_id) 
+    function process($record_id) 
 	{ 
         $this->load->model('queings/Mdl_queings');
         $this->load->model('records/Mdl_records');
-        $this->load->library('record_lib');
+        $this->load->library('records/record_lib');
 
-        $que_info = $this->Mdl_queings->get_by_id($que_id);
-
-        $record = $this->Mdl_records->record_from($que_info->user_id)->is_current()->get()->row();
+        $record = $this->Mdl_records->get_by_id($record_id);
 
         $db_array = array(
-            'records_status' => 1
+            'record_status' => 1
         );
 
         if ($this->Mdl_records->save($record->record_id, $db_array)) {
+   
+            $que_id = $this->Mdl_queings->where(array('user_id' => $record->patient_id, 'que_date' => $record->record_date))->get()->row()->id;
 
-	        if($this->Mdl_queings->delete($que_info->id))
+	        if($this->Mdl_queings->delete($que_id))
 	        {
 	        	$redirect = ($this->record_lib->next()) ? base_url().'patients/records/'.$this->record_lib->next() : site_url('patients');
 				echo json_encode(

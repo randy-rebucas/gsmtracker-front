@@ -398,7 +398,7 @@
 													<div class="tab-pane fade <?php if($tab == 'vital-signs') echo 'active in';?>" id="vital-signs">
 														<?php echo form_open('records/ajax/save_vital_signs','class="smart-form" id="vital-signs-form"');?>
 															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
-															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+															<?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) { ?>	
 																<div class="alert alert-info">
 																	<p>Please move first in que to continue!</p>
 																</div>
@@ -457,7 +457,7 @@
 									                    	</div>
 									                    	<footer>
 																
-																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -501,7 +501,7 @@
 														
 														<?php echo form_open('records/ajax/save_symptoms','class="smart-form" id="symptoms-form"');?>
 															<input type="hidden" name="record_id" id="record_id" value="<?php echo $record_id;?>"/>
-															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+															<?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) { ?>	
 																<div class="alert alert-info">
 																	<p>Please move first to que to continue!</p>
 																</div>
@@ -525,7 +525,7 @@
 																</div> -->
 															</section>
 															<footer>
-																<button type="submit" id="symptoms-submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
+																<button type="submit" id="symptoms-submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -560,7 +560,7 @@
 													<div class="tab-pane fade <?php if($tab == 'investigation') echo 'active in';?>" id="investigation">
 														<?php echo form_open('records/ajax/save_investigation','class="smart-form" id="investigation-form"');?>
 															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
-															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+															<?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) { ?>	
 																<div class="alert alert-info">
 																	<p>Please move first in que to continue!</p>
 																</div>
@@ -575,7 +575,7 @@
 																</div> -->
 															</section>
 															<footer>
-																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -610,7 +610,7 @@
 
 														<?php echo form_open('records/ajax/save_medication','class="smart-form" id="medication-form"');?>
 															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
-															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+															<?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) { ?>	
 																<div class="alert alert-info">
 																	<p>Please move first in que to continue!</p>
 																</div>
@@ -651,7 +651,7 @@
 															</fieldset>
 
 															<footer>
-																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -686,8 +686,8 @@
 																			</tbody>
 																			<tfoot>
 																				<tr>
-																					<td colspan="4"><?php echo $row->records_medications_date;?></td>
-																					<td class="text-right"><a href="" class="btn btn-xs btn-success">Print</a></td>
+																					<td colspan="5"><?php echo $row->records_medications_date;?></td>
+																					<td class="text-right"><a href="<?php echo site_url('records/rx_preview/'.$row->record_id);?>" class="btn btn-xs btn-success">Print</a></td>
 																				</tr>
 																			</tfoot>
 																		</table>
@@ -700,7 +700,7 @@
 													<div class="tab-pane fade <?php if($tab == 'advice') echo 'active in';?>" id="advice">
 														<?php echo form_open('records/ajax/save_advice','class="smart-form" id="advice-form"');?>
 															<input type="hidden" name="record_id" value="<?php echo $record_id;?>"/>
-															<?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) { ?>	
+															<?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) { ?>	
 																<div class="alert alert-info">
 																	<p>Please move first in que to continue!</p>
 																</div>
@@ -728,7 +728,7 @@
 
 															</div>
 															<footer>
-																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->get()->num_rows()) echo 'disabled="disabled"';?>>
+																<button type="submit" class="btn btn-primary" <?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) echo 'disabled="disabled"';?>>
 																	Submit
 																</button>
 															</footer>
@@ -805,7 +805,6 @@
 											
 											<!-- widget content -->
 											<div class="widget-body no-padding">
-												
 												
 												<div class="custom-scroll table-responsive" style="height:290px; overflow-y: scroll;">
 												
@@ -1117,9 +1116,11 @@
 	          	cache: true	
 	        },
 	        tags: "true",
-  			allowClear: true,
+			allowClear: true,
+			multiple:true,
 	        placeholder: 'Select Symptoms',
-			minimumInputLength: 1
+			minimumInputLength: 1,
+			tokenSeparators: [','],
 		});
 
 		$('#diagnosis').select2({
