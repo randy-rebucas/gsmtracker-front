@@ -31,8 +31,7 @@ class Ajax extends Secure_Controller {
 
     public function modal_create_patient($patient_id = -1)
     {
-        $this->load->library('location_lib');
-
+      
         $this->load->model('patients/Mdl_patients');
         $data['info'] =  $this->Mdl_patients->get_info($patient_id);
 

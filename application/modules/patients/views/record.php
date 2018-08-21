@@ -112,6 +112,43 @@
 	.select2-container-multi .select2-search-choice-close:hover, .select2-selection__choice__remove:hover {
 	    background: none;
 	}
+
+	.panel-heading {
+		position: relative;
+	}
+	.panel-heading a.remove {
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		visibility: hidden;
+	}
+	.panel-heading:hover a.remove {
+		visibility: visible;
+	}
+
+	.mesurements ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.mesurements ul li {
+		position: relative;
+		padding: .6em 1em;
+		border: 1px solid #ddd;
+		margin: .2em 0;
+	}
+	.mesurements ul li i {
+		position: absolute;
+		right: 3%;
+		top: 18%;
+	}
+	.mesurements ul li p {
+		padding: 0;
+		margin: 0;
+	}
+	.mesurements ul li p strong {
+		font-size: 20px;
+	}
 </style>
 <!-- Bread crumb is created dynamically -->
 <!-- row -->
@@ -201,21 +238,21 @@
 											<dl class="row">
 											
 												<dt class="col-sm-3">Age</dt>
-												<dd class="col-sm-9 text-truncate"><?php echo (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
-												? ((date("Y") - $info->bYear) - 1)
-												: (date("Y") - $info->bYear)); ?> - <?php echo ($info->bYear < date('Y')) ? 'years': (date('m') - $info->bMonth) .' month old';?></dd>
+												<dd class="col-sm-9 text-truncate"><?php //echo (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
+												//? ((date("Y") - $info->bYear) - 1)
+												//: (date("Y") - $info->bYear)); ?> - <?php //echo ($info->bYear < date('Y')) ? 'years': (date('m') - $info->bMonth) .' month old';?></dd>
 
 												<dt class="col-sm-3">Gender</dt>
 												<dd class="col-sm-9"><?php echo ($info->gender == 1) ? 'Male': 'Female';?></dd>
 
 												<dt class="col-sm-3">Birthdate</dt>
-												<dd class="col-sm-9 text-truncate"><?php echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
+												<dd class="col-sm-9 text-truncate">---<?php //echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
 
 												<dt class="col-sm-3">Address</dt>
 												<dd class="col-sm-9">
 													<address>
 														<?php echo $info->address;?><br>
-														<?php echo $this->Mdl_countries->get_by_id($info->country)->name.', '.$this->Mdl_cities->get_by_id($info->city)->name.' '.$this->Mdl_states->get_by_id($info->state)->name;?><br>
+														<?php //echo $this->Mdl_countries->get_by_id($info->country)->name.', '.$this->Mdl_cities->get_by_id($info->city)->name.' '.$this->Mdl_states->get_by_id($info->state)->name;?><br>
 														<?php echo $info->zip;?><br>
 														<abbr title="Mobile">M:</abbr> <?php echo $info->mobile;?><br>
 														<abbr title="Work Phone">WP:</abbr> <?php echo $info->work_phone;?>
@@ -226,7 +263,29 @@
 
 										</div>
 									</div>
-
+									<div class="mesurements">
+										<ul>
+											<li>
+												<p>Weight <br/>
+													<strong><?php echo $this->Mdl_records_vital_signs->select('records_vital_signs_weight')->order_by('records_vital_signs_id',"desc")->limit(1)->get()->row()->records_vital_signs_weight;?> (kg)</strong>
+												</p>
+												<i class="fas fa-3x fa-fw fa-weight"></i>
+											</li>
+											<li>
+												<p>Height <br/>
+													<strong><?php echo $this->Mdl_records_vital_signs->select('records_vital_signs_height')->order_by('records_vital_signs_id',"desc")->limit(1)->get()->row()->records_vital_signs_height;?> (Cm)</strong>
+												</p>
+												<i class="fas fa-3x fa-fw fa-list-ol"></i>
+											</li>
+											<li>
+												<p>BMI <br/>
+													<strong><?php echo $this->Mdl_records_vital_signs->select('records_vital_signs_bmi')->order_by('records_vital_signs_bmi',"desc")->limit(1)->get()->row()->records_vital_signs_bmi;?> (Kg/M^2)</strong>
+												</p>
+												<i class="fas fa-3x fa-fw fa-indent"></i>
+											</li>
+										</ul>
+									</div>
+									<br/>
 									<!-- Widget ID (each widget will need unique ID)-->
 									<div class="jarviswidget well" id="wid-allergies" data-widget-colorbutton="true" data-widget-editbutton="true" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
 										<!-- widget options:
@@ -490,7 +549,8 @@
 																		<td class="text-center"><?php echo $row->records_vital_signs_bp.' (mm, hg)';?></td>
 																		<td class="text-center"><?php echo $row->records_vital_signs_pulse.' (bpm)';?></td>
 																		<td class="text-center"><?php echo $row->records_vital_signs_bmi.' (Kg/M^2)';?></td>
-																		<td class="text-right"><a class="remove" href="records/ajax/remove_vital_signs/<?php echo $row->records_vital_signs_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
+																		
+																		<td class="text-right"><a class="remove" href="<?php echo site_url('records/ajax/remove_vital_signs/'.$row->records_vital_signs_id);?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -509,7 +569,7 @@
 															<section>
 																<label class="label">Signs and Symptoms</label>
 																<label class="input"> 	
-																	<select name="sign_symptoms" id="sign_symptoms" class="select2-multiple" multiple="multiple"></select>									
+																	<select name="sign_symptoms" id="sign_symptoms" class="select2-single"></select>									
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -518,7 +578,7 @@
 															<section>
 																<label class="label">Diagnosis</label>
 																<label class="input"> 										
-																	<select name="diagnosis" id="diagnosis" class="select2-multiple" multiple="multiple"></select>
+																	<select name="diagnosis" id="diagnosis" class="select2-single"></select>
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -548,9 +608,10 @@
 																			<?php echo $row->records_symptoms_date;?>
 																			<?php if($row->records_symptoms_date == date('Y-m-d')) echo '<span class="label label-success">current</span>';?>
 																		</td>
-																		<td><?php echo $row->records_symptoms_signs;?></td>
-																		<td><?php echo $row->records_symptoms_diagnosis;?></td>
-																		<td class="text-right"><a class="remove" href="records/ajax/remove_symptoms/<?php echo $row->records_symptoms_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
+																		<td><?php echo $this->Mdl_symptoms->get_by_id($row->records_symptoms_signs)->symptom_name;?></td>
+																		<td><?php echo $this->Mdl_diagnosis->get_by_id($row->records_symptoms_diagnosis)->diagnos_name;?></td>
+																		
+																		<td class="text-right"><a class="remove" href="<?php echo site_url('records/ajax/remove_symptoms/'.$row->records_symptoms_id);?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -599,7 +660,8 @@
 																			<?php if($row->records_investigations_date == date('Y-m-d')) echo '<span class="label label-success">current</span>';?>
 																		</td>
 																		<td><?php echo $row->records_investigations_investigation;?></td>
-																		<td class="text-right"><a class="remove" href="records/ajax/remove_investigations/<?php echo $row->records_investigations_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
+																		
+																		<td class="text-right"><a class="remove" href="<?php echo site_url('records/ajax/remove_investigations/'.$row->records_investigations_id);?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -664,7 +726,7 @@
 																		<table class="table">
 																			<thead>
 																				<tr>
-																					<th>Medicine</th>
+																					<th>Medicine<?php echo $row->records_medications_date;?></th>
 																					<th>Preparation</th>
 																					<th>Sig</th>
 																					<th>Qty</th>
@@ -680,7 +742,8 @@
 																						<td><?php echo $medicine->records_medications_sig;?></td>
 																						<td><?php echo $medicine->records_medications_qty;?></td>
 																						<td><?php echo ($medicine->records_medications_mainteinable == 1) ? 'Yes':'No';?></td>
-																						<td class="text-right"><a class="remove" href="records/ajax/remove_medications/<?php echo $row->records_medications_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
+																						
+																						<td class="text-right"><a class="remove" href="<?php echo site_url('records/ajax/remove_medications/'.$row->records_medications_id);?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																					</tr>
 																				<?php } ?>		
 																			</tbody>
@@ -754,7 +817,7 @@
 																		</td>
 																		<td><?php echo $row->records_advice_advice;?></td>
 																		<td><?php echo $row->records_advice_follow_up_date;?></td>
-																		<td class="text-right"><a class="remove" href="records/ajax/remove_advice/<?php echo $row->records_advice_id;?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
+																		<td class="text-right"><a class="remove" href="<?php echo site_url('records/ajax/remove_advice/'.$row->records_advice_id);?>"><i class="far fa-trash-alt fa-lg"></i></a></td>
 																	</tr>
 																<?php } ?>		
 															</tbody>
@@ -805,38 +868,149 @@
 											
 											<!-- widget content -->
 											<div class="widget-body no-padding">
-												
-												<div class="custom-scroll table-responsive" style="height:290px; overflow-y: scroll;">
-												
-													<?php if(count($all_record)){ ?>						
-														<table class="table table-bordered">
-															<thead>
-																<tr>
-																	<th>ID</th>
-																	<th>Date</th>
-																	<th>Time</th>
-																	<th>Status</th>
-																</tr>
-															</thead>
-															<tbody>
-																<?php foreach($all_record as $row){ ?>
-																	<tr>
-																		<td><?php echo $row->record_id;?></td>
-																		<td><?php echo $row->record_date;?></td>
-																		<td><?php echo $row->record_time;?></td>
-																		<td><?php echo ($row->record_status == 1) ? 'Finished':'Progress...';?></td>
-																	</tr>
-																<?php } ?>
-															</tbody>
-														</table>
-													<?php } else { ?>
-														<h2 class="text-center">no record histories found!</h2>
-													<?php } ?>
+											<?php if(count($all_record)){ ?>
+												<div class="panel-group smart-accordion-default" id="accordion-2">
+													<?php
+														$i = 1;
+														foreach($all_record as $row){ ?>
+															<div class="panel panel-default">
+																<div class="panel-heading">
+																	<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#collapse-<?php echo $row->record_id;?>" class="<?php if($i != 1) echo 'collapsed'?>"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i> <?php echo $row->record_date .' ('.$row->record_time.')';?> <?php echo ($row->record_status == 1) ? '<span class="label label-success">Finished</span>':'<span class="label label-danger">Progress...</span>';?></a></h4>
+																	<?php if($row->record_status != 1){ ?>
+																		<a class="remove" href="<?php echo site_url('records/ajax/remove_record/'.$row->record_id);?>"><i class="far fa-trash-alt fa-lg"></i></a>
+																	<?php } ?>
+																</div>
+																<div id="collapse-<?php echo $row->record_id;?>" class="panel-collapse collapse <?php if($i == 1) echo 'in'?>">
+																	<div class="panel-body">
+																		<?php
+																		if($this->Mdl_records_vital_signs->by_record_id($row->record_id)->get()->num_rows() > 0){ ?>
+																			<h2>Vital Signs</h2>	
+																				<table class="table">
+																					<thead>
+																						<tr>
+																							<th class="text-center">weight</th>
+																							<th class="text-center">height</th>
+																							<th class="text-center">temp</th>
+																							<th class="text-center">bp</th>
+																							<th class="text-center">pulse</th>
+																							<th class="text-center">bmi</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																					<?php foreach($this->Mdl_records_vital_signs->by_record_id($row->record_id)->get()->result() as $vs){ ?>
+																				
+																						<tr>
+																							<td class="text-center"><?php echo $vs->records_vital_signs_weight.' (kg)';?></td>
+																							<td class="text-center"><?php echo $vs->records_vital_signs_height.' (Cm)';?></td>
+																							<td class="text-center"><?php echo $vs->records_vital_signs_temp.' (F)';?></td>
+																							<td class="text-center"><?php echo $vs->records_vital_signs_bp.' (mm, hg)';?></td>
+																							<td class="text-center"><?php echo $vs->records_vital_signs_pulse.' (bpm)';?></td>
+																							<td class="text-center"><?php echo $vs->records_vital_signs_bmi.' (Kg/M^2)';?></td>
+																						</tr>
+																					
+																					<?php } ?>
+																					</tbody>
+																				</table>
+																		<?php } ?>
 
-												</div>
-												
-												
-											
+																		<?php if($this->Mdl_records_symptoms->by_record_id($row->record_id)->get()->num_rows() > 0) { ?>				
+																			<h2>Dsymptoms / Diagnosis</h2>
+																				<table class="table">
+																					<thead>
+																						<tr>
+																							<th>Signs / Symptoms</th>
+																							<th>Diagnosis</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																					<?php foreach($this->Mdl_records_symptoms->by_record_id($row->record_id)->get()->result() as $symtoms){ ?>
+																							<tr>
+																								<td><?php echo $this->Mdl_symptoms->get_by_id($symtoms->records_symptoms_signs)->symptom_name;?></td>
+																								<td><?php echo $this->Mdl_diagnosis->get_by_id($symtoms->records_symptoms_diagnosis)->diagnos_name;?></td>
+																							</tr>
+																						<?php } ?>		
+																					</tbody>
+																				</table>
+																		<?php } ?>	
+
+																		<?php if($this->Mdl_records_investigations->by_record_id($row->record_id)->get()->num_rows() > 0) { ?>										
+																			<h2>Investigations</h2>			
+																				<table class="table">
+																					<thead>
+																						<tr>
+																							<th>Investigations</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																						<?php foreach($this->Mdl_records_investigations->by_record_id($row->record_id)->get()->result() as $investigation){ ?>
+																							<tr>
+																								<td><?php echo $investigation->records_investigations_investigation;?></td>
+																							</tr>
+																						<?php } ?>		
+																					</tbody>
+																				</table>
+																		<?php } ?>	
+																		
+																		<?php if($this->Mdl_records_medications->by_record_id($row->record_id)->get()->num_rows() > 0) { ?>										
+																			<h2>Medications</h2>		
+																				<table class="table">
+																					<thead>
+																						<tr>
+																							<th>Medicine</th>
+																							<th>Preparation</th>
+																							<th>Sig</th>
+																							<th>Qty</th>
+																							<th>Maintenable</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																						<?php foreach($this->Mdl_records_medications->get_all($this->Mdl_records_medications->by_record_id($row->record_id)->get()->row()->records_medications_date)->result() as $medicine) { ?>
+																							<tr>
+																								<td><?php echo $medicine->records_medications_medicine;?></td>
+																								<td><?php echo $medicine->records_medications_preparation;?></td>
+																								<td><?php echo $medicine->records_medications_sig;?></td>
+																								<td><?php echo $medicine->records_medications_qty;?></td>
+																								<td><?php echo ($medicine->records_medications_mainteinable == 1) ? 'Yes':'No';?></td>
+																							</tr>
+																						<?php } ?>		
+																					</tbody>
+																					<tfoot>
+																						<tr>
+																							<td colspan="5" class="text-right"><a href="<?php echo site_url('records/rx_preview/'.$this->Mdl_records_medications->by_record_id($row->record_id)->get()->row()->record_id);?>" class="btn btn-xs btn-success">Print</a></td>
+																						</tr>
+																					</tfoot>
+																				</table>
+																		<?php } ?>
+																		
+																		<?php if($this->Mdl_records_advice->by_record_id($row->record_id)->get()->num_rows() > 0) { ?>			
+																			<h2>Advices</h2>		
+																				<table class="table">
+																					<thead>
+																						<tr>
+																							<th>Advice</th>
+																							<th>Next visit</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																						<?php foreach($this->Mdl_records_advice->by_record_id($row->record_id)->get()->result() as $advice){ ?>
+																							<tr>
+																								<td><?php echo $advice->records_advice_advice;?></td>
+																								<td><?php echo $advice->records_advice_follow_up_date;?></td>
+																							</tr>
+																						<?php } ?>		
+																					</tbody>
+																				</table>
+																		<?php } ?>			
+																	</div>
+																</div>
+															</div>
+														<?php 
+														$i++;	
+													} 	
+												} else { ?>
+													<h2 class="text-center">no record histories found!</h2>
+												<?php } ?>
+
 											</div>
 											<!-- end widget content -->
 											
@@ -1053,45 +1227,22 @@
 		}
 
 		$(document).on('click','.remove',function(e) {
+
 			e.preventDefault();
             $.ajax({
-                url: $(this).attr('href'),
+				url: $(this).attr('href'),
+				type: 'post',
+				dataType: "json",
                 success: function(response) {
-                    var obj = JSON.parse(response);
-                    console.log(response);
-                    if (obj.success) {
+                    if (response.success) {
                         checkURL();
                     } else {
-                        mcs.init_smallBox("error", obj.message);
+                        mcs.init_smallBox("error");
                     }
                 }
             });
 		});
-		$(document).on('click','#symptoms-submit',function(e) {
-			
-			$('#symptoms-form').submit(function(event) {
 
-				$.ajax({
-		            type : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-		            url : BASE_URL+'records/ajax/save_symptoms', // the url where we want to POST
-		            data : {
-			            record_id: $('#record_id').val(),
-			            sign_symptoms: $('#sign_symptoms').select2('data'),
-			            diagnosis: $('#diagnosis').select2('data')
-			        }, // our data object
-		            dataType :'json'
-		        })
-	            // using the done promise callback
-	            .done(function(data) {
-
-	                // log data to the console so we can see
-	                console.log(data); 
-
-	                // here we will handle errors and validation messages
-	            });
-		       	event.preventDefault();
-	    	});
-	    });
 	});
 
 	var select = function() {
@@ -1115,12 +1266,11 @@
 	          	},
 	          	cache: true	
 	        },
-	        tags: "true",
-			allowClear: true,
-			multiple:true,
 	        placeholder: 'Select Symptoms',
 			minimumInputLength: 1,
-			tokenSeparators: [','],
+		}).on('change', function(e) {
+			var data = $("#sign_symptoms option:selected").text();
+			console.log(data);
 		});
 
 		$('#diagnosis').select2({
@@ -1142,10 +1292,11 @@
 	          	},
 	          	cache: true	
 	        },
-	        tags: "true",
-  			allowClear: true,
 	        placeholder: 'Select Diagnosis',
-			minimumInputLength: 1
+			minimumInputLength: 1,
+		}).on('change', function(e) {
+			var data = $("#diagnosis option:selected").text();
+			console.log(data);
 		});
 		
 	}
@@ -1335,6 +1486,67 @@
             }
         });
 
+		$("#symptoms-form").validate({
+            // Rules for form validation
+            rules : {
+                sign_symptoms : {
+                    required : true
+				},
+				diagnosis: {
+                    required : true
+				},
+            },
+            // Messages for form validation
+            messages : {
+				sign_symptoms : {
+                    required : '<i class="fa fa-times-circle"></i> Please add symptoms'
+                },
+                diagnosis : {
+                    required : '<i class="fa fa-times-circle"></i> Please add diagnosis'
+                }
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }else{
+                    error.insertAfter(element);
+                }
+            },
+            // Ajax form submition
+            submitHandler : function(form) {
+                
+                $(form).ajaxSubmit({
+                    beforeSend: function () {
+                        $(form).find('#submit').html('Please wait...');
+                        $(form).find('#submit').attr("disabled", "disabled");
+                    },
+                    success:function(response)
+                    {
+                        if(response.success)
+                        {
+                            mcs.init_smallBox("success", response.message);
+                            checkURL();
+                        }
+                        else
+                        {
+                            mcs.init_smallBox("error", response.message);
+                        }                   
+                        $(form).find('#submit').text('Submit');
+                        $(form).find('#submit').removeAttr("disabled");
+                    },
+                    dataType:'json'
+                });
+            }
+		});
+		
 		$("#investigation-form").validate({
             // Rules for form validation
             rules : {

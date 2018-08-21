@@ -80,39 +80,46 @@ class Ajax extends Secure_Controller {
         echo json_encode(array('success'=>true));
     }
     
-    public function remove_advice()
+    public function remove_advice($id)
     {
         $this->load->model('records/Mdl_records_advice');
         $this->Mdl_records_advice->delete($id);
         echo json_encode(array('success'=>true));
     }
     
-    public function remove_medications()
+    public function remove_medications($id)
     {
         $this->load->model('records/Mdl_records_medications');
         $this->Mdl_records_medications->delete($id);
         echo json_encode(array('success'=>true));
     }
 
-    public function remove_investigations()
+    public function remove_investigations($id)
     {
         $this->load->model('records/Mdl_records_investigations');
         $this->Mdl_records_investigations->delete($id);
         echo json_encode(array('success'=>true));
     }
 
-    public function remove_symptoms()
+    public function remove_symptoms($id)
     {
         $this->load->model('records/Mdl_records_symptoms');
         $this->Mdl_records_symptoms->delete($id);
         echo json_encode(array('success'=>true));
     }
 
-    public function remove_vital_signs()
+    public function remove_vital_signs($id)
     {
         $this->load->model('records/Mdl_records_vital_signs');
         $this->Mdl_records_vital_signs->delete($id);
         echo json_encode(array('success'=>true));
+    }
+
+    public function remove_record($id)
+    {
+        $this->load->model('records/Mdl_records');
+		$this->Mdl_records->delete($id);
+		echo json_encode(array('success'=>true));
     }
 
     public function save_allergies()
@@ -211,7 +218,6 @@ class Ajax extends Secure_Controller {
             'records_symptoms_diagnosis'    => $this->input->post('diagnosis'),
             'records_symptoms_date'         => date('Y-m-d')
         );
-
         if ($this->Mdl_records_symptoms->save(NULL, $db_array))
         {
             $response = array(

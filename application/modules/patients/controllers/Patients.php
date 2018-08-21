@@ -54,6 +54,9 @@ class Patients extends Secure_Controller
 		$this->load->model('locations/Mdl_cities');
 		$this->load->model('locations/Mdl_states');
 
+		$this->load->model('diagnosis/Mdl_diagnosis');
+		$this->load->model('symptoms/Mdl_symptoms');
+
 		$this->load->model('queings/Mdl_queings');
 		$this->load->model('records/Mdl_records');
 		$this->load->model('patients/Mdl_patients');

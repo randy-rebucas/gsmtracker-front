@@ -16,6 +16,11 @@ class Mdl_Records extends Response_Model
 	public $table               = 'records';
     public $primary_key         = 'records.record_id';
 
+    public function default_order_by()
+    {
+        $this->db->order_by('records.record_date DESC');
+    }
+
     public function is_current()
     { 
         $this->filter_where('record_date', date('Y-m-d'));

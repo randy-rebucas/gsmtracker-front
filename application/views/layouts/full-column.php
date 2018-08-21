@@ -180,13 +180,13 @@
 			}
 		</script>
 		
-		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
+		<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
         <script>
             if (!window.moment) { 
                 document.write('<script src="<?php echo base_url();?>js/plugin/moment/moment.min.js"><\/script>');
             }
-        </script>
-		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        </script> -->
+		<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>js/app.config.js"></script>
 
