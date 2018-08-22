@@ -29,38 +29,19 @@ class Ajax extends Secure_Controller {
         $patient = $this->Mdl_patients->get_by_id($patient_id);
         //check if exist
         if(!$this->Mdl_queings->in_que($patient->id)->is_current()->get()->num_rows()){
-            
-            
+
             $db_array = array(
                 'patient_id'    => $patient->id,
                 'record_date'   => date('Y-m-d'),
                 'record_time'   => date('h:i:s')
             );
 
-            if ($this->Mdl_records->save(NULL, $db_array))
-            {
-                
-                $db_array = array(
-                    'que_id'    => $this->Mdl_queings->get()->num_rows() + 1,
-                    'user_id'   => $patient->id,
-                    'que_name'  => $patient->firstname.', '.$patient->lastname,
-                    'que_date'  => date('Y-m-d')
-                );
-
-                $this->Mdl_queings->save(NULL, $db_array);
-
-                $response = array(
-                    'success' => true
-                );
-
-            }
-            else
-            {
-                $response = array(
-                    'success' => false,
-                    'message' => 'Oooppps! failed to move in que!'
-                );
-            }
+            $this->Mdl_records->create($patient, $db_array);
+            
+            $response = array(
+                'success' => true
+            );
+            
         } 
         else 
         {
@@ -71,6 +52,19 @@ class Ajax extends Secure_Controller {
         }
  
         echo json_encode($response);
+    }
+
+    public function move_out($record_id){
+
+        $this->load->model('queings/Mdl_queings');
+        $this->Mdl_queings->delete($this->Mdl_queings->select('id')->where('record_id', $record_id)->get()->row()->id);
+
+        $this->load->model('records/Mdl_records');
+        $this->Mdl_records->delete($record_id);
+
+        echo json_encode(array(
+            'success' => true
+        ));
     }
 
     function get_counts()
@@ -113,22 +107,17 @@ class Ajax extends Secure_Controller {
    
             $que_id = $this->Mdl_queings->where(array('user_id' => $record->patient_id, 'que_date' => $record->record_date))->get()->row()->id;
 
-	        if($this->Mdl_queings->delete($que_id))
-	        {
-	        	$redirect = ($this->record_lib->next()) ? base_url().'patients/records/'.$this->record_lib->next() : site_url('patients');
-				echo json_encode(
-					array(
-						'success' => true, 
-						'message' => 'Patient successfully remove in wating list!', 
-						'redirect'=> $redirect
-					)
-				);
-			} 
-			else 
-			{
-				echo json_encode(array('success' => false, 'message' => 'Patient cannot be remove in wating list!'));
-			}
-
+	        $this->Mdl_queings->delete($que_id);
+	        
+            $redirect = ($this->record_lib->next()) ? base_url().'patients/records/'.$this->record_lib->next() : site_url('patients');
+            echo json_encode(
+                array(
+                    'success' => true, 
+                    'message' => 'Patient successfully remove in wating list!', 
+                    'redirect'=> $redirect
+                )
+            );
+			
     	}
 
 	}

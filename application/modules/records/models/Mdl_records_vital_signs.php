@@ -57,6 +57,11 @@ class Mdl_Records_Vital_Signs extends Response_Model
         $this->db->order_by('records_vital_signs.records_vital_signs_date DESC');
     }
 
+    // public function default_join()
+    // {
+    //     $this->db->join('records', 'records_vital_signs.record_id= records.record_id');
+    // }
+
     public function is_current()
     {
         $this->filter_where('records_vital_signs_date', date('Y-m-d'));

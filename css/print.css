@@ -1,0 +1,40 @@
+@media print {
+    #printableArea {
+        page-break-after: always;
+        position: relative;
+        font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+        font-size: 20px;
+        font-size: 20px;
+        background-color: #fff;
+        color: #000;
+        box-shadow: transparent;
+        width: 5.8in;
+        height: 8.3in;
+    }
+    #rx-pad {
+        height: 11in !important;
+        page-break-after: always;
+        position: relative;
+        font-size: 20px;
+        background-color: #fff;
+        color: #000;
+    }
+    #rx-header {
+        margin-top: 165px;
+        position: absolute;
+        width: 100%;
+        display: none;
+    }
+    #rx-body {
+        min-height: 570px;
+        color: rgb(51, 122, 183);
+        position: absolute;
+        top: 360px;
+        width: 100%;
+    }
+    #rx-footer {
+        position: absolute;
+        bottom: 75px;
+        width: 100%;
+    }
+}

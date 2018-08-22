@@ -58,7 +58,7 @@ class Records extends Secure_Controller
 		$i = 1;
 		$prescriptions = '';
 	    $prescriptions.='<table id="rx-contents" width="100%"><tbody>';
-		foreach ($this->Mdl_records_medications->get_all($record->record_date)->result_array() as $medicine) {
+		foreach ($this->Mdl_records_medications->get_all($record->record_id)->result_array() as $medicine) {
 			$prescriptions.="<tr>";
 			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:10%; padding-bottom: 5px;"><strong>'. $i .'</strong></td>';
 			$prescriptions.='<td style="font-size: 20px; vertical-align: top; width:75%; padding-bottom: 5px;"><strong>' .  $medicine['records_medications_medicine'].' '.$medicine['records_medications_preparation']. '</strong><br> ';

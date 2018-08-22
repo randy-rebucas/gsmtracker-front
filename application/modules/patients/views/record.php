@@ -63,6 +63,9 @@
 		visibility: visible;
 	}
 	
+	.list-group-item {
+		font-size: 16px;
+	}
 </style>
 <link href="<?php echo base_url();?>vendor/select2/select2/dist/css/select2.min.css" rel="stylesheet" />
 <style type="text/css">
@@ -212,9 +215,11 @@
 									</div> -->
 								</div>
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
-									
-									<a href="<?php echo site_url('queings/ajax/move_in/'.$this->uri->segment(3));?>" class="btn btn-warning btn-sm" id="move-in"><i class="fas fa-lg fa-fw fa-users"></i>&nbsp;<span class="hidden-mobile">Que</span> </a>
-							
+								<?php if(!$this->Mdl_queings->in_que($info->id)->is_current()->get()->num_rows()) { ?>	
+									<a href="<?php echo site_url('queings/ajax/move_in/'.$info->id);?>" class="btn btn-warning btn-sm que-action" id="move-in"><i class="fas fa-lg fa-fw fa-users"></i>&nbsp;<span class="hidden-mobile">Que</span> </a>
+								<?php } else { ?>
+									<a href="<?php echo site_url('queings/ajax/move_out/'.$record_id);?>" class="btn btn-danger btn-sm que-action" id="move-out"><i class="fas fa-lg fa-fw fa-remove"></i>&nbsp;<span class="hidden-mobile">Remove Que</span> </a>
+								<?php } ?>
 								</div>
 								
 							</div>
@@ -238,21 +243,21 @@
 											<dl class="row">
 											
 												<dt class="col-sm-3">Age</dt>
-												<dd class="col-sm-9 text-truncate"><?php //echo (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
-												//? ((date("Y") - $info->bYear) - 1)
-												//: (date("Y") - $info->bYear)); ?> - <?php //echo ($info->bYear < date('Y')) ? 'years': (date('m') - $info->bMonth) .' month old';?></dd>
+												<dd class="col-sm-9 text-truncate"><?php echo (date("md", date("U", mktime(0, 0, 0, $info->bMonth, $info->bDay, $info->bYear))) > date("md")
+												? ((date("Y") - $info->bYear) - 1)
+												: (date("Y") - $info->bYear)); ?> - <?php echo ($info->bYear < date('Y')) ? 'years': (date('m') - $info->bMonth) .' month old';?></dd>
 
 												<dt class="col-sm-3">Gender</dt>
 												<dd class="col-sm-9"><?php echo ($info->gender == 1) ? 'Male': 'Female';?></dd>
 
 												<dt class="col-sm-3">Birthdate</dt>
-												<dd class="col-sm-9 text-truncate">---<?php //echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
+												<dd class="col-sm-9 text-truncate">---<?php echo date('M', mktime(0,0,0,$info->bMonth)).' '.str_pad($info->bDay, 2, "0", STR_PAD_LEFT).', '.$info->bYear;?></dd>
 
 												<dt class="col-sm-3">Address</dt>
 												<dd class="col-sm-9">
 													<address>
 														<?php echo $info->address;?><br>
-														<?php //echo $this->Mdl_countries->get_by_id($info->country)->name.', '.$this->Mdl_cities->get_by_id($info->city)->name.' '.$this->Mdl_states->get_by_id($info->state)->name;?><br>
+														<?php echo $this->Mdl_countries->get_by_id($info->country)->name.', '.$this->Mdl_cities->get_by_id($info->city)->name.' '.$this->Mdl_states->get_by_id($info->state)->name;?><br>
 														<?php echo $info->zip;?><br>
 														<abbr title="Mobile">M:</abbr> <?php echo $info->mobile;?><br>
 														<abbr title="Work Phone">WP:</abbr> <?php echo $info->work_phone;?>
@@ -264,22 +269,29 @@
 										</div>
 									</div>
 									<div class="mesurements">
+
 										<ul>
 											<li>
 												<p>Weight <br/>
-													<strong><?php echo $this->Mdl_records_vital_signs->select('records_vital_signs_weight')->order_by('records_vital_signs_id',"desc")->limit(1)->get()->row()->records_vital_signs_weight;?> (kg)</strong>
+													<strong><?php 
+													$weight = $this->Mdl_records_vital_signs->select('records_vital_signs_weight')->where('patient_id', $info->id)->order_by('records_vital_signs_id',"desc")->join('records', 'records_vital_signs.record_id = records.record_id')->limit(1)->get();
+													echo ($weight->num_rows() > 0) ? $weight->row()->records_vital_signs_weight : '--';?> (kg)</strong>
 												</p>
 												<i class="fas fa-3x fa-fw fa-weight"></i>
 											</li>
 											<li>
 												<p>Height <br/>
-													<strong><?php echo $this->Mdl_records_vital_signs->select('records_vital_signs_height')->order_by('records_vital_signs_id',"desc")->limit(1)->get()->row()->records_vital_signs_height;?> (Cm)</strong>
+													<strong><?php 
+													$height = $this->Mdl_records_vital_signs->select('records_vital_signs_height')->where('patient_id', $info->id)->order_by('records_vital_signs_id',"desc")->join('records', 'records_vital_signs.record_id = records.record_id')->limit(1)->get();
+													echo ($height->num_rows() > 0) ? $height->row()->records_vital_signs_height : '--';?> (Cm)</strong>
 												</p>
 												<i class="fas fa-3x fa-fw fa-list-ol"></i>
 											</li>
 											<li>
 												<p>BMI <br/>
-													<strong><?php echo $this->Mdl_records_vital_signs->select('records_vital_signs_bmi')->order_by('records_vital_signs_bmi',"desc")->limit(1)->get()->row()->records_vital_signs_bmi;?> (Kg/M^2)</strong>
+													<strong><?php 
+													$bmi = $this->Mdl_records_vital_signs->select('records_vital_signs_bmi')->where('patient_id', $info->id)->order_by('records_vital_signs_id',"desc")->join('records', 'records_vital_signs.record_id = records.record_id')->limit(1)->get();
+													echo ($height->num_rows() > 0) ? $height->row()->records_vital_signs_bmi : '--';?> (Kg/M^2)</strong>
 												</p>
 												<i class="fas fa-3x fa-fw fa-indent"></i>
 											</li>
@@ -466,13 +478,13 @@
 										                        <section class="col col-6">
 																	<label class="label">Weight (kg)</label>
 																	<label class="input">
-																		<input type="text" name="weight" id="weight" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_weight : '';?>">
+																		<input type="text" name="weight" id="weight" value="">
 																	</label>
 																</section>
 																<section class="col col-6">
 																	<label class="label">Height (Cm)</label>
 																	<label class="input">
-																		<input type="text" name="height" id="height" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_height : '';?>">
+																		<input type="text" name="height" id="height" value="">
 																	</label>
 																</section>
 									                    	</div>
@@ -480,13 +492,13 @@
 										                        <section class="col col-6">
 																	<label class="label">Tempature (F)</label>
 																	<label class="input">
-																		<input type="text" name="tempature" id="tempature" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_temp : '';?>">
+																		<input type="text" name="tempature" id="tempature" value="">
 																	</label>
 																</section>
 																<section class="col col-6">
 																	<label class="label">B.P. (mm, hg)</label>
 																	<label class="input">
-																		<input type="text" name="bp" id="bp" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_bp : '';?>">
+																		<input type="text" name="bp" id="bp" value="">
 																	</label>
 																</section>
 									                    	</div>
@@ -494,13 +506,13 @@
 										                        <section class="col col-6">
 																	<label class="label">Pulse (bpm)</label>
 																	<label class="input">
-																		<input type="text" name="pulse" id="pulse" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_pulse : '';?>">
+																		<input type="text" name="pulse" id="pulse" value="">
 																	</label>
 																</section>
 																<section class="col col-6">
 																	<label class="label">BMI (Kg/M^2)</label>
 																	<label class="input">
-																		<input type="text" name="bmi" id="bmi" value="<?php echo (count($cur_vital_sign)) ? $cur_vital_sign[0]->records_vital_signs_bmi : '';?>">
+																		<input type="text" name="bmi" id="bmi" value="">
 																	</label>
 																</section>
 									                    	</div>
@@ -629,7 +641,7 @@
 															<section>
 																<label class="label">Investigation</label>
 																<label class="textarea"> 										
-																	<textarea rows="3" class="custom-scroll" name="investigations" id="investigations"><?php echo (count($cur_investigations)) ? $cur_investigations[0]->records_investigations_investigation : '';?></textarea> 
+																	<textarea rows="3" class="custom-scroll" name="investigations" id="investigations"></textarea> 
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -735,7 +747,7 @@
 																				</tr>
 																			</thead>
 																			<tbody>
-																				<?php foreach($this->Mdl_records_medications->get_all($row->records_medications_date)->result() as $medicine) { ?>
+																				<?php foreach($this->Mdl_records_medications->get_all($row->record_id)->result() as $medicine) { ?>
 																					<tr>
 																						<td><?php echo $medicine->records_medications_medicine;?></td>
 																						<td><?php echo $medicine->records_medications_preparation;?></td>
@@ -771,7 +783,7 @@
 															<section>
 																<label class="label">Advice</label>
 																<label class="textarea"> 										
-																	<textarea rows="3" class="custom-scroll" name="advices" id="advices"><?php echo (count($cur_advice)) ? $cur_advice[0]->records_advice_advice : '';?></textarea> 
+																	<textarea rows="3" class="custom-scroll" name="advices" id="advices"></textarea> 
 																</label>
 																<!-- <div class="note">
 																	<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -782,7 +794,7 @@
 																<section class="col col-4">
 																	<label class="label">Follow-Up Date</label>
 																	<label class="input"> 										
-																		<input type="input" name="followup_date" id="followup_date" value="<?php echo (count($cur_advice)) ? $cur_advice[0]->records_advice_follow_up_date : '';?>" class="datepicker" data-dateformat="yy-mm-dd">
+																		<input type="input" name="followup_date" id="followup_date" value="" class="datepicker" data-dateformat="yy-mm-dd">
 																	</label>
 																	<!-- <div class="note">
 																		<strong>Note:</strong> height of the textarea depends on the rows attribute.
@@ -964,7 +976,7 @@
 																						</tr>
 																					</thead>
 																					<tbody>
-																						<?php foreach($this->Mdl_records_medications->get_all($this->Mdl_records_medications->by_record_id($row->record_id)->get()->row()->records_medications_date)->result() as $medicine) { ?>
+																						<?php foreach($this->Mdl_records_medications->get_all($row->record_id)->result() as $medicine) { ?>
 																							<tr>
 																								<td><?php echo $medicine->records_medications_medicine;?></td>
 																								<td><?php echo $medicine->records_medications_preparation;?></td>
@@ -1165,7 +1177,7 @@
 			$.post(BASE_URL+'records/ajax/set_tab', { tab: curtab} );
 		});
 
-		$(document).on('click','#move-in',function(e) {
+		$(document).on('click','.que-action',function(e) {
 		    var href = $(this).attr('href');
 			
 			$.ajax({
@@ -1212,7 +1224,7 @@
 
 		function get_hestories(){
 
-			$.getJSON(BASE_URL+'records/ajax/get_hestories', { patient_id: patient_id }, function(data) {
+			$.getJSON(BASE_URL+'records/ajax/get_histories', { patient_id: patient_id }, function(data) {
 				var temp = '<ul class="list-group">';
 				if(data.length > 0){
 					$.each(data, function(index, element) {

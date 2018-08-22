@@ -64,8 +64,8 @@ class Mdl_Records_Medications extends Response_Model
         return $this;
     }
     
-    public function get_all($date){
+    public function get_all($record_id){
         
-        return $this->db->get_where('records_medications', array('records_medications_date' => $date));
+        return $this->db->get_where('records_medications', array('record_id' => $record_id));
     }
 }
