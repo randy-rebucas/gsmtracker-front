@@ -41,46 +41,6 @@ p.print-size-info {
     font-size: 20px;
     color: #000;
 }
-@media print {
-    #printableArea {
-        page-break-after: always;
-        position: relative;
-        font-family: Menlo, Monaco, Consolas, Courier New, monospace;
-        font-size: 20px;
-        font-size: 20px;
-        background-color: #fff;
-        color: #000;
-        box-shadow: transparent;
-        width: 5.8in;
-        height: 8.3in;
-    }
-    #rx-pad {
-        height: 11in !important;
-        page-break-after: always;
-        position: relative;
-        font-size: 20px;
-        background-color: #fff;
-        color: #000;
-    }
-    #rx-header {
-        margin-top: 165px;
-        position: absolute;
-        width: 100%;
-        display: none;
-    }
-    #rx-body {
-        min-height: 570px;
-        color: rgb(51, 122, 183);
-        position: absolute;
-        top: 360px;
-        width: 100%;
-    }
-    #rx-footer {
-        position: absolute;
-        bottom: 75px;
-        width: 100%;
-    }
-}
 </style>
 
 <div class="row">
@@ -102,42 +62,6 @@ p.print-size-info {
 <script type='text/javascript'>
     
     var record_id = '<?php echo $this->uri->segment(3);?>';
-
-	$(document).ready(function()
-	{
-        function closePrint () {
-            $.ajax({
-                url: BASE_URL+'queings/ajax/process/'+record_id,
-                type: 'post',
-                dataType: 'json',
-                success: function(response) {
-                    console.log(response);
-                    if(response.success)
-                    {
-                        window.location.replace(response.redirect);
-                    }
-                }
-            });	
-        }
-
-        function nWin() {
-            var w = window.open();
-            var html = $("#printableArea").html();
-
-            $(w.document.body).html(html);
-            w.onafterprint = closePrint;
-            w.focus();
-            w.print();
-            w.close();
-        }
-
-        $(function() {
-            $("a#print").click(nWin);
-        });
-        
-        
-
-	});
 	
 	function PrintDoc(title, w, h) {
         // Fixes dual-screen position Most browsers Firefox
@@ -151,25 +75,16 @@ p.print-size-info {
         var toPrint = document.getElementById('printableArea');
         var popupWin = window.open('', title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
         popupWin.document.open();
-        popupWin.document.write('<html><title>::Preview::</title><link rel="stylesheet" type="text/css" href="/css/print.css" /></head><body onafterprint="closePrint()" onload="window.print();window.close()">')
+        popupWin.document.write('<html><title>::RX Pad::</title><link rel="stylesheet" type="text/css" href="/css/print.css" /></head><body id="'+BASE_URL+'" onafterprint="closePrint('+record_id+');" onload="window.print(); ">')
         popupWin.document.write(toPrint.innerHTML);
         popupWin.document.write('</html>');
         popupWin.document.close();
-
+        
+        var script   = popupWin.document.createElement("script");
+        script.type  = "text/javascript";
+        script.src  = BASE_URL+"/js/print.js";
+        popupWin.document.body.appendChild(script);
     }
 
-    function closePrint () {
-        $.ajax({
-            url: BASE_URL+'queings/ajax/process/'+record_id,
-            type: 'post',
-            dataType: 'json',
-            success: function(response) {
-                console.log(response);
-                if(response.success)
-                {
-                    window.location.replace(response.redirect);
-                }
-            }
-        });	
-    }
+    
 </script>

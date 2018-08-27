@@ -1,4 +1,10 @@
 @media print {
+    @page {
+        margin: 0;
+    }
+    body {
+        margin: 1.6cm;
+    }
     #printableArea {
         page-break-after: always;
         position: relative;
@@ -23,7 +29,6 @@
         margin-top: 165px;
         position: absolute;
         width: 100%;
-        display: none;
     }
     #rx-body {
         min-height: 570px;

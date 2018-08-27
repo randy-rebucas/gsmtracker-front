@@ -91,36 +91,6 @@ class Ajax extends Secure_Controller {
         
     }
 
-    function process($record_id) 
-	{ 
-        $this->load->model('queings/Mdl_queings');
-        $this->load->model('records/Mdl_records');
-        $this->load->library('records/record_lib');
-
-        $record = $this->Mdl_records->get_by_id($record_id);
-
-        $db_array = array(
-            'record_status' => 1
-        );
-
-        if ($this->Mdl_records->save($record->record_id, $db_array)) {
-   
-            $que_id = $this->Mdl_queings->where(array('user_id' => $record->patient_id, 'que_date' => $record->record_date))->get()->row()->id;
-
-	        $this->Mdl_queings->delete($que_id);
-	        
-            $redirect = ($this->record_lib->next()) ? base_url().'patients/records/'.$this->record_lib->next() : site_url('patients');
-            echo json_encode(
-                array(
-                    'success' => true, 
-                    'message' => 'Patient successfully remove in wating list!', 
-                    'redirect'=> $redirect
-                )
-            );
-			
-    	}
-
-	}
 }
 
 ?>
