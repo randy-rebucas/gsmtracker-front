@@ -20,7 +20,6 @@ class Appointments extends Secure_Controller
 
         parent::__construct();
 
-        $this->load->model('Appointment');
         $this->load->language('appointments', 'english');
 
     }

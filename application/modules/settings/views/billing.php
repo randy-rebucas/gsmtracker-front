@@ -84,27 +84,7 @@ the <section></section> and you can use wells or panels instead
 
 						<div id="settingsTabContent" class="tab-content padding-10">
 							<div class="tab-pane fade in active" id="s5">
-								<legend>Billing overview</legend>
-
-								<table class="table">
-									<tbody>
-										<tr>
-											<th>Plan</th>
-											<td><?php echo $client_info->client_plan;?> plan</td>
-											<td><a href="<?php echo site_url('account/upgrade');?>" class="btn btn-success btn-sm">Update plan</a></td>
-											<td></td>
-										</tr>
-										<!-- <tr>
-											<th>Payment</th>
-											<td>No payment method on file.</td>
-											<td><a href="" class="btn btn-default btn-sm">Add payment method</a></td>
-											<td></td>
-										</tr> -->
-										
- 
-									</tbody>
-								</table>
-
+								
 								<legend>Payment history</legend>
 								<table class="table">
 									<tbody>

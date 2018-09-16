@@ -13,7 +13,7 @@ class Ajax extends Secure_Controller {
 	       
         $this->datatables->select("import_id as id, filename, created, success_count, failed_count, total_records as total", false);
         
-        $this->datatables->where('client_id', $this->client_id);
+        // $this->datatables->where('client_id', $this->client_id);
         
         $this->datatables->from('import');
 

@@ -255,7 +255,7 @@ the <section></section> and you can use wells or panels instead
 </div>
 
 <script type="text/javascript">
-	var BASE_URL = '<?php echo base_url();?>';
+	
 	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
 	 *
 	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS

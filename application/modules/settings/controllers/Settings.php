@@ -18,7 +18,6 @@ class Settings extends Secure_Controller
 	{
         parent::__construct();
 
-		$this->load->library('location_lib');
 		$this->load->library('ci_mailer');
 
         $this->load->language('setting', 'english');

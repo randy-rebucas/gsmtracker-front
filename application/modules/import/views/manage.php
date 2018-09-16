@@ -75,7 +75,7 @@
 								</div>
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
 
-									<?php if(($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('roles', $this->role_id, 'create',  $this->client_id) : true) { ?>
+									<?php if(($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('roles', $this->role_id, 'create') : true) { ?>
 										<a href="<?php echo site_url('import/ajax/modal_import');?>" data-original-title="Import" class="preview btn btn-success btn-sm"><i class="fas fa-file-import"></i>&nbsp;<span class="hidden-mobile">Import</span> </a>
 										
 									<?php } ?>
@@ -123,9 +123,9 @@
 
 <script type="text/javascript">
 
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('import', $this->role_id, 'view',   $this->client_id) : true; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('import', $this->role_id, 'update',   $this->client_id) : true; ?>';
-	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('import', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('import', $this->role_id, 'view') : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('import', $this->role_id, 'update') : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('import', $this->role_id, 'delete') : true; ?>';
 	
 	var admin_role_id = '<?php echo $this->admin_role_id;?>';
 	var patient_role_id = '<?php echo $this->patient_role_id;?>';

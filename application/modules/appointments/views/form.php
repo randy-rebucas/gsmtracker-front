@@ -3,7 +3,7 @@
     text-align: left;
 }
 </style>
-<?php echo form_open('appointments/doSave/'.$info->appointment_id,'class="smart-form" id="appointment-form"');?>
+<?php echo form_open('appointments/doSave','class="smart-form" id="appointment-form"');?>
    
 	<fieldset> 
 		<div class="row">
@@ -14,7 +14,7 @@
 					
 				</label>
 			</section>
-			<section class="col col-4 <?php if($this->admin_role_id != $this->role_id) echo 'hidden';?>">
+			<section class="col col-4">
 				<label for="gender">Status</label>
 				<label class="select">
 					<?php 
@@ -23,16 +23,16 @@
 						'Pending'	=> 'Pending',
 						'Approve'	=> 'Approve'
 					);	
-					echo form_dropdown('status',$status, ($info->appointment_status) ? $info->appointment_status : 'Pending',' id="status" tabindex="3"'); ?>
+					echo form_dropdown('status',$status, '',' id="status" tabindex="3"'); ?>
 					<i></i>
 				</label>
 			</section>
 		</div>
 		
-		<section class="<?php if($this->admin_role_id != $this->role_id) echo 'hidden';?>">
+		<section class="">
 			<label for="gender">Patient(s)</label>
 			<label class="select">
-				<?php echo form_dropdown('user_id',$patients, ($this->admin_role_id != $this->role_id) ? $this->user_id : $info->user_id,' id="user_id" tabindex="5"'); ?>
+				<?php echo form_dropdown('user_id',$patients, '',' id="user_id" tabindex="5"'); ?>
 				<i></i>
 			</label>
 		</section>
@@ -41,7 +41,7 @@
 		<section>
 			<label for="title">Title</label>
 			<label class="input">
-				<input type="text" name="title" id="title" value="<?php echo set_value('title', $info->appointment_title);?>" placeholder="Title" tabindex="6">
+				<input type="text" name="title" id="title" value="" placeholder="Title" tabindex="6">
 				
 			</label>
 		</section>
@@ -49,7 +49,7 @@
 		<section>
 			<label for="description">Description</label>
 			<label class="textarea">
-				<textarea name="description" class="custom-scroll" id="description" placeholder="Description" tabindex="7"><?php echo $info->appointment_description;?></textarea>
+				<textarea name="description" class="custom-scroll" id="description" placeholder="Description" tabindex="7"></textarea>
 			</label>	
 		</section>
 
@@ -60,12 +60,15 @@
   
 <script type="text/javascript">
     var BASE_URL = '<?php echo base_url();?>';
+    
     runAllForms();
+
 	loadScript(BASE_URL+"js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js", runTimePicker);
 	
 	function runTimePicker() {
 		$('.timepicker').timepicker();
 	}
+
     var validatefunction = function() {
 
         $("#appointment-form").validate({

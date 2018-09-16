@@ -13,7 +13,7 @@ class Ajax extends Secure_Controller {
         
         $this->datatables->select("appointments.*, CONCAT(IF(up.lastname != '', up.lastname, ''),',',IF(up.firstname != '', up.firstname, '')) as fullname", false);
         
-        $this->datatables->where('client_id', $this->client_id);
+        //$this->datatables->where('client_id', $this->client_id);
         
         $this->datatables->join('users_profiles as up', 'appointments.appointment_patient_id = up.user_id', 'left', false);
 
@@ -24,11 +24,8 @@ class Ajax extends Secure_Controller {
 
     public function modal_create($id = -1)
     {
-        $this->load->model('appointments/Mdl_appointments');
 		$this->load->model('patients/Mdl_patients');
 
-        $data['info'] = $this->Mdl_appointments->get_info($id);
-        
         $patients = array('' => 'Select');
 
         foreach ($this->Mdl_patients->get()->result_array() as $row) 

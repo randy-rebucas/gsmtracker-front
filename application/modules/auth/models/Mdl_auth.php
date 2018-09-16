@@ -14,8 +14,6 @@ class Mdl_Auth extends CI_Model
 {
 	private $table_name			= 'users';			// user accounts
 	private $client_table			= 'clients';			// user accounts
-	private $profile_table_name		= 'users_profiles';	// user profiles
-
 	
 	function __construct()
 	{
@@ -23,7 +21,6 @@ class Mdl_Auth extends CI_Model
 
 		$ci =& get_instance();
 		$this->table_name		= $ci->config->item('db_table_prefix', 'tank_auth').$this->table_name;
-		$this->profile_table_name	= $ci->config->item('db_table_prefix', 'tank_auth').$this->profile_table_name;
 		$this->client_table  = $ci->config->item('db_table_prefix', 'tank_auth').$this->client_table;
 	}
 
@@ -456,29 +453,24 @@ class Mdl_Auth extends CI_Model
 	
 	private function create_profile($user_id, $profile_data)
 	{
+
 		$this->db->set('user_id', $user_id);
-		if($this->db->insert($this->profile_table_name, $profile_data)){
-
-			$this->load->model('roles/Mdl_roles');
-			$this->db->set('role_id', $this->Mdl_roles->get_by_val('role_slug', 'administrator')->role_id);
+		if($this->db->insert('users_profiles', $profile_data))
+		{
 			$this->db->set('user_id', $user_id);
-			return $this->db->insert('users_role');
+			if($this->db->insert('users_custom'))
+			{
+				$this->db->set('role_id', 1);
+				$this->db->set('user_id', $user_id);
+				if($this->db->insert('users_role'))
+				{
+					$this->db->set('user_id', $user_id);
+					return $this->db->insert('administrators');
+				}
+			}
 		}
-		
 	}
 
-	function update_visibility($id, $state)
-	{
-		$this->db->where('id', $id);
-		return $this->db->update('users', array('isonline'=> $state));
-
-	}
-
-	function update_profile_type($id, $type)
-	{
-		$this->db->where('id', $id);
-		return $this->db->update('users', array('type'=> $type));
-	}
 }
 
 /* End of file users.php */

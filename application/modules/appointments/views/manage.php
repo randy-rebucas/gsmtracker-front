@@ -57,7 +57,7 @@
 								</div>
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-7 text-right">
 								
-									<?php if(($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'create',  $this->client_id) : true) { ?>
+									<?php if(($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'create') : true) { ?>
 										<a href="<?php echo site_url('patients/ajax/modal_create_patient');?>" data-original-title="<?php echo $this->lang->line('__common_create_new');?>" class="preview btn btn-success btn-sm"><i class="fa fa-plus"></i>&nbsp;<span class="hidden-mobile"><?php echo $this->lang->line('__common_create');?></span> </a>
 										
 									<?php } ?>
@@ -105,9 +105,9 @@
 <!-- end row -->
 
 <script type="text/javascript">
-	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'view',   $this->client_id) : true; ?>';
-	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'update',   $this->client_id) : true; ?>';
-	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'delete',   $this->client_id) : true; ?>';
+	var can_view = 	'<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'view') : true; ?>';
+	var can_update = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'update') : true; ?>';
+	var can_delete = '<?php echo ($this->admin_role_id != $this->role_id) ? $this->Mdl_roles->has_permission('appointments', $this->role_id, 'delete') : true; ?>';
 	
 	var admin_role_id = '<?php echo $this->admin_role_id;?>';
 	var patient_role_id = '<?php echo $this->patient_role_id;?>';
@@ -188,7 +188,7 @@
 			$.ajax({
 				async: false,
 				type: 'POST', 
-				url: BASE_URL +'appointments/get', 
+				url: BASE_URL +'appointments/ajax/get', 
 				data: {}, 
 				success: function (res) { 
 					response = $.parseJSON(res);

@@ -109,9 +109,11 @@
 		</style>
 
 		<script type="text/javascript">
-			var BASE_URL = '<?php echo base_url();?>';
-			var user_id = '<?php echo $user_info->user_id;?>';
-			var role_id = '<?php echo $user_info->role_id;?>';
+
+			const BASE_URL 	= '<?php echo base_url();?>';
+			const USER_ID 	= '<?php echo $user_info->id;?>';
+			const ROLE_ID 	= '<?php echo $user_info->role_id;?>';
+
 		</script>
 	</head>
 
@@ -230,10 +232,7 @@
 		<!-- <script src="<?php echo base_url(); ?>js/demo.min.js"></script>-->
 
 		<!-- MAIN APP JS FILE -->
-		<script src="<?php echo base_url(); ?>js/app.min.js"></script>
-
-		<!-- AJAX NAV APP JS FILE -->
-		<script src="<?php echo base_url(); ?>js/ajaxnav.js"></script>
+		<script src="<?php echo base_url(); ?>js/app.js"></script>
 		
 		<!-- GLOBAL APP JS FILE -->
 		<script src="<?php echo base_url(); ?>js/global.js"></script>
@@ -255,7 +254,10 @@
  
 				mcs.init();
 				
-
+				$('.modal').on('hidden.bs.modal', function(e){ 
+				    $(this).removeData();
+				    $('.modal .modal-content').empty();
+				});
 			});
 			
 			

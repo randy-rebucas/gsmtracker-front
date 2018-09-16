@@ -1,7 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once('phpass-0.1/PasswordHash.php');
-
 define('STATUS_ACTIVATED', '1');
 define('STATUS_NOT_ACTIVATED', '0');
 
@@ -23,10 +21,11 @@ class Tank_auth
 	function __construct()
 	{
 		$this->ci =& get_instance();
-		$this->ci->load->library('session');
+		
 		$this->ci->load->config('auth/tank_auth', TRUE);
+		$this->ci->load->library('auth/my_crypt');
+		$this->ci->load->library('session');
 		$this->ci->load->model('auth/Mdl_auth');
-
 		// Try to autologin
 		$this->autologin();
 	}
@@ -40,102 +39,59 @@ class Tank_auth
 	 * @param	bool
 	 * @return	bool
 	 */
-	function login($login, $password, $remember, $isSocial = false)
+	function login($login, $password, $remember)
 	{
 		if ((strlen($login) > 0) AND (strlen($password) > 0)) {
 
 			if (!is_null($user = $this->ci->Mdl_auth->get_user_by_email($login))) {	// login ok
 
-				
-				if (!$isSocial) {
-						// password ok
-					
-					if($this->checkPoint($password, $user->password)){
-						
+				// Does password match hash in database?
+				if ($this->ci->my_crypt->check_password($user->password, $password)) {		// password ok
+
+					if ($user->banned == 1) {									// fail - banned
+						$this->error = array('banned' => $user->ban_reason);
+
+					} else {
 						$this->ci->session->set_userdata(array(
-							'user_id'	=> $user->id,
-							'username'	=> $user->username,
-							//'client_id' => $user->client_id,
-							'role_id' 	=> $user->role_id,
-							'status'	=> ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
+								'user_id'	=> $user->id,
+								'username'	=> $user->username,
+								'status'	=> ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
 						));
-				
-						if ($user->activated == 0) {
-													// fail - not activated
-							$this->error = array('not_activated' => 'auth_message_not_activated');
-				
+
+						if ($user->activated == 0) {							// fail - not activated
+							$this->error = array('not_activated' => '');
+
 						} else {												// success
-				
+							if ($remember) {
+								$this->create_autologin($user->id);
+							}
+
+							// $this->clear_login_attempts($login);
+
 							$this->ci->Mdl_auth->update_login_info(
 									$user->id,
 									$this->ci->config->item('login_record_ip', 'tank_auth'),
 									$this->ci->config->item('login_record_time', 'tank_auth'));
-				
-							//$this->update_status($user->id, 1);
 							return TRUE;
 						}
-						
-					} else {
-																			// fail - wrong 
-						$this->error = array('password' => 'auth_incorrect_password');
 					}
-					
-				} else {		
-					
-					$this->ci->session->set_userdata(array(
-						'user_id'	=> $user->id,
-						'username'	=> $user->username,
-						//'client_id' 	=> $user->client_id,
-						'role_id' 	=> $user->role_id,
-						'status'	=> 1,
-					));
-
-					$this->ci->Mdl_auth->update_login_info(
-							$user->id,
-							$this->ci->config->item('login_record_ip', 'tank_auth'),
-							$this->ci->config->item('login_record_time', 'tank_auth'));
-		
-					//$this->update_status($user->id, 1);
-					return TRUE;
-					
+				} else {														// fail - wrong password
+					$this->increase_login_attempt($login);
+					$this->error = array('password' => 'auth_incorrect_password');
 				}
-				
-			} else {	
-
+			} else {															// fail - wrong login
+				$this->increase_login_attempt($login);
 				$this->error = array('login' => 'auth_incorrect_login');
-				
 			}
-			
 		}
-		
 		return FALSE;
-		
 	}
-	
-	function checkPoint($password, $dbPassword){
-		$hasher = new PasswordHash(
-		$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-		$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-		
-		return $hasher->CheckPassword($password, $dbPassword);
-	}
+
 	
 	function get_user_by_email($email){
 	
 		return $this->ci->Mdl_auth->get_user_by_email($email);
 		
-	}
-	
-	function check_password($confirm_password, $recent_password){
-		
-		$hasher = new PasswordHash(
-				$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-				$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-		if ($hasher->CheckPassword($confirm_password, $recent_password)) {
-			return TRUE;
-		}else{
-			return FALSE;
-		}
 	}
 
 	/**
@@ -218,23 +174,20 @@ class Tank_auth
 			$this->error = array('email' => 'auth_email_in_use');
 
 		}  else {
-			// Hash password using phpass
-			$hasher = new PasswordHash(
-					$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-			$hashed_password = $hasher->HashPassword($password);
+			$salt = $this->ci->my_crypt->salt();
+            $hash = $this->ci->my_crypt->generate_password($password, $salt);
 // create_user
 			$data = array(
 				'username'	=> $username,
-				'password'	=> $hashed_password,
+				'password'	=> $hash,
 				'email'		=> $email,
 				'last_ip'	=> $this->ci->input->ip_address(),
-				'token'			=> date('Ymd')
+				'token'		=> date('Ymd')
 			);
 
 			$profile_data = array(
 				'firstname'	=> $firstname,
-				'mi'	=> $mi,
+				'mi'		=> $mi,
 				'lastname'	=> $lastname,
 				'address'	=> $address
 			);
@@ -404,14 +357,12 @@ class Tank_auth
 			if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 				// Hash password using phpass
-				$hasher = new PasswordHash(
-						$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-						$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-				$hashed_password = $hasher->HashPassword($new_password);
+				$salt = $this->ci->my_crypt->salt();
+            	$hash = $this->ci->my_crypt->generate_password($new_password, $salt);
 
 				if ($this->ci->Mdl_auth->reset_password(
 						$user_id,
-						$hashed_password,
+						$hash,
 						$new_pass_key,
 						$this->ci->config->item('forgot_password_expire', 'tank_auth'))) {	// success
 
@@ -443,23 +394,20 @@ class Tank_auth
 		$user_id = $this->ci->session->userdata('user_id');
 
 		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
-
-			// Check if old password correct
-			$hasher = new PasswordHash(
-					$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-			if ($hasher->CheckPassword($old_pass, $user->password)) {			// success
+			
+			if ($this->ci->my_crypt->check_password($user->password, $old_pass)) {			// success
 
 				// Hash new password using phpass
-				$hashed_password = $hasher->HashPassword($new_pass);
-
+				$salt = $this->ci->my_crypt->salt();
+            	$hash = $this->ci->my_crypt->generate_password($new_pass, $salt);
 				// Replace old password with new one
-				$this->ci->Mdl_auth->change_password($user_id, $hashed_password);
+				$this->ci->Mdl_auth->change_password($user_id, $hash);
 				return TRUE;
 
 			} else {															// fail
 				$this->error = array('old_password' => 'auth_incorrect_password');
 			}
+			
 		}
 		return FALSE;
 	}
@@ -480,10 +428,7 @@ class Tank_auth
 		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 			// Check if password correct
-			$hasher = new PasswordHash(
-					$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-			if ($hasher->CheckPassword($password, $user->password)) {			// success
+			if ($this->ci->my_crypt->check_password($user->password, $password)) { 			// success
 
 				$data = array(
 					'user_id'	=> $user_id,
@@ -529,10 +474,7 @@ class Tank_auth
 		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 			// Check if password correct
-			$hasher = new PasswordHash(
-					$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-			if ($hasher->CheckPassword($password, $user->password)) {			// success
+			if ($this->ci->my_crypt->check_password($user->password, $password)) {			// success
 
 				$data = array(
 					'user_id'	=> $user_id,
@@ -587,10 +529,7 @@ class Tank_auth
 		if (!is_null($user = $this->ci->Mdl_auth->get_user_by_id($user_id, TRUE))) {
 
 			// Check if password correct
-			$hasher = new PasswordHash(
-					$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
-					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
-			if ($hasher->CheckPassword($password, $user->password)) {			// success
+			if ($this->ci->my_crypt->check_password($user->password, $password)) {			// success
 
 				$this->ci->Mdl_auth->delete_user($client_id);
 
