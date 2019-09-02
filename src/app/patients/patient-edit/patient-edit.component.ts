@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy, Inject} from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { PatientsService } from '../patients.service';
 import { PatientData } from '../patient-data.model';
-import { mimeType } from './mime-type.validator';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -20,28 +18,27 @@ export class PatientEditComponent implements OnInit, OnDestroy {
   currentPage = 1;
 
   patient: PatientData;
-  isLoading = false;
   form: FormGroup;
-  imagePreview: string;
-  private mode = 'create';
-  private patientId: string;
-  title: string;
-  userId: string;
-  private authStatusSub: Subscription;
-
+  isLoading = false;
   startDate = new Date(1990, 0, 1);
 
-  constructor(
-    public patientsService: PatientsService,
-    public route: ActivatedRoute,
-    private authService: AuthService,
+  private mode = 'create';
+  private patientId: string;
+  public title: string;
+  public btnLabel: string;
+  private userId: string;
+  private authStatusSub: Subscription;
 
+  constructor(
+    private authService: AuthService,
     private notificationService: NotificationService,
-    public dialogRef: MatDialogRef < PatientEditComponent >,
+    private patientsService: PatientsService,
+    private dialogRef: MatDialogRef < PatientEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.patientId = data.id;
     this.title = data.title;
+    this.btnLabel = data.btnLabel;
   }
 
   ngOnInit() {
@@ -61,18 +58,24 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       lastname: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       }),
-      bloodType: new FormControl(null),
+      bloodType: new FormControl(null, {
+        validators: [Validators.required, Validators.maxLength(3) ]
+      }),
       contact: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(7), Validators.maxLength(13)]
       }),
       gender: new FormControl(null, {
         validators: [Validators.required]
       }),
-      birthdate: new FormControl(null),
+      birthdate: new FormControl(null, {
+        validators: [Validators.required]
+      }),
       address: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(250)]
       }),
-      comments: new FormControl(null)
+      comments: new FormControl(null, {
+        validators: [Validators.minLength(3), Validators.maxLength(350)]
+      })
     });
 
     if (this.patientId) {
@@ -110,17 +113,6 @@ export class PatientEditComponent implements OnInit, OnDestroy {
         this.mode = 'create';
         this.patientId = null;
       }
-  }
-
-  onImagePicked(event: Event) {
-    const file = (event.target as HTMLInputElement).files[0];
-    this.form.patchValue({ image: file });
-    this.form.get('image').updateValueAndValidity();
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
-    reader.readAsDataURL(file);
   }
 
   onSavePatient() {

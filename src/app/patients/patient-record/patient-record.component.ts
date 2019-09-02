@@ -18,6 +18,7 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
   private authListenerSubs: Subscription;
 
   id: string;
+  bloodType: string;
   firstname: string;
   midlename: string;
   lastname: string;
@@ -57,6 +58,7 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
         this.contact = patientData.contact;
         this.gender = patientData.gender;
         this.birthdate = patientData.birthdate;
+        this.bloodType = patientData.bloodType;
       });
     }
 

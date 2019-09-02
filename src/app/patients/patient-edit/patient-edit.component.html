@@ -3,13 +3,6 @@
 </h2>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="form" class="normal-form" (submit)="onSavePatient()" *ngIf="!isLoading">
-        <!-- <div id="patient-picture">
-            <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
-                <img [src]="imagePreview" [alt]="form.value.firstname">
-            </div>
-            <button mat-stroked-button type="button" (click)="filePicker.click()">Upload</button>
-            <input type="file" #filePicker (change)="onImagePicked($event)">
-        </div> -->
 
         <div class="form-field-block">
             <mat-form-field>
@@ -49,16 +42,16 @@
         </div>
         <div class="form-field-block">
             <mat-form-field>
-                <textarea matInput rows="6" formControlName="address" placeholder="Address"></textarea>
+                <textarea matInput rows="4" formControlName="address" placeholder="Address"></textarea>
                 <mat-error *ngIf="form.get('address').invalid">Please enter address</mat-error>
             </mat-form-field>
         </div>
         <div class="form-field-block">
           <mat-form-field>
-              <textarea matInput rows="6" formControlName="comments" placeholder="Comment"></textarea>
+              <textarea matInput rows="4" formControlName="comments" placeholder="Comment"></textarea>
               <mat-error *ngIf="form.get('comments').invalid">Please enter comment</mat-error>
           </mat-form-field>
         </div>
-        <button mat-raised-button color="primary" type="submit">Save</button>
+        <button mat-raised-button color="primary" type="submit">{{btnLabel}}</button>
     </form>
 </mat-dialog-content>

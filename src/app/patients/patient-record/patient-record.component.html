@@ -2,14 +2,14 @@
     <h1 class="mat-headline"> Patient Details</h1>
 </div>
 <mat-grid-list cols="6" rowHeight="100px" [gutterSize]="'10px'">
-    <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
-        <div style="padding: 1em;">
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+        <div class="grid-inner-content grid-inner-content-center">
             <div *ngIf="image; then thenBlock else elseBlock"></div>
             <ng-template #thenBlock>
-                <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 100%;" />
+                <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
             </ng-template>
             <ng-template #elseBlock>
-              <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 100%;" />
+              <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
             </ng-template>
         </div>
     </mat-grid-tile>
@@ -35,7 +35,8 @@
         <div style="padding: 1em;">
             <h3>{{firstname + ' ' + midlename + ' ' + lastname}} <br/>
                 <span style="font-size: 14px; font-weight: 100;">{{id}}</span></h3>
-            <address>
+            <address style="font-style: initial;">
+                Blood Type: {{bloodType}} <br/>
                 Contact: {{contact}} <br/>
                 Gender: {{gender}} <br/>
                 Birthdate: {{ birthdate | date }}

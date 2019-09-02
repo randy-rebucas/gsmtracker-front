@@ -30,8 +30,13 @@ export class PatientsService {
     .pipe(
       map(patientData => {
         return { patients: patientData.patients.map(patient => {
+          console.log(patient);
           return {
             id: patient._id,
+            bloodType: patient.bloodType,
+            comments: patient.comments,
+            clientId: patient.clientId,
+            personId: patient.personId._id,
             firstname: patient.personId.firstname,
             midlename: patient.personId.midlename,
             lastname: patient.personId.lastname,
@@ -39,9 +44,7 @@ export class PatientsService {
             gender: patient.personId.gender,
             birthdate: patient.personId.birthdate,
             address: patient.personId.address,
-            bloodType: patient.bloodType,
-            comments: patient.comments,
-            clientId: patient.clientId
+            createdAt: patient.personId.createdAt
           };
         }), maxPatients: patientData.maxPatients};
       })

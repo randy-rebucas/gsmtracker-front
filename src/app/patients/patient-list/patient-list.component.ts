@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, Optional, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PageEvent, MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { PatientData } from '../patient-data.model';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -15,7 +15,6 @@ import { NotificationService } from 'src/app/shared/notification.service';
 
 import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-patient-list',
@@ -57,6 +56,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   }
   .example-element-description {
       padding: 16px;
+      width: 100%;
   }
   td.mat-cell.cdk-column-action.mat-column-action {
     text-align: right;
@@ -73,6 +73,13 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   .component-page-header {
     padding: 2em 0 0;
   }
+  dl {
+    margin-top: 0;
+  }
+  dt {
+    float: left;
+    width: 100px;
+  }
   `],
   templateUrl: './patient-list.component.html',
   animations: [
@@ -84,16 +91,15 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   ],
 })
 export class PatientListComponent implements OnInit, OnDestroy {
-  patients: PatientData[] = [];
-  isLoading = false;
   totalPatients = 0;
   patientsPerPage = 10;
   currentPage = 1;
   pageSizeOptions = [5, 10, 25, 100];
+
+  patients: PatientData[] = [];
+  isLoading = false;
   userIsAuthenticated = false;
   userId: string;
-  myDate = new Date();
-  theDate: string;
 
   private patientsSub: Subscription;
   private authStatusSub: Subscription;
@@ -106,15 +112,11 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute,
-    private datePipe: DatePipe,
     private dialogService: DialogService
-  ) {
-    this.theDate = this.datePipe.transform(this.myDate, 'yyyy-MM-dd');
-  }
+  ) {}
 
   dataSource: MatTableDataSource<any>;
   columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
-
   expandedElement: any;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -182,7 +184,8 @@ export class PatientListComponent implements OnInit, OnDestroy {
     dialogConfig.width = '50%';
     dialogConfig.data = {
       id: null,
-      title: 'New patient'
+      title: 'New patient',
+      btnLabel: 'Save'
     };
     this.dialog.open(PatientEditComponent, dialogConfig);
   }
@@ -194,7 +197,8 @@ export class PatientListComponent implements OnInit, OnDestroy {
     dialogConfig.width = '50%';
     dialogConfig.data = {
         id: patientId,
-        title: 'Update patient'
+        title: 'Update patient',
+        btnLabel: 'Update'
     };
     this.dialog.open(PatientEditComponent, dialogConfig);
   }
@@ -202,7 +206,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
   onDelete(patientId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
-      console.log(res);
       if (res) {
         this.patientsService.deletePatient(patientId).subscribe(() => {
           this.patientsService.getPatients(this.userId, this.patientsPerPage, this.currentPage);

@@ -29,6 +29,7 @@ export class PatientChartComponent implements OnInit, OnDestroy {
   private authListenerSubs: Subscription;
 
   id: string;
+  bloodType: string;
   image: string;
   firstname: string;
   midlename: string;
@@ -104,6 +105,7 @@ export class PatientChartComponent implements OnInit, OnDestroy {
         this.gender = patientData.gender;
         this.birthdate = patientData.birthdate;
         this.address = patientData.address;
+        this.bloodType = patientData.bloodType;
       });
 
     this.heightService.getLast(this.patientId).subscribe(recordData => {

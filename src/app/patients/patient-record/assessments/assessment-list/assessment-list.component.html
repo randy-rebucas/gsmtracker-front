@@ -21,11 +21,7 @@
     </ng-container>
 
     <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef style="text-align: right;">
-            <!-- <button mat-icon-button color="primary" (click)="onCreate(complaintId)">
-                <mat-icon>add</mat-icon>
-            </button> -->
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let row">
             <button mat-icon-button (click)="onEdit(row.id)"><mat-icon>launch</mat-icon></button>
             <button mat-icon-button color="warn" (click)="onDelete(row.id)"><mat-icon>delete_outline</mat-icon></button>
@@ -38,7 +34,7 @@
     </ng-container>
     <ng-container matColumnDef="noData">
         <mat-footer-cell *matFooterCellDef colspan="3" id="no-data">
-            <p class="mat-body">No assessment recorded!</p>
+            <p class="mat-body">No assessment data.</p>
         </mat-footer-cell>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

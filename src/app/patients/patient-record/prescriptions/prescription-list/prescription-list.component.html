@@ -25,11 +25,7 @@
       </ng-container>
 
       <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef style="text-align: right;">
-              <!-- <button mat-icon-button color="primary" (click)="onCreate(complaintId)">
-                  <mat-icon>add</mat-icon>
-              </button> -->
-          </th>
+          <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row">
               <button mat-icon-button (click)="onEdit(row.id)"><mat-icon>launch</mat-icon></button>
               <button mat-icon-button color="primary" (click)="onPrintPreview(row.id)"><mat-icon>print</mat-icon></button>
