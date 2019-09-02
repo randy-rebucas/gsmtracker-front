@@ -9,49 +9,48 @@ const Setting = require('../models/setting');
 exports.createUser = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-          const person = new Person({
-            firstname: req.body.firstname,
-            lastname: req.body.lastname
-          });
-          person.save()
-            .then(personResult => {
-              console.log(personResult);
-              const user = new User({
-                email: req.body.email,
-                password: hash,
-                lastIp: ip.address(),
-                licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase(),
-                personId: personResult._id
-              });
-              user.save()
-              .then(userResult => {
-                console.log(userResult);
-                const setting = new Setting({
-                  client_id: userResult._id
-                });
-                setting.save().then(createdSetting => {
-                  res.status(201).json({
-                      message: 'User created!',
-                      result: userResult
-                  });
+            const person = new Person({
+                firstname: req.body.firstname,
+                lastname: req.body.lastname
+            });
+            person.save()
+                .then(personResult => {
+                    const user = new User({
+                        email: req.body.email,
+                        password: hash,
+                        lastIp: ip.address(),
+                        licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase(),
+                        personId: personResult._id
+                    });
+                    user.save()
+                        .then(userResult => {
+                            const setting = new Setting({
+                                clientId: userResult._id,
+                                clinicOwner: personResult.firstname + ', ' + personResult.lastname
+                            });
+                            setting.save().then(createdSetting => {
+                                    res.status(201).json({
+                                        message: 'User created!',
+                                        result: userResult
+                                    });
+                                })
+                                .catch(error => {
+                                    res.status(500).json({
+                                        message: error.message
+                                    });
+                                });
+                        })
+                        .catch(err => {
+                            res.status(500).json({
+                                message: err.message
+                            });
+                        });
                 })
-                .catch(error => {
+                .catch(err => {
                     res.status(500).json({
-                        message: error.message
+                        message: err.message
                     });
                 });
-              })
-              .catch(err => {
-                res.status(500).json({
-                    message: err.message
-                });
-              });
-            })
-          .catch(err => {
-              res.status(500).json({
-                  message: err.message
-              });
-          });
         });
 }
 
@@ -87,9 +86,8 @@ exports.userLogin = (req, res, next) => {
             });
         })
         .catch(err => {
-            console.log(err);
             return res.status(401).json({
-                message: 'Invalid authentication credentials!'
+                message: err.message // 'Invalid authentication credentials!'
             });
         });
 }

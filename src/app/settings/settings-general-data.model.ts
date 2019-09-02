@@ -1,16 +1,16 @@
 export interface SettingsGeneralData {
   id: string;
-  license_key: string;
-  clinic_name: string;
-  clinic_owner: string;
-  clinic_address: string;
-  clinic_email: string;
-  clinic_url: string;
+  clientId: string;
+  clinicName: string;
+  clinicOwner: string;
+  clinicAddress: string;
+  clinicEmail: string;
+  clinicUrl: string;
   prc: string;
   ptr: string;
   s2: string;
-  clinic_phone: Contact[];
-  clinic_hours: Hour[];
+  clinicPhone: Contact[];
+  clinicHours: Hour[];
 }
 
 export interface Contact {
@@ -18,8 +18,8 @@ export interface Contact {
 }
 
 export interface Hour {
-  morning_open: string;
-  morning_close: string;
-  afternoon_open: string;
-  afternoon_close: string;
+  morningOpen: string;
+  morningClose: string;
+  afternoonOpen: string;
+  afternoonClose: string;
 }

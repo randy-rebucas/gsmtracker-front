@@ -15,11 +15,73 @@ import { NotificationService } from 'src/app/shared/notification.service';
 
 import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-patient-list',
+  styles: [`
+  table {
+    width: 100%;
+  }
+  tr {
+    cursor: pointer;
+  }
+  tr.example-detail-row {
+      height: 0;
+  }
+  tr.example-element-row:not(.example-expanded-row):hover {
+      background: #efefef;
+  }
+  tr.example-element-row:not(.example-expanded-row):active {
+      background: #efefef;
+  }
+  .example-element-row td {
+      border-bottom-width: 0;
+  }
+  .example-element-detail {
+      overflow: hidden;
+      display: flex;
+  }
+  .example-element-diagram {
+      min-width: 80px;
+      border: 2px solid black;
+      padding: 8px;
+      font-weight: lighter;
+      margin: 8px 0;
+      height: 104px;
+  }
+  .example-element-symbol {
+      font-weight: bold;
+      font-size: 40px;
+      line-height: normal;
+  }
+  .example-element-description {
+      padding: 16px;
+  }
+  td.mat-cell.cdk-column-action.mat-column-action {
+    text-align: right;
+  }
+  td.mat-cell.cdk-column-action.mat-column-action button {
+      visibility: hidden;
+  }
+  tr:hover td.mat-cell.cdk-column-action.mat-column-action button {
+      visibility: visible;
+  }
+  .hide {
+    display: none;
+  }
+  .component-page-header {
+    padding: 2em 0 0;
+  }
+  `],
   templateUrl: './patient-list.component.html',
-  styleUrls: ['./patient-list.component.css']
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class PatientListComponent implements OnInit, OnDestroy {
   patients: PatientData[] = [];
@@ -51,7 +113,10 @@ export class PatientListComponent implements OnInit, OnDestroy {
   }
 
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['imagePath', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
+  columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
+
+  expandedElement: any;
+
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -68,6 +133,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
+
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService
       .getAuthStatusListener()

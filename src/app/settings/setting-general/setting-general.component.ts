@@ -19,26 +19,28 @@ export class SettingsGeneralComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              public settingsGeneralService: SettingsGeneralService,
-              private notificationService: NotificationService,
-              private fb: FormBuilder) {
-                this.form = this.fb.group({
-                  clinic_name: ['', [Validators.required]],
-                  clinic_owner: ['', [Validators.required]],
-                  clinic_address: [''],
-                  clinic_url: [''],
-                  clinic_email: [''],
-                  prc: [''],
-                  ptr: [''],
-                  s2: [''],
-                  clinic_phone: this.fb.array([this.addClinicContactGroup()]),
-                  clinic_hours: this.fb.array([this.addClinicHourGroup()])
-                });
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    public settingsGeneralService: SettingsGeneralService,
+    private notificationService: NotificationService,
+    private fb: FormBuilder
+    ) {
+      this.form = this.fb.group({
+        clinicName: ['', [Validators.required]],
+        clinicOwner: ['', [Validators.required]],
+        clinicAddress: [''],
+        clinicUrl: [''],
+        clinicEmail: [''],
+        prc: [''],
+        ptr: [''],
+        s2: [''],
+        clinicPhone: this.fb.array([this.addClinicContactGroup()]),
+        clinicHours: this.fb.array([this.addClinicHourGroup()])
+      });
 
-                this.userId = this.authService.getUserId();
-              }
+      this.userId = this.authService.getUserId();
+  }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -53,41 +55,42 @@ export class SettingsGeneralComponent implements OnInit, OnDestroy {
 
   populateForm() {
     this.settingsGeneralService.get(this.userId).subscribe(settingData => {
+      console.log(settingData);
       this.form.patchValue({
-        clinic_name: settingData[0].clinic_name,
-        clinic_owner: settingData[0].clinic_owner,
-        clinic_address: settingData[0].clinic_address,
-        clinic_url: settingData[0].clinic_url,
-        clinic_email: settingData[0].clinic_email,
+        clinicName: settingData[0].clinicName,
+        clinicOwner: settingData[0].clinicOwner,
+        clinicAddress: settingData[0].clinicAddress,
+        clinicUrl: settingData[0].clinicUrl,
+        clinicEmail: settingData[0].clinicEmail,
         prc: settingData[0].prc,
         ptr: settingData[0].ptr,
         s2: settingData[0].s2,
       });
 
-      const contactControl = this.form.controls.clinic_phone as FormArray;
-      const contacts = settingData[0].clinic_phone;
+      const contactControl = this.form.controls.clinicPhone as FormArray;
+      const contacts = settingData[0].clinicPhone;
       for (let i = 1; i < contacts.length; i++) {
         contactControl.push(this.addClinicContactGroup());
       }
-      this.form.patchValue({clinic_phone: contacts});
+      this.form.patchValue({clinicPhone: contacts});
 
-      const hourControl = this.form.controls.clinic_hours as FormArray;
-      const hours = settingData[0].clinic_hours;
+      const hourControl = this.form.controls.clinicHours as FormArray;
+      const hours = settingData[0].clinicHours;
       for (let i = 1; i < hours.length; i++) {
         hourControl.push(this.addClinicHourGroup());
       }
-      this.form.patchValue({clinic_hours: hours});
+      this.form.patchValue({clinicHours: hours});
 
       this.settingId = settingData[0]._id;
-      });
+    });
   }
 
   addClinicHourGroup() {
     return this.fb.group({
-      morning_open: [''],
-      morning_close: [''],
-      afternoon_open: [''],
-      afternoon_close: ['']
+      morningOpen: [''],
+      morningClose: [''],
+      afternoonOpen: [''],
+      afternoonClose: ['']
     });
   }
 
@@ -98,11 +101,11 @@ export class SettingsGeneralComponent implements OnInit, OnDestroy {
   }
 
   get hourArray() {
-    return this.form.get('clinic_hours') as FormArray;
+    return this.form.get('clinicHours') as FormArray;
   }
 
   get contactArray() {
-    return this.form.get('clinic_phone') as FormArray;
+    return this.form.get('clinicPhone') as FormArray;
   }
 
   addHour() {
@@ -128,19 +131,17 @@ export class SettingsGeneralComponent implements OnInit, OnDestroy {
   onSaveGenSetting() {
     this.settingsGeneralService.update(
       this.settingId,
-      this.form.value.clinic_name,
-      this.form.value.clinic_owner,
-      this.form.value.clinic_address,
-      this.form.value.clinic_email,
-      this.form.value.clinic_url,
+      this.form.value.clinicName,
+      this.form.value.clinicOwner,
+      this.form.value.clinicAddress,
+      this.form.value.clinicEmail,
+      this.form.value.clinicUrl,
       this.form.value.prc,
       this.form.value.ptr,
       this.form.value.s2,
-      this.form.value.clinic_phone,
-      this.form.value.clinic_hours
+      this.form.value.clinicPhone,
+      this.form.value.clinicHours
     ).subscribe(() => {
-      // this.form.reset();
-      // this.populateForm();
       this.notificationService.success('::Updated successfully');
     });
   }

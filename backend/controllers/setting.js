@@ -2,23 +2,23 @@ const Setting = require('../models/setting');
 
 exports.createSetting = (req, res, next) => {
     const setting = new Setting({
-      license_key: req.body.license,
-      clinic_name: req.body.name,
-      clinic_owner: req.body.owner,
-      clinic_address: req.body.address,
-      clinic_url: req.body.url,
-      clinic_email: req.body.email,
-      prc: req.body.prc,
-      ptr: req.body.ptr,
-      s2: req.body.s2
+        clientId: req.body.clientId,
+        clinicName: req.body.name,
+        clinicOwner: req.body.owner,
+        clinicAddress: req.body.address,
+        clinicUrl: req.body.url,
+        clinicEmail: req.body.email,
+        prc: req.body.prc,
+        ptr: req.body.ptr,
+        s2: req.body.s2
     });
     phoneData = req.body.phones;
     for (let index = 0; index < phoneData.length; index++) {
-        setting.clinic_phone.push(phoneData[index]);
+        setting.clinicPhone.push(phoneData[index]);
     }
     hourData = req.body.hours;
     for (let index = 0; index < hourData.length; index++) {
-        setting.clinic_hours.push(hourData[index]);
+        setting.clinicHours.push(hourData[index]);
     }
     setting.save().then(createdSetting => {
             res.status(201).json({
@@ -37,40 +37,39 @@ exports.createSetting = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-  const setting = new Setting({
-    _id: req.body.id,
-    client_id: req.body.client_id,
-    clinic_name: req.body.name,
-    clinic_owner: req.body.owner,
-    clinic_address: req.body.address,
-    clinic_url: req.body.url,
-    clinic_email: req.body.email,
-    prc: req.body.prc,
-    ptr: req.body.ptr,
-    s2: req.body.s2
-  });
-  phoneData = req.body.phones;
-  for (let index = 0; index < phoneData.length; index++) {
-      setting.clinic_phone.push(phoneData[index]);
-  }
-  hourData = req.body.hours;
-  for (let index = 0; index < hourData.length; index++) {
-      setting.clinic_hours.push(hourData[index]);
-  }
-  Setting.updateOne({ _id: req.params.id },
-    setting
-      ).then(result => {
-          if (result.n > 0) {
-              res.status(200).json({ message: 'Settings update successful!' });
-          } else {
-              res.status(401).json({ message: 'Not authorized!' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: 'Unable to update settings!'
-          });
-      });
+    const setting = new Setting({
+        _id: req.body.id,
+        clinicName: req.body.name,
+        clinicOwner: req.body.owner,
+        clinicAddress: req.body.address,
+        clinicUrl: req.body.url,
+        clinicEmail: req.body.email,
+        prc: req.body.prc,
+        ptr: req.body.ptr,
+        s2: req.body.s2
+    });
+    phoneData = req.body.phones;
+    for (let index = 0; index < phoneData.length; index++) {
+        setting.clinicPhone.push(phoneData[index]);
+    }
+    hourData = req.body.hours;
+    for (let index = 0; index < hourData.length; index++) {
+        setting.clinicHours.push(hourData[index]);
+    }
+    Setting.updateOne({ _id: req.params.id },
+            setting
+        ).then(result => {
+            if (result.n > 0) {
+                res.status(200).json({ message: 'Settings update successful!' });
+            } else {
+                res.status(401).json({ message: 'Not authorized!' });
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: 'Unable to update settings!'
+            });
+        });
 };
 
 exports.getSettings = (req, res, next) => {
@@ -97,7 +96,7 @@ exports.getSettings = (req, res, next) => {
 };
 
 exports.getSetting = (req, res, next) => {
-    Setting.find({ 'client_id': req.params.key }).then(setting => {
+    Setting.find({ 'clientId': req.params.id }).then(setting => {
             if (setting) {
                 res.status(200).json(setting);
             } else {
@@ -106,7 +105,7 @@ exports.getSetting = (req, res, next) => {
         })
         .catch(error => {
             res.status(500).json({
-                message: 'Fetching settings failed!'
+                message: error.message
             });
         });
 };

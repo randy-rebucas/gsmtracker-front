@@ -26,10 +26,10 @@ export class SettingsGeneralService {
       return this.settingsUpdated.asObservable();
     }
 
-    get(license: string) {
+    get(clientId: string) {
       return this.http.get<{
         _id: string;
-        license: string,
+        clientId: string,
         name: string,
         owner: string,
         address: string,
@@ -40,7 +40,7 @@ export class SettingsGeneralService {
         s2: string,
         phones: [],
         hours: []}>(
-        BACKEND_URL + '/' + license
+        BACKEND_URL + '/' + clientId
         );
     }
 

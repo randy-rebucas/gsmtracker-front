@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('', SettingController.getSettings);
 
-router.get('/:key', SettingController.getSetting);
+router.get('/:id', SettingController.getSetting);
 
 router.put('/:id', checkAuth, SettingController.update);
 

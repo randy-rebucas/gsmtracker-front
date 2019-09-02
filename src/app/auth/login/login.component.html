@@ -6,13 +6,13 @@
         <mat-spinner *ngIf="isLoading"></mat-spinner>
         <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
             <table style="width: 100%;">
-              <tr>
-                <td cols-an="2">Demo Account</td>
-              </tr>
-              <tr>
-                <td>email: test1@sample.com</td>
-                <td>pass: 11111111</td>
-              </tr>
+                <tr>
+                    <td cols-an="2">Demo Account</td>
+                </tr>
+                <tr>
+                    <td>email: randyr@sample.com</td>
+                    <td>pass: 11111111</td>
+                </tr>
             </table>
             <mat-form-field>
                 <input matInput name="email" type="email" ngModel placeholder="Email" #emailInput="ngModel" required email>
@@ -27,4 +27,3 @@
         </form>
     </mat-card-content>
 </mat-card>
-
