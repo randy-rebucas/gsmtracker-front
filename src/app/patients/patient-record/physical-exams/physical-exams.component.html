@@ -1,0 +1,11 @@
+<nav mat-tab-nav-bar>
+    <a mat-tab-link routerLink="./height" routerLinkActive #rlaHeight="routerLinkActive" [active]="rlaHeight.isActive">Height</a>
+    <a mat-tab-link routerLink="./weight" routerLinkActive #rlaWeight="routerLinkActive" [active]="rlaWeight.isActive">Weight</a>
+    <a mat-tab-link routerLink="./temperature" routerLinkActive #rlaTemperature="routerLinkActive" [active]="rlaTemperature.isActive">Temperature</a>
+    <a mat-tab-link routerLink="./blood-pressure" routerLinkActive #rlaBloodPressure="routerLinkActive" [active]="rlaBloodPressure.isActive">Blood pressure</a>
+    <a mat-tab-link routerLink="./respiratory-rate" routerLinkActive #rlaRespiratoryRate="routerLinkActive" [active]="rlaRespiratoryRate.isActive">Respiratory rate</a>
+</nav>
+<div class="physical-exam-wrap">
+    <router-outlet></router-outlet>
+</div>
+

@@ -1,0 +1,267 @@
+<div class="component-page-header">
+    <h1 class="mat-headline"> Patient Details</h1>
+    <button class="mat-raised-button mat-primary" (click)="gotoRecord()" style="float: right; margin-top: -50px;">Go to Record</button>
+</div>
+
+<mat-grid-list cols="6" rowHeight="100px" [gutterSize]="'10px'">
+    <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
+        <div style="padding: 1em;">
+            <div *ngIf="image; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock>
+                <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 100%;" />
+            </ng-template>
+            <ng-template #elseBlock>
+              <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 100%;" />
+            </ng-template>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+        <mat-grid-tile-header>
+            <h3>Height</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        line-height: 0.8;">
+            <mat-icon style="transform: rotate(90deg);
+            position: absolute;
+            left: 20%;
+            font-size: 60px;
+            top: 35%;">straighten</mat-icon>
+            {{height}}<span *ngIf="height == null">--</span> cm <br/>
+            <span style="font-size: 16px;">{{heightCreated | date}}</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('height')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+        <mat-grid-tile-header>
+            <h3>Weight</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        line-height: 0.8;">
+            <mat-icon style="transform: rotate(90deg);
+        position: absolute;
+        left: 20%;
+        font-size: 60px;
+        top: 35%;">settings_input_svideo</mat-icon>
+            {{weight}}<span *ngIf="weight == null">--</span> kg <br/>
+            <span style="font-size: 16px;">{{weightCreated | date}}</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('weight')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+        <mat-grid-tile-header>
+            <h3>Temperature</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        line-height: 0.8;">
+            <mat-icon style="position: absolute;
+            left: 5%;
+            font-size: 60px;
+            top: 35%;">whatshot</mat-icon>
+            {{temperature}}<span *ngIf="temperature == null">--</span> &#8451; <br/>
+            <span style="font-size: 16px;">{{temperatureCreated | date}}</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('temperature')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+        <mat-grid-tile-header>
+            <h3>Blood Pressure</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        line-height: 0.8;">
+            <mat-icon style="position: absolute;
+            left: 5%;
+            font-size: 60px;
+            top: 35%;">alarm</mat-icon>
+            {{tempSystolic}}/{{tempDiastolic}} <span *ngIf="tempSystolic == null && tempDiastolic == null">--</span> <br/>
+            <span style="font-size: 16px;"> {{tempCreated | date}}</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('blood-pressure')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+        <mat-grid-tile-header>
+            <h3>Respiratory rate</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        line-height: 0.8;">
+            <mat-icon style="position: absolute;
+            left: 5%;
+            font-size: 60px;
+            top: 35%;">vibration</mat-icon>
+            {{respiratoryRate}}<span *ngIf="respiratoryRate == null">--</span> bpm <br/>
+            <span style="font-size: 16px;"> {{respiratoryRateCreated | date}}</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('respiratory-rate')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
+        <div style="padding: 1em;">
+            <h3>{{firstname + ' ' + midlename + ' ' + lastname}} <br/>
+                <span style="font-size: 14px; font-weight: 100;">{{id}}</span></h3>
+            <address>
+                Contact: {{contact}} <br/>
+                Gender: {{gender}} <br/>
+                Birthdate: {{ birthdate | date }}
+            </address>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
+        <mat-grid-tile-header>
+            <h3>Histories</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-list">
+            <ul style="list-style: none;
+          padding: 0;
+          line-height: 2;
+          margin: 0;">
+                <li *ngFor="let history of histories"><strong>{{history.type}}</strong> : {{history.description}}</li>
+            </ul>
+            <span *ngIf="histories == null">--</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('histories')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
+        <mat-grid-tile-header>
+            <h3>Complaints</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-list">
+            <ul style="list-style: none;
+            padding: 0;
+            line-height: 2;
+            margin: 0;">
+                <li *ngFor="let complaint of complaints">{{complaint.complaint}}</li>
+            </ul>
+            <span *ngIf="complaints == null">--</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('chief-complaints')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
+        <mat-grid-tile-header>
+            <h3>Assessments</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-list">
+            <table class="table">
+                <tr>
+                    <td>Diagnosis</td>
+                    <td>Treatments</td>
+                </tr>
+                <tr>
+                    <td>
+                        <ul style="list-style: none;
+                  padding: 0;
+                  line-height: 2;
+                  margin: 0;">
+                            <li *ngFor="let diagnose of diagnosis">{{diagnose.diagnose}}</li>
+                        </ul>
+                        <span *ngIf="diagnosis == null">--</span>
+                    </td>
+                    <td>
+                        <ul style="list-style: none;
+                  padding: 0;
+                  line-height: 2;
+                  margin: 0;">
+                            <li *ngFor="let treatment of treatments">{{treatment.treatment}}</li>
+                        </ul>
+                        <span *ngIf="treatments == null">--</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('assessments')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+
+    <mat-grid-tile [colspan]="1" [rowspan]="3" class="grid-content">
+        <div style="padding: 1em;">
+            Quick Actions
+            <mat-list>
+                <mat-list-item (click)="onCreateMessage()"><i class="material-icons">
+                        message
+                        </i> &nbsp; Message </mat-list-item>
+                <mat-list-item (click)="viewChart()"><i class="material-icons">
+                  remove_red_eye
+                        </i> &nbsp; View Chart </mat-list-item>
+                <mat-list-item (click)="generateQrCode()"><i class="material-icons">
+                        fingerprint
+                        </i> &nbsp; Generate QR Code </mat-list-item>
+            </mat-list>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="3" [rowspan]="2" class="grid-content">
+        <mat-grid-tile-header>
+            <h3>Prescriptions</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-list">
+            <table class="table">
+                <tr>
+                    <td>Medicine</td>
+                    <td>Preparation</td>
+                    <td>Sig</td>
+                    <td>Qty</td>
+                </tr>
+                <tr *ngFor="let prescription of prescriptions">
+                    <td>
+                        {{prescription.medicine}}
+                    </td>
+                    <td>
+                        {{prescription.preparation}}
+                    </td>
+                    <td>
+                        {{prescription.sig}}
+                    </td>
+                    <td>
+                        {{prescription.quantity}}
+                    </td>
+                </tr>
+            </table>
+            <span *ngIf="prescriptions == null">--</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('prescriptions')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
+        <mat-grid-tile-header>
+            <h3>Progress notes</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-list">
+            {{progressNotes}}
+            <span *ngIf="progressNotes == null">--</span>
+        </div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('progress-notes')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="5" [rowspan]="2" class="grid-content">
+        <mat-grid-tile-header>
+            <h3>Test Results</h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-list">Sample</div>
+        <mat-grid-tile-footer>
+            <a style="cursor: pointer;" (click)="onViewAll('test-results')">View All</a>
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="1" class="grid-content">
+        <div style="padding: 1em;">
+            Support <a>09179157515</a>
+            <mat-list>
+                <mat-list-item><i class="material-icons">
+                        email
+                        </i> &nbsp; Support </mat-list-item>
+            </mat-list>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>

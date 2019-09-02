@@ -1,0 +1,4 @@
+<!-- some.component.html -->
+<button mat-stroked-button color="primary" (click)="onToggleScan()">Click to Scan QR Code</button>
+
+<zxing-scanner [formats]="['QR_CODE']" [formats]="allowedFormats" [enable]="scannerEnabled" (scanComplete)="handleQrCodeResult($event)"></zxing-scanner>
