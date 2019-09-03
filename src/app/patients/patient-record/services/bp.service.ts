@@ -53,41 +53,40 @@ export class BpService {
     return this.bpsUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string; systolic: string, diastolic: string, created: string, patient: string }>(
-      BACKEND_URL + '/' + id
+  get(bloodPressureId: string) {
+    return this.http.get<{ _id: string; systolic: string, diastolic: string, created: string, patientId: string }>(
+      BACKEND_URL + '/' + bloodPressureId
       );
   }
 
   getLatest(patientId) {
-    return this.http.get<{ _id: string; systolic: string, diastolic: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; systolic: string, diastolic: string, created: string, patientId: string }>(
       BACKEND_URL + '/latest/' + patientId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string; systolic: string, diastolic: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; systolic: string, diastolic: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(systolic: string, diastolic: string, created: string, patient: string) {
+  insert(systolic: string, diastolic: string, created: string, patientId: string) {
     const recordData = {
-        systolic, diastolic, created, patient
+        systolic, diastolic, created, patientId
     };
     return this.http.post<{ message: string, record: BpData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, systolic: string, diastolic: string, created: string, patient: string) {
-    let recordData: BpData | FormData;
-    recordData = {
-        id, systolic, diastolic, created, patient
+  update(bloodPressureId: string, systolic: string, diastolic: string, created: string, patientId: string) {
+    const recordData = {
+      bloodPressureId, systolic, diastolic, created, patientId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + bloodPressureId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(bloodPressureId: string) {
+    return this.http.delete(BACKEND_URL + '/' + bloodPressureId);
   }
 
 }

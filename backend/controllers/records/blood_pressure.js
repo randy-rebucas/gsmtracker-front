@@ -6,7 +6,7 @@ exports.create = (req, res, next) => {
         systolic: req.body.systolic,
         diastolic: req.body.diastolic,
         created: req.body.created,
-        patient: req.body.patient
+        patientId: req.body.patient
     });
     bp.save().then(createdRecord => {
             res.status(201).json({
@@ -30,9 +30,9 @@ exports.update = (req, res, next) => {
         systolic: req.body.systolic,
         diastolic: req.body.diastolic,
         created: req.body.created_date,
-        patient: req.body.patient_id
+        patientId: req.body.patient_id
     });
-    BloodPressure.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    BloodPressure.updateOne({ _id: req.params.bloodPressureId }, //pass doctor role for restriction
             bp
         ).then(result => {
             if (result.n > 0) {
@@ -51,7 +51,7 @@ exports.update = (req, res, next) => {
 exports.getAll = (req, res, next) => {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const bpQuery = BloodPressure.find({ 'patient': req.query.patient }).sort({ 'created': 'desc' });
+    const bpQuery = BloodPressure.find({ 'patientId': req.query.patient }).sort({ 'created': 'desc' });
 
     let fetchedRecord;
     if (pageSize && currentPage) {
@@ -77,7 +77,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    BloodPressure.findById(req.params.id).then(bp => {
+    BloodPressure.findById(req.params.bloodPressureId).then(bp => {
             if (bp) {
                 res.status(200).json(bp);
             } else {
@@ -116,25 +116,25 @@ exports.getCurrent = (req, res, next) => {
 };
 
 exports.getLast = (req, res, next) => {
-  BloodPressure.find({ 'patient': req.params.patientId })
-      .limit(1)
-      .sort({ 'created': 'desc' })
-      .then(bp => {
-          if (bp) {
-              res.status(200).json(bp);
-          } else {
-              res.status(404).json({ message: 'bp not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+    BloodPressure.find({ 'patientId': req.params.patientId })
+        .limit(1)
+        .sort({ 'created': 'desc' })
+        .then(bp => {
+            if (bp) {
+                res.status(200).json(bp);
+            } else {
+                res.status(404).json({ message: 'bp not found' });
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: error.message
+            });
+        });
 };
 
 exports.delete = (req, res, next) => {
-    BloodPressure.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+    BloodPressure.deleteOne({ _id: req.params.bloodPressureId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

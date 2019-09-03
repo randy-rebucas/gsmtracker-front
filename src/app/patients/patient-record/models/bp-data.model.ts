@@ -3,5 +3,5 @@ export interface BpData {
     systolic: string;
     diastolic: string;
     created: string;
-    patient: string;
+    patientId: string;
 }

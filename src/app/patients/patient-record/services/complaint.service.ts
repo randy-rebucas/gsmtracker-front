@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { ComplaintData } from '../models/complaint-data.model';
@@ -17,13 +15,11 @@ export class ComplaintService {
   private complaintsUpdated = new Subject<{ complaints: ComplaintData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
   getAll(perPage: number, currentPage: number, patientId: string) {
-    const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+    const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, complaints: any, max: number }>(
       BACKEND_URL + queryParams
     )
@@ -51,43 +47,40 @@ export class ComplaintService {
     return this.complaintsUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string; complaints: [], created: string, patient: string }>(
-      BACKEND_URL + '/' + id
+  get(complaintId: string) {
+    return this.http.get<{ _id: string; complaints: [], created: string, patientId: string }>(
+      BACKEND_URL + '/' + complaintId
       );
   }
 
   getLatest() {
-    return this.http.get<{ _id: string; complaints: [], created: string, patient: string }>(
+    return this.http.get<{ _id: string; complaints: [], created: string, patientId: string }>(
       BACKEND_URL + '/latest'
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string, complaints: [], created: string, patient: string }>(
+    return this.http.get<{ _id: string, complaints: [], created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(created: string, patient: string, complaints: []) {
+  insert(created: string, patientId: string, complaints: []) {
     const recordData = {
-      created, patient, complaints
+      created, patientId, complaints
     };
     return this.http.post<{ message: string, complaint: ComplaintData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, created: string, patient: string, complaints: []) {
+  update(complaintId: string, created: string, patientId: string, complaints: []) {
     const recordData = {
-        id, created, patient, complaints
+      complaintId, created, patientId, complaints
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + complaintId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(complaintId: string) {
+    return this.http.delete(BACKEND_URL + '/' + complaintId);
   }
 
-  cascadeDelete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/cascade/' + recordId);
-  }
 }

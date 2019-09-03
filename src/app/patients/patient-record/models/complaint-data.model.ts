@@ -1,7 +1,7 @@
 export interface ComplaintData {
   id: string;
   created: string;
-  patient: string;
+  patientId: string;
   complaints: Complaints[];
 }
 

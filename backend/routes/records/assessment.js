@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('', checkAuth, Controller.create);
 
-router.put('/:id', checkAuth, Controller.update);
+router.put('/:assessmentId', checkAuth, Controller.update);
 
 router.get('', Controller.getAll);
 
@@ -18,9 +18,9 @@ router.get('/complaint/:complaintId', Controller.getByComplaint);
 
 router.get('/last/:patientId', Controller.getLast);
 
-router.get('/:id', Controller.get);
+router.get('/:assessmentId', Controller.get);
 
-router.delete('/:id', checkAuth, Controller.delete);
+router.delete('/:assessmentId', checkAuth, Controller.delete);
 
 
 module.exports = router;

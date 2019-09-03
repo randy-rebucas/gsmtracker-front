@@ -5,7 +5,6 @@ import { Router, RouterStateSnapshot } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, MatDialogConfig } from '@angular/material';
-import { DatePipe } from '@angular/common';
 import { DialogService } from 'src/app/shared/dialog.service';
 
 import { AssessmentData } from '../../models/assessment-data.model';
@@ -39,7 +38,6 @@ export class AssessmentListComponent implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: AssessmentService,
     public assessmentService: AssessmentService,
     private dialog: MatDialog,
-    private datePipe: DatePipe,
     private dialogService: DialogService,
     private authService: AuthService,
     private router: Router,
@@ -86,31 +84,33 @@ export class AssessmentListComponent implements OnInit, OnDestroy {
     dialogConfig.data = {
       id: null,
       title: 'New record',
-      complaintIds: complaintId
+      complaintIds: complaintId,
+      btnLabel: 'Save'
     };
     this.dialog.open(AssessmentEditComponent, dialogConfig);
   }
 
-  onEdit(recordId) {
+  onEdit(assessmentId) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '30%';
     dialogConfig.data = {
-        id: recordId,
+        id: assessmentId,
         title: 'Update record',
-        patient: this.patientId
+        patient: this.patientId,
+        btnLabel: 'Update'
     };
     this.dialog.open(AssessmentEditComponent, dialogConfig);
   }
 
-  onDelete(recordId) {
+  onDelete(assessmentId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.assessmentService.delete(recordId).subscribe(() => {
-          this.assessmentService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.assessmentService.delete(assessmentId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
+          this.assessmentService.getAll(this.perPage, this.currentPage, this.patientId);
         });
       }
     });

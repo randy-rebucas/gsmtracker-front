@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
 
 import { AuthService } from '../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
@@ -27,6 +26,7 @@ export class BloodPressureEditComponent implements OnInit, OnDestroy {
   patientId: string;
   title: string;
   patient: string;
+  btnLabel: string;
 
   form: FormGroup;
   bpData: BpData;
@@ -37,8 +37,6 @@ export class BloodPressureEditComponent implements OnInit, OnDestroy {
     public bpService: BpService,
     public route: ActivatedRoute,
     private authService: AuthService,
-    private datePipe: DatePipe,
-
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < BloodPressureEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
@@ -46,6 +44,7 @@ export class BloodPressureEditComponent implements OnInit, OnDestroy {
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -78,7 +77,7 @@ export class BloodPressureEditComponent implements OnInit, OnDestroy {
               systolic: recordData.systolic,
               diastolic: recordData.diastolic,
               created: recordData.created,
-              patient: recordData.patient
+              patientId: recordData.patientId
             };
             this.form.setValue({
                 systolic: this.bpData.systolic,

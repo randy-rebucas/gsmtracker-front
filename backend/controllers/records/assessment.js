@@ -34,7 +34,7 @@ exports.create = (req, res, next) => {
 exports.update = (req, res, next) => {
 
     const assessment = new Assessment({
-        _id: req.body.id,
+        _id: req.body.assessmentId,
         created: req.body.created,
         complaintId: req.body.complaintId,
         patientId: req.body.patientId
@@ -47,7 +47,7 @@ exports.update = (req, res, next) => {
     for (let index = 0; index < treatmentData.length; index++) {
         assessment.treatments.push(treatmentData[index]);
     }
-    Assessment.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    Assessment.updateOne({ _id: req.params.assessmentId }, //pass doctor role for restriction
             assessment
         ).then(result => {
             if (result.n > 0) {
@@ -92,7 +92,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Assessment.findById(req.params.id).then(complaint => {
+    Assessment.findById(req.params.assessmentId).then(complaint => {
             if (complaint) {
                 res.status(200).json(complaint);
             } else {
@@ -130,21 +130,21 @@ exports.getCurrent = (req, res, next) => {
 };
 
 exports.getLast = (req, res, next) => {
-  Assessment.find({ 'patientId': req.params.patientId })
-      .limit(1)
-      .sort({ 'created': 'desc' })
-      .then(assessment => {
-          if (assessment) {
-              res.status(200).json(assessment);
-          } else {
-              res.status(404).json({ message: 'assessment not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+    Assessment.find({ 'patientId': req.params.patientId })
+        .limit(1)
+        .sort({ 'created': 'desc' })
+        .then(assessment => {
+            if (assessment) {
+                res.status(200).json(assessment);
+            } else {
+                res.status(404).json({ message: 'assessment not found' });
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: error.message
+            });
+        });
 };
 /**
  * @param complaintId
@@ -152,7 +152,7 @@ exports.getLast = (req, res, next) => {
  */
 exports.getByComplaint = (req, res, next) => {
     Assessment.find({
-          complaintId: req.params.complaintId
+            complaintId: req.params.complaintId
         })
         .then(assessment => {
             if (assessment) {
@@ -169,7 +169,7 @@ exports.getByComplaint = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Assessment.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+    Assessment.deleteOne({ _id: req.params.assessmentId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

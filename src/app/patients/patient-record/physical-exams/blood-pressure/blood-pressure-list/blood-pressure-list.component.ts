@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../../auth/auth.service';
-import { Router, ActivatedRoute, Params, ParamMap, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
@@ -18,14 +18,13 @@ import { BloodPressureEditComponent } from '../blood-pressure-edit/blood-pressur
   styleUrls: ['./blood-pressure-list.component.css']
 })
 export class BloodPressureListComponent implements OnInit, OnDestroy {
-  records: BpService[] = [];
   isLoading = false;
   total = 0;
   perPage = 10;
   currentPage = 1;
-
   pageSizeOptions = [5, 10, 25, 100];
-
+  
+  records: BpService[] = [];
   userIsAuthenticated = false;
   patientId: string;
 
@@ -36,8 +35,6 @@ export class BloodPressureListComponent implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: BpService,
     public bpService: BpService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private datePipe: DatePipe,
     private dialogService: DialogService,
     private authService: AuthService,
     private router: Router,
@@ -96,28 +93,30 @@ export class BloodPressureListComponent implements OnInit, OnDestroy {
     dialogConfig.data = {
       id: null,
       title: 'New record',
-      patient: this.patientId
+      patient: this.patientId,
+      btnLabel: 'Save'
     };
     this.dialog.open(BloodPressureEditComponent, dialogConfig);
   }
 
-  onEdit(recordId) {
+  onEdit(bloodPressureId) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-        id: recordId,
+        id: bloodPressureId,
         title: 'Update record',
-        patient: this.patientId
+        patient: this.patientId,
+        btnLabel: 'Update'
     };
     this.dialog.open(BloodPressureEditComponent, dialogConfig);
   }
 
-  onDelete(recordId) {
+  onDelete(bloodPressureId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.bpService.delete(recordId).subscribe(() => {
+        this.bpService.delete(bloodPressureId).subscribe(() => {
           this.bpService.getAll(this.perPage, this.currentPage, this.patientId);
           this.notificationService.warn('! Deleted successfully');
         });

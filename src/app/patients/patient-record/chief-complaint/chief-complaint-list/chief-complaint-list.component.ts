@@ -8,7 +8,6 @@ import { ComplaintData } from '../../models/complaint-data.model';
 import { ComplaintService } from '../../services/complaint.service';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
-import { DatePipe } from '@angular/common';
 import { DialogService } from 'src/app/shared/dialog.service';
 
 import { ChiefComplaintEditComponent } from '../chief-complaint-edit/chief-complaint-edit.component';
@@ -22,14 +21,14 @@ import { NotesService } from '../../services/notes.service';
   styleUrls: ['./chief-complaint-list.component.css']
 })
 export class ChiefComplaintListComponent implements OnInit, OnDestroy {
-  records: ComplaintService[] = [];
-  complaints: ComplaintData[] = [];
-  isLoading = false;
   total = 0;
   perPage = 10;
   currentPage = 1;
-
   pageSizeOptions = [5, 10, 25, 100];
+
+  records: ComplaintService[] = [];
+  complaints: ComplaintData[] = [];
+  isLoading = false;
   id: string;
 
   userIsAuthenticated = false;
@@ -45,7 +44,6 @@ export class ChiefComplaintListComponent implements OnInit, OnDestroy {
     public notesService: NotesService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private datePipe: DatePipe,
     private dialogService: DialogService,
     private authService: AuthService,
     private router: Router,
@@ -70,7 +68,6 @@ export class ChiefComplaintListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.total = complaintData.count;
         this.complaints = complaintData.complaints;
-
         this.dataSource = new MatTableDataSource(complaintData.complaints);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -99,8 +96,8 @@ export class ChiefComplaintListComponent implements OnInit, OnDestroy {
     this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
   }
 
-  onFilter(recordId) {
-    this.router.navigate(['./', recordId], {relativeTo: this.route});
+  onFilter(complaintId) {
+    this.router.navigate(['./', complaintId], {relativeTo: this.route});
   }
 
   onCreate() {
@@ -111,56 +108,34 @@ export class ChiefComplaintListComponent implements OnInit, OnDestroy {
     dialogConfig.data = {
       id: null,
       title: 'New record',
-      patient: this.patientId
+      patient: this.patientId,
+      btnLabel: 'Save'
     };
     this.dialog.open(ChiefComplaintEditComponent, dialogConfig);
   }
 
-  onEdit(recordId) {
+  onEdit(complaintId) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '30%';
     dialogConfig.data = {
-        id: recordId,
+        id: complaintId,
         title: 'Update record',
-        patient: this.patientId
+        patient: this.patientId,
+        btnLabel: 'Update'
     };
     this.dialog.open(ChiefComplaintEditComponent, dialogConfig);
   }
 
-  onDelete(recordId) {
+  onDelete(complaintId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-
-        this.complaintService.delete(recordId).subscribe(() => {
-          this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.complaintService.delete(complaintId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
+          this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
         });
-
-        // this.assessmentService.getByComplaintId(recordId).subscribe(
-        //   assessmenrData => {
-        // this.assessmentService.delete(assessmenrData[0]._id).subscribe(() => {
-        //   this.prescriptionService.getByComplaintId(recordId).subscribe(
-        //     prescriptionData => {
-        //     this.prescriptionService.delete(prescriptionData[0]._id).subscribe(() => {
-        //       this.notesService.getByComplaintId(recordId).subscribe(
-        //         noteData => {
-        //         this.notesService.delete(noteData[0]._id).subscribe(() => {
-        //           this.complaintService.delete(recordId).subscribe(() => {
-        //             this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
-        //             this.notificationService.warn('! Deleted successfully');
-        //           });
-        //         });
-        //         }
-        //       );
-        //     });
-        //     }
-        //   );
-        // });
-        //   }
-        // );
       }
     });
   }

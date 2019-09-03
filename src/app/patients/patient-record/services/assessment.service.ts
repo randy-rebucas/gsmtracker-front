@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { AssessmentData } from '../models/assessment-data.model';
@@ -17,9 +15,7 @@ export class AssessmentService {
   private assessmentsUpdated = new Subject<{ assessments: AssessmentData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
     getAll(perPage: number, currentPage: number, patientId: string) {
@@ -35,6 +31,7 @@ export class AssessmentService {
               id: assessment._id,
               created: assessment.created,
               complaintId: assessment.complaintId,
+              patientId: assessment.patientId,
               diagnosis: assessment.diagnosis,
               treatments: assessment.treatments
             };
@@ -54,9 +51,9 @@ export class AssessmentService {
     return this.assessmentsUpdated.asObservable();
   }
 
-  get(id: string) {
+  get(assessmentId: string) {
     return this.http.get<{ _id: string; complaintId: string, diagnosis: [], treatments: [] }>(
-      BACKEND_URL + '/' + id
+      BACKEND_URL + '/' + assessmentId
       );
   }
 
@@ -85,15 +82,15 @@ export class AssessmentService {
     return this.http.post<{ message: string, record: AssessmentData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, created: string, complaintId: string, patientId: string, diagnosis: [], treatments: []) {
+  update(assessmentId: string, created: string, complaintId: string, patientId: string, diagnosis: [], treatments: []) {
     const recordData = {
-        id, created, complaintId, patientId, diagnosis, treatments
+      assessmentId, created, complaintId, patientId, diagnosis, treatments
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + assessmentId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(assessmentId: string) {
+    return this.http.delete(BACKEND_URL + '/' + assessmentId);
   }
 
 

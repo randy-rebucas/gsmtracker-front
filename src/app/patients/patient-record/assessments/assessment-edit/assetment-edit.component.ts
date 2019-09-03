@@ -23,7 +23,7 @@ export class AssessmentEditComponent implements OnInit, OnDestroy {
   assessmentId: string;
   diagnosis: [];
   treatments: [];
-
+  
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
   assessmentData: AssessmentData;
@@ -33,6 +33,8 @@ export class AssessmentEditComponent implements OnInit, OnDestroy {
   complaintId: string;
   patientId: string;
   title: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   maxDate = new Date();
@@ -52,6 +54,7 @@ export class AssessmentEditComponent implements OnInit, OnDestroy {
       this.complaintId = data.complaintIds;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {

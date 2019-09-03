@@ -30,6 +30,7 @@ export class ChiefComplaintEditComponent implements OnInit, OnDestroy {
   title: string;
   patient: string;
   complainId: string;
+  btnLabel: string;
 
   form: FormGroup;
 
@@ -38,10 +39,7 @@ export class ChiefComplaintEditComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     public complaintService: ComplaintService,
-    private router: Router,
-    private route: ActivatedRoute,
     private authService: AuthService,
-    private datePipe: DatePipe,
     private fb: FormBuilder,
 
     private notificationService: NotificationService,
@@ -51,6 +49,7 @@ export class ChiefComplaintEditComponent implements OnInit, OnDestroy {
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -138,7 +137,7 @@ export class ChiefComplaintEditComponent implements OnInit, OnDestroy {
         this.form.value.record_date,
         this.patientId,
         this.form.value.complaints
-      ).subscribe((complaintData) => {
+      ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
         this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
