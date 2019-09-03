@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../../auth/auth.service';
-import { Router, ActivatedRoute, Params, ParamMap, RouterStateSnapshot } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { WeightData } from '../../../models/weight-data.model';
@@ -9,7 +9,6 @@ import { WeightService } from '../../../services/weight.service';
 import { WeightEditComponent } from '../weight-edit/weight-edit.component';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
-import { DatePipe } from '@angular/common';
 import { DialogService } from 'src/app/shared/dialog.service';
 
 @Component({
@@ -18,14 +17,13 @@ import { DialogService } from 'src/app/shared/dialog.service';
   styleUrls: ['./weight-list.component.css']
 })
 export class WeightListComponent implements OnInit, OnDestroy {
-  records: WeightService[] = [];
   isLoading = false;
   total = 0;
   perPage = 10;
   currentPage = 1;
-
   pageSizeOptions = [5, 10, 25, 100];
 
+  records: WeightService[] = [];
   userIsAuthenticated = false;
   patientId: string;
 
@@ -36,8 +34,6 @@ export class WeightListComponent implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: WeightService,
     public weightService: WeightService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private datePipe: DatePipe,
     private dialogService: DialogService,
     private authService: AuthService,
     private router: Router,
@@ -96,30 +92,32 @@ export class WeightListComponent implements OnInit, OnDestroy {
     dialogConfig.data = {
       id: null,
       title: 'New record',
-      patient: this.patientId
+      patient: this.patientId,
+      btnLabel: 'Save'
     };
     this.dialog.open(WeightEditComponent, dialogConfig);
   }
 
-  onEdit(recordId) {
+  onEdit(weightId) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-        id: recordId,
+        id: weightId,
         title: 'Update record',
-        patient: this.patientId
+        patient: this.patientId,
+        btnLabel: 'Update'
     };
     this.dialog.open(WeightEditComponent, dialogConfig);
   }
 
-  onDelete(recordId) {
+  onDelete(weightId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.weightService.delete(recordId).subscribe(() => {
-          this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.weightService.delete(weightId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
+          this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
         });
       }
     });

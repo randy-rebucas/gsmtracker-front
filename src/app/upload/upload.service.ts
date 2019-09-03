@@ -23,7 +23,7 @@ export class UploadService {
   constructor(private http: HttpClient) {}
 
   getAll(perPage: number, currentPage: number, patientId: string) {
-    const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+    const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, files: any, max: number }>(
       BACKEND_URL + queryParams
     )
@@ -35,7 +35,8 @@ export class UploadService {
             path: file.path,
             name: file.name,
             type: file.type,
-            created: file.created
+            created: file.created,
+            patientId: file.patientId
           };
         }), max: fileData.max};
       })
@@ -81,7 +82,7 @@ export class UploadService {
       // create a new multipart-form for every file
       const formData: FormData = new FormData();
       formData.append('file', file, file.name);
-      formData.append('patient', patientId);
+      formData.append('patientId', patientId);
       formData.append('clientId', clientId);
       formData.append('complaintId', complaintId);
 

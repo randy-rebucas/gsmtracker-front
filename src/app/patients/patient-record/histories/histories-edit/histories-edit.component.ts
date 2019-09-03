@@ -33,6 +33,8 @@ export class HistoriesEditComponent implements OnInit, OnDestroy {
   patientId: string;
   title: string;
   patient: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   maxDate = new Date();
@@ -60,6 +62,7 @@ export class HistoriesEditComponent implements OnInit, OnDestroy {
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -92,7 +95,7 @@ export class HistoriesEditComponent implements OnInit, OnDestroy {
               type: recordData.type,
               description: recordData.description,
               created: recordData.created,
-              patient: recordData.patient
+              patientId: recordData.patientId
             };
             this.form.setValue({
               type: this.historyData.type,

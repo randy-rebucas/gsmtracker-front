@@ -29,6 +29,8 @@ export class TemperatureEditComponent implements OnInit, OnDestroy {
   patientId: string;
   title: string;
   patient: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   maxDate = new Date();
@@ -46,6 +48,7 @@ export class TemperatureEditComponent implements OnInit, OnDestroy {
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -74,7 +77,7 @@ export class TemperatureEditComponent implements OnInit, OnDestroy {
               id: recordData._id,
               temperature: recordData.temperature,
               created: recordData.created,
-              patient: recordData.patient
+              patientId: recordData.patientId
             };
             this.form.setValue({
             temperature: this.temperatureData.temperature,

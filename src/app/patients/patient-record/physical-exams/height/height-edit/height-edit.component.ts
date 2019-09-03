@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
@@ -28,6 +28,8 @@ export class HeightEditComponent implements OnInit, OnDestroy {
   patientId: string;
   title: string;
   patient: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   maxDate = new Date();
@@ -45,6 +47,7 @@ export class HeightEditComponent implements OnInit, OnDestroy {
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -73,7 +76,7 @@ export class HeightEditComponent implements OnInit, OnDestroy {
               id: recordData._id,
               height: recordData.height,
               created: recordData.created,
-              patient: recordData.patient
+              patientId: recordData.patientId
             };
             this.form.setValue({
               height: this.heightData.height,

@@ -5,7 +5,7 @@ exports.create = (req, res, next) => {
     const height = new Height({
         height: req.body.height,
         created: req.body.created,
-        patient: req.body.patient
+        patientId: req.body.patientId
     });
     height.save().then(createdRecord => {
             res.status(201).json({
@@ -25,12 +25,12 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const height = new Height({
-        _id: req.body.id,
+        _id: req.body.heightId,
         height: req.body.height,
         created: req.body.created_date,
-        patient: req.body.patient_id
+        patientId: req.body.patientId
     });
-    Height.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    Height.updateOne({ _id: req.params.heightId }, //pass doctor role for restriction
             height
         ).then(result => {
             if (result.n > 0) {
@@ -49,7 +49,7 @@ exports.update = (req, res, next) => {
 exports.getAll = (req, res, next) => {
     const currentPage = +req.query.page;
     const pageSize = +req.query.pagesize;
-    const heightQuery = Height.find({ 'patient': req.query.patient }).sort({ 'created': 'desc' });
+    const heightQuery = Height.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
     let fetchedRecord;
 
@@ -76,7 +76,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Height.findById(req.params.id).then(height => {
+    Height.findById(req.params.heightId).then(height => {
             if (height) {
                 res.status(200).json(height);
             } else {
@@ -115,7 +115,7 @@ exports.getCurrent = (req, res, next) => {
 };
 
 exports.getLast = (req, res, next) => {
-    Height.find({ 'patient': req.params.patientId })
+    Height.find({ 'patientId': req.params.patientId })
         .limit(1)
         .sort({ 'created': 'desc' })
         .then(height => {
@@ -133,7 +133,7 @@ exports.getLast = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Height.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+    Height.deleteOne({ _id: req.params.heightId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

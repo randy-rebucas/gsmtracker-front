@@ -6,7 +6,7 @@ exports.create = (req, res, next) => {
         systolic: req.body.systolic,
         diastolic: req.body.diastolic,
         created: req.body.created,
-        patientId: req.body.patient
+        patientId: req.body.patientId
     });
     bp.save().then(createdRecord => {
             res.status(201).json({
@@ -26,11 +26,11 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const bp = new BloodPressure({
-        _id: req.body.id,
+        _id: req.body.bloodPressureId,
         systolic: req.body.systolic,
         diastolic: req.body.diastolic,
         created: req.body.created_date,
-        patientId: req.body.patient_id
+        patientId: req.body.patientId
     });
     BloodPressure.updateOne({ _id: req.params.bloodPressureId }, //pass doctor role for restriction
             bp
@@ -51,7 +51,7 @@ exports.update = (req, res, next) => {
 exports.getAll = (req, res, next) => {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const bpQuery = BloodPressure.find({ 'patientId': req.query.patient }).sort({ 'created': 'desc' });
+    const bpQuery = BloodPressure.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
     let fetchedRecord;
     if (pageSize && currentPage) {

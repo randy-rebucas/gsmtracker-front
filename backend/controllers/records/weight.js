@@ -5,7 +5,7 @@ exports.create = (req, res, next) => {
     const weight = new Weight({
         weight: req.body.weight,
         created: req.body.created,
-        patient: req.body.patient
+        patientId: req.body.patientId
     });
     weight.save().then(createdRecord => {
             res.status(201).json({
@@ -25,12 +25,12 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const weight = new Weight({
-        _id: req.body.id,
+        _id: req.body.weightId,
         weight: req.body.weight,
         created: req.body.created_date,
-        patient: req.body.patient_id
+        patientId: req.body.patientId
     });
-    Weight.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    Weight.updateOne({ _id: req.params.weightId }, //pass doctor role for restriction
             weight
         ).then(result => {
             if (result.n > 0) {
@@ -49,7 +49,7 @@ exports.update = (req, res, next) => {
 exports.getAll = (req, res, next) => {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const weightQuery = Weight.find({ 'patient': req.query.patient }).sort({ 'created': 'desc' });
+    const weightQuery = Weight.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
     let fetchedRecord;
     if (pageSize && currentPage) {
@@ -75,7 +75,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Weight.findById(req.params.id).then(weight => {
+    Weight.findById(req.params.weightId).then(weight => {
             if (weight) {
                 res.status(200).json(weight);
             } else {
@@ -90,7 +90,6 @@ exports.get = (req, res, next) => {
 };
 
 exports.getCurrent = (req, res, next) => {
-  // { 'patient': req.params.patientId }
     const today = moment().startOf('day');
 
     Weight.find({
@@ -115,7 +114,7 @@ exports.getCurrent = (req, res, next) => {
 };
 
 exports.getLast = (req, res, next) => {
-  Weight.find({ 'patient': req.params.patientId })
+  Weight.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
       .then(weight => {
@@ -133,7 +132,7 @@ exports.getLast = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Weight.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+    Weight.deleteOne({ _id: req.params.weightId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

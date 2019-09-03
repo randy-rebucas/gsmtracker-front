@@ -28,6 +28,8 @@ export class WeightEditComponent implements OnInit, OnDestroy {
   patientId: string;
   title: string;
   patient: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   maxDate = new Date();
@@ -36,8 +38,6 @@ export class WeightEditComponent implements OnInit, OnDestroy {
     public weightService: WeightService,
     public route: ActivatedRoute,
     private authService: AuthService,
-    private datePipe: DatePipe,
-
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < WeightEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
@@ -45,6 +45,7 @@ export class WeightEditComponent implements OnInit, OnDestroy {
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -73,7 +74,7 @@ export class WeightEditComponent implements OnInit, OnDestroy {
               id: recordData._id,
               weight: recordData.weight,
               created: recordData.created,
-              patient: recordData.patient
+              patientId: recordData.patientId
             };
             this.form.setValue({
               weight: this.weightData.weight,

@@ -5,7 +5,7 @@ exports.create = (req, res, next) => {
     const temperature = new Temperature({
         temperature: req.body.temperature,
         created: req.body.created,
-        patient: req.body.patient
+        patientId: req.body.patientId
     });
     temperature.save().then(createdRecord => {
             res.status(201).json({
@@ -25,12 +25,12 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const temperature = new Temperature({
-        _id: req.body.id,
+        _id: req.body.temperatureId,
         temperature: req.body.temperature,
         created: req.body.created_date,
-        patient: req.body.patient_id
+        patientId: req.body.patienId
     });
-    Temperature.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    Temperature.updateOne({ _id: req.params.temperatureId }, //pass doctor role for restriction
             temperature
         ).then(result => {
             if (result.n > 0) {
@@ -49,7 +49,7 @@ exports.update = (req, res, next) => {
 exports.getAll = (req, res, next) => {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const temperatureQuery = Temperature.find({ 'patient': req.query.patient }).sort({ 'created': 'desc' });
+    const temperatureQuery = Temperature.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
     let fetchedRecord;
     if (pageSize && currentPage) {
@@ -75,7 +75,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Temperature.findById(req.params.id).then(temperature => {
+    Temperature.findById(req.params.temperatureId).then(temperature => {
             if (temperature) {
                 res.status(200).json(temperature);
             } else {
@@ -93,7 +93,7 @@ exports.getCurrent = (req, res, next) => {
     const today = moment().startOf('day');
     // 'patient': req.params.patientId
     Temperature.find({
-      patient: req.params.patientId,
+      patientId: req.params.patientId,
             created: {
                 $gte: today.toDate(),
                 $lte: moment(today).endOf('day').toDate()
@@ -114,7 +114,7 @@ exports.getCurrent = (req, res, next) => {
 };
 
 exports.getLast = (req, res, next) => {
-  Temperature.find({ 'patient': req.params.patientId })
+  Temperature.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
       .then(temperature => {
@@ -132,7 +132,7 @@ exports.getLast = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Temperature.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+    Temperature.deleteOne({ _id: req.params.temperatureId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

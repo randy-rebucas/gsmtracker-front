@@ -5,7 +5,7 @@ exports.create = (req, res, next) => {
     const respiratoryrate = new RespiratoryRate({
         respiratoryrate: req.body.respiratoryrate,
         created: req.body.created,
-        patient: req.body.patient
+        patientId: req.body.patientId
     });
     respiratoryrate.save().then(createdRecord => {
             res.status(201).json({
@@ -25,12 +25,12 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const respiratoryrate = new RespiratoryRate({
-        _id: req.body.id,
+        _id: req.body.respiratoryRateId,
         respiratoryrate: req.body.respiratoryrate,
         created: req.body.created_date,
-        patient: req.body.patient_id
+        patientId: req.body.patientId
     });
-    RespiratoryRate.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    RespiratoryRate.updateOne({ _id: req.params.respiratoryRateId }, //pass doctor role for restriction
             respiratoryrate
         ).then(result => {
             if (result.n > 0) {
@@ -49,7 +49,7 @@ exports.update = (req, res, next) => {
 exports.getAll = (req, res, next) => {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const resrateQuery = RespiratoryRate.find({ 'patient': req.query.patient }).sort({ 'created': 'desc' });
+    const resrateQuery = RespiratoryRate.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
     let fetchedRecord;
     if (pageSize && currentPage) {
@@ -75,7 +75,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    RespiratoryRate.findById(req.params.id).then(respiratoryrate => {
+    RespiratoryRate.findById(req.params.respiratoryRateId).then(respiratoryrate => {
             if (respiratoryrate) {
                 res.status(200).json(respiratoryrate);
             } else {
@@ -93,7 +93,7 @@ exports.getCurrent = (req, res, next) => {
     const today = moment().startOf('day');
 
     RespiratoryRate.find({
-      patient: req.params.patientId,
+      patientId: req.params.patientId,
             created: {
                 $gte: today.toDate(),
                 $lte: moment(today).endOf('day').toDate()
@@ -114,7 +114,7 @@ exports.getCurrent = (req, res, next) => {
 };
 
 exports.getLast = (req, res, next) => {
-  RespiratoryRate.find({ 'patient': req.params.patientId })
+  RespiratoryRate.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
       .then(respiratoryrate => {
@@ -132,7 +132,7 @@ exports.getLast = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    RespiratoryRate.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+    RespiratoryRate.deleteOne({ _id: req.params.respiratoryRateId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

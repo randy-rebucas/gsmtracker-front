@@ -5,7 +5,7 @@ const moment = require('moment');
 exports.getAll = (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
-  const fileQuery = Upload.find({ 'patient': req.query.patient });
+  const fileQuery = Upload.find({ 'patientId': req.query.patientId });
 
   let fetchedRecord;
   if (pageSize && currentPage) {
@@ -31,8 +31,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  console.log(req.params);
-  Upload.findById(req.params.id).then(file => {
+  Upload.findById(req.params.uploadId).then(file => {
           if (file) {
               res.status(200).json(file);
           } else {
@@ -127,7 +126,7 @@ exports.upload = (req, res, next) => {
       path: url + '/' + files.file.path,
       name: files.file.name,
       type: files.file.type,
-      patient: fields.patient,
+      patientId: fields.patientId,
       clientId: fields.clientId,
       complaintId: fields.complaintId
     });
@@ -138,7 +137,7 @@ exports.upload = (req, res, next) => {
 
 
 exports.delete = (req, res, next) => {
-  Upload.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+  Upload.deleteOne({ _id: req.params.uploadId }) //pass doctors role for restriction
       .then(result => {
           if (result.n > 0) {
               res.status(200).json({ message: 'Deletion successfull!' });

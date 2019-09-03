@@ -36,7 +36,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      this.patientId = data.patient;
+      this.patientId = data.patientId;
       this.title = data.title;
       this.complaintId = data.complaint;
     }

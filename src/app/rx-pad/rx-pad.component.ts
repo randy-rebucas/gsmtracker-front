@@ -62,20 +62,20 @@ export class RxPadComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.patientsService.getPatient(this.patientId).subscribe(patientData => {
-      // this.firstname = patientData.firstname;
-      // this.midlename = patientData.midlename;
-      // this.lastname = patientData.lastname;
-      // this.contact = patientData.contact;
-      // this.gender = patientData.gender;
-      // this.birthdate = patientData.birthdate;
-      // this.address = patientData.address;
+      this.firstname = patientData.firstname;
+      this.midlename = patientData.midlename;
+      this.lastname = patientData.lastname;
+      this.contact = patientData.contact;
+      this.gender = patientData.gender;
+      this.birthdate = patientData.birthdate;
+      this.address = patientData.address;
     });
 
     this.prescriptionService.get(this.recordId).subscribe(recordData => {
       this.isLoading = false;
       this.id = recordData._id;
       this.created = recordData.created;
-      this.complaintId = recordData.complaint;
+      this.complaintId = recordData.complaintId;
       this.prescriptions = recordData.prescriptions;
     });
   }

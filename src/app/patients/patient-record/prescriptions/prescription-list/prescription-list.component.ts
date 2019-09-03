@@ -1,17 +1,15 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../auth/auth.service';
-import { Router, ActivatedRoute, Params, ParamMap, RouterStateSnapshot } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
-import { DatePipe } from '@angular/common';
 import { DialogService } from 'src/app/shared/dialog.service';
 
 import { PrescriptionData } from '../../models/prescription-data.model';
 import { PrescriptionService } from '../../services/prescription.service';
 import { PrescriptionEditComponent } from '../prescription-edit/prescription-edit.component';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ComplaintService } from '../../services/complaint.service';
 import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
 
@@ -19,25 +17,17 @@ import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
   selector: 'app-prescription-list',
   templateUrl: './prescription-list.component.html',
   styleUrls: ['./prescription-list.component.css']
-  // animations: [
-  //   trigger('detailExpand', [
-  //     state('collapsed', style({height: '0px', minHeight: '0'})),
-  //     state('expanded', style({height: '*'})),
-  //     transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-  //   ]),
-  // ]
 })
 
 export class PrescriptionListComponent implements OnInit, OnDestroy {
-  records: PrescriptionService[] = [];
-  prs: PrescriptionData[] = [];
-  isLoading = false;
-
   total = 0;
   perPage = 10;
   currentPage = 1;
   pageSizeOptions = [5, 10, 25, 100];
 
+  records: PrescriptionService[] = [];
+  prs: PrescriptionData[] = [];
+  isLoading = false;
   userIsAuthenticated = false;
   patientId: string;
   complaintId: string;
@@ -49,7 +39,6 @@ export class PrescriptionListComponent implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: PrescriptionService,
     public prescriptionService: PrescriptionService,
     private dialog: MatDialog,
-    private datePipe: DatePipe,
     private dialogService: DialogService,
     private authService: AuthService,
     private router: Router,
@@ -115,30 +104,32 @@ export class PrescriptionListComponent implements OnInit, OnDestroy {
     dialogConfig.data = {
       id: null,
       title: 'New record',
-      complaintIds: complaintId
+      complaintIds: complaintId,
+      btnLabel: 'Save'
     };
     this.dialog.open(PrescriptionEditComponent, dialogConfig);
   }
 
-  onEdit(recordId) {
+  onEdit(prescriptionId) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-        id: recordId,
+        id: prescriptionId,
         title: 'Update record',
-        patient: this.patientId
+        patient: this.patientId,
+        btnLabel: 'Update'
     };
     this.dialog.open(PrescriptionEditComponent, dialogConfig);
   }
 
-  onDelete(recordId) {
+  onDelete(prescriptionId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.prescriptionService.delete(recordId).subscribe(() => {
-          this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.prescriptionService.delete(prescriptionId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
+          this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
         });
       }
     });

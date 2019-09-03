@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
@@ -29,6 +28,8 @@ export class ProgressNoteEditComponent implements OnInit, OnDestroy {
   title: string;
   patient: string;
   complaintId: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   maxDate = new Date();
@@ -37,8 +38,6 @@ export class ProgressNoteEditComponent implements OnInit, OnDestroy {
     public notesService: NotesService,
     public route: ActivatedRoute,
     private authService: AuthService,
-    private datePipe: DatePipe,
-
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < ProgressNoteEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
@@ -47,6 +46,7 @@ export class ProgressNoteEditComponent implements OnInit, OnDestroy {
       this.complaintId = data.complaintIds;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -73,9 +73,10 @@ export class ProgressNoteEditComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this.noteData = {
               id: recordData._id,
+              note: recordData.note,
               created: recordData.created,
               complaintId: recordData.complaintId,
-              note: recordData.note,
+              patientId: recordData.patientId
             };
             this.form.setValue({
               record_date: this.noteData.created,
@@ -94,10 +95,10 @@ export class ProgressNoteEditComponent implements OnInit, OnDestroy {
     }
     if (this.mode === 'create') {
       this.notesService.insert(
+        this.form.value.note,
         this.form.value.record_date,
         this.complaintId,
         this.patientId,
-        this.form.value.note
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
@@ -114,10 +115,10 @@ export class ProgressNoteEditComponent implements OnInit, OnDestroy {
     } else {
       this.notesService.update(
         this.recordId,
+        this.form.value.note,
         this.form.value.record_date,
         this.complaintId,
         this.patientId,
-        this.form.value.note
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');

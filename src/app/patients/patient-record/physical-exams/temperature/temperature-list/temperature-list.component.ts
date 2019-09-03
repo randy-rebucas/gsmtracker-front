@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../../auth/auth.service';
-import { Router, ActivatedRoute, Params, ParamMap, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { TemperatureData } from '../../../models/temperature-data.model';
@@ -18,13 +18,13 @@ import { DialogService } from 'src/app/shared/dialog.service';
   styleUrls: ['./temperature-list.component.css']
 })
 export class TemperatureListComponent implements OnInit, OnDestroy {
-  records: TemperatureService[] = [];
-  isLoading = false;
   total = 0;
   perPage = 10;
   currentPage = 1;
-
   pageSizeOptions = [5, 10, 25, 100];
+
+  records: TemperatureService[] = [];
+  isLoading = false;
 
   userIsAuthenticated = false;
   patientId: string;
@@ -36,8 +36,6 @@ export class TemperatureListComponent implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: TemperatureService,
     public temperatureService: TemperatureService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private datePipe: DatePipe,
     private dialogService: DialogService,
     private authService: AuthService,
     private router: Router,
@@ -96,30 +94,32 @@ export class TemperatureListComponent implements OnInit, OnDestroy {
     dialogConfig.data = {
       id: null,
       title: 'New record',
-      patient: this.patientId
+      patient: this.patientId,
+      btnLabel: 'Save'
     };
     this.dialog.open(TemperatureEditComponent, dialogConfig);
   }
 
-  onEdit(recordId) {
+  onEdit(temperatureId) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-        id: recordId,
+        id: temperatureId,
         title: 'Update record',
-        patient: this.patientId
+        patient: this.patientId,
+        btnLabel: 'Update'
     };
     this.dialog.open(TemperatureEditComponent, dialogConfig);
   }
 
-  onDelete(recordId) {
+  onDelete(temperatureId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.temperatureService.delete(recordId).subscribe(() => {
-          this.temperatureService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.temperatureService.delete(temperatureId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
+          this.temperatureService.getAll(this.perPage, this.currentPage, this.patientId);
         });
       }
     });

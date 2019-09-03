@@ -23,7 +23,7 @@ export class WeightService {
     ) {}
 
     getAll(perPage: number, currentPage: number, patientId: string) {
-      const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+      const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
       this.http.get<{message: string, weights: any, max: number }>(
         BACKEND_URL + queryParams
       )
@@ -51,37 +51,36 @@ export class WeightService {
     return this.weightsUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string; weight: string, created: string, patient: string }>(
-      BACKEND_URL + '/' + id
+  get(weightId: string) {
+    return this.http.get<{ _id: string; weight: string, created: string, patientId: string }>(
+      BACKEND_URL + '/' + weightId
       );
   }
 
   getLatest(patientId) {
-    return this.http.get<{ _id: string; weight: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; weight: string, created: string, patientId: string }>(
       BACKEND_URL + '/latest/' + patientId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string; weight: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; weight: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(weight: string, created: string, patient: string) {
+  insert(weight: string, created: string, patientId: string) {
     const recordData = {
-      weight, created, patient
+      weight, created, patientId
     };
     return this.http.post<{ message: string, record: WeightData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, weight: string, created: string, patient: string) {
-    let recordData: WeightData | FormData;
-    recordData = {
-        id, weight, created, patient
+  update(weightId: string, weight: string, created: string, patientId: string) {
+    const recordData = {
+      weightId, weight, created, patientId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + weightId, recordData);
   }
 
   delete(recordId: string) {

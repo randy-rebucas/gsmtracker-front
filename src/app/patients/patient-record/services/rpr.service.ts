@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { RprData } from '../models/rpr-data.model';
@@ -17,13 +15,11 @@ export class RprService {
   private rprsUpdated = new Subject<{ rprs: RprData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
   getAll(perPage: number, currentPage: number, patientId: string) {
-    const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+    const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, rprs: any, max: number }>(
       BACKEND_URL + queryParams
     )
@@ -52,41 +48,40 @@ export class RprService {
     return this.rprsUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string; respiratoryrate: string, created: string, patient: string }>(
-      BACKEND_URL + '/' + id
+  get(respiratoryRateId: string) {
+    return this.http.get<{ _id: string; respiratoryrate: string, created: string, patientId: string }>(
+      BACKEND_URL + '/' + respiratoryRateId
       );
   }
 
   getLatest(patientId) {
-    return this.http.get<{ _id: string; respiratoryrate: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; respiratoryrate: string, created: string, patientId: string }>(
       BACKEND_URL + '/latest/' + patientId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string; respiratoryrate: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; respiratoryrate: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(respiratoryrate: string, created: string, patient: string) {
+  insert(respiratoryrate: string, created: string, patientId: string) {
     const recordData = {
-      respiratoryrate, created, patient
+      respiratoryrate, created, patientId
     };
     return this.http.post<{ message: string, record: RprData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, respiratoryrate: string, created: string, patient: string) {
-    let recordData: RprData | FormData;
-    recordData = {
-        id, respiratoryrate, created, patient
+  update(respiratoryRateId: string, respiratoryrate: string, created: string, patientId: string) {
+    const recordData = {
+      respiratoryRateId, respiratoryrate, created, patientId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + respiratoryRateId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(respiratoryRateId: string) {
+    return this.http.delete(BACKEND_URL + '/' + respiratoryRateId);
   }
 
 }

@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
 
 import { AuthService } from '../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
@@ -29,6 +28,8 @@ export class RespiratoryRateEditComponent implements OnInit, OnDestroy {
   patientId: string;
   title: string;
   patient: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   maxDate = new Date();
@@ -37,8 +38,6 @@ export class RespiratoryRateEditComponent implements OnInit, OnDestroy {
     public rprService: RprService,
     public route: ActivatedRoute,
     private authService: AuthService,
-    private datePipe: DatePipe,
-
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < RespiratoryRateEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
@@ -46,6 +45,7 @@ export class RespiratoryRateEditComponent implements OnInit, OnDestroy {
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {
@@ -74,7 +74,7 @@ export class RespiratoryRateEditComponent implements OnInit, OnDestroy {
               id: recordData._id,
               respiratoryrate: recordData.respiratoryrate,
               created: recordData.created,
-              patient: recordData.patient
+              patientId: recordData.patientId
             };
             this.form.setValue({
               respiratoryrate: this.rprData.respiratoryrate,

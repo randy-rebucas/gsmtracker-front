@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { HeightData } from '../models/height-data.model';
@@ -17,13 +15,11 @@ export class HeightService {
   private heightsUpdated = new Subject<{ heights: HeightData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
   getAll(perPage: number, currentPage: number, patientId: string) {
-    const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+    const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, heights: any, max: number }>(
       BACKEND_URL + queryParams
     )
@@ -51,41 +47,40 @@ export class HeightService {
     return this.heightsUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string; height: string, created: string, patient: string }>(
-      BACKEND_URL + '/' + id
+  get(heightId: string) {
+    return this.http.get<{ _id: string; height: string, created: string, patientId: string }>(
+      BACKEND_URL + '/' + heightId
       );
   }
 
   getLatest(patientId) {
-    return this.http.get<{ _id: string; height: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; height: string, created: string, patientId: string }>(
       BACKEND_URL + '/latest/' + patientId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string; height: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; height: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(height: string, created: string, patient: string) {
+  insert(height: string, created: string, patientId: string) {
     const recordData = {
-      height, created, patient
+      height, created, patientId
     };
     return this.http.post<{ message: string, record: HeightData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, height: string, created: string, patient: string) {
-    let recordData: HeightData | FormData;
-    recordData = {
-        id, height, created, patient
+  update(heightId: string, height: string, created: string, patientId: string) {
+    const recordData = {
+      heightId, height, created, patientId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + heightId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(heightId: string) {
+    return this.http.delete(BACKEND_URL + '/' + heightId);
   }
 
 }

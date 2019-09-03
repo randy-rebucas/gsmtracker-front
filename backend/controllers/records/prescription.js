@@ -32,7 +32,7 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const prescription = new Prescription({
-      _id: req.body.id,
+      _id: req.body.prescriptionId,
       created: req.body.created,
       complaintId: req.body.complaintId,
       patientId: req.body.patientId
@@ -43,7 +43,7 @@ exports.update = (req, res, next) => {
     }
 
     Prescription.updateOne(
-      { _id: req.params.id }, //pass doctor role for restriction
+      { _id: req.params.prescriptionId }, //pass doctor role for restriction
       prescription
         ).then(result => {
             if (result.n > 0) {
@@ -88,7 +88,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Prescription.findById(req.params.id).then(prescription => {
+  Prescription.findById(req.params.prescriptionId).then(prescription => {
             if (prescription) {
                 res.status(200).json(prescription);
             } else {
@@ -167,7 +167,7 @@ exports.getByComplaint = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  Prescription.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+  Prescription.deleteOne({ _id: req.params.prescriptionId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

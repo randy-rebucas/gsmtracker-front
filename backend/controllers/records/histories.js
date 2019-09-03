@@ -6,7 +6,7 @@ exports.create = (req, res, next) => {
         type: req.body.type,
         description: req.body.description,
         created: req.body.created,
-        patient: req.body.patient
+        patientId: req.body.patientId
     });
     history.save().then(createdRecord => {
             res.status(201).json({
@@ -26,13 +26,13 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const history = new Histories({
-        _id: req.body.id,
+        _id: req.body.historyId,
         type: req.body.type,
         description: req.body.description,
         created: req.body.created_date,
-        patient: req.body.patient_id
+        patientId: req.body.patientId
     });
-    Histories.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    Histories.updateOne({ _id: req.params.historyId }, //pass doctor role for restriction
       history
         ).then(result => {
             if (result.n > 0) {
@@ -51,7 +51,7 @@ exports.update = (req, res, next) => {
 exports.getAll = (req, res, next) => {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const historyQuery = Histories.find({ 'patient': req.query.patient }).sort({'created': 'desc'});
+    const historyQuery = Histories.find({ 'patientId': req.query.patientId }).sort({'created': 'desc'});
 
     let fetchedRecord;
     if (pageSize && currentPage) {
@@ -77,7 +77,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Histories.findById(req.params.id).then(history => {
+  Histories.findById(req.params.historyId).then(history => {
             if (history) {
                 res.status(200).json(history);
             } else {
@@ -93,9 +93,8 @@ exports.get = (req, res, next) => {
 
 exports.getCurrent = (req, res, next) => {
   const today = moment().startOf('day');
-  //addpatient id
   Histories.find({
-    patient: req.params.patientId,
+    patientId: req.params.patientId,
           created: {
               $gte: today.toDate(),
               $lte: moment(today).endOf('day').toDate()
@@ -116,7 +115,7 @@ exports.getCurrent = (req, res, next) => {
 };
 
 exports.getLast = (req, res, next) => {
-  Histories.find({ 'patient': req.params.patientId })
+  Histories.find({ 'patientId': req.params.patientId })
       .limit(2)
       .sort({ 'created': 'desc' })
       .then(history => {
@@ -134,7 +133,7 @@ exports.getLast = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  Histories.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+  Histories.deleteOne({ _id: req.params.historyId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

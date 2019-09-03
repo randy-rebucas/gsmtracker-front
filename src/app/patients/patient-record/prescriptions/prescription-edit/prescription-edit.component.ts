@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators, NgControl, FormBuilder, FormArray }
 import { Router, ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
@@ -11,7 +10,6 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { PrescriptionService } from '../../services/prescription.service';
 import { PrescriptionData } from '../../models/prescription-data.model';
 import { ComplaintService } from '../../services/complaint.service';
-import { ComplaintData } from '../../models/complaint-data.model';
 
 @Component({
   selector: 'app-prescription-edit',
@@ -25,7 +23,6 @@ export class PrescriptionEditComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
   prescriptionData: PrescriptionData;
-  ccs: ComplaintData[];
 
   isLoading = false;
   private mode = 'create';
@@ -34,20 +31,19 @@ export class PrescriptionEditComponent implements OnInit, OnDestroy {
   title: string;
   patient: string;
   complaintId: string;
+  btnLabel: string;
+
   form: FormGroup;
 
   checked = false;
 
   maxDate = new Date();
 
-  rData: any;
-
   constructor(
     public complaintService: ComplaintService,
     public prescriptionService: PrescriptionService,
     public route: ActivatedRoute,
     private authService: AuthService,
-    private datePipe: DatePipe,
     private fb: FormBuilder,
 
     private notificationService: NotificationService,
@@ -58,6 +54,7 @@ export class PrescriptionEditComponent implements OnInit, OnDestroy {
       this.complaintId = data.complaintIds;
       this.patientId = data.patient;
       this.title = data.title;
+      this.btnLabel = data.btnLabel;
     }
 
   ngOnInit() {

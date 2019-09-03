@@ -76,7 +76,7 @@ export class UploadComponent implements OnInit, OnDestroy {
     dialogConfig.height = '50%';
     dialogConfig.data = {
       title: 'Upload Files',
-      patient: this.patientId,
+      patientId: this.patientId,
       complaint: this.complaintId
     };
     this.dialog.open(DialogComponent, dialogConfig);

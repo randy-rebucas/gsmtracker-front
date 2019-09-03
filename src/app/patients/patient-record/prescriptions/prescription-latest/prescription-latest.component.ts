@@ -44,7 +44,8 @@ export class PrescriptionLatestComponent implements OnInit, OnDestroy {
       id: null,
       title: 'New record',
       complaintIds: complaintId,
-      patient: patientId
+      patient: patientId,
+      btnLabel: 'Save'
     };
     this.dialog.open(PrescriptionEditComponent, dialogConfig);
   }

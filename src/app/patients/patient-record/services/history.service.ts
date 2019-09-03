@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { HistoryData } from '../models/history-data.model';
@@ -17,13 +15,11 @@ export class HistoryService {
   private historiesUpdated = new Subject<{ histories: HistoryData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
   getAll(perPage: number, currentPage: number, patientId: string) {
-    const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+    const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, histories: any, max: number }>(
       BACKEND_URL + queryParams
     )
@@ -52,35 +48,34 @@ export class HistoryService {
     return this.historiesUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string, type: string, description: string, created: string, patient: string }>(
-      BACKEND_URL + '/' + id
+  get(historyId: string) {
+    return this.http.get<{ _id: string, type: string, description: string, created: string, patientId: string }>(
+      BACKEND_URL + '/' + historyId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string, type: string, description: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string, type: string, description: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(type: string, description: string, created: string, patient: string) {
+  insert(type: string, description: string, created: string, patientId: string) {
     const recordData = {
-      type, description, created, patient
+      type, description, created, patientId
     };
     return this.http.post<{ message: string, record: HistoryData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, type: string, description: string, created: string, patient: string) {
-    let recordData: HistoryData | FormData;
-    recordData = {
-        id, type, description, created, patient
+  update(historyId: string, type: string, description: string, created: string, patientId: string) {
+    const recordData = {
+      historyId, type, description, created, patientId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + historyId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(historyId: string) {
+    return this.http.delete(BACKEND_URL + '/' + historyId);
   }
 
 }

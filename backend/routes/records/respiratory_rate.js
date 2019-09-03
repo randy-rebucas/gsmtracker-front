@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('', checkAuth, Controller.create);
 
-router.put('/:id', checkAuth, Controller.update);
+router.put('/:respiratoryRateId', checkAuth, Controller.update);
 
 router.get('', Controller.getAll);
 
@@ -16,8 +16,8 @@ router.get('/last/:patientId', Controller.getLast);
 
 router.get('/latest/:patientId', Controller.getCurrent);
 
-router.get('/:id', Controller.get);
+router.get('/:respiratoryRateId', Controller.get);
 
-router.delete('/:id', checkAuth, Controller.delete);
+router.delete('/:respiratoryRateId', checkAuth, Controller.delete);
 
 module.exports = router;

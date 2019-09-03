@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { NoteData } from '../models/note.model';
@@ -17,9 +15,7 @@ export class NotesService {
   private notesUpdated = new Subject<{ notes: NoteData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
   getAll(perPage: number, currentPage: number, patientId: string) {
@@ -34,6 +30,7 @@ export class NotesService {
             id: note._id,
             created: note.created,
             complaintId: note.complaintId,
+            patientId: note.patientId,
             note: note.note
           };
         }), max: noteData.max};
@@ -52,46 +49,46 @@ export class NotesService {
     return this.notesUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string; created: string, complaintId: string, note: string }>(
-      BACKEND_URL + '/' + id
+  get(progressNoteId: string) {
+    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string}>(
+      BACKEND_URL + '/' + progressNoteId
       );
   }
 
   getLatest() {
-    return this.http.get<{ _id: string; created: string, complaintId: string, note: string }>(
+    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string }>(
       BACKEND_URL + '/latest'
       );
   }
 
   getByComplaintId(complaintId) {
-    return this.http.get<{ _id: string; created: string, complaintId: string, note: string }>(
+    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string }>(
       BACKEND_URL + '/complaint/' + complaintId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string; created: string, complaintId: string, note: string }>(
+    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(created: string, complaintId: string, patientId: string, note: string) {
+  insert(note: string, created: string, complaintId: string, patientId: string) {
     const recordData = {
-      created, complaintId, patientId, note
+      note, created, complaintId, patientId
     };
     return this.http.post<{ message: string, record: NoteData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, created: string, complaintId: string, patientId: string, note: string) {
+  update(progressNoteId: string, note: string, created: string, complaintId: string, patientId: string) {
     const recordData = {
-        id, created, complaintId, patientId, note
+      progressNoteId, note, created, complaintId, patientId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + progressNoteId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(progressNoteId: string) {
+    return this.http.delete(BACKEND_URL + '/' + progressNoteId);
   }
 
 }

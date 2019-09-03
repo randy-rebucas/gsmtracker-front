@@ -3,7 +3,7 @@ export interface UploadData {
   path: string;
   name: string;
   type: string;
-  patient: string;
+  patientId: string;
   clientId: string;
   complaintId: string;
   created: string;

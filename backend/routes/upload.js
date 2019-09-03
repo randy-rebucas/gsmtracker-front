@@ -8,17 +8,17 @@ const router = express.Router();
 
 router.get('', UploadController.getAll);
 
-router.get('/:id', UploadController.get);
+router.get('/:uploadId', UploadController.get);
 
 router.get('/latest', UploadController.getCurrent);
 
 router.get('/complaint/:complaintId', UploadController.getByComplaint);
 
-// router.put('/:id', checkAuth, SettingController.update);
+//router.put('/:uploadId', checkAuth, SettingController.update);
 
 router.post('', checkAuth, UploadController.upload);
 
-router.delete('/:id', checkAuth, UploadController.delete);
+router.delete('/:uploadId', checkAuth, UploadController.delete);
 
 
 module.exports = router;

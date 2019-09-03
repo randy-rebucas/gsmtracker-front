@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { BpData } from '../models/bp-data.model';
@@ -17,13 +15,11 @@ export class BpService {
   private bpsUpdated = new Subject<{ bps: BpData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
   getAll(perPage: number, currentPage: number, patientId: string) {
-    const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+    const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, bps: any, max: number }>(
       BACKEND_URL + queryParams
     )

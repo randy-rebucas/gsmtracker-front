@@ -44,7 +44,8 @@ export class AssessmentLatestComponent implements OnInit, OnDestroy {
       id: null,
       title: 'New record',
       complaintIds: complaintId,
-      patient: patientId
+      patient: patientId,
+      btnLabel: 'Save'
     };
     this.dialog.open(AssessmentEditComponent, dialogConfig);
   }

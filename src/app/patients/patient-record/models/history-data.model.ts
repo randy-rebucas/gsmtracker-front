@@ -3,5 +3,5 @@ export interface HistoryData {
   type: string;
   description: string;
   created: string;
-  patient: string;
+  patientId: string;
 }

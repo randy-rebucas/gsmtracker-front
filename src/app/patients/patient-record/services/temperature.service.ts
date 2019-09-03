@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../../../environments/environment';
 import { TemperatureData } from '../models/temperature-data.model';
@@ -17,13 +15,11 @@ export class TemperatureService {
   private temperaturesUpdated = new Subject<{ temperatures: TemperatureData[], count: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
     getAll(perPage: number, currentPage: number, patientId: string) {
-      const queryParams = `?patient=${patientId}&pagesize=${perPage}&page=${currentPage}`;
+      const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
       this.http.get<{message: string, temperatures: any, max: number }>(
         BACKEND_URL + queryParams
       )
@@ -33,7 +29,8 @@ export class TemperatureService {
             return {
               id: temperature._id,
               temperature: temperature.temperature,
-              created: temperature.created
+              created: temperature.created,
+              patientId: temperature.patientId
             };
           }), max: temperatureData.max};
         })
@@ -51,41 +48,40 @@ export class TemperatureService {
     return this.temperaturesUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string; temperature: string, created: string, patient: string }>(
-      BACKEND_URL + '/' + id
+  get(temperatureId: string) {
+    return this.http.get<{ _id: string; temperature: string, created: string, patientId: string }>(
+      BACKEND_URL + '/' + temperatureId
       );
   }
 
   getLatest(patientId) {
-    return this.http.get<{ _id: string; temperature: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; temperature: string, created: string, patientId: string }>(
       BACKEND_URL + '/latest/' + patientId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string; temperature: string, created: string, patient: string }>(
+    return this.http.get<{ _id: string; temperature: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(temperature: string, created: string, patient: string) {
+  insert(temperature: string, created: string, patientId: string) {
     const recordData = {
-        temperature, created, patient
+        temperature, created, patientId
     };
     return this.http.post<{ message: string, record: TemperatureData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, temperature: string, created: string, patient: string) {
-    let recordData: TemperatureData | FormData;
-    recordData = {
-        id, temperature, created, patient
+  update(temperatureId: string, temperature: string, created: string, patientId: string) {
+    const recordData = {
+      temperatureId, temperature, created, patientId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + temperatureId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(temperatureId: string) {
+    return this.http.delete(BACKEND_URL + '/' + temperatureId);
   }
 
 }

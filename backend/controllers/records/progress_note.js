@@ -9,6 +9,7 @@ exports.create = (req, res, next) => {
         patientId: req.body.patientId
     });
     note.save().then(createdRecord => {
+      console.log(createdRecord);
             res.status(201).json({
                 message: 'Successfully added',
                 note: {
@@ -26,13 +27,13 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const note = new Note({
-        _id: req.body.id,
+        _id: req.body.progressNoteId,
         note: req.body.note,
         created: req.body.created_date,
         complaintId: req.body.complaintId,
         patientId: req.body.patientId
     });
-    Note.updateOne({ _id: req.params.id }, //pass doctor role for restriction
+    Note.updateOne({ _id: req.params.progressNoteId }, //pass doctor role for restriction
       note
         ).then(result => {
             if (result.n > 0) {
@@ -77,7 +78,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Note.findById(req.params.id).then(note => {
+  Note.findById(req.params.progressNoteId).then(note => {
             if (note) {
                 res.status(200).json(note);
             } else {
@@ -151,7 +152,7 @@ exports.getByComplaint = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  Note.deleteOne({ _id: req.params.id }) //pass doctors role for restriction
+  Note.deleteOne({ _id: req.params.progressNoteId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });
