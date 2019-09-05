@@ -57,6 +57,7 @@ exports.createUser = (req, res, next) => {
 exports.userLogin = (req, res, next) => {
     let fetchedUser;
     User.findOne({ email: req.body.email })
+    .populate('personId')
         .then(user => {
             if (!user) {
                 return res.status(401).json({
@@ -72,15 +73,13 @@ exports.userLogin = (req, res, next) => {
                     message: 'Auth failed no result'
                 });
             }
-            const token = jwt.sign({ email: fetchedUser.email, license: fetchedUser.licenseKey, userId: fetchedUser._id },
+            const token = jwt.sign({ email: fetchedUser.email, license: fetchedUser.licenseKey, userId: fetchedUser.personId._id },
                 process.env.JWT_KEY, { expiresIn: '12h' }
             );
-            console.log(token);
-
             res.status(200).json({
                 token: token,
-                expiresIn: 43200, //3600,
-                userId: fetchedUser._id,
+                expiresIn: 43200, // 3600,
+                userId: fetchedUser.personId._id, // fetchedUser._id,
                 userEmail: fetchedUser.email,
                 userLicense: fetchedUser.licenseKey
             });
@@ -102,20 +101,21 @@ exports.getAll = (req, res, next) => {
         query.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     query
-        .then(documents => {
-            fetchedRecord = documents;
-            return User.countDocuments();
-        })
-        .then(count => {
-            res.status(200).json({
-                message: 'Fetched successfully!',
-                users: fetchedRecord,
-                max: count
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+      .populate('personId')
+      .then(documents => {
+          fetchedRecord = documents;
+          return User.countDocuments();
+      })
+      .then(count => {
+          res.status(200).json({
+              message: 'Fetched successfully!',
+              users: fetchedRecord,
+              max: count
+          });
+      })
+      .catch(error => {
+          res.status(500).json({
+              message: error.message
+          });
+      });
 };

@@ -1,15 +1,28 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { startWith, map, debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
+import { MessagesService } from '../messages.service';
+import { ThreadsService } from '../threads.service';
+import { NotificationService } from 'src/app/shared/notification.service';
+export interface User {
+  name: string;
+}
 @Component({
   selector: 'app-message-edit',
   templateUrl: './message-edit.component.html',
   styleUrls: ['./message-edit.component.css']
 })
 export class MessageEditComponent implements OnInit, OnDestroy {
+  perPage = 10;
+  currentPage = 1;
+
+  filteredUsers: User[] = [];
+  messageForm: FormGroup;
+  isLoading = false;
+
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
   recordId: string;
@@ -21,19 +34,18 @@ export class MessageEditComponent implements OnInit, OnDestroy {
   complaintId: string;
   prescription: any;
 
-  isLoading = false;
+  userId: string;
+  page = 1;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     route: ActivatedRoute,
-    public dialogRef: MatDialogRef < MessageEditComponent >,
-    @Inject(MAT_DIALOG_DATA) data
-    ) {
-      this.recordId = data.id;
-      this.patientId = data.patientId;
-      this.title = data.title;
-    }
+    private fb: FormBuilder,
+    private messageService: MessagesService,
+    private threadService: ThreadsService,
+    private notificationService: NotificationService,
+    ) {}
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -43,12 +55,45 @@ export class MessageEditComponent implements OnInit, OnDestroy {
         this.userIsAuthenticated = isAuthenticated;
       });
 
-    this.isLoading = true;
+    this.userId = this.authService.getUserId();
 
+    this.messageForm = this.fb.group({
+      userInput: new FormControl(null),
+      message: new FormControl(null, [Validators.required])
+    });
+
+    this.messageForm
+      .get('userInput')
+      .valueChanges
+      .pipe(
+        debounceTime(300),
+        tap(() => this.isLoading = true),
+        switchMap(value => this.messageService.search({name: value}, this.page, this.userId)
+        .pipe(
+          finalize(() => this.isLoading = false),
+          )
+        )
+      )
+      .subscribe((users) => {
+        console.log(users.results);
+        this.filteredUsers = users.results;
+      });
   }
 
-  onClose() {
-    this.dialogRef.close();
+  displayFn(user: User) {
+    if (user) { return user.name; }
+  }
+
+  onSend() {
+
+    this.threadService.insert(
+      this.messageForm.value.message,
+      this.messageForm.value.userInput,
+      this.userId
+    ).subscribe(() => {
+      this.threadService.getAll(this.userId);
+      this.notificationService.success(':: Message Sent');
+    });
   }
 
   ngOnDestroy() {

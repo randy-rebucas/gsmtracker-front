@@ -1,3 +1,18 @@
-<div class="component-page-header">
-  <h1 class="mat-headline"> Messages</h1>
+<div class="message-list">
+    <mat-list>
+      <!-- <mat-spinner *ngIf="isLoading"></mat-spinner> -->
+      <h3 mat-subheader>Patients</h3>
+      <mat-list-item *ngFor="let thread of threads">
+        <mat-icon mat-list-icon class="md-48">face</mat-icon>
+        <h4 mat-line (click)="messageDetail(thread.id)">{{thread.fullname}} <small mat-line> {{thread.created | date}} </small></h4>
+        <p mat-line> {{thread.message.substring(0,100)+"..."}} </p>
+      </mat-list-item>
+      <!-- <h3 mat-subheader>Doctors</h3>
+      <mat-list-item *ngFor="let doctor of doctors">
+        <mat-icon mat-list-icon class="md-48">face</mat-icon>
+        <h4 mat-line>{{doctor.name}}</h4>
+        <p mat-line> {{doctor.updated | date}} </p>
+      </mat-list-item> -->
+    </mat-list>
 </div>
+

@@ -13,6 +13,8 @@ router.put('/:id/:personId', checkAuth, PatientController.updatePatient); //extr
 
 router.get('', PatientController.getPatients);
 
+router.get('/network', PatientController.getAllNetwork);
+
 router.get('/:id', PatientController.getPatient);
 
 router.delete('/:id', checkAuth, PatientController.deletePatient);

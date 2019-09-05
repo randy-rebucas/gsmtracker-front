@@ -25,7 +25,9 @@ import { MatInputModule,
   MatMenuModule,
   MatSidenavModule,
   MatButtonToggleModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatAutocompleteModule,
+  MatFormFieldModule
 } from '@angular/material';
 
 @NgModule({
@@ -56,7 +58,9 @@ import { MatInputModule,
     MatMenuModule,
     MatSidenavModule,
     MatButtonToggleModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatAutocompleteModule,
+    MatFormFieldModule
   ]
 })
 export class AngularMaterialModule {}

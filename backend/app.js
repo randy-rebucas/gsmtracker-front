@@ -24,6 +24,8 @@ var prescriptionRouter = require('./routes/records/prescription');
 var notesRouter = require('./routes/records/progress_note');
 var assessmentsRouter = require('./routes/records/assessment');
 
+var threadRouter = require('./routes/thread');
+
 var uploadRouter = require('./routes/upload');
 
 var driveRouter = require('./routes/drive');
@@ -92,6 +94,8 @@ app.use('/api/histories', historyRouter);
 app.use('/api/prescriptions', prescriptionRouter);
 app.use('/api/progress-notes', notesRouter);
 app.use('/api/assessments', assessmentsRouter);
+
+app.use('/api/thread', threadRouter);
 
 app.use('/api/drive', driveRouter);
 app.use('/api/upload', uploadRouter);

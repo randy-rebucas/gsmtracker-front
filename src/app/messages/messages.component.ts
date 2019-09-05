@@ -11,13 +11,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class MessagesComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
-
+  isNew = false;
   isLoading = false;
+  setRow: number;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    route: ActivatedRoute,
+    private authService: AuthService
     ) {}
 
   ngOnInit() {
@@ -28,7 +27,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
         this.userIsAuthenticated = isAuthenticated;
       });
 
+    this.setRow = 7;
     this.isLoading = true;
+  }
+
+  onCreate() {
+    this.isNew = true;
+    this.setRow = 4;
   }
 
   ngOnDestroy() {

@@ -30,7 +30,6 @@ export class PatientsService {
     .pipe(
       map(patientData => {
         return { patients: patientData.patients.map(patient => {
-          console.log(patient);
           return {
             id: patient._id,
             bloodType: patient.bloodType,

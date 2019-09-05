@@ -59,6 +59,8 @@ import { AppointmentListComponent } from './appointments/appointment-list/appoin
 import { AppointmentCalendarComponent } from './appointments/appointment-calendar/appointment-calendar.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageListComponent } from './messages/message-list/message-list.component';
+import { MessageInitialComponent } from './messages/message-initial/message-initial.component';
+import { MessageDetailComponent } from './messages/message-detail/message-detail.component';
 import { TestResultListComponent } from './patients/patient-record/test-results/test-result-list/test-result-list.component';
 import { TestResultDetailComponent } from './patients/patient-record/test-results/test-result-detail/test-result-detail.component';
 import { TestResultInitialComponent } from './patients/patient-record/test-results/test-result-initial/test-result-initial.component';
@@ -118,7 +120,8 @@ const appRoutes: Routes = [
       { path: 'calendar', component: AppointmentCalendarComponent },
     ]},
     { path: 'messages', component: MessagesComponent, canActivate: [AuthGuard], children: [
-      { path: '', component: MessageListComponent }
+      { path: '', component: MessageInitialComponent },
+      { path: ':messageId', component: MessageDetailComponent }
     ]},
     { path: 'rxpad/:padIds', component: RxPadComponent },
 

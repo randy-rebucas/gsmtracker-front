@@ -1,18 +1,18 @@
-mat-spinner {
-  margin: auto;
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
 }
 
-.mat-dialog-title button {
-  float: right;
-  border: none;
+.example-full-width {
+  width: 100%;
 }
 
-.mat-dialog-title {
-  border-bottom: 1px solid rgb(169, 169, 169);
-  padding: 0 0 1em 0;
+.is-loading ::ng-deep .mat-option-text {
+  display: flex;
+  justify-content: center;
 }
 
-button.mat-raised-button mat-icon {
-  vertical-align: middle;
-  margin-right: .3em;
+form.message-form {
+  padding: 1em;
 }

@@ -49,6 +49,8 @@ import { PatientChartComponent } from './patients/patient-chart/patient-chart.co
 import { MessagesComponent } from './messages/messages.component';
 import { MessageListComponent } from './messages/message-list/message-list.component';
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
+import { MessageInitialComponent } from './messages/message-initial/message-initial.component';
+import { MessageDetailComponent } from './messages/message-detail/message-detail.component';
 import { DialogComponent } from './upload/dialog/dialog.component';
 import { UploadService } from './upload/upload.service';
 import { UploadModule } from './upload/upload.module';
@@ -80,8 +82,10 @@ import { LayoutModule } from '@angular/cdk/layout';
     MessagesComponent,
     MessageListComponent,
     MessageEditComponent,
+    MessageInitialComponent,
+    MessageDetailComponent,
     MatDialogConfirmComponent,
-    DialogComponent
+    DialogComponent,
   ],
   imports: [
     CommonModule,

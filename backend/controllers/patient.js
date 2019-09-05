@@ -90,6 +90,44 @@ exports.updatePatient = (req, res, next) => {
     );
 };
 
+exports.getAllNetwork = (req, res, next) => {
+  const currentPage = +req.query.page;
+  const patientQuery = Patient.find({
+    'clientId': req.query.practitionerId
+  });
+
+  // if (pageSize && currentPage) {
+  //   patientQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  // }
+  patientQuery
+    .populate('personId')
+    .then(documents => {
+        fetchedPatients = documents;
+        return Patient.countDocuments();
+      }
+    )
+    .then(
+      count => {
+        const result = [];
+        fetchedPatients.forEach(element => {
+          let fullname = element.personId.firstname + ', ' + element.personId.lastname;
+          result.push({ id: element.personId._id, name: fullname });
+        });
+        res.status(200).json({
+          total: count,
+          results: result
+        });
+      }
+    )
+    .catch(
+      error => {
+        res.status(500).json({
+          message: error.message
+        });
+      }
+    );
+}
+
 exports.getPatients = (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
