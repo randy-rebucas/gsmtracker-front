@@ -1,0 +1,27 @@
+.mat-card {
+  border-radius: 0;
+  box-shadow: unset !important;
+  border-bottom: 1px solid rgba(0,0,0,.14);
+}
+mat-icon.md-48 {
+  font-size:52px !important;
+}
+mat-icon.md-24 {
+  font-size: 30px !important;
+}
+.recepient-detail dt {
+  float: left;
+}
+.recepient-detail dd {
+  padding-left: 4em;
+}
+
+h4.mat-line small {
+  position: relative;
+}
+h4.mat-line small:before {
+  content: "*";
+}
+.mat-list-item-content {
+  flex-wrap: wrap !important;
+}

@@ -36,6 +36,7 @@ export class MessageEditComponent implements OnInit, OnDestroy {
 
   userId: string;
   page = 1;
+  setRow: number;
 
   constructor(
     private authService: AuthService,
@@ -75,7 +76,6 @@ export class MessageEditComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe((users) => {
-        console.log(users.results);
         this.filteredUsers = users.results;
       });
   }
@@ -85,13 +85,14 @@ export class MessageEditComponent implements OnInit, OnDestroy {
   }
 
   onSend() {
-
     this.threadService.insert(
       this.messageForm.value.message,
       this.messageForm.value.userInput,
       this.userId
     ).subscribe(() => {
       this.threadService.getAll(this.userId);
+      this.messageForm.reset();
+      this.setRow = 7;
       this.notificationService.success(':: Message Sent');
     });
   }

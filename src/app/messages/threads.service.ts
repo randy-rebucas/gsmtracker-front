@@ -53,15 +53,10 @@ export class ThreadsService {
     return this.threadsUpdated.asObservable();
   }
 
-  get(id: string) {
-    return this.http.get<{ _id: string, subject: string, message: string, patientId: string, created: string }>(
-      BACKEND_URL + '/' + id
-      );
-  }
-
-  getByMessageId(messageId) {
-    return this.http.get<{ _id: string, subject: string, message: string, patientId: string, created: string }>(
-      BACKEND_URL + '/message/' + messageId
+  get(threadId: string) {
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<{ _id: string, message: string, fullname: string, gender: string, address: string, birthdate: string; contact: string, personId: string, created: string, ownerId: string }>(
+      BACKEND_URL + '/' + threadId
       );
   }
 
@@ -72,15 +67,15 @@ export class ThreadsService {
     return this.http.post<{ message: string, record: ThreadData }>(BACKEND_URL, recordData);
   }
 
-  update(id: string, subject: string, message: string, patientId: string, created: string, practitionerId: string) {
+  update(threadId: string, message: string, users: [], ownerId: string) {
     const recordData = {
-        id, subject, message, patientId, created, practitionerId
+      threadId, message, users, ownerId
     };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
+    return this.http.put(BACKEND_URL + '/' + threadId, recordData);
   }
 
-  delete(recordId: string) {
-    return this.http.delete(BACKEND_URL + '/' + recordId);
+  delete(threadId: string) {
+    return this.http.delete(BACKEND_URL + '/' + threadId);
   }
 
 

@@ -15,7 +15,7 @@ const BACKEND_URL = environment.apiUrl + '/messages';
 
 export class MessagesService {
   private messages: MessagesData[] = [];
-  private messagesUpdated = new Subject<{ messages: MessagesData[], count: number }>();
+  private messagesUpdated = new Subject<{ messages: MessagesData[] }>();
 
   constructor(
     private http: HttpClient
@@ -35,27 +35,26 @@ export class MessagesService {
 
     getAll(threadId: string) {
       const queryParams = `?threadId=${threadId}`;
-      this.http.get<{message: string, messages: any, max: number }>(
+      this.http.get<{message: string, messages: any }>(
         BACKEND_URL + queryParams
       )
       .pipe(
         map(messageData => {
           return { messages: messageData.messages.map(message => {
             return {
-              id: message._id,
+              id: message.id,
               created: message.created,
-              subject: message.subject,
               message: message.message,
-              patient: message.patientId
+              fullname: message.fullname,
+              personId: message.personId
             };
-          }), max: messageData.max};
+          })};
         })
       )
       .subscribe((transformData) => {
         this.messages = transformData.messages;
         this.messagesUpdated.next({
-          messages: [...this.messages],
-          count: transformData.max
+          messages: [...this.messages]
         });
       });
     }
@@ -76,9 +75,9 @@ export class MessagesService {
       );
   }
 
-  insert(subject: string, message: string, patientId: string, created: string, practitionerId: string) {
+  insert( message: string, threadId: string, personId: string) {
     const recordData = {
-      subject, message, patientId, created, practitionerId
+      message, threadId, personId
     };
     return this.http.post<{ message: string, record: MessagesData }>(BACKEND_URL, recordData);
   }

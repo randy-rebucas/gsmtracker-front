@@ -1,50 +1,40 @@
 const Thread = require('../models/thread');
+const Message = require('../models/message');
 const moment = require('moment');
-
+/**
+ * loop all users recepient to send sms
+ */
 exports.create = (req, res, next) => {
     const thread = new Thread({
-      message: req.body.message,
       userId: req.body.users.id,
       ownerId: req.body.ownerId
     });
     thread.save().then(createdThread => {
-      console.log(createdThread);
-            res.status(201).json({
-                message: 'Successfully added',
-                thread: {
-                    ...createdThread,
-                    id: createdThread._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
-};
-
-exports.update = (req, res, next) => {
-    const height = new Message({
-        _id: req.body.heightId,
-        height: req.body.height,
-        created: req.body.created_date,
-        patientId: req.body.patientId
-    });
-    Height.updateOne({ _id: req.params.heightId }, //pass doctor role for restriction
-            height
-        ).then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Update successful!' });
-            } else {
-                res.status(401).json({ message: 'Not authorized!' });
+      const message = new Message({
+        message: req.body.message,
+        threadId: createdThread._id,
+        personId: req.body.ownerId
+      });
+      message.save()
+        .then(createdMessage => {
+          res.status(201).json({
+            thread: {
+                ...createdThread,
+                id: createdThread._id,
             }
+          });
         })
         .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
+          res.status(500).json({
+            message: error.message
+          });
         });
+    })
+    .catch(error => {
+        res.status(500).json({
+            message: error.message
+        });
+    });
 };
 
 exports.getAll = (req, res, next) => {
@@ -65,22 +55,34 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Height.findById(req.params.heightId).then(height => {
-            if (height) {
-                res.status(200).json(height);
-            } else {
-                res.status(404).json({ message: 'height not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+  Thread.findById(req.params.threadId)
+  .populate('userId')
+  .then(thread => {
+      if (thread) {
+          res.status(200).json({
+            threadId: thread._id,
+            ownerId: thread.ownerId,
+            fullname: thread.userId.firstname + ' ' + thread.userId.midlename + ', ' +thread.userId.lastname,
+            gender: thread.userId.gender,
+            address: thread.userId.address,
+            birthdate: thread.userId.birthdate,
+            contact: thread.userId.contact,
+            personId: thread.userId._id,
+            created: thread.created
+          });
+      } else {
+          res.status(404).json({ message: 'thread not found' });
+      }
+  })
+  .catch(error => {
+      res.status(500).json({
+          message: error.message
+      });
+  });
 };
 
 exports.delete = (req, res, next) => {
-    Message.deleteOne({ _id: req.params.heightId }) //pass doctors role for restriction
+  Thread.deleteOne({ _id: req.params.threadId }) //pass doctors role for restriction
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

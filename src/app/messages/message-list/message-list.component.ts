@@ -4,64 +4,16 @@ import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ThreadsService } from '../threads.service';
 import { ThreadData } from '../thread-data.model';
-export interface Section {
-  name: string;
-  updated: Date;
-}
+import { NotificationService } from 'src/app/shared/notification.service';
+import { DialogService } from 'src/app/shared/dialog.service';
+
 @Component({
   selector: 'app-message-list',
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.css']
 })
 export class MessageListComponent implements OnInit, OnDestroy {
-  patients: Section[] = [
-    {
-      name: 'Photos',
-      updated: new Date('1/1/16'),
-    },
-    {
-      name: 'Recipes',
-      updated: new Date('1/17/16'),
-    },
-    {
-      name: 'Work',
-      updated: new Date('1/28/16'),
-    },
-    {
-      name: 'Photos',
-      updated: new Date('1/1/16'),
-    },
-    {
-      name: 'Recipes',
-      updated: new Date('1/17/16'),
-    },
-    {
-      name: 'Work',
-      updated: new Date('1/28/16'),
-    },
-    {
-      name: 'Photos',
-      updated: new Date('1/1/16'),
-    },
-    {
-      name: 'Recipes',
-      updated: new Date('1/17/16'),
-    },
-    {
-      name: 'Work',
-      updated: new Date('1/28/16'),
-    }
-  ];
-  doctors: Section[] = [
-    {
-      name: 'Vacation Itinerary',
-      updated: new Date('2/20/16'),
-    },
-    {
-      name: 'Kitchen Remodel',
-      updated: new Date('1/18/16'),
-    }
-  ];
+
   userIsAuthenticated = false;
   private threadSub: Subscription;
   private authListenerSubs: Subscription;
@@ -74,7 +26,9 @@ export class MessageListComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private threadService: ThreadsService
+    private threadService: ThreadsService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService
     ) {}
 
   ngOnInit() {
@@ -96,8 +50,16 @@ export class MessageListComponent implements OnInit, OnDestroy {
     });
   }
 
-  messageDetail(messageId: string) {
-    this.router.navigate(['./', messageId], {relativeTo: this.route});
+  onDelete(threadId) {
+    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+    .afterClosed().subscribe(res => {
+      if (res) {
+        this.threadService.delete(threadId).subscribe(() => {
+          this.threadService.getAll(this.userId);
+          this.notificationService.warn('! Deleted successfully');
+        });
+      }
+    });
   }
 
   ngOnDestroy() {

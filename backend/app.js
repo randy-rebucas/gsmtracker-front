@@ -25,6 +25,7 @@ var notesRouter = require('./routes/records/progress_note');
 var assessmentsRouter = require('./routes/records/assessment');
 
 var threadRouter = require('./routes/thread');
+var messagesRouter = require('./routes/message');
 
 var uploadRouter = require('./routes/upload');
 
@@ -96,6 +97,7 @@ app.use('/api/progress-notes', notesRouter);
 app.use('/api/assessments', assessmentsRouter);
 
 app.use('/api/thread', threadRouter);
+app.use('/api/messages', messagesRouter);
 
 app.use('/api/drive', driveRouter);
 app.use('/api/upload', uploadRouter);
