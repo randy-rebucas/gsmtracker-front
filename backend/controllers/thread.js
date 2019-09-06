@@ -5,62 +5,63 @@ const moment = require('moment');
  * loop all users recepient to send sms
  */
 exports.create = (req, res, next) => {
-    const thread = new Thread({
-      userId: req.body.users.id,
-      ownerId: req.body.ownerId
-    });
-    thread.save().then(createdThread => {
-      const message = new Message({
-        message: req.body.message,
-        threadId: createdThread._id,
-        personId: req.body.ownerId
-      });
-      message.save()
-        .then(createdMessage => {
-          this.reply(req);
-          res.status(201).json({
-            thread: {
-                ...createdThread,
-                id: createdThread._id,
-            }
+  Thread.findOne({userId: req.body.users.id}, function(err,obj) {
+      if (obj === null) {
+        const thread = new Thread({
+          userId: req.body.users.id,
+          ownerId: req.body.ownerId
+        });
+        thread.save().then(createdThread => {
+          const message = new Message({
+            message: req.body.message,
+            threadId: createdThread._id,
+            personId: req.body.ownerId
           });
+          message.save()
+            .then(createdMessage => {
+              res.status(201).json({
+                thread: {
+                    ...createdThread,
+                    id: createdThread._id,
+                }
+              });
+            })
+            .catch(error => {
+              res.status(500).json({
+                message: error.message
+              });
+            });
         })
         .catch(error => {
-          res.status(500).json({
-            message: error.message
+            res.status(500).json({
+                message: error.message
+            });
+        });
+      } else {
+        // reply
+        const message = new Message({
+          message: req.body.message,
+          threadId: obj._id,
+          personId: obj.ownerId
+        });
+        message.save()
+          .then(createdMessage => {
+            res.status(201).json({
+              messages: {
+                  ...createdMessage,
+                  id: createdMessage._id,
+              }
+            });
+          })
+          .catch(error => {
+            res.status(500).json({
+              message: error.message
+            });
           });
-        });
-    })
-    .catch(error => {
-        res.status(500).json({
-            message: error.message
-        });
+      }
     });
-};
 
-exports.reply = (req, res, next) => {
-  console.log(req);
-  // const message = new Message({
-  //   message: req.body.message,
-  //   threadId: createdThread._id,
-  //   personId: req.body.ownerId
-  // });
-  // message.save()
-  //   .then(createdMessage => {
-  //     this.reply();
-  //     res.status(201).json({
-  //       thread: {
-  //           ...createdThread,
-  //           id: createdThread._id,
-  //       }
-  //     });
-  //   })
-  //   .catch(error => {
-  //     res.status(500).json({
-  //       message: error.message
-  //     });
-  //   });
-}
+};
 
 exports.getAll = (req, res, next) => {
 

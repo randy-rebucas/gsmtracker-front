@@ -9,7 +9,7 @@ mat-icon.md-48 {
 
 mat-list {
   height: 705px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 

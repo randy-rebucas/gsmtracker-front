@@ -25,3 +25,7 @@ h4.mat-line small:before {
 .mat-list-item-content {
   flex-wrap: wrap !important;
 }
+div#reply-area {
+  height: 480px;
+  overflow-y: auto;
+}

@@ -3,7 +3,6 @@ const moment = require('moment');
 
 exports.create = (req, res, next) => {
     const message = new Message({
-      created: req.body.created,
       message: req.body.message,
       threadId: req.body.threadId,
       personId: req.body.personId
