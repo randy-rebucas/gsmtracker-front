@@ -64,6 +64,7 @@ import { MessageDetailComponent } from './messages/message-detail/message-detail
 import { TestResultListComponent } from './patients/patient-record/test-results/test-result-list/test-result-list.component';
 import { TestResultDetailComponent } from './patients/patient-record/test-results/test-result-detail/test-result-detail.component';
 import { TestResultInitialComponent } from './patients/patient-record/test-results/test-result-initial/test-result-initial.component';
+import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent },
@@ -121,6 +122,7 @@ const appRoutes: Routes = [
     ]},
     { path: 'messages', component: MessagesComponent, canActivate: [AuthGuard], children: [
       { path: '', component: MessageInitialComponent },
+      { path: 'new', component: MessageEditComponent },
       { path: ':messageId', component: MessageDetailComponent }
     ]},
     { path: 'rxpad/:padIds', component: RxPadComponent },

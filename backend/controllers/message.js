@@ -6,7 +6,7 @@ exports.create = (req, res, next) => {
       created: req.body.created,
       message: req.body.message,
       threadId: req.body.threadId,
-      personId: req.body.patientId
+      personId: req.body.personId
     });
     message.save().then(createdRecord => {
             res.status(201).json({
@@ -26,7 +26,7 @@ exports.create = (req, res, next) => {
 exports.getAll = (req, res, next) => {
   Message.find({ 'threadId': req.query.threadId })
     .populate('personId')
-    .sort({ 'created': 'desc' })
+    .sort({ 'created': 'asc' })
     .then(documents => {
         newMessages = [];
         documents.forEach(element => {

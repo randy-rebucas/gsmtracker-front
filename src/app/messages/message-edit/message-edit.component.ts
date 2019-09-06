@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -8,6 +8,7 @@ import { MessagesService } from '../messages.service';
 import { ThreadsService } from '../threads.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 export interface User {
+  id: string;
   name: string;
 }
 @Component({
@@ -16,6 +17,8 @@ export interface User {
   styleUrls: ['./message-edit.component.css']
 })
 export class MessageEditComponent implements OnInit, OnDestroy {
+  @Input() threadId: string;
+
   perPage = 10;
   currentPage = 1;
 
@@ -25,14 +28,6 @@ export class MessageEditComponent implements OnInit, OnDestroy {
 
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
-  recordId: string;
-  patientId: string;
-  title: string;
-
-  id: string;
-  created: string;
-  complaintId: string;
-  prescription: any;
 
   userId: string;
   page = 1;
@@ -81,20 +76,39 @@ export class MessageEditComponent implements OnInit, OnDestroy {
   }
 
   displayFn(user: User) {
-    if (user) { return user.name; }
+
+    if (user) {
+      console.log(user.id);
+      return user.name;
+    }
   }
 
   onSend() {
-    this.threadService.insert(
-      this.messageForm.value.message,
-      this.messageForm.value.userInput,
-      this.userId
-    ).subscribe(() => {
-      this.threadService.getAll(this.userId);
-      this.messageForm.reset();
-      this.setRow = 7;
-      this.notificationService.success(':: Message Sent');
-    });
+    if (this.threadId) {
+      /**
+       * reply
+       */
+      this.messageService.insert(
+        this.messageForm.value.message,
+        this.threadId,
+        this.userId
+      ).subscribe(() => {
+        this.messageService.getAll(this.threadId);
+        this.messageForm.reset();
+      });
+    } else {
+      /**
+       * new thread
+       */
+      this.threadService.insert(
+        this.messageForm.value.message,
+        this.messageForm.value.userInput,
+        this.userId
+      ).subscribe(() => {
+        this.threadService.getAll(this.userId);
+        this.messageForm.reset();
+      });
+    }
   }
 
   ngOnDestroy() {

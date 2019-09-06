@@ -1,8 +1,8 @@
 <form class="message-form" [formGroup]='messageForm' (submit)="onSend()">
 
-  <h4 display-4>New Message</h4>
+  <h4 display-4>{{ threadId ? 'Reply' : 'New Message'}}</h4>
 
-  <mat-form-field class="example-full-width">
+  <mat-form-field class="example-full-width" *ngIf="!threadId">
     <input type="text" placeholder="Type a name or multiple names" aria-label="Patient" matInput formControlName='userInput' [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
       <mat-option *ngIf="isLoading" class="is-loading"><mat-spinner diameter="50"></mat-spinner></mat-option>

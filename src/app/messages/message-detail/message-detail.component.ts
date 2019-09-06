@@ -35,7 +35,7 @@ export class MessageDetailComponent implements OnInit, OnDestroy {
   private messageSub: Subscription;
   private authListenerSubs: Subscription;
 
-  public messageId: string;
+  public threadId: string;
 
   id: string;
   fullname: string;
@@ -45,6 +45,7 @@ export class MessageDetailComponent implements OnInit, OnDestroy {
   personId: string;
   contact: string;
   created: string;
+  isNew: boolean;
 
   isLoading = false;
   constructor(
@@ -64,8 +65,8 @@ export class MessageDetailComponent implements OnInit, OnDestroy {
       });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      this.messageId = paramMap.get('messageId');
-      this.threadService.get(this.messageId).subscribe(threadData => {
+      this.threadId = paramMap.get('messageId');
+      this.threadService.get(this.threadId).subscribe(threadData => {
         this.id = threadData._id;
         this.fullname = threadData.fullname;
         this.gender = threadData.gender;
@@ -76,13 +77,15 @@ export class MessageDetailComponent implements OnInit, OnDestroy {
         this.created = threadData.created;
       });
 
-      this.messageService.getAll(this.messageId);
+      this.messageService.getAll(this.threadId);
       this.messageSub = this.messageService.getUpdateListener()
       .subscribe((messageData: {messages: MessagesData[]}) => {
         this.isLoading = false;
         this.messages = messageData.messages;
       });
     });
+
+    this.isNew = false;
   }
 
   onProfile(personId: string) {

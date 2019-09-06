@@ -17,6 +17,7 @@ exports.create = (req, res, next) => {
       });
       message.save()
         .then(createdMessage => {
+          this.reply(req);
           res.status(201).json({
             thread: {
                 ...createdThread,
@@ -37,11 +38,35 @@ exports.create = (req, res, next) => {
     });
 };
 
+exports.reply = (req, res, next) => {
+  console.log(req);
+  // const message = new Message({
+  //   message: req.body.message,
+  //   threadId: createdThread._id,
+  //   personId: req.body.ownerId
+  // });
+  // message.save()
+  //   .then(createdMessage => {
+  //     this.reply();
+  //     res.status(201).json({
+  //       thread: {
+  //           ...createdThread,
+  //           id: createdThread._id,
+  //       }
+  //     });
+  //   })
+  //   .catch(error => {
+  //     res.status(500).json({
+  //       message: error.message
+  //     });
+  //   });
+}
+
 exports.getAll = (req, res, next) => {
 
     Thread.find({ 'ownerId': req.query.ownerId })
     .populate('userId')
-      .sort({ 'created': 'desc' })
+      .sort({ 'created': 'asc' })
       .then(documents => {
           res.status(200).json({
             threads: documents
