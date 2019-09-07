@@ -1,1 +1,33 @@
-<p>appointment-edit</p>
+<div class="calendar-form">
+  <form [formGroup]="form" class="normal-form" (submit)="onSave()" *ngIf="!isLoading">
+
+      <table>
+        <tr>
+          <td colspan="2">
+            <mat-form-field>
+              <input matInput formControlName="title" placeholder="Title">
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput readonly [matDatepicker]="startPicker" formControlName="start" [min]="minDate" placeholder="Start">
+              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker color="primary"></mat-datepicker>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <input matInput readonly [matDatepicker]="endPicker" formControlName="end" [min]="minDate" placeholder="End">
+              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <mat-datepicker #endPicker color="primary"></mat-datepicker>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+  </form>
+</div>
+

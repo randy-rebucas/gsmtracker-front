@@ -76,9 +76,7 @@ export class MessageEditComponent implements OnInit, OnDestroy {
   }
 
   displayFn(user: User) {
-
     if (user) {
-      console.log(user.id);
       return user.name;
     }
   }

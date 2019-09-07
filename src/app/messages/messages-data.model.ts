@@ -4,6 +4,7 @@ export interface MessagesData {
   message: string;
   threadtId: string;
   personId: string;
+  status: number;
 
   fullname: string;
 }

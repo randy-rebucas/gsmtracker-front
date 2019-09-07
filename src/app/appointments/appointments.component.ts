@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-appointment',
@@ -13,7 +15,8 @@ export class AppointmentsComponent implements OnInit, OnDestroy {
   private authListenerSubs: Subscription;
 
   constructor(private authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private titleService: Title) { }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -22,6 +25,12 @@ export class AppointmentsComponent implements OnInit, OnDestroy {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });
+
+    this.titleService.setTitle('Appointments');
+  }
+
+  onCreate() {
+
   }
 
   ngOnDestroy() {

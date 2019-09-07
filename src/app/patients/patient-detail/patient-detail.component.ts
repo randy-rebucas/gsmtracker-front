@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterContentInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, Params, ParamMap } from '@angular/router';
 import { PatientsService } from '../patients.service';
 import { Subscription } from 'rxjs';
@@ -23,7 +24,7 @@ import { MessageEditComponent } from 'src/app/messages/message-edit/message-edit
   templateUrl: './patient-detail.component.html',
   styleUrls: ['./patient-detail.component.css']
 })
-export class PatientDetailComponent implements OnInit, OnDestroy {
+export class PatientDetailComponent implements OnInit, OnDestroy, AfterContentInit {
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
 
@@ -78,7 +79,8 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     public complaintService: ComplaintService,
     public assessmentService: AssessmentService,
     public prescriptionService: PrescriptionService,
-    public notesService: NotesService
+    public notesService: NotesService,
+    private titleService: Title
     ) { }
 
     ngOnInit() {
@@ -101,7 +103,10 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
         this.gender = patientData.gender;
         this.birthdate = patientData.birthdate;
         this.bloodType = patientData.bloodType;
+        this.titleService.setTitle(this.firstname + ' ' + this.lastname + ' Detail');
       });
+
+
 
       this.heightService.getLast(this.patientId).subscribe(recordData => {
         if (Object.keys(recordData).length) {
@@ -169,6 +174,10 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
           this.progressNotes = recordData[0].note;
         }
       });
+    }
+
+    ngAfterContentInit() {
+      console.log('after on init');
     }
 
     onViewAll(targetComp: any) {

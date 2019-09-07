@@ -30,11 +30,9 @@ export class ThreadsService {
       .pipe(
         map(threadData => {
           return { threads: threadData.threads.map(thread => {
-            console.log(thread);
             return {
               id: thread._id,
               created: thread.created,
-              message: thread.message,
               ownerId: thread.ownerId,
               fullname: thread.userId.firstname + ', ' + thread.userId.lastname
             };

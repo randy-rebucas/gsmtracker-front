@@ -60,6 +60,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { NgxPrintModule } from 'ngx-print';
 import { LayoutModule } from '@angular/cdk/layout';
+import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { LayoutModule } from '@angular/cdk/layout';
     NgxPrintModule,
     ZXingScannerModule,
     QRCodeModule,
-    UploadModule
+    UploadModule,
+    FullCalendarModule
   ],
   providers: [
     AppConfiguration,

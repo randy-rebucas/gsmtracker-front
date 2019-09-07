@@ -1,3 +1,19 @@
-<div class="component-page-header">
-    <h1 class="mat-headline"> Appointment Calendar</h1>
+<div class='app-calendar'>
+  <full-calendar
+      #calendar
+      defaultView="dayGridMonth"
+      [header]="{
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      }"
+      [plugins]="calendarPlugins"
+      [weekends]="calendarWeekends"
+      [events]="appointments"
+      (dateClick)="handleDateClick($event)"
+      (eventClick)="viewEvent($event)"
+      (eventMouseEnter)="viewShort($event)"
+    ></full-calendar>
 </div>
+
+

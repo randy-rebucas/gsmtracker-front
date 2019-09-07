@@ -95,10 +95,6 @@ exports.getAllNetwork = (req, res, next) => {
   const patientQuery = Patient.find({
     'clientId': req.query.practitionerId
   });
-
-  // if (pageSize && currentPage) {
-  //   patientQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
-  // }
   patientQuery
     .populate('personId')
     .then(documents => {

@@ -6,6 +6,7 @@ import { ThreadsService } from '../threads.service';
 import { ThreadData } from '../thread-data.model';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { DialogService } from 'src/app/shared/dialog.service';
+import { MessagesService } from '../messages.service';
 
 @Component({
   selector: 'app-message-list',
@@ -28,7 +29,8 @@ export class MessageListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private threadService: ThreadsService,
     private notificationService: NotificationService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private messageService: MessagesService
     ) {}
 
   ngOnInit() {

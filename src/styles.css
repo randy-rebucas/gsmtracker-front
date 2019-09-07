@@ -3,7 +3,10 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 /* No css on initial setup */
-
+@import '@fullcalendar/core/main.css';
+@import '@fullcalendar/daygrid/main.css';
+@import '@fullcalendar/timegrid/main.css';
+@import '@fullcalendar/list/main.css';
 html,
 body {
     height: 100%;

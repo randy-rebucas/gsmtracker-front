@@ -51,6 +51,19 @@ exports.getAll = (req, res, next) => {
       });
 };
 
+// exports.getStatus = (req, res, next) => {
+//   Message.findOne({ threadId: req.body.threadId })
+//     .where('status', 0)
+//     .then(result => {
+//         console.log(result);
+//     })
+//     .catch(error => {
+//         res.status(500).json({
+//             message: error.message
+//         });
+//     });
+// };
+
 exports.delete = (req, res, next) => {
     Message.deleteOne({ _id: req.params.messageId })
       .then(result => {

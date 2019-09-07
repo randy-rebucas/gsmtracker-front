@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, Optional, Inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageEvent, MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material';
@@ -91,6 +92,7 @@ import { DialogService } from 'src/app/shared/dialog.service';
   ],
 })
 export class PatientListComponent implements OnInit, OnDestroy {
+
   totalPatients = 0;
   patientsPerPage = 10;
   currentPage = 1;
@@ -112,7 +114,8 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private titleService: Title
   ) {}
 
   dataSource: MatTableDataSource<any>;
@@ -123,6 +126,8 @@ export class PatientListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   ngOnInit() {
+    this.titleService.setTitle('Patients');
+
     this.isLoading = true;
     this.userId = this.authService.getUserId();
     this.patientsService.getPatients(this.userId, this.patientsPerPage, this.currentPage);

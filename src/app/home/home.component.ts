@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
@@ -21,7 +22,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private appSettingsService: AppSettingsService
+    private appSettingsService: AppSettingsService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
@@ -41,6 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.license = this.authService.getUserLicense();
       });
 
+    this.titleService.setTitle('Home');
   }
 
   ngOnDestroy() {

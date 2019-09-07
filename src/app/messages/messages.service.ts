@@ -7,7 +7,6 @@ import { environment } from '../../environments/environment';
 import { MessagesData } from '../messages/messages-data.model';
 
 import {User, IUserResponse} from '../users/user.class';
-import { PatientData } from '../patients/patient-data.model';
 
 const BACKEND_URL = environment.apiUrl + '/messages';
 
@@ -21,43 +20,44 @@ export class MessagesService {
     private http: HttpClient
     ) {}
 
-    search(filter: {name: string} = {name: ''}, page: number, practitionerId: string): Observable<IUserResponse> {
-      const queryParams = `?practitionerId=${practitionerId}&page=${page}`;
-      return this.http.get<IUserResponse>(environment.apiUrl + '/patients/network' + queryParams)
-      .pipe(
-        tap((response: IUserResponse) => {
-          response.results = response.results
-            .map(user => new User(user.id, user.name));
-          return response;
-        })
-      );
-    }
+  search(filter: {name: string} = {name: ''}, page: number, practitionerId: string): Observable<IUserResponse> {
+    const queryParams = `?practitionerId=${practitionerId}&page=${page}`;
+    return this.http.get<IUserResponse>(environment.apiUrl + '/patients/network' + queryParams)
+    .pipe(
+      tap((response: IUserResponse) => {
+        response.results = response.results
+          .map(user => new User(user.id, user.name))
+          .filter(user => user.name.includes(filter.name));
+        return response;
+      })
+    );
+  }
 
-    getAll(threadId: string) {
-      const queryParams = `?threadId=${threadId}`;
-      this.http.get<{message: string, messages: any }>(
-        BACKEND_URL + queryParams
-      )
-      .pipe(
-        map(messageData => {
-          return { messages: messageData.messages.map(message => {
-            return {
-              id: message.id,
-              created: message.created,
-              message: message.message,
-              fullname: message.fullname,
-              personId: message.personId
-            };
-          })};
-        })
-      )
-      .subscribe((transformData) => {
-        this.messages = transformData.messages;
-        this.messagesUpdated.next({
-          messages: [...this.messages]
-        });
+  getAll(threadId: string) {
+    const queryParams = `?threadId=${threadId}`;
+    this.http.get<{message: string, messages: any }>(
+      BACKEND_URL + queryParams
+    )
+    .pipe(
+      map(messageData => {
+        return { messages: messageData.messages.map(message => {
+          return {
+            id: message.id,
+            created: message.created,
+            message: message.message,
+            fullname: message.fullname,
+            personId: message.personId
+          };
+        })};
+      })
+    )
+    .subscribe((transformData) => {
+      this.messages = transformData.messages;
+      this.messagesUpdated.next({
+        messages: [...this.messages]
       });
-    }
+    });
+  }
 
   getUpdateListener() {
     return this.messagesUpdated.asObservable();

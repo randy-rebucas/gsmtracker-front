@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
@@ -17,7 +18,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
   private authListenerSubs: Subscription;
 
   constructor(private authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private titleService: Title
+              ) { }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -26,6 +29,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });
+
+    this.titleService.setTitle('Settings');
   }
 
   ngOnDestroy() {

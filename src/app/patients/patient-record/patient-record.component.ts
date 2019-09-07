@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -35,7 +36,8 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
     public patientsService: PatientsService,
     private route: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private titleService: Title
     ) { }
 
     ngOnInit() {
@@ -59,6 +61,8 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
         this.gender = patientData.gender;
         this.birthdate = patientData.birthdate;
         this.bloodType = patientData.bloodType;
+
+        this.titleService.setTitle(this.firstname + ' ' + this.lastname + ' Record');
       });
     }
 

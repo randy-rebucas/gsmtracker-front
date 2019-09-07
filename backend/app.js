@@ -26,7 +26,7 @@ var assessmentsRouter = require('./routes/records/assessment');
 
 var threadRouter = require('./routes/thread');
 var messagesRouter = require('./routes/message');
-
+var appointmentsRouter = require('./routes/appointment');
 var uploadRouter = require('./routes/upload');
 
 var driveRouter = require('./routes/drive');
@@ -98,6 +98,7 @@ app.use('/api/assessments', assessmentsRouter);
 
 app.use('/api/thread', threadRouter);
 app.use('/api/messages', messagesRouter);
+app.use('/api/appointments', appointmentsRouter);
 
 app.use('/api/drive', driveRouter);
 app.use('/api/upload', uploadRouter);
