@@ -96,7 +96,11 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
     this.router.navigate(['messages']);
   }
 
-    ngOnDestroy() {
-      this.authListenerSubs.unsubscribe();
-    }
+  onCreateAppointment() {
+    this.router.navigate(['appointments']);
+  }
+
+  ngOnDestroy() {
+    this.authListenerSubs.unsubscribe();
+  }
 }

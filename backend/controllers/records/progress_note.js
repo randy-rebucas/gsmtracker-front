@@ -35,7 +35,9 @@ exports.update = (req, res, next) => {
     });
     Note.updateOne({ _id: req.params.progressNoteId }, //pass doctor role for restriction
       note
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -59,6 +61,7 @@ exports.getAll = (req, res, next) => {
       noteQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     noteQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Note.countDocuments();
@@ -78,7 +81,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Note.findById(req.params.progressNoteId).then(note => {
+  Note.findById(req.params.progressNoteId)
+  .exec()
+  .then(note => {
             if (note) {
                 res.status(200).json(note);
             } else {
@@ -101,6 +106,7 @@ exports.getCurrent = (req, res, next) => {
               $lte: moment(today).endOf('day').toDate()
           }
       })
+      .exec()
       .then(note => {
           if (note) {
               res.status(200).json(note);
@@ -119,6 +125,7 @@ exports.getLast = (req, res, next) => {
   Note.find({ 'patientId': req.params.patientId })
     .limit(1)
     .sort({ 'created': 'desc' })
+    .exec()
     .then(note => {
         if (note) {
             res.status(200).json(note);
@@ -137,6 +144,7 @@ exports.getByComplaint = (req, res, next) => {
   Note.find({
     complaintId: req.params.complaintId
   })
+  .exec()
   .then(note => {
       if (note) {
           res.status(200).json(note);
@@ -153,6 +161,7 @@ exports.getByComplaint = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   Note.deleteOne({ _id: req.params.progressNoteId }) //pass doctors role for restriction
+  .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

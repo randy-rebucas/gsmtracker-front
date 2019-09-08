@@ -57,3 +57,6 @@ mat-list-item {
 table {
 width: 100%;
 }
+table.table tr td {
+  vertical-align: text-bottom;
+}

@@ -58,7 +58,9 @@ exports.update = (req, res, next) => {
     }
     Setting.updateOne({ _id: req.params.id },
             setting
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Settings update successful!' });
             } else {
@@ -78,6 +80,7 @@ exports.getSettings = (req, res, next) => {
     let fetchedSettings;
 
     settingQuery
+    .exec()
         .then(documents => {
             fetchedSettings = documents;
             return Setting.countDocuments();
@@ -96,7 +99,9 @@ exports.getSettings = (req, res, next) => {
 };
 
 exports.getSetting = (req, res, next) => {
-    Setting.find({ 'clientId': req.params.id }).then(setting => {
+    Setting.find({ 'clientId': req.params.id })
+    .exec()
+    .then(setting => {
             if (setting) {
                 res.status(200).json(setting);
             } else {
@@ -111,7 +116,9 @@ exports.getSetting = (req, res, next) => {
 };
 
 exports.deleteSettings = (req, res, next) => {
-    Setting.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
+    Setting.deleteOne({ _id: req.params.id, creator: req.userData.userId })
+    .exec()
+    .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });
             } else {

@@ -38,7 +38,9 @@ exports.update = (req, res, next) => {
     }
     Complaint.updateOne({ _id: req.params.complaintId }, //pass doctor role for restriction
             complaint
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -62,6 +64,7 @@ exports.getAll = (req, res, next) => {
         complaintQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     complaintQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Complaint.countDocuments();
@@ -81,7 +84,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Complaint.findById(req.params.complaintId).then(complaint => {
+    Complaint.findById(req.params.complaintId)
+    .exec()
+    .then(complaint => {
             if (complaint) {
                 res.status(200).json(complaint);
             } else {
@@ -104,6 +109,7 @@ exports.getCurrent = (req, res, next) => {
                 $lte: moment(today).endOf('day').toDate()
             }
         })
+        .exec()
         .then(complaint => {
             if (complaint) {
                 res.status(200).json(complaint);
@@ -122,6 +128,7 @@ exports.getLast = (req, res, next) => {
     Complaint.find({ 'patientId': req.params.patientId })
         .limit(1)
         .sort({ 'created': 'desc' })
+        .exec()
         .then(complaint => {
             if (complaint) {
                 res.status(200).json(complaint);
@@ -138,6 +145,7 @@ exports.getLast = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     Complaint.deleteOne({ _id: req.params.complaintId }) //pass doctors role for restriction
+    .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

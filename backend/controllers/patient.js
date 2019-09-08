@@ -55,6 +55,7 @@ exports.updatePatient = (req, res, next) => {
       },
       patient
     )
+    .exec()
     .then(
       result => {
         if (result.n > 0) {
@@ -136,6 +137,7 @@ exports.getPatients = (req, res, next) => {
   }
   patientQuery
     .populate('personId')
+    .exec()
     .then(documents => {
         fetchedPatients = documents;
         return Patient.countDocuments();
@@ -167,6 +169,7 @@ exports.getPatient = (req, res, next) => {
     .populate(
       'personId'
     )
+    .exec()
     .then(
       patient => {
         if (patient) {
@@ -208,6 +211,7 @@ exports.deletePatient = (req, res, next) => {
         clientId: req.userData.userId
       }
     )
+    .exec()
     .then(
       result => {
         if (result.n > 0) {

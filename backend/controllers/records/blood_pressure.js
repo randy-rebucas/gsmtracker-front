@@ -34,7 +34,9 @@ exports.update = (req, res, next) => {
     });
     BloodPressure.updateOne({ _id: req.params.bloodPressureId }, //pass doctor role for restriction
             bp
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -58,6 +60,7 @@ exports.getAll = (req, res, next) => {
         bpQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     bpQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return BloodPressure.countDocuments();
@@ -77,7 +80,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    BloodPressure.findById(req.params.bloodPressureId).then(bp => {
+    BloodPressure.findById(req.params.bloodPressureId)
+    .exec()
+    .then(bp => {
             if (bp) {
                 res.status(200).json(bp);
             } else {
@@ -101,6 +106,7 @@ exports.getCurrent = (req, res, next) => {
                 $lte: moment(today).endOf('day').toDate()
             }
         })
+        .exec()
         .then(bp => {
             if (bp) {
                 res.status(200).json(bp);
@@ -119,6 +125,7 @@ exports.getLast = (req, res, next) => {
     BloodPressure.find({ 'patientId': req.params.patientId })
         .limit(1)
         .sort({ 'created': 'desc' })
+        .exec()
         .then(bp => {
             if (bp) {
                 res.status(200).json(bp);
@@ -135,6 +142,7 @@ exports.getLast = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     BloodPressure.deleteOne({ _id: req.params.bloodPressureId }) //pass doctors role for restriction
+    .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

@@ -45,3 +45,7 @@ ul#file-gallery li img {
   width: 100%;
   border: 1px solid rgba(0, 0, 0, .12);
 }
+
+table.table tr td {
+  vertical-align: text-bottom;
+}

@@ -45,7 +45,9 @@ exports.update = (req, res, next) => {
     Prescription.updateOne(
       { _id: req.params.prescriptionId }, //pass doctor role for restriction
       prescription
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -69,6 +71,7 @@ exports.getAll = (req, res, next) => {
       prescriptionQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     prescriptionQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Prescription.countDocuments();
@@ -88,7 +91,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Prescription.findById(req.params.prescriptionId).then(prescription => {
+  Prescription.findById(req.params.prescriptionId)
+  .exec()
+  .then(prescription => {
             if (prescription) {
                 res.status(200).json(prescription);
             } else {
@@ -111,6 +116,7 @@ exports.getCurrent = (req, res, next) => {
               $lte: moment(today).endOf('day').toDate()
           }
       })
+      .exec()
       .then(prescription => {
           if (prescription) {
               res.status(200).json(prescription);
@@ -131,6 +137,7 @@ exports.getLast = (req, res, next) => {
       })
       .limit(1)
       .sort({ 'created': 'desc' })
+      .exec()
       .then(prescription => {
           if (prescription) {
               res.status(200).json(prescription);
@@ -152,6 +159,7 @@ exports.getByComplaint = (req, res, next) => {
   Prescription.find({
           complaintId: req.params.complaintId
         })
+        .exec()
         .then(prescription => {
             if (prescription) {
                 res.status(200).json(prescription);
@@ -168,6 +176,7 @@ exports.getByComplaint = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   Prescription.deleteOne({ _id: req.params.prescriptionId }) //pass doctors role for restriction
+  .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });
@@ -182,6 +191,3 @@ exports.delete = (req, res, next) => {
         });
 };
 
-exports.printRx = (req, res, next) => {
-
-}

@@ -32,7 +32,9 @@ exports.update = (req, res, next) => {
     });
     Weight.updateOne({ _id: req.params.weightId }, //pass doctor role for restriction
             weight
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -56,6 +58,7 @@ exports.getAll = (req, res, next) => {
         weightQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     weightQuery
+      .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Weight.countDocuments();
@@ -75,7 +78,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Weight.findById(req.params.weightId).then(weight => {
+    Weight.findById(req.params.weightId)
+    .exec()
+    .then(weight => {
             if (weight) {
                 res.status(200).json(weight);
             } else {
@@ -99,6 +104,7 @@ exports.getCurrent = (req, res, next) => {
                 $lte: moment(today).endOf('day').toDate()
             }
         })
+        .exec()
         .then(weight => {
             if (weight) {
                 res.status(200).json(weight);
@@ -117,6 +123,7 @@ exports.getLast = (req, res, next) => {
   Weight.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
+      .exec()
       .then(weight => {
           if (weight) {
               res.status(200).json(weight);
@@ -132,17 +139,18 @@ exports.getLast = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Weight.deleteOne({ _id: req.params.weightId }) //pass doctors role for restriction
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Deletion successfull!' });
-            } else {
-                res.status(401).json({ message: 'Not Authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
+  Weight.deleteOne({ _id: req.params.weightId }) //pass doctors role for restriction
+    .exec()
+    .then(result => {
+        if (result.n > 0) {
+            res.status(200).json({ message: 'Deletion successfull!' });
+        } else {
+            res.status(401).json({ message: 'Not Authorized!' });
+        }
+    })
+    .catch(error => {
+        res.status(500).json({
+            message: error.message
         });
+    });
 };

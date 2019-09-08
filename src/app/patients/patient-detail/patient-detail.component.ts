@@ -254,6 +254,10 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['messages']);
     }
 
+    onCreateAppointment() {
+      this.router.navigate(['appointments']);
+    }
+
     gotoRecord() {
       this.router.navigate(['./record/physical-exams'], {relativeTo: this.route});
     }

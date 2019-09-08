@@ -7,7 +7,9 @@ exports.create = (req, res, next) => {
       threadId: req.body.threadId,
       personId: req.body.personId
     });
-    message.save().then(createdRecord => {
+    message
+    .save()
+    .then(createdRecord => {
             res.status(201).json({
                 message: {
                     ...createdRecord,
@@ -26,6 +28,7 @@ exports.getAll = (req, res, next) => {
   Message.find({ 'threadId': req.query.threadId })
     .populate('personId')
     .sort({ 'created': 'asc' })
+    .exec()
     .then(documents => {
         newMessages = [];
         documents.forEach(element => {
@@ -66,6 +69,7 @@ exports.getAll = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     Message.deleteOne({ _id: req.params.messageId })
+    .exec()
       .then(result => {
           if (result.n > 0) {
               res.status(200).json({ message: 'Deletion successfull!' });

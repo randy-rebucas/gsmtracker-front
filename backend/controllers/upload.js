@@ -72,6 +72,7 @@ exports.getLast = (req, res, next) => {
   Upload.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
+      .exec()
       .then(file => {
           if (file) {
               res.status(200).json(file);
@@ -94,6 +95,7 @@ exports.getByComplaint = (req, res, next) => {
   Upload.find({
         complaintId: req.params.complaintId
       })
+      .exec()
       .then(file => {
           if (file) {
               res.status(200).json(file);
@@ -156,6 +158,7 @@ exports.upload = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   Upload.deleteOne({ _id: req.params.uploadId }) //pass doctors role for restriction
+  .exec()
       .then(result => {
           if (result.n > 0) {
               res.status(200).json({ message: 'Deletion successfull!' });

@@ -11,7 +11,8 @@ exports.create = (req, res, next) => {
           userId: req.body.users.id,
           ownerId: req.body.ownerId
         });
-        thread.save().then(createdThread => {
+        thread.save()
+        .then(createdThread => {
           const message = new Message({
             message: req.body.message,
             threadId: createdThread._id,
@@ -66,8 +67,9 @@ exports.create = (req, res, next) => {
 exports.getAll = (req, res, next) => {
 
     Thread.find({ 'ownerId': req.query.ownerId })
-    .populate('userId')
+      .populate('userId')
       .sort({ 'created': 'asc' })
+      .exec()
       .then(documents => {
           res.status(200).json({
             threads: documents
@@ -83,6 +85,7 @@ exports.getAll = (req, res, next) => {
 exports.get = (req, res, next) => {
   Thread.findById(req.params.threadId)
   .populate('userId')
+  .exec()
   .then(thread => {
       if (thread) {
           res.status(200).json({
@@ -109,6 +112,7 @@ exports.get = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   Thread.deleteOne({ _id: req.params.threadId }) //pass doctors role for restriction
+  .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

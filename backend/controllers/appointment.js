@@ -92,7 +92,9 @@ exports.updateStatus = (req, res, next) => {
   });
   Detail.updateOne({ _id: req.params.detailId }, //pass doctor role for restriction
     detail
-      ).then(result => {
+      )
+      .exec()
+      .then(result => {
           if (result.n > 0) {
             const appointment = new Appointment({
               _id: req.body.appointmentId,
@@ -101,7 +103,9 @@ exports.updateStatus = (req, res, next) => {
             });
             Appointment.updateOne({ _id: req.body.appointmentId },
               appointment
-            ).then(() => {
+            )
+            .exec()
+            .then(() => {
               res.status(200).json({ message: 'Update successful!' });
             })
             .catch(error => {
@@ -134,6 +138,7 @@ exports.getAll = (req, res, next) => {
         newAppointments = [];
         documents.forEach(element => {
           Detail.findOne({ appointmentId: element._id })
+          .exec()
           .then(result => {
             //create object
             var myObj = {
@@ -171,7 +176,7 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Appointment.findById(req.params.appointmentId)
+  Appointment.findById(req.params.appointmentId).exec()
   .then(appointment => {
       if (appointment) {
         Detail.findOne({ appointmentId: appointment._id })

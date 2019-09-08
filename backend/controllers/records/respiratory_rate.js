@@ -32,7 +32,9 @@ exports.update = (req, res, next) => {
     });
     RespiratoryRate.updateOne({ _id: req.params.respiratoryRateId }, //pass doctor role for restriction
             respiratoryrate
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -56,6 +58,7 @@ exports.getAll = (req, res, next) => {
         resrateQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     resrateQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return RespiratoryRate.countDocuments();
@@ -75,7 +78,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    RespiratoryRate.findById(req.params.respiratoryRateId).then(respiratoryrate => {
+    RespiratoryRate.findById(req.params.respiratoryRateId)
+    .exec()
+    .then(respiratoryrate => {
             if (respiratoryrate) {
                 res.status(200).json(respiratoryrate);
             } else {
@@ -99,6 +104,7 @@ exports.getCurrent = (req, res, next) => {
                 $lte: moment(today).endOf('day').toDate()
             }
         })
+        .exec()
         .then(respiratoryrate => {
             if (respiratoryrate) {
                 res.status(200).json(respiratoryrate);
@@ -117,6 +123,7 @@ exports.getLast = (req, res, next) => {
   RespiratoryRate.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
+      .exec()
       .then(respiratoryrate => {
           if (respiratoryrate) {
               res.status(200).json(respiratoryrate);
@@ -133,6 +140,7 @@ exports.getLast = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     RespiratoryRate.deleteOne({ _id: req.params.respiratoryRateId }) //pass doctors role for restriction
+    .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

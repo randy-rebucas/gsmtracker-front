@@ -32,7 +32,9 @@ exports.update = (req, res, next) => {
     });
     Height.updateOne({ _id: req.params.heightId }, //pass doctor role for restriction
             height
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -57,6 +59,7 @@ exports.getAll = (req, res, next) => {
         heightQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     heightQuery
+      .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Height.countDocuments();
@@ -76,7 +79,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Height.findById(req.params.heightId).then(height => {
+    Height.findById(req.params.heightId)
+    .exec()
+    .then(height => {
             if (height) {
                 res.status(200).json(height);
             } else {
@@ -100,6 +105,7 @@ exports.getCurrent = (req, res, next) => {
                 $lte: moment(today).endOf('day').toDate()
             }
         })
+        .exec()
         .then(height => {
             if (height) {
                 res.status(200).json(height);
@@ -118,6 +124,7 @@ exports.getLast = (req, res, next) => {
     Height.find({ 'patientId': req.params.patientId })
         .limit(1)
         .sort({ 'created': 'desc' })
+        .exec()
         .then(height => {
             if (height) {
                 res.status(200).json(height);
@@ -134,6 +141,7 @@ exports.getLast = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     Height.deleteOne({ _id: req.params.heightId }) //pass doctors role for restriction
+      .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

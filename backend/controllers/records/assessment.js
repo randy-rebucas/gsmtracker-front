@@ -49,7 +49,9 @@ exports.update = (req, res, next) => {
     }
     Assessment.updateOne({ _id: req.params.assessmentId }, //pass doctor role for restriction
             assessment
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -73,6 +75,7 @@ exports.getAll = (req, res, next) => {
         assessmentQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     assessmentQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Assessment.countDocuments();
@@ -92,7 +95,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Assessment.findById(req.params.assessmentId).then(complaint => {
+    Assessment.findById(req.params.assessmentId)
+    .exec()
+    .then(complaint => {
             if (complaint) {
                 res.status(200).json(complaint);
             } else {
@@ -115,6 +120,7 @@ exports.getCurrent = (req, res, next) => {
                 $lte: moment(today).endOf('day').toDate()
             }
         })
+        .exec()
         .then(assessment => {
             if (assessment) {
                 res.status(200).json(assessment);
@@ -133,6 +139,7 @@ exports.getLast = (req, res, next) => {
     Assessment.find({ 'patientId': req.params.patientId })
         .limit(1)
         .sort({ 'created': 'desc' })
+        .exec()
         .then(assessment => {
             if (assessment) {
                 res.status(200).json(assessment);
@@ -154,6 +161,7 @@ exports.getByComplaint = (req, res, next) => {
     Assessment.find({
             complaintId: req.params.complaintId
         })
+        .exec()
         .then(assessment => {
             if (assessment) {
                 res.status(200).json(assessment);
@@ -170,6 +178,7 @@ exports.getByComplaint = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     Assessment.deleteOne({ _id: req.params.assessmentId }) //pass doctors role for restriction
+    .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

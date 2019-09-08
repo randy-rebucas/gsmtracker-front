@@ -32,7 +32,9 @@ exports.update = (req, res, next) => {
     });
     Temperature.updateOne({ _id: req.params.temperatureId }, //pass doctor role for restriction
             temperature
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -56,6 +58,7 @@ exports.getAll = (req, res, next) => {
         temperatureQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     temperatureQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Temperature.countDocuments();
@@ -75,7 +78,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Temperature.findById(req.params.temperatureId).then(temperature => {
+    Temperature.findById(req.params.temperatureId)
+    .exec()
+    .then(temperature => {
             if (temperature) {
                 res.status(200).json(temperature);
             } else {
@@ -99,6 +104,7 @@ exports.getCurrent = (req, res, next) => {
                 $lte: moment(today).endOf('day').toDate()
             }
         })
+        .exec()
         .then(temperature => {
             if (temperature) {
                 res.status(200).json(temperature);
@@ -117,6 +123,7 @@ exports.getLast = (req, res, next) => {
   Temperature.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
+      .exec()
       .then(temperature => {
           if (temperature) {
               res.status(200).json(temperature);
@@ -133,6 +140,7 @@ exports.getLast = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     Temperature.deleteOne({ _id: req.params.temperatureId }) //pass doctors role for restriction
+    .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });

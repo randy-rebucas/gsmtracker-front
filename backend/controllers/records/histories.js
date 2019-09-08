@@ -34,7 +34,9 @@ exports.update = (req, res, next) => {
     });
     Histories.updateOne({ _id: req.params.historyId }, //pass doctor role for restriction
       history
-        ).then(result => {
+        )
+        .exec()
+        .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Update successful!' });
             } else {
@@ -58,6 +60,7 @@ exports.getAll = (req, res, next) => {
       historyQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     historyQuery
+    .exec()
         .then(documents => {
             fetchedRecord = documents;
             return Histories.countDocuments();
@@ -77,7 +80,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Histories.findById(req.params.historyId).then(history => {
+  Histories.findById(req.params.historyId)
+  .exec()
+  .then(history => {
             if (history) {
                 res.status(200).json(history);
             } else {
@@ -100,6 +105,7 @@ exports.getCurrent = (req, res, next) => {
               $lte: moment(today).endOf('day').toDate()
           }
       })
+      .exec()
       .then(history => {
           if (history) {
               res.status(200).json(history);
@@ -118,6 +124,7 @@ exports.getLast = (req, res, next) => {
   Histories.find({ 'patientId': req.params.patientId })
       .limit(2)
       .sort({ 'created': 'desc' })
+      .exec()
       .then(history => {
           if (history) {
               res.status(200).json(history);
@@ -134,6 +141,7 @@ exports.getLast = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   Histories.deleteOne({ _id: req.params.historyId }) //pass doctors role for restriction
+  .exec()
         .then(result => {
             if (result.n > 0) {
                 res.status(200).json({ message: 'Deletion successfull!' });
