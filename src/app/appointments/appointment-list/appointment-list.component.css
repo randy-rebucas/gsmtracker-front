@@ -43,4 +43,7 @@ tr:hover td.mat-cell.cdk-column-action.mat-column-action button {
   visibility: visible;
 }
 
+p.mat-body a {
+  cursor: pointer;
+}
 

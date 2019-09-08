@@ -33,7 +33,7 @@
         </ng-container>
         <ng-container matColumnDef="noData">
             <mat-footer-cell *matFooterCellDef colspan="3" id="no-data">
-                <p class="mat-body">No appointment data.</p>
+                <p class="mat-body">No appointment data. <a (click)="viewCalendar()">View Calendar</a></p>
             </mat-footer-cell>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

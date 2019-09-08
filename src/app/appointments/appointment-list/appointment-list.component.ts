@@ -30,7 +30,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
-    route: ActivatedRoute,
+    private route: ActivatedRoute,
     public appointmentService: AppointmentService,
     private notificationService: NotificationService,
     private dialogService: DialogService
@@ -88,6 +88,10 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  viewCalendar() {
+    this.router.navigate(['./', 'calendar'], {relativeTo: this.route});
   }
 
   ngOnDestroy() {

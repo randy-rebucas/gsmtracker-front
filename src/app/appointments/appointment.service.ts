@@ -25,7 +25,9 @@ export class AppointmentService {
       )
       .pipe(
         map(appointmentData => {
+
           return { appointments: appointmentData.appointment.map(appointment => {
+            console.log(appointment._id);
             return {
               id: appointment._id,
               title: appointment.title,
