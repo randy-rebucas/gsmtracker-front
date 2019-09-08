@@ -31,7 +31,7 @@ export class ThreadsService {
         map(threadData => {
           return { threads: threadData.threads.map(thread => {
             return {
-              id: thread._id,
+              id: thread.id,
               created: thread.created,
               ownerId: thread.ownerId,
               fullname: thread.fullname
