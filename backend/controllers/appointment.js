@@ -1,20 +1,82 @@
 const Appointment = require('../models/appointment');
+const Person = require('../models/person');
+const Detail = require('../models/appointment_detail');
+
 const moment = require('moment');
 
 exports.create = (req, res, next) => {
+
     const appointment = new Appointment({
       title: req.body.title,
       start: req.body.start,
       end: req.body.end,
+      backgroundColor: '#ff4081',
+      borderColor: '#ff4081',
+      textColor: '#fff',
       clientId: req.body.clientId
     });
     appointment.save().then(createdRecord => {
-      res.status(201).json({
-          message: {
-              ...createdRecord,
-              id: createdRecord._id,
-          }
-      });
+
+      if(req.body.users.id) {
+        Person
+          .findById(
+            req.body.users.id
+          )
+          .then(
+            person => {
+              const detail = new Detail({
+                firstname: person.firstname,
+                midlename: person.midlename,
+                lastname: person.lastname,
+                contact: person.contact,
+                gender: person.gender,
+                address: person.address,
+                type: 0,
+                appointmentId: createdRecord._id
+              });
+
+              detail.save().then(createdDetails => {
+                res.status(201).json({
+                    message: {
+                        ...createdRecord,
+                        id: createdRecord._id,
+                    }
+                });
+              })
+              .catch(error => {
+                res.status(500).json({
+                    message: error.message
+                });
+              });
+            }
+          );
+      } else {
+        const detail = new Detail({
+          firstname:  req.body.firstname,
+          midlename: req.body.midlename,
+          lastname: req.body.lastname,
+          contact: req.body.contact,
+          gender: req.body.gender,
+          address: req.body.address,
+          type: 0,
+          appointmentId: createdRecord._id
+        });
+
+        detail.save().then(createdDetails => {
+          res.status(201).json({
+              message: {
+                  ...createdRecord,
+                  id: createdRecord._id,
+              }
+          });
+        })
+        .catch(error => {
+          res.status(500).json({
+              message: error.message
+          });
+        });
+      }
+
     })
     .catch(error => {
       res.status(500).json({

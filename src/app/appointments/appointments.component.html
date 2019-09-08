@@ -2,7 +2,7 @@
   <h1 class="mat-headline"> Appointments</h1>
 </div>
 <mat-grid-list cols="8" rowHeight="100px" [gutterSize]="'10px'">
-  <mat-grid-tile [colspan]="3" [rowspan]="6" class="grid-content">
+  <mat-grid-tile [colspan]="3" [rowspan]="4" class="grid-content">
     <mat-grid-tile-header>
         <h3>Create Appointments
             <button mat-icon-button [routerLink]="['./', 'calendar']" routerLinkActive="mat-accent"  style="position: absolute;
@@ -24,6 +24,13 @@
   <mat-grid-tile [colspan]="5" [rowspan]="7" class="grid-content" style="position: relative;">
     <div class="grid-inner-content grid-inner-content-list">
       <router-outlet></router-outlet>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="3" [rowspan]="3" class="grid-content" style="border: 1px solid rgba(0, 0, 0, .12);">
+    <div class="grid-inner-content grid-inner-content-list">
+        <div style="padding: 1em;">
+            <p>News</p>
+        </div>
     </div>
   </mat-grid-tile>
 </mat-grid-list>

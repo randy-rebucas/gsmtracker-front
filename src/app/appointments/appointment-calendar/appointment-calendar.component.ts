@@ -9,7 +9,6 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import timeGrigPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { FullCalendarComponent } from '@fullcalendar/angular';
-import { EventInput } from '@fullcalendar/core';
 import { AppointmentData } from '../appointment-data.model';
 import { AppointmentService } from '../appointment.service';
 
@@ -34,9 +33,6 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
   calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, listPlugin, interactionPlugin];
   calendarWeekends = true;
-  calendarEvents: EventInput[] = [
-    { title: 'Event Now', start: new Date(), end: new Date() }
-  ];
 
   userIsAuthenticated = false;
   private recordsSub: Subscription;
@@ -68,10 +64,6 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
         this.appointments = appointmentData.appointments;
         console.log(appointmentData.appointments);
       });
-  }
-
-  handleDateClick(arg) {
-    console.log(arg);
   }
 
   viewEvent(arg) {

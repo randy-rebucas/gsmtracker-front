@@ -30,7 +30,10 @@ export class AppointmentService {
               id: appointment._id,
               title: appointment.title,
               start: appointment.start,
-              end: appointment.end
+              end: appointment.end,
+              backgroundColor: appointment.backgroundColor,
+              textColor: appointment.textColor,
+              borderColor: appointment.borderColor
             };
           }), max: appointmentData.max};
         })
@@ -56,9 +59,9 @@ export class AppointmentService {
       );
   }
 
-  insert(title: string, start: string, end: string, clientId: string) {
+  insert(users: string, title: string, start: string, end: string, clientId: string) {
     const appointmentData = {
-      title, start, end, clientId
+      users, title, start, end, clientId
     };
     return this.http.post<{ message: string, record: AppointmentData }>(BACKEND_URL, appointmentData);
   }

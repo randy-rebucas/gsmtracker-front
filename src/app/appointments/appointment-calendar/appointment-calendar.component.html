@@ -10,9 +10,8 @@
       [plugins]="calendarPlugins"
       [weekends]="calendarWeekends"
       [events]="appointments"
-      (dateClick)="handleDateClick($event)"
       (eventClick)="viewEvent($event)"
-      (eventMouseEnter)="viewShort($event)"
+      [eventLimit]= true
     ></full-calendar>
 </div>
 
