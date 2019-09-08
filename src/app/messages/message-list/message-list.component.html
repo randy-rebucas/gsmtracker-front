@@ -3,7 +3,7 @@
       <!-- <mat-spinner *ngIf="isLoading"></mat-spinner> -->
       <mat-list-item *ngFor="let thread of threads" [routerLink]="['./', thread.id]" routerLinkActive="active" >
         <mat-icon mat-list-icon class="md-48">face</mat-icon>
-        <h4 mat-line>{{thread.fullname}} <small mat-line> {{thread.created | date}} </small></h4>
+        <h4 mat-line>{{thread.fullname}} <small mat-line> {{thread.created }} </small></h4>
         <!-- <a (click)="onDelete(thread.id)">Delete</a> -->
         <!-- <p mat-line> get the last message </p> -->
       </mat-list-item>

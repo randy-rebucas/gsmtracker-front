@@ -35,7 +35,7 @@ exports.getAll = (req, res, next) => {
           //create object
           var myObj = {
             id: element._id,
-            created: element.created,
+            created: moment(element.created, "YYYYMMDD").fromNow(),
             message: element.message,
             fullname : element.personId.firstname + ' ' + element.personId.midlename + ', ' +element.personId.lastname,
             personId : element.personId._id

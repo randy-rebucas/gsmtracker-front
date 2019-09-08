@@ -34,7 +34,7 @@ export class ThreadsService {
               id: thread._id,
               created: thread.created,
               ownerId: thread.ownerId,
-              fullname: thread.userId.firstname + ', ' + thread.userId.lastname
+              fullname: thread.fullname
             };
           })};
         })

@@ -71,8 +71,22 @@ exports.getAll = (req, res, next) => {
       .sort({ 'created': 'asc' })
       .exec()
       .then(documents => {
+
+          newThreads = [];
+          documents.forEach(element => {
+            // find all message by threadId limit 1 order created desc
+            //create object
+            var myObj = {
+              id: element._id,
+              created: moment(element.created, "YYYYMMDD").fromNow(),
+              ownerId: element.ownerId,
+              fullname : element.userId.firstname + ' ' + element.userId.midlename + ', ' +element.userId.lastname,
+            };
+            //push the object to your array
+            newThreads.push( myObj );
+          });
           res.status(200).json({
-            threads: documents
+            threads: newThreads
         });
       })
       .catch(error => {
@@ -97,7 +111,7 @@ exports.get = (req, res, next) => {
             birthdate: thread.userId.birthdate,
             contact: thread.userId.contact,
             personId: thread.userId._id,
-            created: thread.created
+            created: moment(thread.created, "YYYYMMDD").fromNow()
           });
       } else {
           res.status(404).json({ message: 'thread not found' });
