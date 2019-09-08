@@ -68,6 +68,24 @@ exports.getCurrent = (req, res, next) => {
       });
 };
 
+exports.getLast = (req, res, next) => {
+  Upload.find({ 'patientId': req.params.patientId })
+      .limit(1)
+      .sort({ 'created': 'desc' })
+      .then(file => {
+          if (file) {
+              res.status(200).json(file);
+          } else {
+              res.status(404).json({ message: 'file not found' });
+          }
+      })
+      .catch(error => {
+          res.status(500).json({
+              message: error.message
+          });
+      });
+};
+
 /**
  * @param complaintId
  * @since v1

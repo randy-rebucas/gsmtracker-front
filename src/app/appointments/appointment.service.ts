@@ -25,9 +25,7 @@ export class AppointmentService {
       )
       .pipe(
         map(appointmentData => {
-
           return { appointments: appointmentData.appointment.map(appointment => {
-            console.log(appointment._id);
             return {
               id: appointment._id,
               title: appointment.title,
@@ -35,7 +33,9 @@ export class AppointmentService {
               end: appointment.end,
               backgroundColor: appointment.backgroundColor,
               textColor: appointment.textColor,
-              borderColor: appointment.borderColor
+              borderColor: appointment.borderColor,
+              fullname: appointment.fullname,
+              status: appointment.status
             };
           }), max: appointmentData.max};
         })
@@ -56,7 +56,7 @@ export class AppointmentService {
 
   get(appointmentId: string) {
     // tslint:disable-next-line:max-line-length
-    return this.http.get<{ _id: string, title: string, start: string, end: string }>(
+    return this.http.get<{ _id: string, title: string, start: Date, end: Date, clientId: string, fullname: string, gender: string, address: string, birthdate: string, contact: string, type: number, status: number, detailId: string }>(
       BACKEND_URL + '/' + appointmentId
       );
   }
@@ -68,11 +68,11 @@ export class AppointmentService {
     return this.http.post<{ message: string, record: AppointmentData }>(BACKEND_URL, appointmentData);
   }
 
-  update(appointmentId: string, title: string, start: string, end: string) {
-    const appointmentData = {
-      appointmentId, title, start, end
+  updateStatus(detailId: string, status: number, appointmentId: string) {
+    const detailData = {
+      detailId, status, appointmentId
     };
-    return this.http.put(BACKEND_URL + '/' + appointmentId, appointmentData);
+    return this.http.put(BACKEND_URL + '/updateStatus/' + detailId, detailData);
   }
 
   delete(appointmentId: string) {

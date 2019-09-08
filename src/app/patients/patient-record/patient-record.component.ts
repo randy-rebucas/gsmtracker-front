@@ -93,16 +93,7 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
   }
 
   onCreateMessage() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '30%';
-    dialogConfig.data = {
-        id: null,
-        title: 'Create Message',
-        patientId: this.patientId
-      };
-    this.dialog.open(MessageEditComponent, dialogConfig);
+    this.router.navigate(['messages']);
   }
 
     ngOnDestroy() {

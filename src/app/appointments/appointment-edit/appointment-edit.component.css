@@ -49,3 +49,6 @@ span.canceled {
   margin-right: 1em;
 }
 
+.mat-form-field-infix {
+  width: auto !important;
+}

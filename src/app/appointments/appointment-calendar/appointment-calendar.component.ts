@@ -11,6 +11,8 @@ import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { AppointmentData } from '../appointment-data.model';
 import { AppointmentService } from '../appointment.service';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
 
 @Component({
   selector: 'app-appointment-calendar',
@@ -43,6 +45,7 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
     private router: Router,
     route: ActivatedRoute,
     public appointmentService: AppointmentService,
+    private dialog: MatDialog
     ) {}
 
   ngOnInit() {
@@ -62,19 +65,20 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.total = appointmentData.count;
         this.appointments = appointmentData.appointments;
-        console.log(appointmentData.appointments);
       });
   }
 
   viewEvent(arg) {
-    console.log(arg.event.title); // good
-    console.log(arg.event);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '30%';
+    dialogConfig.data = {
+        id: arg.event.id
+    };
+    this.dialog.open(AppointmentDetailComponent, dialogConfig);
   }
 
-  viewShort(arg) {
-    console.log(arg);
-
-  }
   ngOnDestroy() {
     this.authListenerSubs.unsubscribe();
   }

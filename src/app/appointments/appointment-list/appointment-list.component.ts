@@ -37,7 +37,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     ) {}
 
     dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['title', 'start', 'end', 'action'];
+    displayedColumns: string[] = ['title', 'start', 'end', 'fullname', 'status', 'action'];
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
 

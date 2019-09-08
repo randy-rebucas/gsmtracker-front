@@ -8,9 +8,11 @@ const router = express.Router();
 
 router.post('', checkAuth, AppointmentController.create); //extractFile,
 
+router.put('/updateStatus/:detailId', checkAuth, AppointmentController.updateStatus);
+
 router.get('', AppointmentController.getAll);
 
-// router.get('/:appointmentId', AppointmentController.get);
+router.get('/:appointmentId', AppointmentController.get);
 
 router.delete('/:appointmentId', checkAuth, AppointmentController.delete);
 

@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>Appointment Details
+    <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</h2>
+<mat-dialog-content class="mat-typography">
+    <table class="appointment-detail">
+      <tr>
+        <td colspan="2">Title: {{title}}</td>
+      </tr>
+      <tr>
+        <td>Start: {{start | date}}</td>
+        <td>End: {{end | date}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">Person Details</td>
+      </tr>
+      <tr>
+        <td colspan="2">Fullname: {{fullname}}</td>
+      </tr>
+      <tr>
+        <td>Gender: {{gender}}</td>
+        <td>Birthdate: {{birthdate}}</td>
+      </tr>
+      <tr>
+        <td>Contact: {{contact}}</td>
+        <td>Type: {{type === 1 ? 'Not Registered' : 'My Patient'}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">Address: {{address}}</td>
+      </tr>
+
+      <tr>
+        <td colspan="2">Status:
+            <ng-template [ngIf]="status === 0"><span style="color:#ff4081;font-weight: bold;">Pending</span></ng-template>
+            <ng-template [ngIf]="status === 1"><span style="color:#3f51b5;font-weight: bold;">Confirmed</span></ng-template>
+            <ng-template [ngIf]="status === 2"><span style="color:#f44336;font-weight: bold;">Canceled</span></ng-template>
+        </td>
+      </tr>
+    </table>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="status === 0">
+  <button type="button" mat-flat-button color="primary" (click)="onUpdate(detailId, 1, id)">Confirm</button>
+  <button type="button" mat-button color="warn" (click)="onUpdate(detailId, 2, id)">Cancel</button>
+</mat-dialog-actions>
+<mat-dialog-actions *ngIf="status != 0">
+  <button type="button" mat-flat-button color="primary" (click)="onClose()">Close</button>
+</mat-dialog-actions>
+

@@ -61,6 +61,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { NgxPrintModule } from 'ngx-print';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
+import { AppointmentDetailComponent } from './appointments/appointment-detail/appointment-detail.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
     MessageDetailComponent,
     MatDialogConfirmComponent,
     DialogComponent,
+    AppointmentDetailComponent
   ],
   imports: [
     CommonModule,
@@ -142,7 +144,8 @@ import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
     PatientChartComponent,
     MessageEditComponent,
     DialogComponent,
-    RxPadComponent
+    RxPadComponent,
+    AppointmentDetailComponent
   ]
 })
 export class AppModule { }

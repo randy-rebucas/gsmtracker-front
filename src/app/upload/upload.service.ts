@@ -66,6 +66,12 @@ export class UploadService {
       );
   }
 
+  getLast(patientId) {
+    return this.http.get<{ _id: string; path: string, name: string, type: string, created: string }>(
+      BACKEND_URL + '/last/' + patientId
+      );
+  }
+
   getByComplaintId(complaintId) {
     return this.http.get<{ _id: string, path: string, name: string, type: string, created: string }>(
       BACKEND_URL + '/complaint/' + complaintId

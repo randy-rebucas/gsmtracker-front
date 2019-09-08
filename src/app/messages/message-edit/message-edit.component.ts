@@ -71,6 +71,7 @@ export class MessageEditComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe((users) => {
+        console.log(users);
         this.filteredUsers = users.results;
       });
   }

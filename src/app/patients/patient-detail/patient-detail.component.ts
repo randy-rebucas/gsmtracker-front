@@ -18,13 +18,15 @@ import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-cod
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { PatientChartComponent } from '../patient-chart/patient-chart.component';
 import { MessageEditComponent } from 'src/app/messages/message-edit/message-edit.component';
+import { UploadService } from 'src/app/upload/upload.service';
+import { UploadData } from 'src/app/upload/upload-data.model';
 
 @Component({
   selector: 'app-patient-detail',
   templateUrl: './patient-detail.component.html',
   styleUrls: ['./patient-detail.component.css']
 })
-export class PatientDetailComponent implements OnInit, OnDestroy, AfterContentInit {
+export class PatientDetailComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
 
@@ -62,6 +64,12 @@ export class PatientDetailComponent implements OnInit, OnDestroy, AfterContentIn
   prescriptions: any;
   progressNotes: string;
 
+  files: UploadData[] = [];
+  isLoading = false;
+  total = 0;
+  perPage = 10;
+  currentPage = 1;
+
   private patientId: string;
   private recordsSub: Subscription;
   constructor(
@@ -80,6 +88,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy, AfterContentIn
     public assessmentService: AssessmentService,
     public prescriptionService: PrescriptionService,
     public notesService: NotesService,
+    public uploadService: UploadService,
     private titleService: Title
     ) { }
 
@@ -105,8 +114,6 @@ export class PatientDetailComponent implements OnInit, OnDestroy, AfterContentIn
         this.bloodType = patientData.bloodType;
         this.titleService.setTitle(this.firstname + ' ' + this.lastname + ' Detail');
       });
-
-
 
       this.heightService.getLast(this.patientId).subscribe(recordData => {
         if (Object.keys(recordData).length) {
@@ -174,10 +181,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy, AfterContentIn
           this.progressNotes = recordData[0].note;
         }
       });
-    }
 
-    ngAfterContentInit() {
-      console.log('after on init');
     }
 
     onViewAll(targetComp: any) {
@@ -247,16 +251,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy, AfterContentIn
     }
 
     onCreateMessage() {
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.disableClose = true;
-      dialogConfig.autoFocus = true;
-      dialogConfig.width = '30%';
-      dialogConfig.data = {
-          id: null,
-          title: 'Create Message',
-          patientId: this.patientId
-        };
-      this.dialog.open(MessageEditComponent, dialogConfig);
+      this.router.navigate(['messages']);
     }
 
     gotoRecord() {

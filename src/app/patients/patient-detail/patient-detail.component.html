@@ -199,6 +199,12 @@
                         fingerprint
                         </i> &nbsp; Generate QR Code </mat-list-item>
             </mat-list>
+            Support
+            <mat-list>
+                <mat-list-item><i class="material-icons">
+                        email
+                        </i> &nbsp; Support </mat-list-item>
+            </mat-list>
         </div>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="3" [rowspan]="2" class="grid-content">
@@ -246,23 +252,5 @@
             <a style="cursor: pointer;" (click)="onViewAll('progress-notes')">View All</a>
         </mat-grid-tile-footer>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="5" [rowspan]="2" class="grid-content">
-        <mat-grid-tile-header>
-            <h3>Test Results</h3>
-        </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-list">Sample</div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('test-results')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="1" class="grid-content">
-        <div style="padding: 1em;">
-            Support <a>09179157515</a>
-            <mat-list>
-                <mat-list-item><i class="material-icons">
-                        email
-                        </i> &nbsp; Support </mat-list-item>
-            </mat-list>
-        </div>
-    </mat-grid-tile>
+
 </mat-grid-list>
