@@ -24,7 +24,7 @@ exports.createUser = (req, res, next) => {
                     user.save()
                         .then(userResult => {
                             const setting = new Setting({
-                                clientId: userResult._id,
+                                userId: userResult._id,
                                 clinicName: req.body.clinicname,
                                 clinicOwner: personResult.firstname + ', ' + personResult.lastname
                             });

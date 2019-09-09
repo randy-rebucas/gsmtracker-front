@@ -55,7 +55,6 @@ export class SettingsGeneralComponent implements OnInit, OnDestroy {
 
   populateForm() {
     this.settingsGeneralService.get(this.userId).subscribe(settingData => {
-      console.log(settingData);
       this.form.patchValue({
         clinicName: settingData[0].clinicName,
         clinicOwner: settingData[0].clinicOwner,

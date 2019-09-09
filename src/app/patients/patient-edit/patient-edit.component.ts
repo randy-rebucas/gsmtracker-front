@@ -87,7 +87,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
             id: patientData._id,
             bloodType: patientData.bloodType,
             comments: patientData.comments,
-            clientId: patientData.clientId,
+            userId: patientData.userId,
             personId: patientData.personId,
             firstname: patientData.firstname,
             midlename: patientData.midlename,

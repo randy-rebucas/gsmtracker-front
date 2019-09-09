@@ -8,6 +8,7 @@ const appointmentSchema = mongoose.Schema({
   backgroundColor: { type: String },
   borderColor: { type: String },
   textColor: { type: String },
+  patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
   clientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Person', required: true }
 });
 

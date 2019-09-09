@@ -3,7 +3,7 @@ export interface PatientData {
   bloodType: string;
   comments: string;
   personId: string;
-  clientId: string;
+  userId: string;
 
   firstname: string;
   midlename: string;

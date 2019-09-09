@@ -22,8 +22,8 @@ export class PatientsService {
     private datePipe: DatePipe
     ) {}
 
-  getPatients(clientId: string, patientPerPage: number, currentPage: number) {
-    const queryParams = `?client=${clientId}&pagesize=${patientPerPage}&page=${currentPage}`;
+  getPatients(userId: string, patientPerPage: number, currentPage: number) {
+    const queryParams = `?userId=${userId}&pagesize=${patientPerPage}&page=${currentPage}`;
     this.http.get<{message: string, patients: any, maxPatients: number }>(
       BACKEND_URL + queryParams
     )
@@ -34,7 +34,7 @@ export class PatientsService {
             id: patient._id,
             bloodType: patient.bloodType,
             comments: patient.comments,
-            clientId: patient.clientId,
+            userId: patient.userId,
             personId: patient.personId._id,
             firstname: patient.personId.firstname,
             midlename: patient.personId.midlename,
@@ -63,7 +63,7 @@ export class PatientsService {
 
   getPatient(id: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ _id: string, bloodType: string, comments: string, personId: string, clientId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, address: string }>(
+    return this.http.get<{ _id: string, bloodType: string, comments: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, address: string }>(
         BACKEND_URL + '/' + id
       );
   }

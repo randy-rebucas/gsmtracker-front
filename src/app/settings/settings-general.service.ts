@@ -26,10 +26,10 @@ export class SettingsGeneralService {
       return this.settingsUpdated.asObservable();
     }
 
-    get(clientId: string) {
+    get(userId: string) {
       return this.http.get<{
         _id: string;
-        clientId: string,
+        userId: string,
         name: string,
         owner: string,
         address: string,
@@ -40,13 +40,13 @@ export class SettingsGeneralService {
         s2: string,
         phones: [],
         hours: []}>(
-        BACKEND_URL + '/' + clientId
+        BACKEND_URL + '/' + userId
         );
     }
 
-    insert(license: string, name: string, owner: string, address: string, email: string, url: string, prc: string, ptr: string, s2: string, phones: [], hours: []) {
+    insert(name: string, owner: string, address: string, email: string, url: string, prc: string, ptr: string, s2: string, phones: [], hours: []) {
       const recordData = {
-        license, name, owner, address, email, url, prc, ptr, s2, phones, hours
+        name, owner, address, email, url, prc, ptr, s2, phones, hours
       };
       return this.http.post<{ message: string, record: SettingsGeneralData }>(BACKEND_URL, recordData);
     }
@@ -60,7 +60,4 @@ export class SettingsGeneralService {
       return this.http.put(BACKEND_URL + '/' + id, settingData);
     }
 
-    delete(recordId: string) {
-      return this.http.delete(BACKEND_URL + '/' + recordId);
-    }
 }

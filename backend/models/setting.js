@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 
 const settingSchema = mongoose.Schema({
-  clientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   clinicOwner: { type: String, required: true },
   clinicName: { type: String },
   clinicAddress: { type: String },

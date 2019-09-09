@@ -2,7 +2,7 @@ const Patient = require('../models/patient');
 const Person = require('../models/person');
 
 exports.createPatient = (req, res, next) => {
-    const person = new Person({
+  const person = new Person({
       firstname: req.body.firstname,
       midlename: req.body.midlename,
       lastname: req.body.lastname,
@@ -17,7 +17,7 @@ exports.createPatient = (req, res, next) => {
           bloodType: req.body.bloodType,
           comments: req.body.comments,
           personId: createdPerson._id,
-          clientId: req.userData.userId
+          userId: req.userData.userId
         });
         patient.save()
           .then(createdPatient => {
@@ -31,13 +31,13 @@ exports.createPatient = (req, res, next) => {
           })
           .catch(error => {
             res.status(500).json({
-              message: 'Creating a patient failed!'
+              message: error.message
             });
           });
       })
       .catch(error => {
         res.status(500).json({
-          message: 'Creating a person failed!'
+          message: error.message
         });
       });
 };
@@ -51,7 +51,7 @@ exports.updatePatient = (req, res, next) => {
   Patient
     .updateOne(
       {
-        _id: req.params.id //clientId: req.userData.userId
+        _id: req.params.patientId //userId: req.userData.userId
       },
       patient
     )
@@ -94,7 +94,7 @@ exports.updatePatient = (req, res, next) => {
 exports.getAllNetwork = (req, res, next) => {
   const currentPage = +req.query.page;
   const patientQuery = Patient.find({
-    'clientId': req.query.practitionerId
+    'userId': req.query.userId
   });
   patientQuery
     .populate('personId')
@@ -129,7 +129,7 @@ exports.getPatients = (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
   const patientQuery = Patient.find({
-    'clientId': req.query.client
+    'userId': req.query.userId
   });
 
   if (pageSize && currentPage) {
@@ -164,7 +164,7 @@ exports.getPatients = (req, res, next) => {
 exports.getPatient = (req, res, next) => {
   Patient
     .findById(
-      req.params.id
+      req.params.patientId
     )
     .populate(
       'personId'
@@ -177,7 +177,7 @@ exports.getPatient = (req, res, next) => {
             id: patient._id,
             bloodType: patient.bloodType,
             comments: patient.comments,
-            clientId: patient.clientId,
+            userId: patient.userId,
             personId: patient.personId._id,
             firstname: patient.personId.firstname,
             lastname: patient.personId.lastname,
@@ -207,8 +207,8 @@ exports.getPatient = (req, res, next) => {
 exports.deletePatient = (req, res, next) => {
   Patient
     .deleteOne(
-      { _id: req.params.id,
-        clientId: req.userData.userId
+      { _id: req.params.patientId,
+        userId: req.userData.userId //only owner can delete
       }
     )
     .exec()

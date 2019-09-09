@@ -9,15 +9,15 @@ const router = express.Router();
 
 router.post('', checkAuth, PatientController.createPatient); //extractFile,
 
-router.put('/:id/:personId', checkAuth, PatientController.updatePatient); //extractFile,
+router.put('/:patientId/:personId', checkAuth, PatientController.updatePatient); //extractFile,
 
 router.get('', PatientController.getPatients);
 
 router.get('/network', PatientController.getAllNetwork);
 
-router.get('/:id', PatientController.getPatient);
+router.get('/:patientId', PatientController.getPatient);
 
-router.delete('/:id', checkAuth, PatientController.deletePatient);
+router.delete('/:patientId', checkAuth, PatientController.deletePatient);
 
 
 module.exports = router;

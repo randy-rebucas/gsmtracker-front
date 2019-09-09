@@ -1,6 +1,6 @@
 export interface SettingsGeneralData {
   id: string;
-  clientId: string;
+  userId: string;
   clinicName: string;
   clinicOwner: string;
   clinicAddress: string;
