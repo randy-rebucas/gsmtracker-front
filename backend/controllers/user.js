@@ -19,13 +19,13 @@ exports.createUser = (req, res, next) => {
                         email: req.body.email,
                         password: hash,
                         lastIp: ip.address(),
-                        licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase(),
                         personId: personResult._id
                     });
                     user.save()
                         .then(userResult => {
                             const setting = new Setting({
                                 clientId: userResult._id,
+                                clinicName: req.body.clinicname,
                                 clinicOwner: personResult.firstname + ', ' + personResult.lastname
                             });
                             setting.save().then(createdSetting => {
@@ -57,7 +57,7 @@ exports.createUser = (req, res, next) => {
 exports.userLogin = (req, res, next) => {
     let fetchedUser;
     User.findOne({ email: req.body.email })
-    .populate('personId')
+        .populate('personId')
         .then(user => {
             if (!user) {
                 return res.status(401).json({
@@ -73,15 +73,15 @@ exports.userLogin = (req, res, next) => {
                     message: 'Auth failed no result'
                 });
             }
-            const token = jwt.sign({ email: fetchedUser.email, license: fetchedUser.licenseKey, userId: fetchedUser.personId._id },
+            const token = jwt.sign({ email: fetchedUser.email, license: fetchedUser.subscriptionType, userId: fetchedUser._id },
                 process.env.JWT_KEY, { expiresIn: '12h' }
             );
             res.status(200).json({
                 token: token,
                 expiresIn: 43200, // 3600,
-                userId: fetchedUser.personId._id, // fetchedUser._id,
+                userId: fetchedUser._id, // fetchedUser._id,
                 userEmail: fetchedUser.email,
-                userLicense: fetchedUser.licenseKey
+                userSubscriptionType: fetchedUser.subscriptionType
             });
         })
         .catch(err => {
@@ -90,32 +90,3 @@ exports.userLogin = (req, res, next) => {
             });
         });
 }
-
-exports.getAll = (req, res, next) => {
-    const pageSize = +req.query.pagesize;
-    const currentPage = +req.query.page;
-    const query = User.find().sort({ 'createdAt': 'desc' });
-
-    let fetchedRecord;
-    if (pageSize && currentPage) {
-        query.skip(pageSize * (currentPage - 1)).limit(pageSize);
-    }
-    query
-      .populate('personId')
-      .then(documents => {
-          fetchedRecord = documents;
-          return User.countDocuments();
-      })
-      .then(count => {
-          res.status(200).json({
-              message: 'Fetched successfully!',
-              users: fetchedRecord,
-              max: count
-          });
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
-};

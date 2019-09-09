@@ -16,7 +16,7 @@ export class AuthService {
   private tokenTimer: any;
   private userId: string;
   private userEmail: string;
-  private userLicense: string;
+  private userSubscriptionType: string;
   private authStatusListener = new Subject<boolean>();
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -37,18 +37,19 @@ export class AuthService {
     return this.userEmail;
   }
 
-  getUserLicense() {
-    return this.userLicense;
+  getUserSubscription() {
+    return this.userSubscriptionType;
   }
 
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
   }
 
-  createUser(firstname: string, lastname: string, email: string, password: string) {
+  createUser(firstName: string, lastName: string, clinicName: string, email: string, password: string) {
     const authSignup: AuthSignup = {
-      firstname: firstname,
-      lastname: lastname,
+      firstname: firstName,
+      lastname: lastName,
+      clinicname: clinicName,
       email: email,
       password: password
     };
@@ -61,7 +62,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     const authData: AuthData = {email: email, password: password};
-    this.http.post<{token: string, expiresIn: number, userEmail: string, userLicense: string, userId: string}>(
+    this.http.post<{token: string, expiresIn: number, userEmail: string, userSubscriptionType: string, userId: string}>(
       BACKEND_URL + '/login',
       authData
     )
@@ -75,12 +76,12 @@ export class AuthService {
 
         this.userId = response.userId;
         this.userEmail = response.userEmail;
-        this.userLicense = response.userLicense;
+        this.userSubscriptionType = response.userSubscriptionType;
 
         this.authStatusListener.next(true);
         const now = new Date();
         const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-        this.saveAuthData(token, expirationDate, this.userId, this.userEmail, this.userLicense);
+        this.saveAuthData(token, expirationDate, this.userId, this.userEmail, this.userSubscriptionType);
         this.router.navigate(['/']);
       }
     }, error => {
@@ -101,7 +102,7 @@ export class AuthService {
 
       this.userId = authInformation.userId;
       this.userEmail = authInformation.userEmail;
-      this.userLicense = authInformation.userLicense;
+      this.userSubscriptionType = authInformation.userSubscriptionType;
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
     }
@@ -123,12 +124,12 @@ export class AuthService {
     }, duration * 1000);
   }
 
-  private saveAuthData(token: string, expirationDate: Date, userId: string, userEmail: string, userLicense: string) {
+  private saveAuthData(token: string, expirationDate: Date, userId: string, userEmail: string, userSubscriptionType: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('userEmail', userEmail);
-    localStorage.setItem('userLicense', userLicense);
+    localStorage.setItem('userSubscriptionType', userSubscriptionType);
   }
 
   private clearAuthData() {
@@ -136,7 +137,7 @@ export class AuthService {
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
-    localStorage.removeItem('userLicense');
+    localStorage.removeItem('userSubscriptionType');
   }
 
   private getAuthData() {
@@ -144,7 +145,7 @@ export class AuthService {
     const expirationDate = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
     const userEmail = localStorage.getItem('userEmail');
-    const userLicense = localStorage.getItem('userLicense');
+    const userSubscriptionType = localStorage.getItem('userSubscriptionType');
     if (!token || !expirationDate) {
       return;
     }
@@ -153,7 +154,7 @@ export class AuthService {
       expirationDate: new Date(expirationDate),
       userId: userId,
       userEmail: userEmail,
-      userLicense: userLicense
+      userSubscriptionType: userSubscriptionType
     }
   }
 }

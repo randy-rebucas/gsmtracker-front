@@ -7,7 +7,7 @@ import {
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ErrorComponent } from './error/error.component';
 
 @Injectable()
@@ -22,7 +22,16 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error.error.message) {
           errorMessage = error.error.message;
         }
-        this.dialog.open(ErrorComponent, {data: {message: errorMessage}});
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.width = '30%';
+        dialogConfig.data = {
+          message: errorMessage
+        };
+    
+        this.dialog.open(ErrorComponent, dialogConfig);
         return throwError(error);
       })
     );

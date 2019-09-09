@@ -9,7 +9,7 @@ const personSchema = mongoose.Schema({
     gender: { type: String, default: null },
     address: { type: String, default: null },
     birthdate: { type: Date, default: null },
-    createdAt: { type: Date, default: Date.now }
+    created: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Person', personSchema);

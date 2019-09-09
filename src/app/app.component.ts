@@ -11,7 +11,7 @@ import { AppConfiguration } from './app-configuration.service';
 export class AppComponent implements OnInit {
   title = 'clinic-plus';
   apiUrl;
-  license: string;
+  subscriptionType: string;
 
   constructor(
     private authService: AuthService,
@@ -30,6 +30,6 @@ export class AppComponent implements OnInit {
     this.meta.addTag({name: 'author', content: 'Randy Rebucas'});
     this.meta.addTag({name: 'robots', content: 'index, follow'});
     this.authService.autoAuthUser();
-    this.license = this.authService.getUserLicense();
+    this.subscriptionType = this.authService.getUserSubscription();
   }
 }

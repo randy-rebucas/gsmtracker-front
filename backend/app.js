@@ -34,10 +34,11 @@ var cors = require('cors');
 
 var app = express();
 
+// admin@myclinicsoft.com
 mongoose.connect(
-        'mongodb+srv://premit:' +
+        'mongodb+srv://myclinicsoft:' +
         process.env.MONGO_ATLAS_PW +
-        '@cluster0-kxvjt.mongodb.net/premit?retryWrites=true&w=majority', { useNewUrlParser: true }
+        '@main-cndu1.mongodb.net/myclinicsoft?retryWrites=true&w=majority', { useNewUrlParser: true }
     )
     .then(() => {
         console.log('connected to database');
@@ -74,8 +75,8 @@ app.use((req, res, next) => {
 });
 
 var corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200,
+    origin: '*',
+    optionsSuccessStatus: 200,
 }
 
 app.use(cors(corsOptions));

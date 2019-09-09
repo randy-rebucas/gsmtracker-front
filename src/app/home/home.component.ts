@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   @Input() title: string;
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
-  license: string;
+  subscriptionType: string;
   settings: AppSettings;
   version: string;
 
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       () => null,
       () => {
         this.version = this.settings.defaultVersion;
-        this.license = this.authService.getUserLicense();
+        this.subscriptionType = this.authService.getUserSubscription();
       });
 
     this.titleService.setTitle('Home');

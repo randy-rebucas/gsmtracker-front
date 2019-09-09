@@ -9,8 +9,7 @@ const userSchema = mongoose.Schema({
     banned: { type: Boolean, default: 0 },
     banReason: { type: String, default: null },
     lastIp: { type: String },
-    createdAt: { type: Date, default: Date.now },
-    licenseKey: { type: String },
+    subscriptionType: { type: String, default: 'Free' },
     personId: { type: mongoose.Schema.Types.ObjectId, ref: 'Person', required: true }
 });
 
