@@ -1,6 +1,6 @@
 const Setting = require('../models/setting');
 
-exports.createSetting = (req, res, next) => {
+exports.create = (req, res, next) => {
     const setting = new Setting({
         clientId: req.body.clientId,
         clinicName: req.body.name,
@@ -74,31 +74,7 @@ exports.update = (req, res, next) => {
         });
 };
 
-exports.getSettings = (req, res, next) => {
-    const settingQuery = Setting.find();
-
-    let fetchedSettings;
-
-    settingQuery
-    .exec()
-        .then(documents => {
-            fetchedSettings = documents;
-            return Setting.countDocuments();
-        })
-        .then(count => {
-            res.status(200).json({
-                message: 'Setting fetched successfully!',
-                settings: fetchedSettings
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: 'Fetching pasettingtient failed!'
-            });
-        });
-};
-
-exports.getSetting = (req, res, next) => {
+exports.get = (req, res, next) => {
     Setting.find({ 'clientId': req.params.id })
     .exec()
     .then(setting => {
@@ -111,23 +87,6 @@ exports.getSetting = (req, res, next) => {
         .catch(error => {
             res.status(500).json({
                 message: error.message
-            });
-        });
-};
-
-exports.deleteSettings = (req, res, next) => {
-    Setting.deleteOne({ _id: req.params.id, creator: req.userData.userId })
-    .exec()
-    .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Deletion successfull!' });
-            } else {
-                res.status(401).json({ message: 'Not Authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: 'Fetching patients failed!'
             });
         });
 };

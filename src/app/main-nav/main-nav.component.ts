@@ -15,7 +15,7 @@ export class MainNavComponent  implements OnInit, OnDestroy {
 
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
-  license: string;
+  subscriptionType: string;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -38,14 +38,14 @@ export class MainNavComponent  implements OnInit, OnDestroy {
         .subscribe(isAuthenticated => {
           this.userIsAuthenticated = isAuthenticated;
         });
-  
-      this.license = this.authService.getUserLicense();
+
+      this.subscriptionType = this.authService.getUserSubscription();
     }
-  
+
     onLogout() {
       this.authService.logout();
     }
-  
+
     ngOnDestroy() {
       this.authListenerSubs.unsubscribe();
     }
