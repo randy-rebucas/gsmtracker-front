@@ -1,8 +1,6 @@
 #datable-wrapper {
     margin: 2em auto;
 }
-
-
 /**/
 
 table {
@@ -60,7 +58,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 } */
 
 
-/* 
+/*
 td.mat-cell.cdk-column-action.mat-column-action {
     text-align: right;
 } */
@@ -113,7 +111,7 @@ tr:hover td.mat-cell.cdk-column-action.mat-column-action button {
 }
 
 
-/* 
+/*
 tr.mat-footer-row,
 tr.mat-row {
     height: 48px;

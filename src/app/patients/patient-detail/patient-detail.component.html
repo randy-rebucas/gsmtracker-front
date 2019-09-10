@@ -19,7 +19,8 @@
         <mat-grid-tile-header>
             <h3>Height</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="transform: rotate(90deg);
             position: absolute;
@@ -37,7 +38,8 @@
         <mat-grid-tile-header>
             <h3>Weight</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="transform: rotate(90deg);
         position: absolute;
@@ -55,7 +57,8 @@
         <mat-grid-tile-header>
             <h3>Temperature</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="position: absolute;
             left: 5%;
@@ -72,7 +75,8 @@
         <mat-grid-tile-header>
             <h3>Blood Pressure</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="position: absolute;
             left: 5%;
@@ -89,7 +93,8 @@
         <mat-grid-tile-header>
             <h3>Respiratory rate</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="position: absolute;
             left: 5%;
@@ -103,7 +108,8 @@
         </mat-grid-tile-footer>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
-        <div style="padding: 1em;">
+        <div style="padding: 1em;" *ngIf="isLoading">Loading...</div>
+        <div style="padding: 1em;" *ngIf="!isLoading">
             <h3>{{firstname + ' ' + midlename + ' ' + lastname}} <br/>
                 <span style="font-size: 14px; font-weight: 100;">{{id}}</span></h3>
             <address style="font-style: initial;">
@@ -118,7 +124,8 @@
         <mat-grid-tile-header>
             <h3>Histories</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-list">
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <ul style="list-style: none;
           padding: 0;
           line-height: 2;
@@ -135,7 +142,8 @@
         <mat-grid-tile-header>
             <h3>Complaints</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-list">
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <ul style="list-style: none;
             padding: 0;
             line-height: 2;
@@ -152,7 +160,8 @@
         <mat-grid-tile-header>
             <h3>Assessments</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-list">
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <table class="table">
                 <tr>
                     <td>Diagnosis</td>
@@ -214,7 +223,8 @@
         <mat-grid-tile-header>
             <h3>Prescriptions</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-list">
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <table class="table">
                 <tr>
                     <td>Medicine</td>
@@ -247,7 +257,8 @@
         <mat-grid-tile-header>
             <h3>Progress notes</h3>
         </mat-grid-tile-header>
-        <div class="grid-inner-content grid-inner-content-list">
+        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             {{progressNotes}}
             <span *ngIf="progressNotes == null">--</span>
         </div>

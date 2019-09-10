@@ -174,7 +174,7 @@ exports.getPatient = (req, res, next) => {
       patient => {
         if (patient) {
           res.status(200).json({
-            id: patient._id,
+            _id: patient._id,
             bloodType: patient.bloodType,
             comments: patient.comments,
             userId: patient.userId,

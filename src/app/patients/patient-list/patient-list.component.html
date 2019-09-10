@@ -54,7 +54,7 @@
                         <div class="example-element-position"> Blood Type </div>
                         <div class="example-element-symbol"> {{element.bloodType}} </div>
                         <div class="example-element-name"> Created At </div>
-                        <div class="example-element-weight"> {{element.createdAt | date}} </div>
+                        <div class="example-element-weight"> {{element.created | date}} </div>
                     </div>
                     <div class="example-element-description">
                       <dl>
@@ -76,12 +76,12 @@
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 
         <ng-container matColumnDef="loading">
-            <mat-footer-cell *matFooterCellDef colspan="7">
-                <p class="mat-body">Loading data...</p>
+            <mat-footer-cell *matFooterCellDef colspan="8">
+                  <p class="mat-body">Loading data...</p>
             </mat-footer-cell>
         </ng-container>
         <ng-container matColumnDef="noData">
-            <mat-footer-cell *matFooterCellDef colspan="7">
+            <mat-footer-cell *matFooterCellDef colspan="8">
                 <p class="mat-body">No patient data.</p>
             </mat-footer-cell>
         </ng-container>

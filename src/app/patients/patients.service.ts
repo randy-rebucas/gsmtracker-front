@@ -43,7 +43,7 @@ export class PatientsService {
             gender: patient.personId.gender,
             birthdate: patient.personId.birthdate,
             address: patient.personId.address,
-            createdAt: patient.personId.createdAt
+            created: patient.personId.created
           };
         }), maxPatients: patientData.maxPatients};
       })
@@ -61,42 +61,44 @@ export class PatientsService {
     return this.patientsUpdated.asObservable();
   }
 
-  getPatient(id: string) {
+  getPatient(patientId: string) {
     // tslint:disable-next-line: max-line-length
     return this.http.get<{ _id: string, bloodType: string, comments: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, address: string }>(
-        BACKEND_URL + '/' + id
+        BACKEND_URL + '/' + patientId
       );
   }
 
-  addPatient(_firstname: string, _midlename: string, _lastname: string, _contact: string, _bloodType: string, _gender: string, _birthdate: string, _address: string, _comments: string) {
+  // tslint:disable-next-line:max-line-length
+  addPatient(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
       const patientData = {
-        firstname: _firstname,
-        midlename: _midlename,
-        lastname: _lastname,
-        contact: _contact,
-        bloodType: _bloodType,
-        gender: _gender,
-        birthdate: _birthdate,
-        address: _address,
-        comments: _comments
+        firstname: Firstname,
+        midlename: Midlename,
+        lastname: Lastname,
+        contact: Contact,
+        bloodType: BloodType,
+        gender: Gender,
+        birthdate: Birthdate,
+        address: Address,
+        comments: Comments
       };
-    return this.http.post<{ message: string, patient: PatientData }>(BACKEND_URL, patientData);
+      return this.http.post<{ message: string, patient: PatientData }>(BACKEND_URL, patientData);
   }
 
-  updatePatient(_id: string, _personId: string, _firstname: string, _midlename: string, _lastname: string, _contact: string, _bloodType: string, _gender: string, _birthdate: string, _address: string, _comments: string) {
+  // tslint:disable-next-line:max-line-length
+  updatePatient(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
     const patientData = {
-      id: _id,
-      firstname: _firstname,
-      midlename: _midlename,
-      lastname: _lastname,
-      contact: _contact,
-      bloodType: _bloodType,
-      gender: _gender,
-      birthdate: _birthdate,
-      address: _address,
-      comments: _comments
+      id: Id,
+      firstname: Firstname,
+      midlename: Midlename,
+      lastname: Lastname,
+      contact: Contact,
+      bloodType: BloodType,
+      gender: Gender,
+      birthdate: Birthdate,
+      address: Address,
+      comments: Comments
     };
-    return this.http.put(BACKEND_URL + '/' + _id + '/' + _personId, patientData);
+    return this.http.put(BACKEND_URL + '/' + Id + '/' + PersonId, patientData);
   }
 
   deletePatient(patientId: string) {

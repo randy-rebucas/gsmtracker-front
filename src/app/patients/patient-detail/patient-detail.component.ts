@@ -93,6 +93,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+      this.isLoading = true;
       this.userIsAuthenticated = this.authService.getIsAuth();
       this.authListenerSubs = this.authService
       .getAuthStatusListener()
@@ -103,85 +104,95 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
         this.patientId = paramMap.get('patientId');
       });
 
-      this.patientsService.getPatient(this.patientId).subscribe(patientData => {
-        this.id = patientData._id;
-        this.firstname = patientData.firstname;
-        this.midlename = patientData.midlename;
-        this.lastname = patientData.lastname;
-        this.contact = patientData.contact;
-        this.gender = patientData.gender;
-        this.birthdate = patientData.birthdate;
-        this.bloodType = patientData.bloodType;
-        this.titleService.setTitle(this.firstname + ' ' + this.lastname + ' Detail');
-      });
+      this.getPatientData(this.patientId)
+      .then((results) => {
+        this.isLoading = false;
+        this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
+        this.id = results.patientData._id;
+        this.firstname = results.patientData.firstname;
+        this.midlename = results.patientData.midlename;
+        this.lastname = results.patientData.lastname;
+        this.contact = results.patientData.contact;
+        this.gender = results.patientData.gender;
+        this.birthdate = results.patientData.birthdate;
+        this.bloodType = results.patientData.bloodType;
 
-      this.heightService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.height = recordData[0].height;
-          this.heightCreated = recordData[0].created;
+        if (Object.keys(results.heightData).length) {
+          this.height = results.heightData[0].height;
+          this.heightCreated = results.heightData[0].created;
         }
-      });
 
-      this.weightService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.weight = recordData[0].weight;
-          this.weightCreated = recordData[0].created;
+        if (Object.keys(results.weightData).length) {
+          this.weight = results.weightData[0].weight;
+          this.weightCreated = results.weightData[0].created;
         }
-      });
 
-      this.temperatureService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.temperature = recordData[0].temperature;
-          this.temperatureCreated = recordData[0].created;
+        if (Object.keys(results.temperatureData).length) {
+          this.temperature = results.temperatureData[0].temperature;
+          this.temperatureCreated = results.temperatureData[0].created;
         }
-      });
 
-      this.bpService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.tempSystolic = recordData[0].systolic;
-          this.tempDiastolic = recordData[0].diastolic;
-          this.tempCreated = recordData[0].created;
+        if (Object.keys(results.bloodPressureData).length) {
+          this.tempSystolic = results.bloodPressureData[0].systolic;
+          this.tempDiastolic = results.bloodPressureData[0].diastolic;
+          this.tempCreated = results.bloodPressureData[0].created;
         }
-      });
 
-      this.rprService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.respiratoryRate = recordData[0].respiratoryrate;
-          this.respiratoryRateCreated = recordData[0].created;
+        if (Object.keys(results.respiratoryRateData).length) {
+          this.respiratoryRate = results.respiratoryRateData[0].respiratoryrate;
+          this.respiratoryRateCreated = results.respiratoryRateData[0].created;
         }
-      });
 
-      this.historyService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.histories = recordData;
+        if (Object.keys(results.historyData).length) {
+          this.histories = results.historyData;
         }
-      });
 
-      this.complaintService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.complaints = recordData[0].complaints;
+        if (Object.keys(results.complaintData).length) {
+          this.complaints = results.historyData[0].complaints;
         }
-      });
 
-      this.assessmentService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.diagnosis = recordData[0].diagnosis;
-          this.treatments = recordData[0].treatments;
+        if (Object.keys(results.assessmentData).length) {
+          this.diagnosis = results.assessmentData[0].diagnosis;
+          this.treatments = results.assessmentData[0].treatments;
         }
-      });
 
-      this.prescriptionService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.prescriptions = recordData[0].prescriptions;
+        if (Object.keys(results.prescriptionData).length) {
+          this.prescriptions = results.prescriptionData[0].prescriptions;
         }
-      });
 
-      this.notesService.getLast(this.patientId).subscribe(recordData => {
-        if (Object.keys(recordData).length) {
-          this.progressNotes = recordData[0].note;
+        if (Object.keys(results.progressNotesData).length) {
+          this.progressNotes = results.progressNotesData[0].note;
         }
-      });
+      })
+      .catch(err => console.log(err));
 
+    }
+
+    async getPatientData(patientId) {
+      const patientRespomse = await this.patientsService.getPatient(patientId).toPromise();
+      const heightResponse = await this.heightService.getLast(patientId).toPromise();
+      const weightResponse = await this.weightService.getLast(patientId).toPromise();
+      const temperatureResponse = await this.temperatureService.getLast(patientId).toPromise();
+      const bloodPressureResponse = await this.bpService.getLast(patientId).toPromise();
+      const respiratoryRateResponse = await this.rprService.getLast(patientId).toPromise();
+      const historyResponse = await this.historyService.getLast(patientId).toPromise();
+      const complaintResponse = await this.complaintService.getLast(patientId).toPromise();
+      const assessmentResponse = await this.assessmentService.getLast(patientId).toPromise();
+      const prescriptionResponse = await this.prescriptionService.getLast(patientId).toPromise();
+      const progressNotesResponse = await this.notesService.getLast(patientId).toPromise();
+      return {
+        patientData: patientRespomse,
+        heightData: heightResponse,
+        weightData: weightResponse,
+        temperatureData: temperatureResponse,
+        bloodPressureData: bloodPressureResponse,
+        respiratoryRateData: respiratoryRateResponse,
+        historyData: historyResponse,
+        complaintData: complaintResponse,
+        assessmentData: assessmentResponse,
+        prescriptionData: prescriptionResponse,
+        progressNotesData: progressNotesResponse
+      };
     }
 
     onViewAll(targetComp: any) {
