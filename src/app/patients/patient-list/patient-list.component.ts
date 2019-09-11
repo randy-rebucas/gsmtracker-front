@@ -16,6 +16,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 
 import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-patient-list',
@@ -91,32 +92,25 @@ import { DialogService } from 'src/app/shared/dialog.service';
     ]),
   ],
 })
-export class PatientListComponent implements OnInit, OnDestroy {
-
-  totalPatients = 0;
-  patientsPerPage = 10;
-  currentPage = 1;
-  pageSizeOptions = [5, 10, 25, 100];
+export class PatientListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   patients: PatientData[] = [];
-  isLoading = false;
-  userIsAuthenticated = false;
-  userId: string;
-
   private patientsSub: Subscription;
-  private authStatusSub: Subscription;
 
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: PatientData,
-    public patientsService: PatientsService,
-    private authService: AuthService,
-    private dialog: MatDialog,
-    private notificationService: NotificationService,
-    private router: Router,
+    public authService: AuthService,
+    public router: Router,
+    public titleService: Title,
+    public dialog: MatDialog,
+    public dialogService: DialogService,
     private route: ActivatedRoute,
-    private dialogService: DialogService,
-    private titleService: Title
-  ) {}
+    private notificationService: NotificationService,
+    private patientsService: PatientsService
+  ) {
+    super(dialog, authService, router, titleService);
+  }
 
   dataSource: MatTableDataSource<any>;
   columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
@@ -126,29 +120,20 @@ export class PatientListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   ngOnInit() {
-    this.titleService.setTitle('Patients');
+    super.ngOnInit();
+    super.onSetTitle('Patients');
 
     this.isLoading = true;
-    this.userId = this.authService.getUserId();
-    this.patientsService.getPatients(this.userId, this.patientsPerPage, this.currentPage);
+    this.patientsService.getPatients(this.userId, this.perPage, this.currentPage);
     this.patientsSub = this.patientsService
       .getPatientUpdateListener()
       .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {
         this.isLoading = false;
-        this.totalPatients = patientData.patientCount;
+        this.total = patientData.patientCount;
         this.dataSource = new MatTableDataSource(patientData.patients);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authStatusSub = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-        this.userId = this.authService.getUserId();
-      });
-
   }
 
   applyFilter(filterValue: string) {
@@ -166,62 +151,35 @@ export class PatientListComponent implements OnInit, OnDestroy {
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
-    this.patientsPerPage = pageData.pageSize;
-    this.patientsService.getPatients(this.userId, this.patientsPerPage, this.currentPage);
+    this.perPage = pageData.pageSize;
+    this.patientsService.getPatients(this.userId, this.perPage, this.currentPage);
   }
 
   onQue(patientId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-        id: patientId,
-        title: 'On Que'
-    };
-    this.dialog.open(PatientEditComponent, dialogConfig);
+    super.onPopup(patientId, 'Add to Que', 'Move', '50%', PatientEditComponent); // change to que component
   }
 
   onCreate() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-      id: null,
-      title: 'New patient',
-      btnLabel: 'Save'
-    };
-    this.dialog.open(PatientEditComponent, dialogConfig);
+    super.onPopup(null, 'New patient', 'Save', '50%', PatientEditComponent);
   }
 
   onEdit(patientId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-        id: patientId,
-        title: 'Update patient',
-        btnLabel: 'Update'
-    };
-    this.dialog.open(PatientEditComponent, dialogConfig);
+    super.onPopup(patientId, 'Update patient', 'Update', '50%', PatientEditComponent);
   }
 
   onDelete(patientId) {
-    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
-    .afterClosed().subscribe(res => {
-      if (res) {
-        this.patientsService.deletePatient(patientId).subscribe(() => {
-          this.patientsService.getPatients(this.userId, this.patientsPerPage, this.currentPage);
-          this.notificationService.warn('! Deleted successfully');
-        });
-      }
+    super.onDelete(patientId);
+  }
+
+  onConfirmDelete(Id) {
+    this.patientsService.deletePatient(Id).subscribe(() => {
+      this.patientsService.getPatients(this.userId, this.perPage, this.currentPage);
+      this.notificationService.warn('! Deleted successfully');
     });
   }
 
   ngOnDestroy() {
+    super.ngOnDestroy();
     this.patientsSub.unsubscribe();
-    this.authStatusSub.unsubscribe();
   }
 }
