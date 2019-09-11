@@ -108,6 +108,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
       .then((results) => {
         this.isLoading = false;
         this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
+
         this.id = results.patientData._id;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
@@ -169,7 +170,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     }
 
     async getPatientData(patientId) {
-      const patientRespomse = await this.patientsService.getPatient(patientId).toPromise();
+      const patientResponse = await this.patientsService.getPatient(patientId).toPromise();
       const heightResponse = await this.heightService.getLast(patientId).toPromise();
       const weightResponse = await this.weightService.getLast(patientId).toPromise();
       const temperatureResponse = await this.temperatureService.getLast(patientId).toPromise();
@@ -181,7 +182,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
       const prescriptionResponse = await this.prescriptionService.getLast(patientId).toPromise();
       const progressNotesResponse = await this.notesService.getLast(patientId).toPromise();
       return {
-        patientData: patientRespomse,
+        patientData: patientResponse,
         heightData: heightResponse,
         weightData: weightResponse,
         temperatureData: temperatureResponse,

@@ -3,6 +3,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 /* No css on initial setup */
+
 @import '@fullcalendar/core/main.css';
 @import '@fullcalendar/daygrid/main.css';
 @import '@fullcalendar/timegrid/main.css';
@@ -15,4 +16,13 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.loading {
+    right: 45%;
+    position: absolute;
+    left: 45%;
+    margin-left: 0;
+    top: 45%;
+    margin-top: 0;
 }

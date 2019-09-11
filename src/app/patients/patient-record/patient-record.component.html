@@ -3,28 +3,31 @@
 </div>
 <mat-grid-list cols="6" rowHeight="100px" [gutterSize]="'10px'">
     <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <div class="grid-inner-content grid-inner-content-center">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center">
             <div *ngIf="image; then thenBlock else elseBlock"></div>
             <ng-template #thenBlock>
                 <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
             </ng-template>
             <ng-template #elseBlock>
-              <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
+                <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
             </ng-template>
         </div>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="5" [rowspan]="1" class="grid-content" style="border: none;">
         <div class="grid-inner-content grid-inner-content-list">
-        <nav mat-tab-nav-bar>
-            <a mat-tab-link routerLink="./physical-exams" routerLinkActive #rlaPhysicalExams="routerLinkActive" [active]="rlaPhysicalExams.isActive">Physical exams</a>
-            <a mat-tab-link routerLink="./histories" routerLinkActive #rlaHistories="routerLinkActive" [active]="rlaHistories.isActive">Histories</a>
-            <a mat-tab-link routerLink="./chief-complaints" routerLinkActive #rlaChiefComplaint="routerLinkActive" [active]="rlaChiefComplaint.isActive">Chief complaints</a>
-            <a mat-tab-link routerLink="./assessments" routerLinkActive #rlaAssessments="routerLinkActive" [active]="rlaAssessments.isActive">Assessments</a>
-            <a mat-tab-link routerLink="./prescriptions" routerLinkActive #rlaPrescriptions="routerLinkActive" [active]="rlaPrescriptions.isActive">Prescriptions</a>
-            <a mat-tab-link routerLink="./progress-notes" routerLinkActive #rlaProgressNotes="routerLinkActive" [active]="rlaProgressNotes.isActive">Progress Notes</a>
-            <a mat-tab-link routerLink="./test-results" routerLinkActive #rlaTestResult="routerLinkActive" [active]="rlaTestResult.isActive">Test Results</a>
-        </nav>
-      </div>
+            <nav mat-tab-nav-bar>
+                <a mat-tab-link routerLink="./physical-exams" routerLinkActive #rlaPhysicalExams="routerLinkActive" [active]="rlaPhysicalExams.isActive">Physical exams</a>
+                <a mat-tab-link routerLink="./histories" routerLinkActive #rlaHistories="routerLinkActive" [active]="rlaHistories.isActive">Histories</a>
+                <a mat-tab-link routerLink="./chief-complaints" routerLinkActive #rlaChiefComplaint="routerLinkActive" [active]="rlaChiefComplaint.isActive">Chief complaints</a>
+                <a mat-tab-link routerLink="./assessments" routerLinkActive #rlaAssessments="routerLinkActive" [active]="rlaAssessments.isActive">Assessments</a>
+                <a mat-tab-link routerLink="./prescriptions" routerLinkActive #rlaPrescriptions="routerLinkActive" [active]="rlaPrescriptions.isActive">Prescriptions</a>
+                <a mat-tab-link routerLink="./progress-notes" routerLinkActive #rlaProgressNotes="routerLinkActive" [active]="rlaProgressNotes.isActive">Progress Notes</a>
+                <a mat-tab-link routerLink="./test-results" routerLinkActive #rlaTestResult="routerLinkActive" [active]="rlaTestResult.isActive">Test Results</a>
+            </nav>
+        </div>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="5" [rowspan]="8" class="grid-content" style="border: none;">
         <div class="grid-inner-content grid-inner-content-list">
@@ -32,7 +35,10 @@
         </div>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
-        <div style="padding: 1em;">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
+        <div *ngIf="!isLoading" style="padding: 1em;">
             <h3>{{firstname + ' ' + midlename + ' ' + lastname}} <br/>
                 <span style="font-size: 14px; font-weight: 100;">{{id}}</span></h3>
             <address style="font-style: initial;">
@@ -47,20 +53,20 @@
         <div style="padding: 1em;">
             Quick Actions
             <mat-list>
-              <mat-list-item (click)="onCreateMessage()"><i class="material-icons">
+                <mat-list-item (click)="onCreateMessage()"><i class="material-icons">
                       message
                       </i> &nbsp; Message </mat-list-item>
-              <mat-list-item (click)="onCreateAppointment()"><i class="material-icons">
+                <mat-list-item (click)="onCreateAppointment()"><i class="material-icons">
                   calendar_today
                   </i> &nbsp; Appointment </mat-list-item>
-              <mat-list-item (click)="viewChart()"><i class="material-icons">
+                <mat-list-item (click)="viewChart()"><i class="material-icons">
                 remove_red_eye
                       </i> &nbsp; View Chart </mat-list-item>
-              <mat-list-item (click)="generateQrCode()"><i class="material-icons">
+                <mat-list-item (click)="generateQrCode()"><i class="material-icons">
                       fingerprint
                       </i> &nbsp; Generate QR Code </mat-list-item>
-          </mat-list>
-          Support
+            </mat-list>
+            Support
             <mat-list>
                 <mat-list-item><i class="material-icons">
                         email

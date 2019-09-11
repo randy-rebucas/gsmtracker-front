@@ -62,6 +62,7 @@ import { NgxPrintModule } from 'ngx-print';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 import { AppointmentDetailComponent } from './appointments/appointment-detail/appointment-detail.component';
+import { SecureComponent } from './secure/secure.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { AppointmentDetailComponent } from './appointments/appointment-detail/ap
     MessageDetailComponent,
     MatDialogConfirmComponent,
     DialogComponent,
-    AppointmentDetailComponent
+    AppointmentDetailComponent,
+    SecureComponent
   ],
   imports: [
     CommonModule,

@@ -29,6 +29,7 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
   birthdate: string;
   image: string;
 
+  isLoading = false;
   private patientId: string;
 
   constructor(
@@ -40,43 +41,54 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
     private titleService: Title
     ) { }
 
-    ngOnInit() {
-      this.userIsAuthenticated = this.authService.getIsAuth();
-      this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+  ngOnInit() {
+    this.isLoading = true;
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authListenerSubs = this.authService
+    .getAuthStatusListener()
+    .subscribe(isAuthenticated => {
+      this.userIsAuthenticated = isAuthenticated;
+    });
 
-      this.route.paramMap.subscribe((paramMap: ParamMap) => {
-        this.patientId = paramMap.get('patientId');
-      });
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      this.patientId = paramMap.get('patientId');
+    });
 
-      this.patientsService.getPatient(this.patientId).subscribe(patientData => {
-        this.id = patientData._id;
-        this.firstname = patientData.firstname;
-        this.midlename = patientData.midlename;
-        this.lastname = patientData.lastname;
-        this.contact = patientData.contact;
-        this.gender = patientData.gender;
-        this.birthdate = patientData.birthdate;
-        this.bloodType = patientData.bloodType;
+    this.getPatientData(this.patientId)
+      .then((results) => {
+        this.isLoading = false;
+        this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Record');
 
-        this.titleService.setTitle(this.firstname + ' ' + this.lastname + ' Record');
-      });
-    }
+        this.id = results.patientData._id;
+        this.firstname = results.patientData.firstname;
+        this.midlename = results.patientData.midlename;
+        this.lastname = results.patientData.lastname;
+        this.contact = results.patientData.contact;
+        this.gender = results.patientData.gender;
+        this.birthdate = results.patientData.birthdate;
+        this.bloodType = results.patientData.bloodType;
+      })
+      .catch(err => console.log(err));
+  }
 
-    generateQrCode() {
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.disableClose = true;
-      dialogConfig.autoFocus = true;
-      dialogConfig.width = '16%';
-      dialogConfig.data = {
-        id: null,
-        title: 'Generate QR Code',
-        patientId: this.patientId
-      };
-      this.dialog.open(QrCodeGenerateComponent, dialogConfig);
+  async getPatientData(patientId) {
+    const patientResponse = await this.patientsService.getPatient(patientId).toPromise();
+    return {
+      patientData: patientResponse
+    };
+  }
+
+  generateQrCode() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '16%';
+    dialogConfig.data = {
+      id: null,
+      title: 'Generate QR Code',
+      patientId: this.patientId
+    };
+    this.dialog.open(QrCodeGenerateComponent, dialogConfig);
   }
 
   viewChart() {

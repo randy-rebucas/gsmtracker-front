@@ -5,13 +5,16 @@
 
 <mat-grid-list cols="6" rowHeight="100px" [gutterSize]="'10px'">
     <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <div class="grid-inner-content grid-inner-content-center">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center">
             <div *ngIf="image; then thenBlock else elseBlock"></div>
             <ng-template #thenBlock>
                 <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
             </ng-template>
             <ng-template #elseBlock>
-              <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
+                <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
             </ng-template>
         </div>
     </mat-grid-tile>
@@ -19,7 +22,9 @@
         <mat-grid-tile-header>
             <h3>Height</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="transform: rotate(90deg);
@@ -38,7 +43,9 @@
         <mat-grid-tile-header>
             <h3>Weight</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="transform: rotate(90deg);
@@ -57,7 +64,9 @@
         <mat-grid-tile-header>
             <h3>Temperature</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="position: absolute;
@@ -75,7 +84,9 @@
         <mat-grid-tile-header>
             <h3>Blood Pressure</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="position: absolute;
@@ -93,7 +104,9 @@
         <mat-grid-tile-header>
             <h3>Respiratory rate</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
         line-height: 0.8;">
             <mat-icon style="position: absolute;
@@ -108,10 +121,11 @@
         </mat-grid-tile-footer>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
-        <div style="padding: 1em;" *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div style="padding: 1em;" *ngIf="!isLoading">
-            <h3>{{firstname + ' ' + midlename + ' ' + lastname}} <br/>
-                <span style="font-size: 14px; font-weight: 100;">{{id}}</span></h3>
+            <h3>{{firstname + ' ' + midlename + ' ' + lastname}} </h3>
             <address style="font-style: initial;">
                 Blood Type: {{bloodType}} <br/>
                 Contact: {{contact}} <br/>
@@ -124,7 +138,9 @@
         <mat-grid-tile-header>
             <h3>Histories</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <ul style="list-style: none;
           padding: 0;
@@ -142,7 +158,9 @@
         <mat-grid-tile-header>
             <h3>Complaints</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <ul style="list-style: none;
             padding: 0;
@@ -160,7 +178,9 @@
         <mat-grid-tile-header>
             <h3>Assessments</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <table class="table">
                 <tr>
@@ -223,7 +243,9 @@
         <mat-grid-tile-header>
             <h3>Prescriptions</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             <table class="table">
                 <tr>
@@ -257,7 +279,9 @@
         <mat-grid-tile-header>
             <h3>Progress notes</h3>
         </mat-grid-tile-header>
-        <div *ngIf="isLoading">Loading...</div>
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
             {{progressNotes}}
             <span *ngIf="progressNotes == null">--</span>
