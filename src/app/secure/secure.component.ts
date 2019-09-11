@@ -106,5 +106,6 @@ export class SecureComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.authListenerSubs.unsubscribe();
+    console.log('destryoed');
   }
 }

@@ -6,26 +6,32 @@ import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@ang
 import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { SettingsGeneralService } from '../settings-general.service';
+import { MatDialog } from '@angular/material';
+import { Title } from '@angular/platform-browser';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-settings-general',
   templateUrl: './setting-general.component.html',
   styleUrls: ['./setting-general.component.css']
 })
-export class SettingsGeneralComponent implements OnInit, OnDestroy {
+export class SettingsGeneralComponent
+extends SecureComponent
+implements OnInit {
+
   form: FormGroup;
-  userId: string;
   settingId: string;
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
+    public dialog: MatDialog,
+    public authService: AuthService,
+    public router: Router,
+    public titleService: Title,
     public settingsGeneralService: SettingsGeneralService,
     private notificationService: NotificationService,
     private fb: FormBuilder
     ) {
+      super(dialog, authService, router, titleService);
       this.form = this.fb.group({
         clinicName: ['', [Validators.required]],
         clinicOwner: ['', [Validators.required]],
@@ -39,22 +45,18 @@ export class SettingsGeneralComponent implements OnInit, OnDestroy {
         clinicHours: this.fb.array([this.addClinicHourGroup()])
       });
 
-      this.userId = this.authService.getUserId();
   }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.ngOnInit();
+    super.onSetTitle('Settings - General');
 
     this.populateForm();
   }
 
   populateForm() {
     this.settingsGeneralService.get(this.userId).subscribe(settingData => {
+      console.log(settingData);
       this.form.patchValue({
         clinicName: settingData[0].clinicName,
         clinicOwner: settingData[0].clinicOwner,
@@ -145,7 +147,4 @@ export class SettingsGeneralComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
-  }
 }

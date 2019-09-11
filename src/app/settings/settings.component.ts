@@ -1,39 +1,34 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { mimeType } from '../patients/patient-edit/mime-type.validator';
+import { MatDialog } from '@angular/material';
+import { AuthService } from '../auth/auth.service';
+import { SecureComponent } from '../secure/secure.component';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit, OnDestroy {
-  form: FormGroup;
-  imagePreview: string;
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+export class SettingsComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              private titleService: Title
-              ) { }
+  constructor(
+    public dialog: MatDialog,
+    public authService: AuthService,
+    public router: Router,
+    public titleService: Title
+) {
+  super(dialog, authService, router, titleService);
+}
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
-
-    this.titleService.setTitle('Settings');
+    super.ngOnInit();
+    super.onSetTitle('Settings');
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.ngOnDestroy();
   }
 }
