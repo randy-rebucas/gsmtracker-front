@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Title } from '@angular/platform-browser';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-secure',
@@ -15,16 +15,58 @@ import { MatDialogConfig, MatDialog } from '@angular/material';
   styleUrls: ['./secure.component.css']
 })
 export class SecureComponent implements OnInit, OnDestroy {
-
+  /**
+   * datalist options
+   */
   public total = 0;
   public perPage = 10;
   public currentPage = 1;
   public pageSizeOptions = [5, 10, 25, 100];
 
-  public userIsAuthenticated = false;
+  /**
+   * person data types
+   */
+  public personId: string;
+  public image: string;
+  public firstname: string;
+  public midlename: string;
+  public lastname: string;
+  public contact: string;
+  public gender: string;
+  public birthdate: string;
+  public address: string;
+
+  /**
+   * patient data types
+   */
+  public patientId: string;
+  public bloodType: string;
+  public comments: string;
+
+  /**
+   * user/client types
+   */
   public userId: string;
+
+  /**
+   * common variables
+   */
+  public userIsAuthenticated = false;
   public isLoading = false;
+
+  /**
+   * record types
+   */
+  public recordId: string;
+
+  /**
+   * Subscriptions
+   */
   public authListenerSubs: Subscription;
+
+  public dataSource: MatTableDataSource<any>;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
     public dialog: MatDialog,
@@ -41,6 +83,8 @@ export class SecureComponent implements OnInit, OnDestroy {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
     });
+
+    this.isLoading = true;
   }
 
   onSetTitle(title: string) {
@@ -58,13 +102,6 @@ export class SecureComponent implements OnInit, OnDestroy {
       btnLabel: dialogButonText
     };
     this.dialog.open(targetComponent, dialogConfig);
-  }
-  
-  onDelete(Id) {
-    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
-    .afterClosed().subscribe(res => {
-      this.onConfirmDelete(Id);
-    });
   }
 
   ngOnDestroy() {

@@ -170,7 +170,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     }
 
     async getPatientData(patientId) {
-      const patientResponse = await this.patientsService.getPatient(patientId).toPromise();
+      const patientResponse = await this.patientsService.get(patientId).toPromise();
       const heightResponse = await this.heightService.getLast(patientId).toPromise();
       const weightResponse = await this.weightService.getLast(patientId).toPromise();
       const temperatureResponse = await this.temperatureService.getLast(patientId).toPromise();

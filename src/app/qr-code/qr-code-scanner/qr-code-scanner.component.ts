@@ -49,7 +49,7 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
 
   handleQrCodeResult(resultString: string) {
     if  (resultString != null) {
-      this.patientsService.getPatient(resultString).subscribe((response) => {
+      this.patientsService.get(resultString).subscribe((response) => {
         if (response._id) {
           this.router.navigateByUrl('/patients/' + response._id + '/record/physical-exams/height');
         }

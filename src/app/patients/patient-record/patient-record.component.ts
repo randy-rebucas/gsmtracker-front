@@ -72,7 +72,7 @@ export class PatientRecordComponent implements OnInit, OnDestroy {
   }
 
   async getPatientData(patientId) {
-    const patientResponse = await this.patientsService.getPatient(patientId).toPromise();
+    const patientResponse = await this.patientsService.get(patientId).toPromise();
     return {
       patientData: patientResponse
     };

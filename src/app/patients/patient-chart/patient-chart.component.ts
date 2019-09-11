@@ -96,7 +96,7 @@ export class PatientChartComponent implements OnInit, OnDestroy {
         this.userIsAuthenticated = isAuthenticated;
       });
 
-    this.patientsService.getPatient(this.patientId).subscribe(patientData => {
+    this.patientsService.get(this.patientId).subscribe(patientData => {
         this.id = patientData._id;
         this.firstname = patientData.firstname;
         this.midlename = patientData.midlename;

@@ -96,14 +96,14 @@ export class PatientListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  patients: PatientData[] = [];
+  private patients: PatientData[] = [];
   private patientsSub: Subscription;
 
   constructor(
+    public dialog: MatDialog,
     public authService: AuthService,
     public router: Router,
     public titleService: Title,
-    public dialog: MatDialog,
     public dialogService: DialogService,
     private route: ActivatedRoute,
     private notificationService: NotificationService,
@@ -112,21 +112,16 @@ implements OnInit, OnDestroy {
     super(dialog, authService, router, titleService);
   }
 
-  dataSource: MatTableDataSource<any>;
   columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
   expandedElement: any;
-
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   ngOnInit() {
     super.ngOnInit();
     super.onSetTitle('Patients');
 
-    this.isLoading = true;
-    this.patientsService.getPatients(this.userId, this.perPage, this.currentPage);
+    this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
     this.patientsSub = this.patientsService
-      .getPatientUpdateListener()
+      .getUpdateListener()
       .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {
         this.isLoading = false;
         this.total = patientData.patientCount;
@@ -152,7 +147,7 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.patientsService.getPatients(this.userId, this.perPage, this.currentPage);
+    this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
   }
 
   onQue(patientId) {
@@ -168,13 +163,14 @@ implements OnInit, OnDestroy {
   }
 
   onDelete(patientId) {
-    super.onDelete(patientId);
-  }
-
-  onConfirmDelete(Id) {
-    this.patientsService.deletePatient(Id).subscribe(() => {
-      this.patientsService.getPatients(this.userId, this.perPage, this.currentPage);
-      this.notificationService.warn('! Deleted successfully');
+    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+    .afterClosed().subscribe(res => {
+      if (res) {
+        this.patientsService.delete(patientId).subscribe(() => {
+          this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
+          this.notificationService.warn('! Deleted successfully');
+        });
+      }
     });
   }
 

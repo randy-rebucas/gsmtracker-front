@@ -81,7 +81,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
     if (this.patientId) {
         this.mode = 'edit';
         this.isLoading = true;
-        this.patientsService.getPatient(this.patientId).subscribe(patientData => {
+        this.patientsService.get(this.patientId).subscribe(patientData => {
           this.isLoading = false;
           this.patient = {
             id: patientData._id,
@@ -120,7 +120,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.mode === 'create') {
-      this.patientsService.addPatient(
+      this.patientsService.insert(
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -133,10 +133,10 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.patientsService.getPatients(this.userId, this.patientsPerPage, this.currentPage);
+        this.patientsService.getAll(this.userId, this.patientsPerPage, this.currentPage);
       });
     } else {
-      this.patientsService.updatePatient(
+      this.patientsService.update(
         this.patientId,
         this.patient.personId,
         this.form.value.firstname,
@@ -151,7 +151,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.patientsService.getPatients(this.userId, this.patientsPerPage, this.currentPage);
+        this.patientsService.getAll(this.userId, this.patientsPerPage, this.currentPage);
       });
     }
   }

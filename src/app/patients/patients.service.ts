@@ -22,7 +22,7 @@ export class PatientsService {
     private datePipe: DatePipe
     ) {}
 
-  getPatients(userId: string, patientPerPage: number, currentPage: number) {
+  getAll(userId: string, patientPerPage: number, currentPage: number) {
     const queryParams = `?userId=${userId}&pagesize=${patientPerPage}&page=${currentPage}`;
     this.http.get<{message: string, patients: any, maxPatients: number }>(
       BACKEND_URL + queryParams
@@ -57,11 +57,11 @@ export class PatientsService {
     });
   }
 
-  getPatientUpdateListener() {
+  getUpdateListener() {
     return this.patientsUpdated.asObservable();
   }
 
-  getPatient(patientId: string) {
+  get(patientId: string) {
     // tslint:disable-next-line: max-line-length
     return this.http.get<{ _id: string, bloodType: string, comments: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, address: string }>(
         BACKEND_URL + '/' + patientId
@@ -69,7 +69,7 @@ export class PatientsService {
   }
 
   // tslint:disable-next-line:max-line-length
-  addPatient(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
+  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
       const patientData = {
         firstname: Firstname,
         midlename: Midlename,
@@ -85,7 +85,7 @@ export class PatientsService {
   }
 
   // tslint:disable-next-line:max-line-length
-  updatePatient(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
+  update(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
     const patientData = {
       id: Id,
       firstname: Firstname,
@@ -101,7 +101,7 @@ export class PatientsService {
     return this.http.put(BACKEND_URL + '/' + Id + '/' + PersonId, patientData);
   }
 
-  deletePatient(patientId: string) {
+  delete(patientId: string) {
     return this.http.delete(BACKEND_URL + '/' + patientId);
   }
 
