@@ -20,17 +20,17 @@ extends SecureComponent
   constructor(
     public authService: AuthService,
     public router: Router,
+    public dialog: MatDialog,
 
     public patientsService: PatientsService,
     private route: ActivatedRoute,
-    private dialog: MatDialog,
     private titleService: Title
     ) {
-      super(authService, router);
+      super(authService, router, dialog);
     }
 
   ngOnInit() {
-    super.ngOnInit();
+    super.doInit();
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.patientId = paramMap.get('patientId');
@@ -84,6 +84,6 @@ extends SecureComponent
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

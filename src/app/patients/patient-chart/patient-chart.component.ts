@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject, ViewChild, ElementRef } from '@an
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 import { HeightService } from '../patient-record/services/height.service';
 import { WeightService } from '../patient-record/services/weight.service';
@@ -60,6 +60,7 @@ implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     public router: Router,
+    public dialog: MatDialog,
 
     private titleService: Title,
 
@@ -77,13 +78,13 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < PatientChartComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router);
+      super(authService, router, dialog);
       this.dialogTitle = data.title;
       this.patientId = data.id;
      }
 
   ngOnInit() {
-    super.ngOnInit();
+    super.doInit();
 
     this.getPatientData(this.patientId)
       .then((results) => {
@@ -230,6 +231,6 @@ implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    super.doDestroy();
   }
 }

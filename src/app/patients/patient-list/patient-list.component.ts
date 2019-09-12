@@ -17,7 +17,6 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
-import { basename } from 'path';
 
 @Component({
   selector: 'app-patient-list',
@@ -108,18 +107,18 @@ implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     public router: Router,
-
     public dialog: MatDialog,
+
     private titleService: Title,
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private patientsService: PatientsService
   ) {
-    super(authService, router);
+    super(authService, router, dialog);
   }
 
   ngOnInit() {
-    super.ngOnInit();
+    super.doInit();
     this.titleService.setTitle('Patients');
 
     this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
@@ -149,29 +148,23 @@ implements OnInit, OnDestroy {
   }
 
   onCreate() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
+    const args = {
+      width: '50%',
       id: null,
-      title: 'New patient',
-      btnLabel: 'Save'
+      dialogTitle: 'Create New',
+      dialogButton: 'Save'
     };
-    this.dialog.open(PatientEditComponent, dialogConfig);
+    super.onPopup(args, PatientEditComponent);
   }
 
   onEdit(patientId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
+    const args = {
+      width: '50%',
       id: patientId,
-      title: 'Update patient',
-      btnLabel: 'Update'
+      dialogTitle: 'Update Patient',
+      dialogButton: 'Update'
     };
-    this.dialog.open(PatientEditComponent, dialogConfig);
+    super.onPopup(args, PatientEditComponent);
   }
 
   onDelete(patientId) {
@@ -187,7 +180,7 @@ implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    super.doDestroy();
     this.patientsSub.unsubscribe();
   }
 }

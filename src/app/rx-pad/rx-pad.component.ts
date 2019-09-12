@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { PrescriptionService } from '../patients/patient-record/services/prescription.service';
 import { PatientsService } from '../patients/patients.service';
 import { SecureComponent } from '../secure/secure.component';
@@ -27,6 +27,7 @@ implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     public router: Router,
+    public dialog: MatDialog,
 
     public titleService: Title,
     public prescriptionService: PrescriptionService,
@@ -34,7 +35,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < RxPadComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router);
+      super(authService, router, dialog);
       this.recordId = data.id;
       this.patientId = data.patientId;
       this.title = data.title;
@@ -42,7 +43,7 @@ implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    super.ngOnInit();
+    super.doInit();
 
     this.getPatientData(this.patientId)
       .then((results) => {
@@ -87,6 +88,6 @@ implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    super.doDestroy();
   }
 }

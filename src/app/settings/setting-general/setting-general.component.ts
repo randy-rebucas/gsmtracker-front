@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { SettingsGeneralService } from '../settings-general.service';
 import { Title } from '@angular/platform-browser';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-settings-general',
@@ -14,7 +15,7 @@ import { SecureComponent } from 'src/app/secure/secure.component';
 })
 export class SettingsGeneralComponent
 extends SecureComponent
-implements OnInit {
+implements OnInit, OnDestroy {
 
   form: FormGroup;
   settingId: string;
@@ -22,13 +23,14 @@ implements OnInit {
   constructor(
     public authService: AuthService,
     public router: Router,
+    public dialog: MatDialog,
 
     public titleService: Title,
     public settingsGeneralService: SettingsGeneralService,
     private notificationService: NotificationService,
     private fb: FormBuilder
     ) {
-      super(authService, router);
+      super(authService, router, dialog);
       this.form = this.fb.group({
         clinicName: ['', [Validators.required]],
         clinicOwner: ['', [Validators.required]],
@@ -45,7 +47,7 @@ implements OnInit {
   }
 
   ngOnInit() {
-    super.ngOnInit();
+    super.doInit();
     this.titleService.setTitle('Settings - General');
 
     this.populateForm();
@@ -143,4 +145,7 @@ implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    super.doDestroy();
+  }
 }

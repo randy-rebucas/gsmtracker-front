@@ -1,53 +1,50 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 import { PatientsService } from '../patients.service';
 import { PatientData } from '../patient-data.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-patient-edit',
   templateUrl: './patient-edit.component.html',
   styleUrls: ['./patient-edit.component.css']
 })
-export class PatientEditComponent implements OnInit, OnDestroy {
-  patientsPerPage = 10;
-  currentPage = 1;
+export class PatientEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   patient: PatientData;
-  form: FormGroup;
-  isLoading = false;
-  startDate = new Date(1990, 0, 1);
 
   private mode = 'create';
-  private patientId: string;
-  public title: string;
+
+  public dialogTitle: string;
   public btnLabel: string;
-  private userId: string;
-  private authStatusSub: Subscription;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     private notificationService: NotificationService,
     private patientsService: PatientsService,
     private dialogRef: MatDialogRef < PatientEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
+    super(authService, router, dialog);
+
     this.patientId = data.id;
-    this.title = data.title;
+    this.dialogTitle = data.title;
     this.btnLabel = data.btnLabel;
   }
 
   ngOnInit() {
-    this.userId = this.authService.getUserId();
-    this.authStatusSub = this.authService
-    .getAuthStatusListener()
-    .subscribe(authStatus => {
-      this.isLoading = false;
-    });
+    super.doInit();
+
     this.form = new FormGroup({
       firstname: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50) ]
@@ -110,6 +107,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
           });
         });
       } else {
+        this.isLoading = false;
         this.mode = 'create';
         this.patientId = null;
       }
@@ -133,7 +131,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.patientsService.getAll(this.userId, this.patientsPerPage, this.currentPage);
+        this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
       });
     } else {
       this.patientsService.update(
@@ -151,7 +149,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.patientsService.getAll(this.userId, this.patientsPerPage, this.currentPage);
+        this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
       });
     }
   }
@@ -162,7 +160,7 @@ export class PatientEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authStatusSub.unsubscribe();
+    super.doDestroy();
   }
 
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
@@ -19,18 +19,19 @@ implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     public router: Router,
+    public dialog: MatDialog,
 
     public dialogRef: MatDialogRef < QrCodeGenerateComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router);
+      super(authService, router, dialog);
 
       this.dialogTitle = data.title;
       this.myAngularxQrCode = data.id; // 'Your QR code data string';
      }
 
   ngOnInit() {
-    super.ngOnInit();
+    super.doInit();
   }
 
   onClose() {
@@ -38,6 +39,6 @@ implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    super.doDestroy();
   }
 }

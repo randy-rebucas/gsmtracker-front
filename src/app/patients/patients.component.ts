@@ -16,10 +16,10 @@ extends SecureComponent
 implements OnInit, OnDestroy {
 
   ngOnInit() {
-    super.ngOnInit();
+    super.doInit();
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    super.doDestroy();
   }
 }
