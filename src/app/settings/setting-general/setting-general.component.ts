@@ -1,12 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
+import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { SettingsGeneralService } from '../settings-general.service';
-import { MatDialog } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { SecureComponent } from 'src/app/secure/secure.component';
 
@@ -23,15 +20,15 @@ implements OnInit {
   settingId: string;
 
   constructor(
-    public dialog: MatDialog,
     public authService: AuthService,
     public router: Router,
+
     public titleService: Title,
     public settingsGeneralService: SettingsGeneralService,
     private notificationService: NotificationService,
     private fb: FormBuilder
     ) {
-      super(dialog, authService, router, titleService);
+      super(authService, router);
       this.form = this.fb.group({
         clinicName: ['', [Validators.required]],
         clinicOwner: ['', [Validators.required]],
@@ -49,14 +46,13 @@ implements OnInit {
 
   ngOnInit() {
     super.ngOnInit();
-    super.onSetTitle('Settings - General');
+    this.titleService.setTitle('Settings - General');
 
     this.populateForm();
   }
 
   populateForm() {
     this.settingsGeneralService.get(this.userId).subscribe(settingData => {
-      console.log(settingData);
       this.form.patchValue({
         clinicName: settingData[0].clinicName,
         clinicOwner: settingData[0].clinicOwner,

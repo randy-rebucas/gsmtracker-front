@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, ViewChild, Optional, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PageEvent, MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material';
+import { PageEvent, MatDialog, MatDialogConfig } from '@angular/material';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,6 +17,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { basename } from 'path';
 
 @Component({
   selector: 'app-patient-list',
@@ -96,28 +97,30 @@ export class PatientListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  private patients: PatientData[] = [];
   private patientsSub: Subscription;
 
+  dataSource: MatTableDataSource<any>;
+  columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
+  expandedElement: any;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
   constructor(
-    public dialog: MatDialog,
     public authService: AuthService,
     public router: Router,
-    public titleService: Title,
-    public dialogService: DialogService,
-    private route: ActivatedRoute,
+
+    public dialog: MatDialog,
+    private titleService: Title,
+    private dialogService: DialogService,
     private notificationService: NotificationService,
     private patientsService: PatientsService
   ) {
-    super(dialog, authService, router, titleService);
+    super(authService, router);
   }
-
-  columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
-  expandedElement: any;
 
   ngOnInit() {
     super.ngOnInit();
-    super.onSetTitle('Patients');
+    this.titleService.setTitle('Patients');
 
     this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
     this.patientsSub = this.patientsService
@@ -133,14 +136,9 @@ implements OnInit, OnDestroy {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  onFilter(patientId) {
-    this.router.navigate(['./', patientId], {relativeTo: this.route});
   }
 
   onChangedPage(pageData: PageEvent) {
@@ -150,16 +148,30 @@ implements OnInit, OnDestroy {
     this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
   }
 
-  onQue(patientId) {
-    super.onPopup(patientId, 'Add to Que', 'Move', '50%', PatientEditComponent); // change to que component
-  }
-
   onCreate() {
-    super.onPopup(null, 'New patient', 'Save', '50%', PatientEditComponent);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
+      id: null,
+      title: 'New patient',
+      btnLabel: 'Save'
+    };
+    this.dialog.open(PatientEditComponent, dialogConfig);
   }
 
   onEdit(patientId) {
-    super.onPopup(patientId, 'Update patient', 'Update', '50%', PatientEditComponent);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
+      id: patientId,
+      title: 'Update patient',
+      btnLabel: 'Update'
+    };
+    this.dialog.open(PatientEditComponent, dialogConfig);
   }
 
   onDelete(patientId) {

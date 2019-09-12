@@ -1,9 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { Title } from '@angular/platform-browser';
-import { MatDialogConfig, MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-secure',
@@ -47,6 +45,8 @@ export class SecureComponent implements OnInit, OnDestroy {
    * user/client types
    */
   public userId: string;
+  public userEmail: string;
+  public userSubscription: string;
 
   /**
    * common variables
@@ -63,20 +63,17 @@ export class SecureComponent implements OnInit, OnDestroy {
    * Subscriptions
    */
   public authListenerSubs: Subscription;
-
-  public dataSource: MatTableDataSource<any>;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  public serviceSub: Subscription;
 
   constructor(
-    public dialog: MatDialog,
     public authService: AuthService,
-    public router: Router,
-    public titleService: Title
+    public router: Router
   ) { }
 
   ngOnInit() {
     this.userId = this.authService.getUserId();
+    this.userEmail = this.authService.getUserEmail();
+    this.userSubscription = this.authService.getUserSubscription();
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
@@ -87,25 +84,8 @@ export class SecureComponent implements OnInit, OnDestroy {
     this.isLoading = true;
   }
 
-  onSetTitle(title: string) {
-    this.titleService.setTitle(title);
-  }
-
-  onPopup(Id: string, dialogTitle: string, dialogButonText: string, dialogWidth: string, targetComponent: any) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = dialogWidth;
-    dialogConfig.data = {
-      id: Id,
-      title: dialogTitle,
-      btnLabel: dialogButonText
-    };
-    this.dialog.open(targetComponent, dialogConfig);
-  }
-
   ngOnDestroy() {
     this.authListenerSubs.unsubscribe();
-    console.log('destryoed');
   }
+
 }

@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../environments/environment';
 import { PatientData } from './patient-data.model';
@@ -11,15 +9,12 @@ import { PatientData } from './patient-data.model';
 const BACKEND_URL = environment.apiUrl + '/patients';
 
 @Injectable({providedIn: 'root'})
-
 export class PatientsService {
   private patients: PatientData[] = [];
   private patientsUpdated = new Subject<{ patients: PatientData[], patientCount: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
   getAll(userId: string, patientPerPage: number, currentPage: number) {

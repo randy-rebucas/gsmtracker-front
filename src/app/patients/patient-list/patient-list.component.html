@@ -65,7 +65,7 @@
                             <dd>: {{element.comments}}</dd>
                         </dl>
                         <br/>
-                        <button class="mat-raised-button mat-primary" (click)="onFilter(element.id)">View Detail</button>
+                        <button class="mat-raised-button mat-primary" [routerLink]="['./', element.id]">View Detail</button>
                     </div>
                 </div>
             </td>

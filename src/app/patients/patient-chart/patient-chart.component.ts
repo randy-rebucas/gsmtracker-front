@@ -17,27 +17,19 @@ import { NotesService } from '../patient-record/services/notes.service';
 import { PatientsService } from '../patients.service';
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-patient-chart',
   templateUrl: './patient-chart.component.html',
   styleUrls: ['./patient-chart.component.css']
 })
-export class PatientChartComponent implements OnInit, OnDestroy {
-    @ViewChild('content', {static: false}) content: ElementRef;
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+export class PatientChartComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  id: string;
-  bloodType: string;
-  image: string;
-  firstname: string;
-  midlename: string;
-  lastname: string;
-  contact: string;
-  gender: string;
-  address: string;
-  birthdate: string;
+  @ViewChild('content', {static: false}) content: ElementRef;
 
   height: number;
   heightCreated = new Date();
@@ -60,16 +52,17 @@ export class PatientChartComponent implements OnInit, OnDestroy {
   assessments: any;
   diagnosis: any;
   treatments: any;
-  prescriptions: any;
+  prescriptions: [];
   progressNotes: string;
 
-  patientId: string;
-  title: string;
+  dialogTitle: string;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+
+    private titleService: Title,
+
     public patientsService: PatientsService,
     public heightService: HeightService,
     public weightService: WeightService,
@@ -84,100 +77,103 @@ export class PatientChartComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < PatientChartComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      this.title = data.title;
-      this.patientId = data.patientId; // 'Your QR code data string';
+      super(authService, router);
+      this.dialogTitle = data.title;
+      this.patientId = data.id;
      }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.ngOnInit();
 
-    this.patientsService.get(this.patientId).subscribe(patientData => {
-        this.id = patientData._id;
-        this.firstname = patientData.firstname;
-        this.midlename = patientData.midlename;
-        this.lastname = patientData.lastname;
-        this.contact = patientData.contact;
-        this.gender = patientData.gender;
-        this.birthdate = patientData.birthdate;
-        this.address = patientData.address;
-        this.bloodType = patientData.bloodType;
-      });
+    this.getPatientData(this.patientId)
+      .then((results) => {
+        this.isLoading = false;
+        this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Chart');
 
-    this.heightService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.height = recordData[0].height;
-        this.heightCreated = recordData[0].created;
-      }
-    });
+        // this.id = results.patientData._id;
+        this.firstname = results.patientData.firstname;
+        this.midlename = results.patientData.midlename;
+        this.lastname = results.patientData.lastname;
+        this.contact = results.patientData.contact;
+        this.gender = results.patientData.gender;
+        this.birthdate = results.patientData.birthdate;
+        this.bloodType = results.patientData.bloodType;
 
-    this.weightService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.weight = recordData[0].weight;
-        this.weightCreated = recordData[0].created;
-      }
-    });
+        if (Object.keys(results.heightData).length) {
+          this.height = results.heightData[0].height;
+          this.heightCreated = results.heightData[0].created;
+        }
 
-    this.temperatureService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.temperature = recordData[0].temperature;
-        this.temperatureCreated = recordData[0].created;
-      }
-    });
+        if (Object.keys(results.weightData).length) {
+          this.weight = results.weightData[0].weight;
+          this.weightCreated = results.weightData[0].created;
+        }
 
-    this.bpService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.tempSystolic = recordData[0].systolic;
-        this.tempDiastolic = recordData[0].diastolic;
-        this.tempCreated = recordData[0].created;
-      }
-    });
+        if (Object.keys(results.temperatureData).length) {
+          this.temperature = results.temperatureData[0].temperature;
+          this.temperatureCreated = results.temperatureData[0].created;
+        }
 
-    this.rprService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.respiratoryRate = recordData[0].respiratoryrate;
-        this.respiratoryRateCreated = recordData[0].created;
-      }
-    });
+        if (Object.keys(results.bloodPressureData).length) {
+          this.tempSystolic = results.bloodPressureData[0].systolic;
+          this.tempDiastolic = results.bloodPressureData[0].diastolic;
+          this.tempCreated = results.bloodPressureData[0].created;
+        }
 
-    this.historyService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.histories = recordData;
-      }
-    });
+        if (Object.keys(results.respiratoryRateData).length) {
+          this.respiratoryRate = results.respiratoryRateData[0].respiratoryrate;
+          this.respiratoryRateCreated = results.respiratoryRateData[0].created;
+        }
 
-    this.complaintService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.complaints = recordData[0].complaints;
-      }
-    });
+        if (Object.keys(results.historyData).length) {
+          this.histories = results.historyData;
+        }
 
-    this.assessmentService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.diagnosis = recordData[0].diagnosis;
-        this.treatments = recordData[0].treatments;
-      }
-    });
+        if (Object.keys(results.complaintData).length) {
+          this.complaints = results.complaintData[0].complaints;
+        }
 
-    this.prescriptionService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.prescriptions = recordData[0].prescriptions;
-      }
-    });
+        if (Object.keys(results.assessmentData).length) {
+          this.diagnosis = results.assessmentData[0].diagnosis;
+          this.treatments = results.assessmentData[0].treatments;
+        }
 
-    this.notesService.getLast(this.patientId).subscribe(recordData => {
-      if (Object.keys(recordData).length) {
-        this.progressNotes = recordData[0].note;
-      }
-    });
+        if (Object.keys(results.prescriptionData).length) {
+          this.prescriptions = results.prescriptionData[0].prescriptions;
+        }
+
+        if (Object.keys(results.progressNotesData).length) {
+          this.progressNotes = results.progressNotesData[0].note;
+        }
+      })
+      .catch(err => console.log(err));
   }
 
-  onClose() {
-    this.dialogRef.close();
+  async getPatientData(patientId) {
+    const patientResponse = await this.patientsService.get(patientId).toPromise();
+    const heightResponse = await this.heightService.getLast(patientId).toPromise();
+    const weightResponse = await this.weightService.getLast(patientId).toPromise();
+    const temperatureResponse = await this.temperatureService.getLast(patientId).toPromise();
+    const bloodPressureResponse = await this.bpService.getLast(patientId).toPromise();
+    const respiratoryRateResponse = await this.rprService.getLast(patientId).toPromise();
+    const historyResponse = await this.historyService.getLast(patientId).toPromise();
+    const complaintResponse = await this.complaintService.getLast(patientId).toPromise();
+    const assessmentResponse = await this.assessmentService.getLast(patientId).toPromise();
+    const prescriptionResponse = await this.prescriptionService.getLast(patientId).toPromise();
+    const progressNotesResponse = await this.notesService.getLast(patientId).toPromise();
+    return {
+      patientData: patientResponse,
+      heightData: heightResponse,
+      weightData: weightResponse,
+      temperatureData: temperatureResponse,
+      bloodPressureData: bloodPressureResponse,
+      respiratoryRateData: respiratoryRateResponse,
+      historyData: historyResponse,
+      complaintData: complaintResponse,
+      assessmentData: assessmentResponse,
+      prescriptionData: prescriptionResponse,
+      progressNotesData: progressNotesResponse
+    };
   }
 
   public downloadChart() {
@@ -197,23 +193,23 @@ export class PatientChartComponent implements OnInit, OnDestroy {
       const pdfDoc = new jsPDF();
 
       const margins = {
-          top: 15,
-          bottom: 15,
-          left: 15,
-          width: 190
+        top: 15,
+        bottom: 15,
+        left: 15,
+        width: 190
       };
 
       const position = 0;
 
       const specialElementHandlers = {
-          '#editor': function(element: any, renderer: any) {
-              return true;
-          }
+        '#editor': (element: any, renderer: any) => {
+          return true;
+        }
       };
 
       pdfDoc.fromHTML(content.innerHTML, margins.left, margins.top, {
-          'width': margins.width,
-          'elementHandlers': specialElementHandlers
+        width: margins.width,
+        elementHandlers: specialElementHandlers
       });
 
       pdfDoc.setProperties({
@@ -229,22 +225,11 @@ export class PatientChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  // getImgFromUrl(logoUrl, callback) {
-  //   const img = new Image();
-  //   img.src = logoUrl;
-  //   img.onload = function() {
-  //       callback(img);
-  //   };
-  // }
-
-  // generatePDF(img) {
-  //   const options = {orientation: 'p', unit: 'mm', format: 'a4'};
-  //   const doc = new jsPDF(options);
-  //   doc.addImage(img, 'JPEG', 0, 0, 100, 50);
-  //   doc.save('record.pdf');
-  // }
+  onClose() {
+    this.dialogRef.close();
+  }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.ngOnDestroy();
   }
 }

@@ -17,28 +17,18 @@ import { NotesService } from '../patient-record/services/notes.service';
 import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { PatientChartComponent } from '../patient-chart/patient-chart.component';
-import { MessageEditComponent } from 'src/app/messages/message-edit/message-edit.component';
 import { UploadService } from 'src/app/upload/upload.service';
 import { UploadData } from 'src/app/upload/upload-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-patient-detail',
   templateUrl: './patient-detail.component.html',
   styleUrls: ['./patient-detail.component.css']
 })
-export class PatientDetailComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-
-  id: string;
-  bloodType: string;
-  image: string;
-  firstname: string;
-  midlename: string;
-  lastname: string;
-  contact: string;
-  gender: string;
-  birthdate: string;
+export class PatientDetailComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   height: number;
   heightCreated = new Date();
@@ -65,18 +55,15 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
   progressNotes: string;
 
   files: UploadData[] = [];
-  isLoading = false;
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
 
-  private patientId: string;
   private recordsSub: Subscription;
+
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
+    public router: Router,
+
     public patientsService: PatientsService,
     private route: ActivatedRoute,
-    private router: Router,
     private dialog: MatDialog,
     public heightService: HeightService,
     public weightService: WeightService,
@@ -90,16 +77,13 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     public notesService: NotesService,
     public uploadService: UploadService,
     private titleService: Title
-    ) { }
+    ) {
+      super(authService, router);
+    }
 
     ngOnInit() {
-      this.isLoading = true;
-      this.userIsAuthenticated = this.authService.getIsAuth();
-      this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+      super.ngOnInit();
+
       this.route.paramMap.subscribe((paramMap: ParamMap) => {
         this.patientId = paramMap.get('patientId');
       });
@@ -109,7 +93,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
 
-        this.id = results.patientData._id;
+        // this.id = results.patientData._id;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
         this.lastname = results.patientData.lastname;
@@ -149,7 +133,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
         }
 
         if (Object.keys(results.complaintData).length) {
-          this.complaints = results.historyData[0].complaints;
+          this.complaints = results.complaintData[0].complaints;
         }
 
         if (Object.keys(results.assessmentData).length) {
@@ -236,38 +220,28 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
       }
     }
 
-    generateQrCode() {
+    generateQrCode(patientId) {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.width = '16%';
         dialogConfig.data = {
-          id: null,
-          title: 'Generate QR Code',
-          patientId: this.patientId
+          id: patientId,
+          title: 'Generate QR Code'
         };
         this.dialog.open(QrCodeGenerateComponent, dialogConfig);
     }
 
-    viewChart() {
+    viewChart(patientId) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
       dialogConfig.width = '50%';
       dialogConfig.data = {
-          id: null,
-          title: 'Chart',
-          patientId: this.patientId
+          id: patientId,
+          title: 'Chart'
         };
       this.dialog.open(PatientChartComponent, dialogConfig);
-    }
-
-    onCreateMessage() {
-      this.router.navigate(['messages']);
-    }
-
-    onCreateAppointment() {
-      this.router.navigate(['appointments']);
     }
 
     gotoRecord() {

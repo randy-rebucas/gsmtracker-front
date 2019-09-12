@@ -74,6 +74,7 @@ import { SecureComponent } from './secure/secure.component';
     AppointmentsComponent,
     AppointmentEditComponent,
     AppointmentListComponent,
+    AppointmentDetailComponent,
     AppointmentCalendarComponent,
     RxPadComponent,
     QrCodeComponent,
@@ -89,7 +90,6 @@ import { SecureComponent } from './secure/secure.component';
     MessageDetailComponent,
     MatDialogConfirmComponent,
     DialogComponent,
-    AppointmentDetailComponent,
     SecureComponent
   ],
   imports: [

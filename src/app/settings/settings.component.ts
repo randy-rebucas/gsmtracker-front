@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
 import { AuthService } from '../auth/auth.service';
 import { SecureComponent } from '../secure/secure.component';
 
@@ -15,17 +14,17 @@ extends SecureComponent
 implements OnInit, OnDestroy {
 
   constructor(
-    public dialog: MatDialog,
     public authService: AuthService,
     public router: Router,
+
     public titleService: Title
 ) {
-  super(dialog, authService, router, titleService);
+  super(authService, router);
 }
 
   ngOnInit() {
     super.ngOnInit();
-    super.onSetTitle('Settings');
+    this.titleService.setTitle('Settings');
   }
 
   ngOnDestroy() {

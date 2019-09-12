@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PrescriptionService } from '../patients/patient-record/services/prescription.service';
-import { PrescriptionData } from '../patients/patient-record/models/prescription-data.model';
 import { PatientsService } from '../patients/patients.service';
 import { SecureComponent } from '../secure/secure.component';
 import { Title } from '@angular/platform-browser';
@@ -27,17 +25,16 @@ implements OnInit, OnDestroy {
   prescriptions: any;
 
   constructor(
-    public dialog: MatDialog,
     public authService: AuthService,
     public router: Router,
-    public titleService: Title,
 
+    public titleService: Title,
     public prescriptionService: PrescriptionService,
     public patientsService: PatientsService,
     public dialogRef: MatDialogRef < RxPadComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(dialog, authService, router, titleService);
+      super(authService, router);
       this.recordId = data.id;
       this.patientId = data.patientId;
       this.title = data.title;
@@ -56,7 +53,7 @@ implements OnInit, OnDestroy {
         /**
          * set the page title
          */
-        super.onSetTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Record');
+        this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Record');
         /**
          * person data
          */
@@ -90,6 +87,6 @@ implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.ngOnDestroy();
   }
 }
