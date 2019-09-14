@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
@@ -13,20 +13,18 @@ import { AppointmentData } from '../appointment-data.model';
 import { AppointmentService } from '../appointment.service';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-appointment-calendar',
   templateUrl: './appointment-calendar.component.html',
   styleUrls: ['./appointment-calendar.component.css']
 })
-export class AppointmentCalendarComponent implements OnInit, OnDestroy {
+export class AppointmentCalendarComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
   @ViewChild('calendar', {static: false}) calendarComponent: FullCalendarComponent; // the #calendar in the template
 
-  userId: string;
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
-  isLoading = false;
   appointments: AppointmentData[] = [];
   // AIzaSyAG6XBWVT7fFU1newS7FUz9S8LsSb1h9bs
   // https://calendar.google.com/calendar?cid=cmVidWNhc3JhbmR5MTk4NkBnbWFpbC5jb20
@@ -37,29 +35,22 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
   calendarWeekends = true;
   timeZone: 'UTC';
 
-  userIsAuthenticated = false;
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+  public recordsSub: Subscription;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public appointmentService: AppointmentService,
-    private dialog: MatDialog
-    ) {}
+    ) {
+      super(authService, router, dialog);
+    }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.userId = this.authService.getUserId();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
-
     this.recordsSub = this.appointmentService
       .getUpdateListener()
       .subscribe((appointmentData: {appointments: AppointmentData[], count: number}) => {
@@ -70,17 +61,16 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
   }
 
   viewEvent(arg) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '30%';
-    dialogConfig.data = {
-        id: arg.event.id
+    const args = {
+      width: '30%',
+      id: arg.event.id,
+      dialogTitle: 'Update Patient',
+      dialogButton: 'Update'
     };
-    this.dialog.open(AppointmentDetailComponent, dialogConfig);
+    super.onPopup(args, AppointmentDetailComponent);
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

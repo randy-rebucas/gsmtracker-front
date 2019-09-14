@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
@@ -9,18 +9,18 @@ import { AuthService } from '../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { AppointmentService } from '../../appointments/appointment.service';
 import { AppointmentData } from '../../appointments/appointment-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-appointment-detail',
   templateUrl: './appointment-detail.component.html',
   styleUrls: ['./appointment-detail.component.css']
 })
-export class AppointmentDetailComponent implements OnInit, OnDestroy {
+export class AppointmentDetailComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
+
   appointmentData: AppointmentData;
-  isLoading = false;
-  perPage = 10;
-  currentPage = 1;
-  userId: string;
 
   id: string;
   title: string;
@@ -37,31 +37,25 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   status: number;
   detailId: string;
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
   private appointmentId: string;
 
   constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public appointmentService: AppointmentService,
-    public route: ActivatedRoute,
-    private authService: AuthService,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < AppointmentDetailComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
       this.appointmentId = data.id;
     }
 
   ngOnInit() {
-    this.userId = this.authService.getUserId();
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
-    this.isLoading = true;
     this.appointmentService.get(this.appointmentId)
       .subscribe(recordData => {
         this.isLoading = false;
@@ -78,7 +72,6 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
         this.birthdate = recordData.birthdate;
         this.contact = recordData.contact;
         this.detailId = recordData.detailId;
-
     });
   }
 
@@ -99,6 +92,6 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }
