@@ -61,9 +61,9 @@ export class AppointmentService {
       );
   }
 
-  insert(users: string, title: string, start: string, end: string, clientId: string) {
+  insert(users: string, title: string, start: string, clientId: string) {
     const appointmentData = {
-      users, title, start, end, clientId
+      users, title, start, clientId
     };
     return this.http.post<{ message: string, record: AppointmentData }>(BACKEND_URL, appointmentData);
   }

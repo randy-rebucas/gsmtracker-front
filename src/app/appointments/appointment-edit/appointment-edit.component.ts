@@ -48,10 +48,10 @@ implements OnInit, OnDestroy {
       }),
       start: new FormControl(null, {
         validators: [Validators.required]
-      }),
-      end: new FormControl(null, {
-        validators: [Validators.required]
       })
+      // end: new FormControl(null, {
+      //   validators: [Validators.required]
+      // })
     });
 
     this.form
@@ -86,7 +86,6 @@ implements OnInit, OnDestroy {
       this.form.value.userInput,
       this.form.value.title,
       this.form.value.start,
-      this.form.value.end,
       this.userId
     ).subscribe(() => {
       this.form.reset();

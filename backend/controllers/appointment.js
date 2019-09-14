@@ -1,7 +1,4 @@
 const Appointment = require('../models/appointment');
-const Person = require('../models/person');
-const Detail = require('../models/appointment_detail');
-
 const moment = require('moment');
 
 exports.create = async (req, res, next) => {
@@ -9,7 +6,6 @@ exports.create = async (req, res, next) => {
     const appointmentData = new Appointment({
       title: req.body.title,
       start: req.body.start,
-      end: req.body.end,
       backgroundColor: '#ff4081',
       borderColor: '#ff4081',
       textColor: '#fff',

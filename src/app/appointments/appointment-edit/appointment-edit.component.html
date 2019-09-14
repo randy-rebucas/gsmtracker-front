@@ -37,13 +37,18 @@
             </mat-form-field>
           </td>
           <td>
-            <mat-form-field>
-              <input matInput readonly [matDatepicker]="endPicker" formControlName="end" [min]="currentDate" placeholder="End">
-              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-              <mat-datepicker #endPicker color="primary"></mat-datepicker>
-            </mat-form-field>
+            <!-- <mat-form-field>
+                <input matInput type="text" [ngxTimepicker]="morningopenpicker" formControlName="morningOpen" placeholder="hour" [disableClick]="true" readonly>
+                <ngx-material-timepicker-toggle [for]="morningopenpicker"></ngx-material-timepicker-toggle>
+                <ngx-material-timepicker #morningopenpicker></ngx-material-timepicker>
+            </mat-form-field> -->
           </td>
         </tr>
+        <!-- <mat-form-field>
+            <input matInput readonly [matDatepicker]="endPicker" formControlName="end" [min]="currentDate" placeholder="End">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker color="primary"></mat-datepicker>
+          </mat-form-field> -->
       </table>
 
     <button mat-raised-button color="primary" type="submit">Submit</button>

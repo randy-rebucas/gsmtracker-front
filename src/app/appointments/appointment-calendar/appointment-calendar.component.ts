@@ -35,6 +35,7 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
   calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, listPlugin, interactionPlugin];
   calendarWeekends = true;
+  timeZone: 'UTC';
 
   userIsAuthenticated = false;
   private recordsSub: Subscription;

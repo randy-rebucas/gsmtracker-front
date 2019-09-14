@@ -4,7 +4,8 @@ mongoose.set('useCreateIndex', true);
 const appointmentSchema = mongoose.Schema({
   title: { type: String, required: true },
   start: { type: Date, required: true },
-  end: { type: Date, required: true },
+  allDay: { type: Boolean, default: true },
+  // end: { type: Date, required: true },
   backgroundColor: { type: String },
   borderColor: { type: String },
   textColor: { type: String },
