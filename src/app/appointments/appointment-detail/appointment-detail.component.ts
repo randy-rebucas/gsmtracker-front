@@ -70,14 +70,13 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
         this.start = recordData.start;
         this.end = recordData.end;
         this.clientId = recordData.clientId;
+        this.status = recordData.status;
 
         this.fullname = recordData.fullname;
         this.gender = recordData.gender;
         this.address = recordData.address;
         this.birthdate = recordData.birthdate;
         this.contact = recordData.contact;
-        this.type = recordData.type;
-        this.status = recordData.status;
         this.detailId = recordData.detailId;
 
     });

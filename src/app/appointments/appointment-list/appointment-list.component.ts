@@ -2,12 +2,13 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatSort, MatTableDataSource, PageEvent, MatDialog } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, PageEvent, MatDialog, MatDialogConfig } from '@angular/material';
 import { AppointmentService } from '../appointment.service';
 import { AppointmentData } from '../appointment-data.model';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
 
 @Component({
   selector: 'app-appointment-list',
@@ -65,6 +66,17 @@ implements OnInit, OnDestroy {
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
     this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
+  }
+
+  viewEvent(eventId) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '30%';
+    dialogConfig.data = {
+        id: eventId
+    };
+    this.dialog.open(AppointmentDetailComponent, dialogConfig);
   }
 
   onDelete(appointmentId) {
