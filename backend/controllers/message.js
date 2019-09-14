@@ -1,70 +1,70 @@
 const Message = require('../models/message');
+const User = require('../models/user');
+
 const moment = require('moment');
 
-exports.create = (req, res, next) => {
-    const message = new Message({
-      message: req.body.message,
-      threadId: req.body.threadId,
-      personId: req.body.personId
-    });
-    message
-    .save()
-    .then(createdRecord => {
-            res.status(201).json({
-                message: {
-                    ...createdRecord,
-                    id: createdRecord._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
-};
-
-exports.getAll = (req, res, next) => {
-  Message.find({ 'threadId': req.query.threadId })
-    // .populate('personId')
-    .then(documents => {
-      console.log(documents);
-        newMessages = [];
-        documents.forEach(element => {
-          //create object
-          var myObj = {
-            id: element._id,
-            created: moment(element.created, "YYYYMMDD").fromNow(),
-            message: element.message,
-            fullname : element.personId.firstname + ' ' + element.personId.midlename + ', ' +element.personId.lastname,
-            personId : element.personId._id
-          };
-          //push the object to your array
-          newMessages.push( myObj );
-        });
-        res.status(200).json({
-            messages: newMessages
-        });
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
+exports.create = async (req, res, next) => {
+  try {
+    let user = await User.findById(req.body.personId);
+      const messageData = new Message({
+        message: req.body.message,
+        threadId: req.body.threadId,
+        personId: user.personId
       });
+    let message = await messageData.save();
+    res.status(201).json({
+      thread: {
+          ...message,
+          id: message._id,
+      }
+    });
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+    // this will eventually be handled by your error handling middleware
+    // next(e)
+  }
 };
 
-// exports.getStatus = (req, res, next) => {
-//   Message.findOne({ threadId: req.body.threadId })
-//     .where('status', 0)
-//     .then(result => {
-//         console.log(result);
-//     })
-//     .catch(error => {
-//         res.status(500).json({
-//             message: error.message
-//         });
-//     });
-// };
+exports.getAll = async (req, res, next) => {
+  try {
+    let unreadMessage = await Message.find({ 'threadId': req.query.threadId }).where({ status: 0 });
+    if (unreadMessage.length > 0) {
+      ids = [];
+      unreadMessage.forEach(element => {
+        ids.push(element._id);
+      });
+      let readMessage = await Message.updateMany({ "_id": { "$in": ids } }, { "$set": { "status": 1 } } , {multi: true});
+      console.log(readMessage.n + ' items updated');
+    }
+
+    const user = await Message.find({ 'threadId': req.query.threadId }).populate('personId');
+    newMessages = [];
+    user.forEach(element => {
+      //create object
+      var myObj = {
+        id: element._id,
+        created: moment(element.created, "YYYYMMDD").fromNow(),
+        message: element.message,
+        fullname : element.personId.firstname + ' ' + element.personId.midlename + ', ' +element.personId.lastname,
+        personId : element.personId._id
+      };
+      //push the object to your array
+      newMessages.push( myObj );
+    });
+    res.status(200).json({
+        messages: newMessages
+    });
+
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+    //this will eventually be handled by your error handling middleware
+    // next(e)
+  }
+};
 
 exports.delete = (req, res, next) => {
     Message.deleteOne({ _id: req.params.messageId })

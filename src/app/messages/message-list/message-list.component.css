@@ -24,3 +24,6 @@ mat-list-item {
 mat-list-item.active {
   border-left: 3px solid #3f51b5;
 }
+p.mat-line.bold {
+  font-weight: bold !important;
+}

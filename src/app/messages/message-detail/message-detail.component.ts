@@ -49,26 +49,34 @@ implements OnInit, OnDestroy {
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.threadId = paramMap.get('messageId');
-      this.threadService.get(this.threadId).subscribe(threadData => {
-        this.id = threadData._id;
-        this.fullname = threadData.fullname;
-        this.gender = threadData.gender;
-        this.address = threadData.address;
-        this.birthdate = threadData.birthdate;
-        this.contact = threadData.contact;
-        this.personId = threadData.personId;
-        this.created = threadData.created;
-      });
-
-      this.messageService.getAll(this.threadId);
-      this.messageSub = this.messageService.getUpdateListener()
-      .subscribe((messageData: {messages: MessagesData[]}) => {
+      this.getThreadData(this.threadId)
+      .then((results) => {
         this.isLoading = false;
-        this.messages = messageData.messages;
-      });
+        this.id = results.threadData._id;
+        this.fullname = results.threadData.fullname;
+        this.gender = results.threadData.gender;
+        this.address = results.threadData.address;
+        this.birthdate = results.threadData.birthdate;
+        this.contact = results.threadData.contact;
+        this.personId = results.threadData.personId;
+        this.created = results.threadData.created;
+
+        this.messageService.getAll(this.threadId);
+        this.messageSub = this.messageService.getUpdateListener()
+        .subscribe((messageData: {messages: MessagesData[]}) => {
+          this.messages = messageData.messages;
+        });
+      })
+      .catch(err => console.log(err));
     });
 
-    this.isNew = false;
+  }
+
+  async getThreadData(threadId) {
+    const threadResponse = await this.threadService.get(threadId).toPromise();
+    return {
+      threadData: threadResponse
+    };
   }
 
   onProfile(personId: string) {

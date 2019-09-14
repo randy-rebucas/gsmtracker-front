@@ -8,15 +8,9 @@
         <mat-icon mat-list-icon class="md-48">face</mat-icon>
         <h4 mat-line>{{thread.fullname}} <small mat-line> {{thread.created }} </small></h4>
         <!-- <a (click)="onDelete(thread.id)">Delete</a> -->
-        <!-- <p mat-line> get the last message </p> -->
+        <p mat-line [ngClass]="{'bold': thread.status==0}"> {{thread.message}} </p>
       </mat-list-item>
       <mat-list-item *ngIf="threads.length === 0">No message available.</mat-list-item>
-      <!-- <h3 mat-subheader>Doctors</h3>
-      <mat-list-item *ngFor="let doctor of doctors">
-        <mat-icon mat-list-icon class="md-48">face</mat-icon>
-        <h4 mat-line>{{doctor.name}}</h4>
-        <p mat-line> {{doctor.updated | date}} </p>
-      </mat-list-item> -->
     </mat-list>
 </div>
 

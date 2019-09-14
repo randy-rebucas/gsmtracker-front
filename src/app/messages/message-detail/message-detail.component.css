@@ -29,3 +29,6 @@ div#reply-area {
   height: 480px;
   overflow-y: auto;
 }
+mat-list {
+  min-height: 258px;
+}

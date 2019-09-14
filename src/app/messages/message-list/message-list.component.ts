@@ -19,9 +19,9 @@ export class MessageListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  private threadSub: Subscription;
+  public threadSub: Subscription;
   threads: ThreadData[] = [];
-
+  newThreads: any[] = [];
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -29,8 +29,7 @@ implements OnInit, OnDestroy {
 
     private threadService: ThreadsService,
     private notificationService: NotificationService,
-    private dialogService: DialogService,
-    private messageService: MessagesService
+    private dialogService: DialogService
     ) {
       super(authService, router, dialog);
     }
@@ -41,8 +40,22 @@ implements OnInit, OnDestroy {
     this.threadService.getAll(this.userId);
     this.threadSub = this.threadService.getUpdateListener()
     .subscribe((thredData: {threads: ThreadData[]}) => {
+      thredData.threads.forEach(element => {
+        this.threadService.getMessage(element.id).toPromise()
+        .then((results) => {
+          const obj = {
+            created: element.created,
+            fullname: element.fullname,
+            id: element.id,
+            ownerId: element.ownerId,
+            message: results.message.message,
+            status: results.message.status
+          };
+          this.newThreads.push(obj);
+        });
+      });
       this.isLoading = false;
-      this.threads = thredData.threads;
+      this.threads = this.newThreads;
     });
   }
 

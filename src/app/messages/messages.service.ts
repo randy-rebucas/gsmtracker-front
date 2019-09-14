@@ -40,7 +40,6 @@ export class MessagesService {
     )
     .pipe(
       map(messageData => {
-        console.log(messageData);
         return { messages: messageData.messages.map(message => {
           return {
             id: message.id,
@@ -81,13 +80,6 @@ export class MessagesService {
       message, threadId, personId
     };
     return this.http.post<{ message: string, record: MessagesData }>(BACKEND_URL, recordData);
-  }
-
-  update(id: string, subject: string, message: string, patientId: string, created: string, practitionerId: string) {
-    const recordData = {
-        id, subject, message, patientId, created, practitionerId
-    };
-    return this.http.put(BACKEND_URL + '/' + id, recordData);
   }
 
   delete(recordId: string) {

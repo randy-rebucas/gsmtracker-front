@@ -5,4 +5,5 @@ export interface ThreadData {
   ownerId: string;
 
   fullname: string;
+  message: [];
 }

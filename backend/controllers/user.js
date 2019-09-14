@@ -73,7 +73,7 @@ exports.userLogin = (req, res, next) => {
                     message: 'Auth failed no result'
                 });
             }
-            const token = jwt.sign({ email: fetchedUser.email, license: fetchedUser.subscriptionType, userId: fetchedUser._id },
+            const token = jwt.sign({ email: fetchedUser.email, userSubscriptionType: fetchedUser.subscriptionType, userId: fetchedUser._id },
                 process.env.JWT_KEY, { expiresIn: '12h' }
             );
             res.status(200).json({

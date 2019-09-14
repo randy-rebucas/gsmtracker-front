@@ -1,12 +1,15 @@
-<mat-card class="example-card" (click)="onProfile(personId)">
-  <mat-card-header>
+<mat-card class="example-card" style="min-height: 139px;" (click)="onProfile(personId)">
+  <div *ngIf="isLoading" class="loading">
+      <mat-spinner [diameter]="25"></mat-spinner>
+  </div>
+  <mat-card-header *ngIf="!isLoading">
     <div mat-card-avatar class="example-header-image">
         <mat-icon mat-list-icon class="md-48">face</mat-icon>
     </div>
     <mat-card-title>{{fullname}}</mat-card-title>
     <mat-card-subtitle>Created : {{created}}</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content *ngIf="!isLoading">
     <dl class="recepient-detail">
         <dt>Gender</dt> <dd>: {{gender}}</dd>
         <dt>Birthdate</dt> <dd>: {{birthdate | date}}</dd>
@@ -15,14 +18,19 @@
     </dl>
   </mat-card-content>
 </mat-card>
-<div id="reply-area">
-  <mat-list>
-    <mat-list-item *ngFor="let message of messages">
-      <mat-icon mat-list-icon class="md-24">face</mat-icon>
-      <h4 mat-line>{{message.fullname}} <small> {{message.created}} </small></h4>
-      <p mat-line> {{message.message}} </p>
-    </mat-list-item>
-  </mat-list>
-  <app-message-edit [threadId]="threadId"></app-message-edit>
+<div id="reply-area" style="min-height: 480px;">
+  <div *ngIf="isLoading" class="loading">
+      <mat-spinner [diameter]="25"></mat-spinner>
+  </div>
+  <div *ngIf="!isLoading">
+    <mat-list>
+      <mat-list-item *ngFor="let message of messages">
+        <mat-icon mat-list-icon class="md-24">face</mat-icon>
+        <h4 mat-line>{{message.fullname}} <small> {{message.created}} </small></h4>
+        <p mat-line> {{message.message}} </p>
+      </mat-list-item>
+    </mat-list>
+    <app-message-edit [threadId]="threadId"></app-message-edit>
+  </div>
 </div>
 

@@ -51,6 +51,12 @@ export class ThreadsService {
     return this.threadsUpdated.asObservable();
   }
 
+  getMessage(threadId) {
+    return this.http.get<{ message: any, status: any }>(
+      BACKEND_URL + '/last/' + threadId
+    );
+  }
+
   get(threadId: string) {
     // tslint:disable-next-line:max-line-length
     return this.http.get<{ _id: string, message: string, fullname: string, gender: string, address: string, birthdate: string; contact: string, personId: string, created: string, ownerId: string }>(

@@ -25,7 +25,7 @@ implements OnInit, OnDestroy {
 
   filteredUsers: User[] = [];
   setRow: number;
-
+  loading = false;
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -52,10 +52,10 @@ implements OnInit, OnDestroy {
       .valueChanges
       .pipe(
         debounceTime(300),
-        tap(() => this.isLoading = true),
+        tap(() => this.loading = true),
         switchMap(value => this.messageService.search({name: value}, this.currentPage, this.userId)
         .pipe(
-          finalize(() => this.isLoading = false),
+          finalize(() => this.loading = false),
           )
         )
       )

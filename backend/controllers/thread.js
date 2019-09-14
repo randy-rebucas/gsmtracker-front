@@ -1,108 +1,111 @@
 const Thread = require('../models/thread');
 const Message = require('../models/message');
+const User = require('../models/user');
 const moment = require('moment');
 /**
  * loop all users recepient to send sms
  */
-exports.create = (req, res, next) => {
+exports.create = async (req, res, next) => {
+  try {
+    let threadUserCheck = await Thread.findOne({ userId: req.body.users.id });
+    if (threadUserCheck === null) {
+      const threadData = new Thread({
+          userId: req.body.users.id,
+          ownerId: req.body.ownerId
+      });
+      let thread = await threadData.save();
+      let user = await User.findById(thread.ownerId);
+      const messageData = new Message({
+          message: req.body.message,
+          threadId: thread._id,
+          personId: user.personId
+      });
+      let message = await messageData.save();
 
-    Thread.findOne({ userId: req.body.users.id }, function(err, obj) {
-        if (obj === null) {
-            const thread = new Thread({
-                userId: req.body.users.id,
-                ownerId: req.body.ownerId
-            });
-            thread.save()
-                .then(createdThread => {
-                    const message = new Message({
-                        message: req.body.message,
-                        threadId: createdThread._id,
-                        personId: req.body.ownerId
-                    });
-                    message.save()
-                        .then(createdMessage => {
-                            res.status(201).json({
-                                thread: {
-                                    ...createdThread,
-                                    id: createdThread._id,
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            res.status(500).json({
-                                message: error.message
-                            });
-                        });
-                })
-                .catch(error => {
-                    res.status(500).json({
-                        message: error.message
-                    });
-                });
-        } else {
-            // reply
-            const message = new Message({
-                message: req.body.message,
-                threadId: obj._id,
-                personId: obj.ownerId
-            });
-            message.save()
-                .then(createdMessage => {
-                    res.status(201).json({
-                        messages: {
-                            ...createdMessage,
-                            id: createdMessage._id,
-                        }
-                    });
-                })
-                .catch(error => {
-                    res.status(500).json({
-                        message: error.message
-                    });
-                });
-        }
+      res.status(201).json({
+          thread: {
+              ...thread,
+              id: thread._id,
+          }
+      });
+    } else {
+      // reply
+      let user = await User.findById(threadUserCheck.ownerId);
+
+      const messageData = new Message({
+          message: req.body.message,
+          threadId: threadUserCheck._id,
+          personId: user.personId
+      });
+      let message = await messageData.save();
+      res.status(201).json({
+          messages: {
+              ...message,
+              id: message._id,
+          }
+      });
+    }
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
     });
-
+    // this will eventually be handled by your error handling middleware
+    // next(e)
+  }
 };
 
-exports.getAll = (req, res, next) => {
-
-    Thread.find({ 'ownerId': req.query.ownerId })
+exports.getAll = async (req, res, next) => {
+    try {
+      let threads = await Thread.find({ 'ownerId': req.query.ownerId })
         .populate('userId')
         .sort({ 'created': 'asc' })
-        .exec()
-        .then(documents => {
-
-            newThreads = [];
-            documents.forEach(element => {
-                // find all message by threadId limit 1 order created desc
-                //create object
-                var myObj = {
-                    id: element._id,
-                    created: moment(element.created, "YYYYMMDD").fromNow(),
-                    ownerId: element.ownerId,
-                    fullname: element.userId.firstname + ' ' + element.userId.midlename + ', ' + element.userId.lastname,
-                };
-                //push the object to your array
-                newThreads.push(myObj);
-            });
-            res.status(200).json({
-                threads: newThreads
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+        .exec();
+      newThreads = [];
+      threads.forEach(element => {
+          // find all message by threadId limit 1 order created desc
+          //create object
+          var myObj = {
+            id: element._id,
+            created: moment(element.created, "YYYYMMDD").fromNow(),
+            ownerId: element.ownerId,
+            fullname: element.userId.firstname + ' ' + element.userId.midlename + ', ' + element.userId.lastname
+          };
+            //push the object to your array
+          newThreads.push(myObj);
+      });
+      res.status(200).json({
+          threads: newThreads
+      });
+    } catch (e) {
+      res.status(500).json({
+          message: e.message
+      });
+      // this will eventually be handled by your error handling middleware
+      // next(e)
+    }
 };
+
+exports.getLastMessage = async (req, res, next) => {
+  try {
+    let lastMessage = await Message.findOne({ threadId: req.params.threadId })
+      .sort({created: -1});
+    res.status(200).json({
+      message: lastMessage
+    });
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
+}
 
 exports.get = (req, res, next) => {
     Thread.findById(req.params.threadId)
         .populate('userId')
         .exec()
         .then(thread => {
-          // console.log(thread);
+          console.log(thread);
             if (thread) {
                 res.status(200).json({
                     threadId: thread._id,

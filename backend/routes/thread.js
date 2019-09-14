@@ -12,6 +12,8 @@ router.get('', ThreadController.getAll);
 
 router.get('/:threadId', ThreadController.get);
 
+router.get('/last/:threadId', ThreadController.getLastMessage);
+
 router.delete('/:threadId', checkAuth, ThreadController.delete);
 
 
