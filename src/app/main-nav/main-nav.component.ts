@@ -1,20 +1,23 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { AppConfiguration } from '../app-configuration.service';
+import { SecureComponent } from '../secure/secure.component';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.css']
 })
-export class MainNavComponent  implements OnInit, OnDestroy {
-  title: string;
+export class MainNavComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+  title: string;
   subscriptionType: string;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -24,21 +27,19 @@ export class MainNavComponent  implements OnInit, OnDestroy {
     );
 
   constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     private breakpointObserver: BreakpointObserver,
-    private authService: AuthService,
     appconfig: AppConfiguration
     ) {
+      super(authService, router, dialog);
       this.title = appconfig.title;
     }
 
     ngOnInit() {
-      this.userIsAuthenticated = this.authService.getIsAuth();
-      this.authListenerSubs = this.authService
-        .getAuthStatusListener()
-        .subscribe(isAuthenticated => {
-          this.userIsAuthenticated = isAuthenticated;
-        });
-
+      super.doInit();
       this.subscriptionType = this.authService.getUserSubscription();
     }
 
@@ -47,6 +48,6 @@ export class MainNavComponent  implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-      this.authListenerSubs.unsubscribe();
+      super.doDestroy();
     }
 }

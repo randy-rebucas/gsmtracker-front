@@ -75,10 +75,23 @@ exports.getAll = (req, res, next) => {
         assessmentQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     assessmentQuery
+    .populate('complaintId')
     .exec()
         .then(documents => {
-            fetchedRecord = documents;
-            return Assessment.countDocuments();
+          newDocuments = [];
+          documents.forEach(element => {
+            var obj = {
+              _id: element._id,
+              created: element.created,
+              complaints: element.complaintId.complaints,
+              patientId: element.patientId,
+              diagnosis: element.diagnosis,
+              treatments: element.treatments
+            }
+            newDocuments.push(obj);
+          });
+          fetchedRecord = newDocuments;
+          return Assessment.countDocuments();
         })
         .then(count => {
             res.status(200).json({

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PageEvent, MatDialog, MatDialogConfig } from '@angular/material';
+import { PageEvent, MatDialog } from '@angular/material';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';

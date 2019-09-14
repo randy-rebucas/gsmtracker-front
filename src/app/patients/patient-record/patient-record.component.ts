@@ -4,7 +4,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { PatientsService } from '../patients.service';
 import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { PatientChartComponent } from '../patient-chart/patient-chart.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
 

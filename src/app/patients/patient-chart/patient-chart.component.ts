@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject, ViewChild, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 import { HeightService } from '../patient-record/services/height.service';

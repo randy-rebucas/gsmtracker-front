@@ -1,38 +1,38 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 import { AppSettings } from '../shared/appsettings';
 import { AppSettingsService } from '../shared/appsettings.service';
+import { SecureComponent } from '../secure/secure.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
   @Input() title: string;
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
   subscriptionType: string;
   settings: AppSettings;
   version: string;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     private appSettingsService: AppSettingsService,
     private titleService: Title
-  ) { }
+  ) {
+    super(authService, router, dialog);
+   }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.appSettingsService.getSettings()
     .subscribe(
@@ -47,6 +47,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

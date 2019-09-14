@@ -25,12 +25,11 @@ export class AssessmentService {
       )
       .pipe(
         map(assessmentData => {
-          console.log(assessmentData);
           return { complaints: assessmentData.assessments.map(assessment => {
             return {
               id: assessment._id,
               created: assessment.created,
-              complaintId: assessment.complaintId,
+              complaints: assessment.complaints,
               patientId: assessment.patientId,
               diagnosis: assessment.diagnosis,
               treatments: assessment.treatments

@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl, FormBuilder, FormArray } from '@angular/forms';
+import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
