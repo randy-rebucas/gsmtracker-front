@@ -40,6 +40,7 @@ export class MessagesService {
     )
     .pipe(
       map(messageData => {
+        console.log(messageData);
         return { messages: messageData.messages.map(message => {
           return {
             id: message.id,

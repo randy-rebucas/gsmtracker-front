@@ -147,7 +147,8 @@ import { SecureComponent } from './secure/secure.component';
     MessageEditComponent,
     DialogComponent,
     RxPadComponent,
-    AppointmentDetailComponent
+    AppointmentDetailComponent,
+    QrCodeScannerComponent
   ]
 })
 export class AppModule { }

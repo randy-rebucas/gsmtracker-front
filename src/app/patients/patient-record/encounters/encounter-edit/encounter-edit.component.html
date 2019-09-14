@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ title }}
+<h2 mat-dialog-title>{{ dialogTitle }}
     <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
   </h2>
   <mat-dialog-content class="mat-typography">
@@ -16,7 +16,7 @@
         <mat-grid-tile [colspan]="3" [rowspan]="2" class="grid-content">
             <mat-grid-tile-header>
                 <h3 style="width: 100%;">Assessment
-                    <app-assessment-latest [complaintId]="id" [patientId]="patient"></app-assessment-latest>
+                    <app-assessment-latest [complaintId]="complaint" [patientId]="patientId"></app-assessment-latest>
                 </h3>
             </mat-grid-tile-header>
             <div class="grid-inner-content grid-inner-content-list">
@@ -51,7 +51,7 @@
         <mat-grid-tile [colspan]="3" [rowspan]="2" class="grid-content">
             <mat-grid-tile-header>
                 <h3 style="width: 100%;">Prescription
-                  <app-prescription-latest [complaintId]="id" [patientId]="patient" [prescriptionId]="prescriptionId"></app-prescription-latest>
+                  <app-prescription-latest [complaintId]="complaint" [patientId]="patientId" [prescriptionId]="prescriptionId"></app-prescription-latest>
                 </h3>
             </mat-grid-tile-header>
             <div class="grid-inner-content grid-inner-content-list">
@@ -83,7 +83,7 @@
         <mat-grid-tile [colspan]="6" [rowspan]="1" class="grid-content">
             <mat-grid-tile-header>
                 <h3 style="width: 100%;">Progress notes
-                  <app-progress-note-latest [complaintId]="id" [patientId]="patient"></app-progress-note-latest>
+                  <app-progress-note-latest [complaintId]="complaint" [patientId]="patientId"></app-progress-note-latest>
                 </h3>
             </mat-grid-tile-header>
             <div class="grid-inner-content grid-inner-content-list">
@@ -109,6 +109,6 @@
     </mat-grid-list>
   </mat-dialog-content>
   <mat-dialog-actions>
-      <button class="mat-raised-button mat-primary" (click)="onPrintPreview(prescriptionId, patient)" *ngIf="prescriptionId != null">Close and Print</button>
+      <button class="mat-raised-button mat-primary" (click)="onPrintPreview(prescriptionId, patientId)" *ngIf="prescriptionId != null">Close and Print</button>
   </mat-dialog-actions>
 

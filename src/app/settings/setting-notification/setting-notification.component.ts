@@ -2,28 +2,34 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-settings-notification',
   templateUrl: './setting-notification.component.html'
 })
-export class SettingsNotificationComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+export class SettingsNotificationComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  constructor(private authService: AuthService,
-              private router: Router) { }
+  constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
+    public titleService: Title
+  ) {
+    super(authService, router, dialog);
+  }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
+    this.titleService.setTitle('Settings - Notification');
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { AppointmentService } from '../appointment.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { MessagesService } from 'src/app/messages/messages.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
+
 export interface User {
   id: string;
   name: string;
@@ -17,39 +19,27 @@ export interface User {
   templateUrl: './appointment-edit.component.html',
   styleUrls: ['./appointment-edit.component.css']
 })
-export class AppointmentEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class AppointmentEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   assessmentId: string;
-  userId: string;
-  page = 1;
-
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  isLoading = false;
-
-  minDate = new Date();
-  form: FormGroup;
   filteredUsers: User[] = [];
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     private appointmentService: AppointmentService,
     private messageService: MessagesService,
     private notificationService: NotificationService
-    ) {}
+    ) {
+      super(authService, router, dialog);
+    }
 
   ngOnInit() {
-    this.userId = this.authService.getUserId();
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = new FormGroup({
       userInput: new FormControl(null),
@@ -70,7 +60,7 @@ export class AppointmentEditComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.messageService.search({name: value}, this.page, this.userId)
+        switchMap(value => this.messageService.search({name: value}, this.currentPage, this.userId)
         .pipe(
           finalize(() => this.isLoading = false),
           )
@@ -107,6 +97,6 @@ export class AppointmentEditComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

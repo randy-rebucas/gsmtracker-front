@@ -1,69 +1,59 @@
 import { Component, OnInit, OnDestroy, Inject, Optional } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl, FormBuilder, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { ComplaintService } from '../../services/complaint.service';
-import { AssessmentEditComponent } from '../../assessments/assessment-edit/assetment-edit.component';
-import { MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { ComplaintData } from '../../models/complaint-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-chief-complaint-latest',
   templateUrl: './chief-complaint-latest.component.html',
   styleUrls: ['./chief-complaint-latest.component.css']
 })
-export class ChiefComplaintLatestComponent implements OnInit, OnDestroy {
+export class ChiefComplaintLatestComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
+
   complaints: [];
   createdDate: string;
   complaintId: string;
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  isLoading = false;
+
   private mode = 'create';
-  private recordId: string;
-  patientId: string;
-  title: string;
-  form: FormGroup;
   count: number;
 
-  private recordsSub: Subscription;
+  public recordsSub: Subscription;
 
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
-    private dialog: MatDialog,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public route: ActivatedRoute,
-    private authService: AuthService,
-    public complaintService: ComplaintService) {}
+    public complaintService: ComplaintService,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
+  ) {
+    super(authService, router, dialog);
+  }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.complaintService.getLatest().subscribe(recordData => {
-        this.complaintId = null;
-        this.createdDate = null;
-        this.complaints = null;
-        if (Object.keys(recordData).length) {
-          this.complaintId = recordData[0]._id;
-          this.createdDate = recordData[0].created;
-          this.complaints = recordData[0].complaints;
-        }
-      });
+      if (Object.keys(recordData).length) {
+        this.complaintId = recordData[0]._id;
+        this.createdDate = recordData[0].created;
+        this.complaints = recordData[0].complaints;
+      }
+    });
 
     this.recordsSub = this.complaintService
       .getUpdateListener()
       .subscribe((complaintData: {complaints: ComplaintData[], count: number}) => {
         this.isLoading = false;
         this.complaintService.getLatest().subscribe(recordData => {
-          this.complaintId = null;
-          this.createdDate = null;
-          this.complaints = null;
           if (Object.keys(recordData).length) {
             this.complaintId = recordData[0]._id;
             this.createdDate = recordData[0].created;
@@ -75,6 +65,6 @@ export class ChiefComplaintLatestComponent implements OnInit, OnDestroy {
     }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

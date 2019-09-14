@@ -1,30 +1,31 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-message-initial',
   templateUrl: './message-initial.component.html',
   styleUrls: ['./message-initial.component.css']
 })
-export class MessageInitialComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+export class MessageInitialComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   constructor(
-    private authService: AuthService
-    ) {}
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog
+  ) {
+    super(authService, router, dialog);
+  }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

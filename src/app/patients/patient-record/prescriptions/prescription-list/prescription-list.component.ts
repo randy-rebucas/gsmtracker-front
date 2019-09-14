@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../auth/auth.service';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
@@ -12,6 +12,7 @@ import { PrescriptionService } from '../../services/prescription.service';
 import { PrescriptionEditComponent } from '../prescription-edit/prescription-edit.component';
 import { ComplaintService } from '../../services/complaint.service';
 import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-prescription-list',
@@ -19,53 +20,49 @@ import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
   styleUrls: ['./prescription-list.component.css']
 })
 
-export class PrescriptionListComponent implements OnInit, OnDestroy {
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
-  pageSizeOptions = [5, 10, 25, 100];
+export class PrescriptionListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
+
 
   records: PrescriptionService[] = [];
   prs: PrescriptionData[] = [];
-  isLoading = false;
-  userIsAuthenticated = false;
-  patientId: string;
+
   complaintId: string;
 
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+  public recordsSub: Subscription;
+
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['prescriptions', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: PrescriptionService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public prescriptionService: PrescriptionService,
-    private dialog: MatDialog,
+    public complaintService: ComplaintService,
     private dialogService: DialogService,
-    private authService: AuthService,
-    private router: Router,
     private notificationService: NotificationService,
-    public complaintService: ComplaintService) {
-      const snapshot: RouterStateSnapshot = this.router.routerState.snapshot;
-      const splitUrl = snapshot.url.split('/');
-      this.patientId = splitUrl[2];
+    private activatedRoute: ActivatedRoute,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: PrescriptionService
+    ) {
+      super(authService, router, dialog);
+      this.activatedRoute.parent.params.subscribe(
+        (param) => {
+          this.patientId = param.patientId;
+        }
+      );
     }
 
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['prescriptions', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
+
 
   ngOnInit() {
-    this.isLoading = true;
-
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
-
     this.recordsSub = this.prescriptionService
       .getUpdateListener()
       .subscribe((prescriptionData: {prescriptions: PrescriptionData[], count: number}) => {
@@ -78,16 +75,13 @@ export class PrescriptionListComponent implements OnInit, OnDestroy {
   }
 
   onPrintPreview(recordId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '40%';
-    dialogConfig.data = {
+    const args = {
+      width: '40%',
       id: recordId,
-      title: 'Print preview',
-      patientId: this.patientId
+      dialogTitle: 'Preview Print',
+      patient: this.patientId
     };
-    this.dialog.open(RxPadComponent, dialogConfig);
+    super.onPopup(args, RxPadComponent);
   }
 
   onChangedPage(pageData: PageEvent) {
@@ -114,6 +108,7 @@ export class PrescriptionListComponent implements OnInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
     dialogConfig.data = {
         id: prescriptionId,
         title: 'Update record',
@@ -136,6 +131,6 @@ export class PrescriptionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

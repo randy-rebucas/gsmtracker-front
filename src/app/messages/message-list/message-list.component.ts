@@ -1,50 +1,44 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ThreadsService } from '../threads.service';
 import { ThreadData } from '../thread-data.model';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { MessagesService } from '../messages.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-message-list',
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.css']
 })
-export class MessageListComponent implements OnInit, OnDestroy {
+export class MessageListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
   private threadSub: Subscription;
-  private authListenerSubs: Subscription;
   threads: ThreadData[] = [];
 
-  isLoading = false;
-  userId: string;
-
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     private threadService: ThreadsService,
     private notificationService: NotificationService,
     private dialogService: DialogService,
     private messageService: MessagesService
-    ) {}
+    ) {
+      super(authService, router, dialog);
+    }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
-    this.isLoading = true;
-    this.userId = this.authService.getUserId();
     this.threadService.getAll(this.userId);
-
     this.threadSub = this.threadService.getUpdateListener()
     .subscribe((thredData: {threads: ThreadData[]}) => {
       this.isLoading = false;
@@ -65,6 +59,6 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -1,4 +1,10 @@
+<h2 mat-dialog-title>Scan Code
+  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</h2>
+<mat-dialog-content class="mat-typography">
+    <zxing-scanner [formats]="['QR_CODE']" [formats]="allowedFormats" (scanComplete)="handleQrCodeResult($event)"></zxing-scanner>
+</mat-dialog-content>
 <!-- some.component.html -->
-<button mat-stroked-button color="primary" (click)="onToggleScan()">Click to Scan QR Code</button>
 
-<zxing-scanner [formats]="['QR_CODE']" [formats]="allowedFormats" [enable]="scannerEnabled" (scanComplete)="handleQrCodeResult($event)"></zxing-scanner>
+
+

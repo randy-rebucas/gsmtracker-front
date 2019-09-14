@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, NgControl, FormBuilder, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
@@ -10,60 +10,53 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { AssessmentService } from '../../services/assessment.service';
 import { AssessmentData } from '../../models/assessment-data.model';
 import { ComplaintService } from '../../services/complaint.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-assessment-edit',
   templateUrl: './assetment-edit.component.html',
   styleUrls: ['./assetment-edit.component.css']
 })
-export class AssessmentEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class AssessmentEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   assessmentId: string;
   diagnosis: [];
   treatments: [];
-  
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+
   assessmentData: AssessmentData;
-  isLoading = false;
+
   private mode = 'create';
-  private recordId: string;
+
   complaintId: string;
-  patientId: string;
-  title: string;
-  btnLabel: string;
-
-  form: FormGroup;
-
-  maxDate = new Date();
+  dialogTitle: string;
+  dialogButton: string;
 
   constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public assessmentService: AssessmentService,
     public complaintService: ComplaintService,
     public route: ActivatedRoute,
-    private authService: AuthService,
     private fb: FormBuilder,
-
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < AssessmentEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
+
       this.recordId = data.id;
       this.complaintId = data.complaintIds;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.dialogButton = data.btnLabel;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = this.fb.group({
       record_date: [new Date(), [Validators.required]],
@@ -183,6 +176,6 @@ export class AssessmentEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

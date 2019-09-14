@@ -37,7 +37,7 @@ implements OnInit, OnDestroy {
     ) {
       super(authService, router, dialog);
       this.recordId = data.id;
-      this.patientId = data.patientId;
+      this.patientId = data.patient;
       this.title = data.title;
       this.canClosed = data.canClose ? true : false;
     }

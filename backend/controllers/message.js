@@ -26,10 +26,9 @@ exports.create = (req, res, next) => {
 
 exports.getAll = (req, res, next) => {
   Message.find({ 'threadId': req.query.threadId })
-    .populate('personId')
-    .sort({ 'created': 'asc' })
-    .exec()
+    // .populate('personId')
     .then(documents => {
+      console.log(documents);
         newMessages = [];
         documents.forEach(element => {
           //create object

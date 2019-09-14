@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, NgControl, FormBuilder, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../../../auth/auth.service';
@@ -10,60 +10,51 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { PrescriptionService } from '../../services/prescription.service';
 import { PrescriptionData } from '../../models/prescription-data.model';
 import { ComplaintService } from '../../services/complaint.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-prescription-edit',
   templateUrl: './prescription-edit.component.html',
   styleUrls: ['./prescription-edit.component.css']
 })
-export class PrescriptionEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class PrescriptionEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
   prescriptionData: PrescriptionData;
 
-  isLoading = false;
   private mode = 'create';
-  private recordId: string;
-  patientId: string;
-  title: string;
-  patient: string;
-  complaintId: string;
-  btnLabel: string;
 
-  form: FormGroup;
+  dialogTitle: string;
+  dialogButton: string;
+  complaintId: string;
 
   checked = false;
 
-  maxDate = new Date();
-
   constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public complaintService: ComplaintService,
     public prescriptionService: PrescriptionService,
     public route: ActivatedRoute,
-    private authService: AuthService,
     private fb: FormBuilder,
-
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < PrescriptionEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
+
       this.recordId = data.id;
       this.complaintId = data.complaintIds;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.dialogButton = data.btnLabel;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = this.fb.group({
       record_date: [new Date(), [Validators.required]],
@@ -148,9 +139,9 @@ export class PrescriptionEditComponent implements OnInit, OnDestroy {
         this.patientId,
         this.form.value.prescriptions
       ).subscribe(() => {
-        this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
         this.onClose();
         this.notificationService.success(':: Updated successfully');
+        this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
       });
     }
   }
@@ -161,6 +152,6 @@ export class PrescriptionEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

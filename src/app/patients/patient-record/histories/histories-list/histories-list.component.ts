@@ -11,50 +11,49 @@ import { DialogService } from 'src/app/shared/dialog.service';
 import { HistoryData } from '../../models/history-data.model';
 import { HistoryService } from '../../services/history.service';
 import { HistoriesEditComponent } from '../histories-edit/histories-edit.component';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-histories-list',
   templateUrl: './histories-list.component.html',
   styleUrls: ['./histories-list.component.css']
 })
-export class HistoriesListComponent implements OnInit, OnDestroy {
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
-  pageSizeOptions = [5, 10, 25, 100];
+export class HistoriesListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   records: HistoryService[] = [];
-  isLoading = false;
 
-  userIsAuthenticated = false;
-  patientId: string;
+  public recordsSub: Subscription;
 
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['type', 'description', 'created', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: HistoryService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public historyService: HistoryService,
-    private dialog: MatDialog,
     private dialogService: DialogService,
-    private authService: AuthService,
-    private router: Router,
-    private notificationService: NotificationService) {
-      const snapshot: RouterStateSnapshot = this.router.routerState.snapshot;
-      const splitUrl = snapshot.url.split('/');
-      this.patientId = splitUrl[2];
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: HistoryService
+    ) {
+      super(authService, router, dialog);
+      this.activatedRoute.parent.params.subscribe(
+        (param) => {
+          this.patientId = param.patientId;
+        }
+      );
     }
 
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['type', 'description', 'created', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
-
   ngOnInit() {
-    this.isLoading = true;
+    super.doInit();
 
     this.historyService.getAll(this.perPage, this.currentPage, this.patientId);
-
     this.recordsSub = this.historyService
       .getUpdateListener()
       .subscribe((historyData: {histories: HistoryData[], count: number}) => {
@@ -64,17 +63,10 @@ export class HistoriesListComponent implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
   }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -88,29 +80,25 @@ export class HistoriesListComponent implements OnInit, OnDestroy {
   }
 
   onCreate() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
+    const args = {
+      width: '30%',
       id: null,
-      title: 'New record',
-      patient: this.patientId,
-      btnLabel: 'Save'
+      dialogTitle: 'New Record',
+      dialogButton: 'Save',
+      patient: this.patientId
     };
-    this.dialog.open(HistoriesEditComponent, dialogConfig);
+    super.onPopup(args, HistoriesEditComponent);
   }
 
   onEdit(historyId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-        id: historyId,
-        title: 'Update record',
-        patient: this.patientId,
-        btnLabel: 'Update'
+    const args = {
+      width: '30%',
+      id: historyId,
+      dialogTitle: 'Update Record',
+      dialogButton: 'Update',
+      patient: this.patientId
     };
-    this.dialog.open(HistoriesEditComponent, dialogConfig);
+    super.onPopup(args, HistoriesEditComponent);
   }
 
   onDelete(historyId) {
@@ -126,6 +114,6 @@ export class HistoriesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

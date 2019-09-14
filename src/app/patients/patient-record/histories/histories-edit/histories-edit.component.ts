@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { HistoryService } from '../../services/history.service';
 import { HistoryData } from '../../models/history-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 export interface Types {
   value: string;
@@ -20,24 +19,15 @@ export interface Types {
   templateUrl: './histories-edit.component.html',
   styleUrls: ['./histories-edit.component.css']
 })
-export class HistoriesEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class HistoriesEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
   historyData: HistoryData;
-  isLoading = false;
   private mode = 'create';
-  private recordId: string;
-  patientId: string;
-  title: string;
-  patient: string;
+
+  dialogTitle: string;
   btnLabel: string;
-
-  form: FormGroup;
-
-  maxDate = new Date();
 
   types: Types[] = [
     {value: 'Allergies', viewValue: 'Allergies'},
@@ -50,28 +40,24 @@ export class HistoriesEditComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    public historyService: HistoryService,
-    public route: ActivatedRoute,
-    private authService: AuthService,
-    private datePipe: DatePipe,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
 
+    public historyService: HistoryService,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < HistoriesEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
       this.recordId = data.id;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.btnLabel = data.button;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = new FormGroup({
       type: new FormControl(null, {
@@ -104,6 +90,7 @@ export class HistoriesEditComponent implements OnInit, OnDestroy {
             });
           });
         } else {
+          this.isLoading = false;
           this.mode = 'create';
           this.recordId = null;
         }
@@ -145,6 +132,6 @@ export class HistoriesEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -1,32 +1,31 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../auth/auth.service';
 import { Router } from '@angular/router';
-import { NotificationService } from 'src/app/shared/notification.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-respiratory-rate',
   templateUrl: './respiratory-rate.component.html',
   styleUrls: ['./respiratory-rate.component.css']
 })
-export class RespiratoryRateComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+export class RespiratoryRateComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              private notificationService: NotificationService) {}
+  constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog
+  ) {
+    super(authService, router, dialog);
+  }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

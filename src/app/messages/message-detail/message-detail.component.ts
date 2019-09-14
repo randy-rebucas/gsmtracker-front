@@ -5,19 +5,21 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { ThreadsService } from '../threads.service';
 import { MessagesService } from '../messages.service';
 import { MessagesData } from '../messages-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-message-detail',
   templateUrl: './message-detail.component.html',
   styleUrls: ['./message-detail.component.css']
 })
-export class MessageDetailComponent implements OnInit, OnDestroy {
+export class MessageDetailComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   messages: MessagesData[] = [];
-  userIsAuthenticated = false;
-  private messageSub: Subscription;
-  private authListenerSubs: Subscription;
 
+  private messageSub: Subscription;
   public threadId: string;
 
   id: string;
@@ -30,22 +32,20 @@ export class MessageDetailComponent implements OnInit, OnDestroy {
   created: string;
   isNew: boolean;
 
-  isLoading = false;
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     private route: ActivatedRoute,
-    private router: Router,
     private threadService: ThreadsService,
     private messageService: MessagesService
-    ) {}
+    ) {
+      super(authService, router, dialog);
+    }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.threadId = paramMap.get('messageId');
@@ -76,6 +76,6 @@ export class MessageDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -2,56 +2,46 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, PageEvent, MatDialog } from '@angular/material';
 import { AppointmentService } from '../appointment.service';
 import { AppointmentData } from '../appointment-data.model';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { DialogService } from 'src/app/shared/dialog.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-appointment-list',
   templateUrl: './appointment-list.component.html',
   styleUrls: ['./appointment-list.component.css']
 })
-export class AppointmentListComponent implements OnInit, OnDestroy {
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
-  pageSizeOptions = [5, 10, 25, 100];
-
+export class AppointmentListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
   appointments: AppointmentService[] = [];
-  userId: string;
-  isLoading = false;
 
-  userIsAuthenticated = false;
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+  public recordsSub: Subscription;
+
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['title', 'start', 'end', 'fullname', 'status', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public appointmentService: AppointmentService,
     private notificationService: NotificationService,
     private dialogService: DialogService
-    ) {}
-
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['title', 'start', 'end', 'fullname', 'status', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
+    ) {
+      super(authService, router, dialog);
+    }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.userId = this.authService.getUserId();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
-
     this.recordsSub = this.appointmentService
       .getUpdateListener()
       .subscribe((appointmentData: {appointments: AppointmentData[], count: number}) => {
@@ -65,7 +55,6 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -90,11 +79,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     });
   }
 
-  viewCalendar() {
-    this.router.navigate(['./', 'calendar'], {relativeTo: this.route});
-  }
-
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -1,62 +1,49 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
 import { AuthService } from '../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { HeightService } from '../../../services/height.service';
 import { HeightData } from '../../../models/height-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-height-edit',
   templateUrl: './height-edit.component.html',
   styleUrls: ['./height-edit.component.css']
 })
-export class HeightEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class HeightEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  heightData: HeightData;
-  isLoading = false;
   private mode = 'create';
-  private recordId: string;
-  patientId: string;
-  title: string;
-  patient: string;
+
+  heightData: HeightData;
+  dialogTitle: string;
   btnLabel: string;
 
-  form: FormGroup;
-
-  maxDate = new Date();
-
   constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public heightService: HeightService,
-    public route: ActivatedRoute,
-    private authService: AuthService,
-    private datePipe: DatePipe,
 
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < HeightEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
       this.recordId = data.id;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.btnLabel = data.button;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = new FormGroup({
       height: new FormControl(null, {
@@ -84,6 +71,7 @@ export class HeightEditComponent implements OnInit, OnDestroy {
             });
           });
         } else {
+          this.isLoading = false;
           this.mode = 'create';
           this.recordId = null;
         }
@@ -123,6 +111,6 @@ export class HeightEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

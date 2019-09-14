@@ -1,5 +1,8 @@
 <div class="message-list">
-    <mat-list>
+  <div *ngIf="isLoading" class="loading">
+      <mat-spinner [diameter]="25"></mat-spinner>
+  </div>
+  <mat-list *ngIf="!isLoading">
       <!-- <mat-spinner *ngIf="isLoading"></mat-spinner> -->
       <mat-list-item *ngFor="let thread of threads" [routerLink]="['./', thread.id]" routerLinkActive="active" >
         <mat-icon mat-list-icon class="md-48">face</mat-icon>

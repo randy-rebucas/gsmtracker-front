@@ -1,42 +1,43 @@
-import { Component, OnInit, OnDestroy, VERSION, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { BarcodeFormat } from '@zxing/library';
 // import { Result } from '@zxing/library';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { PatientsService } from 'src/app/patients/patients.service';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-qr-code-scanner',
   templateUrl: './qr-code-scanner.component.html',
   styleUrls: ['./qr-code-scanner.component.css']
 })
-export class QrCodeScannerComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-
-  isLoading = false;
+export class QrCodeScannerComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   allowedFormats: any;
   scannerEnabled: boolean;
   qrResultString: string;
+  dialogTitle: string;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    route: ActivatedRoute,
-    public patientsService: PatientsService
-    ) { }
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
+    public patientsService: PatientsService,
+    public dialogRef: MatDialogRef < QrCodeScannerComponent >,
+    @Inject(MAT_DIALOG_DATA) data
+    ) {
+      super(authService, router, dialog);
+      this.dialogTitle = data.dialogTitle;
+    }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.allowedFormats = [ BarcodeFormat.QR_CODE ];
     this.scannerEnabled = false;
@@ -57,7 +58,11 @@ export class QrCodeScannerComponent implements OnInit, OnDestroy {
     }
   }
 
+  onClose() {
+    this.dialogRef.close();
+  }
+
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

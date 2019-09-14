@@ -11,50 +11,50 @@ import { TemperatureEditComponent } from '../temperature-edit/temperature-edit.c
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { DialogService } from 'src/app/shared/dialog.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-temperature-list',
   templateUrl: './temperature-list.component.html',
   styleUrls: ['./temperature-list.component.css']
 })
-export class TemperatureListComponent implements OnInit, OnDestroy {
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
-  pageSizeOptions = [5, 10, 25, 100];
+export class TemperatureListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   records: TemperatureService[] = [];
-  isLoading = false;
 
-  userIsAuthenticated = false;
-  patientId: string;
+  public recordsSub: Subscription;
 
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['temperature', 'created', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: TemperatureService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public temperatureService: TemperatureService,
-    private dialog: MatDialog,
     private dialogService: DialogService,
-    private authService: AuthService,
-    private router: Router,
-    private notificationService: NotificationService) {
-      const snapshot: RouterStateSnapshot = this.router.routerState.snapshot;
-      const splitUrl = snapshot.url.split('/');
-      this.patientId = splitUrl[2];
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute,
+
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: TemperatureService
+    ) {
+      super(authService, router, dialog);
+      this.activatedRoute.parent.parent.params.subscribe(
+        (param) => {
+          this.patientId = param.patientId;
+        }
+      );
     }
 
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['temperature', 'created', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
-
   ngOnInit() {
-    this.isLoading = true;
+    super.doInit();
 
     this.temperatureService.getAll(this.perPage, this.currentPage, this.patientId);
-
     this.recordsSub = this.temperatureService
       .getUpdateListener()
       .subscribe((temperatureData: {temperatures: TemperatureData[], count: number}) => {
@@ -64,17 +64,10 @@ export class TemperatureListComponent implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
   }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -88,29 +81,25 @@ export class TemperatureListComponent implements OnInit, OnDestroy {
   }
 
   onCreate() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
+    const args = {
+      width: '30%',
       id: null,
-      title: 'New record',
-      patient: this.patientId,
-      btnLabel: 'Save'
+      dialogTitle: 'New Record',
+      dialogButton: 'Save',
+      patient: this.patientId
     };
-    this.dialog.open(TemperatureEditComponent, dialogConfig);
+    super.onPopup(args, TemperatureEditComponent);
   }
 
   onEdit(temperatureId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-        id: temperatureId,
-        title: 'Update record',
-        patient: this.patientId,
-        btnLabel: 'Update'
+    const args = {
+      width: '30%',
+      id: temperatureId,
+      dialogTitle: 'Update Record',
+      dialogButton: 'Update',
+      patient: this.patientId
     };
-    this.dialog.open(TemperatureEditComponent, dialogConfig);
+    super.onPopup(args, TemperatureEditComponent);
   }
 
   onDelete(temperatureId) {
@@ -126,6 +115,6 @@ export class TemperatureListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

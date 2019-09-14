@@ -31,14 +31,14 @@
         <tr>
           <td>
             <mat-form-field>
-              <input matInput readonly [matDatepicker]="startPicker" formControlName="start" [min]="minDate" placeholder="Start">
+              <input matInput readonly [matDatepicker]="startPicker" formControlName="start" [min]="currentDate" placeholder="Start">
               <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
               <mat-datepicker #startPicker color="primary"></mat-datepicker>
             </mat-form-field>
           </td>
           <td>
             <mat-form-field>
-              <input matInput readonly [matDatepicker]="endPicker" formControlName="end" [min]="minDate" placeholder="End">
+              <input matInput readonly [matDatepicker]="endPicker" formControlName="end" [min]="currentDate" placeholder="End">
               <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
               <mat-datepicker #endPicker color="primary"></mat-datepicker>
             </mat-form-field>

@@ -4,7 +4,7 @@
         <!-- Complaint Column -->
         <ng-container matColumnDef="complaints">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Complaints </th>
-            <td mat-cell *matCellDef="let row" (click)="onFilter(row.id)">
+            <td mat-cell *matCellDef="let row" [routerLink]="['./', row.id]">
                 <!-- (click)="onFilter(row.id)" -->
                 <mat-chip-list>
                     <mat-chip *ngFor="let complaint of row.complaints" color="primary" selected>{{ complaint.complaint.length > 50 ? complaint.complaint.substring(0,50)+"..." : complaint.complaint }}</mat-chip>

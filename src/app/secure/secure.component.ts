@@ -56,6 +56,7 @@ export class SecureComponent {
   public userIsAuthenticated = false;
   public isLoading = false;
   public startDate = new Date(1990, 0, 1);
+  public currentDate = new Date();
 
   /**
    * record types
@@ -103,7 +104,8 @@ export class SecureComponent {
     dialogConfig.data = {
       id: args.id,
       title: args.dialogTitle,
-      button: args.dialogButton
+      button: args.dialogButton,
+      patient: (args.patient) ? args.patient : null
     };
     this.dialog.open(targetComponent, dialogConfig);
   }

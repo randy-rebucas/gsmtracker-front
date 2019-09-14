@@ -18,12 +18,11 @@ export class PatientEditComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  patient: PatientData;
-
   private mode = 'create';
 
-  public dialogTitle: string;
-  public btnLabel: string;
+  patient: PatientData;
+  dialogTitle: string;
+  btnLabel: string;
 
   constructor(
     public authService: AuthService,
@@ -39,7 +38,7 @@ implements OnInit, OnDestroy {
 
     this.patientId = data.id;
     this.dialogTitle = data.title;
-    this.btnLabel = data.btnLabel;
+    this.btnLabel = data.button;
   }
 
   ngOnInit() {

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../auth/auth.service';
-import { Router, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
@@ -11,57 +11,52 @@ import { NoteData } from '../../models/note.model';
 import { NotesService } from '../../services/notes.service';
 import { ProgressNoteEditComponent } from '../progress-note-edit/progress-note-edit.component';
 import { ComplaintService } from '../../services/complaint.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-progress-note-list',
   templateUrl: './progress-note-list.component.html',
   styleUrls: ['./progress-note-list.component.css']
 })
-export class ProgressNoteListComponent implements OnInit, OnDestroy {
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
-  pageSizeOptions = [5, 10, 25, 100];
+export class ProgressNoteListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   records: NotesService[] = [];
-  isLoading = false;
 
-  userIsAuthenticated = false;
-  patientId: string;
   complaintId: string;
 
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+  public recordsSub: Subscription;
+
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['note', 'created', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: NotesService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
+    public complaintService: ComplaintService,
     public notesService: NotesService,
-    private dialog: MatDialog,
     private dialogService: DialogService,
-    private authService: AuthService,
-    private router: Router,
     private notificationService: NotificationService,
-    public complaintService: ComplaintService) {
-      const snapshot: RouterStateSnapshot = this.router.routerState.snapshot;
-      const splitUrl = snapshot.url.split('/');
-      this.patientId = splitUrl[2];
+    private activatedRoute: ActivatedRoute,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: NotesService,
+    ) {
+      super(authService, router, dialog);
+      this.activatedRoute.parent.params.subscribe(
+        (param) => {
+          this.patientId = param.patientId;
+        }
+      );
     }
 
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['note', 'created', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
-
   ngOnInit() {
-    this.isLoading = true;
+    super.doInit();
 
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
     this.notesService.getAll(this.perPage, this.currentPage, this.patientId);
-
     this.recordsSub = this.notesService
       .getUpdateListener()
       .subscribe((noteData: {notes: NoteData[], count: number}) => {
@@ -76,7 +71,6 @@ export class ProgressNoteListComponent implements OnInit, OnDestroy {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -121,6 +115,6 @@ export class ProgressNoteListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -28,7 +28,7 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const complaint = new Complaint({
-        _id: req.body.id,
+        _id: req.body.complaintId,
         created: req.body.created,
         patientId: req.body.patientId
     });

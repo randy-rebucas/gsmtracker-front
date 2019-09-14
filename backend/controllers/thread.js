@@ -5,6 +5,7 @@ const moment = require('moment');
  * loop all users recepient to send sms
  */
 exports.create = (req, res, next) => {
+
     Thread.findOne({ userId: req.body.users.id }, function(err, obj) {
         if (obj === null) {
             const thread = new Thread({
@@ -101,6 +102,7 @@ exports.get = (req, res, next) => {
         .populate('userId')
         .exec()
         .then(thread => {
+          // console.log(thread);
             if (thread) {
                 res.status(200).json({
                     threadId: thread._id,

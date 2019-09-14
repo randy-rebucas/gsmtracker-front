@@ -10,55 +10,45 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { ComplaintService } from '../../services/complaint.service';
 import { ComplaintData } from '../../models/complaint-data.model';
 import { EncounterEditComponent } from '../../encounters/encounter-edit/encounter-edit.component';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-chief-complaint-edit',
   templateUrl: './chief-complaint-edit.component.html',
   styleUrls: ['./chief-complaint-edit.component.css']
 })
-export class ChiefComplaintEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class ChiefComplaintEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  complaintData: ComplaintData;
-  isLoading = false;
   private mode = 'create';
-  private recordId: string;
-  patientId: string;
-  title: string;
-  patient: string;
-  complainId: string;
+
+  complaintData: ComplaintData;
+
+  dialogTitle: string;
   btnLabel: string;
 
-  form: FormGroup;
-
-  maxDate = new Date();
-
   constructor(
-    private dialog: MatDialog,
-    public complaintService: ComplaintService,
-    private authService: AuthService,
-    private fb: FormBuilder,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
 
+    public complaintService: ComplaintService,
+    private fb: FormBuilder,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < ChiefComplaintEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
+
       this.recordId = data.id;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.btnLabel = data.button;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = this.fb.group({
         record_date: [new Date(), [Validators.required]],
@@ -81,6 +71,7 @@ export class ChiefComplaintEditComponent implements OnInit, OnDestroy {
             this.form.patchValue({complaints: complaintArray});
           });
         } else {
+          this.isLoading = false;
           this.mode = 'create';
           this.recordId = null;
         }
@@ -151,6 +142,6 @@ export class ChiefComplaintEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
@@ -9,52 +9,44 @@ import { AuthService } from '../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { WeightService } from '../../../services/weight.service';
 import { WeightData } from '../../../models/weight-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-weight-edit',
   templateUrl: './weight-edit.component.html',
   styleUrls: ['./weight-edit.component.css']
 })
-export class WeightEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class WeightEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
   weightData: WeightData;
-  isLoading = false;
+
   private mode = 'create';
-  private recordId: string;
-  patientId: string;
-  title: string;
-  patient: string;
+
+  dialogTitle: string;
   btnLabel: string;
 
-  form: FormGroup;
-
-  maxDate = new Date();
-
   constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public weightService: WeightService,
     public route: ActivatedRoute,
-    private authService: AuthService,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < WeightEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
       this.recordId = data.id;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.btnLabel = data.button;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = new FormGroup({
       weight: new FormControl(null, {
@@ -82,6 +74,7 @@ export class WeightEditComponent implements OnInit, OnDestroy {
             });
           });
         } else {
+          this.isLoading = false;
           this.mode = 'create';
           this.recordId = null;
         }
@@ -121,6 +114,6 @@ export class WeightEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

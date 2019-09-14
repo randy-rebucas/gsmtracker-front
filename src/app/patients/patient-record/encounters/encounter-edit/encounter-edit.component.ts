@@ -13,23 +13,24 @@ import { PrescriptionService } from '../../services/prescription.service';
 import { AssessmentService } from '../../services/assessment.service';
 import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
 import { UploadService } from 'src/app/upload/upload.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-encounter-edit',
   templateUrl: './encounter-edit.component.html',
   styleUrls: ['./encounter-edit.component.css']
 })
-export class EncounterEditComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  patient: string;
+export class EncounterEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   complaintData: ComplaintData;
-  isLoading = false;
   complaint: string;
-  title: string;
+  dialogTitle: string;
+  btnLabel: string;
 
-  id: string;
+  complaintId: string;
   complaints: any;
   created: string;
 
@@ -45,14 +46,12 @@ export class EncounterEditComponent implements OnInit, OnDestroy {
 
   attachments: any;
 
-  form: FormGroup;
-  private recordsSub: Subscription;
+  public recordsSub: Subscription;
 
   constructor(
-    private dialog: MatDialog,
-    private authService: AuthService,
-    private datePipe: DatePipe,
-    private notificationService: NotificationService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
 
     public complaintService: ComplaintService,
     public assessmentService: AssessmentService,
@@ -62,22 +61,19 @@ export class EncounterEditComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < EncounterEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
+      //this.recordId = data.id;
+      this.patientId = data.patientIds;
+      this.dialogTitle = data.title;
+      this.btnLabel = data.button;
       this.complaint = data.complaintId;
-      this.patient = data.patientIds;
-      this.title = data.title;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
-
-    this.isLoading = true;
+    super.doInit();
+    console.log(this.complaint);
     this.complaintService.get(this.complaint).subscribe(recordData => {
-      this.id = recordData._id;
+      this.complaintId = recordData._id;
       this.complaints = recordData.complaints;
       this.created = recordData.created;
     });
@@ -133,7 +129,6 @@ export class EncounterEditComponent implements OnInit, OnDestroy {
   getAttachments(complaintId) {
     this.uploadService.getByComplaintId(complaintId).subscribe(
       recordData => {
-        console.log(recordData);
         if (Object.keys(recordData).length) {
           this.attachments = recordData;
         }
@@ -175,19 +170,16 @@ export class EncounterEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  onPrintPreview(recordId, patient) {
+  onPrintPreview(recordId, patientId) {
     this.onClose();
 
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '40%';
-    dialogConfig.data = {
+    const args = {
+      width: '40%',
       id: recordId,
-      title: 'Print preview',
-      patientId: patient
+      dialogTitle: 'Preview Print',
+      patient: patientId
     };
-    this.dialog.open(RxPadComponent, dialogConfig);
+    super.onPopup(args, RxPadComponent);
   }
 
   onClose() {
@@ -195,6 +187,6 @@ export class EncounterEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, Inject, Optional } from '@angular/core';
-import { Router, ActivatedRoute, Params, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { ComplaintService } from '../../services/complaint.service';
-import { MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { AssessmentService } from '../../services/assessment.service';
 import { PrescriptionService } from '../../services/prescription.service';
 import { NotesService } from '../../services/notes.service';
@@ -14,17 +14,16 @@ import { ProgressNoteEditComponent } from '../../progress-notes/progress-note-ed
 import { ChiefComplaintEditComponent } from '../chief-complaint-edit/chief-complaint-edit.component';
 import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
 import { UploadService } from 'src/app/upload/upload.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-chief-complaint-detail',
   templateUrl: './chief-complaint-detail.component.html',
   styleUrls: ['./chief-complaint-detail.component.css']
 })
-export class ChiefComplaintDetailComponent implements OnInit, OnDestroy {
-
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  isLoading = false;
+export class ChiefComplaintDetailComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
   id: string;
   complaints: any;
@@ -46,34 +45,34 @@ export class ChiefComplaintDetailComponent implements OnInit, OnDestroy {
 
   attachments: any;
 
-  private recordsSub: Subscription;
+  public recordsSub: Subscription;
 
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
-    private dialog: MatDialog,
-    private authService: AuthService,
-    public route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
+    public activatedRoute: ActivatedRoute,
     public complaintService: ComplaintService,
     public assessmentService: AssessmentService,
     public prescriptionService: PrescriptionService,
     public notesService: NotesService,
     public uploadService: UploadService,
-    private router: Router,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
     ) {
-      const snapshot: RouterStateSnapshot = this.router.routerState.snapshot;
-      const splitUrl = snapshot.url.split('/');
-      this.patientId = splitUrl[2];
+      super(authService, router, dialog);
+
+      this.activatedRoute.parent.parent.params.subscribe(
+        (param) => {
+          this.patientId = param.patientId;
+        }
+      );
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
-    this.route.paramMap.subscribe(params => {
+    this.activatedRoute.paramMap.subscribe(params => {
       this.id = params.get('complaintId');
     });
 
@@ -148,7 +147,6 @@ export class ChiefComplaintDetailComponent implements OnInit, OnDestroy {
   getAttachments(complaintId) {
     this.uploadService.getByComplaintId(complaintId).subscribe(
       recordData => {
-        console.log(recordData);
         if (Object.keys(recordData).length) {
           this.attachments = recordData;
         }
@@ -209,32 +207,28 @@ export class ChiefComplaintDetailComponent implements OnInit, OnDestroy {
         this.targetWidth = '30%';
     }
 
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = this.targetWidth;
-    dialogConfig.data = {
-          id: recordId,
-          title: 'Update record',
-          patient: this.patientId
-      };
-    this.dialog.open(this.targetElem, dialogConfig);
+    const args = {
+      width: this.targetWidth,
+      id: recordId,
+      dialogTitle: 'Update Record',
+      dialogButton: 'Update',
+      patient: this.patientId
+    };
+    super.onPopup(args, this.targetElem);
   }
 
   onPrintPreview(recordId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
+    const args = {
+      width: '40%',
       id: recordId,
-      title: 'Print preview',
-      patientId: this.patientId
+      dialogTitle: 'Print preview',
+      dialogButton: 'Print',
+      patient: this.patientId
     };
-    this.dialog.open(RxPadComponent, dialogConfig);
+    super.onPopup(args, RxPadComponent);
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

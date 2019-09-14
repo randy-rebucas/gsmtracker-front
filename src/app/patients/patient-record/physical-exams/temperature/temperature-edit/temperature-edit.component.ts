@@ -1,63 +1,49 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
 import { AuthService } from '../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 
 import { TemperatureService } from '../../../services/temperature.service';
 import { TemperatureData } from '../../../models/temperature-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-temperature-edit',
   templateUrl: './temperature-edit.component.html',
   styleUrls: ['./temperature-edit.component.css']
 })
-export class TemperatureEditComponent implements OnInit, OnDestroy {
-  perPage = 10;
-  currentPage = 1;
+export class TemperatureEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  temperatureData: TemperatureData;
-  isLoading = false;
   private mode = 'create';
-  private recordId: string;
-  patientId: string;
-  title: string;
-  patient: string;
+
+  temperatureData: TemperatureData;
+  dialogTitle: string;
   btnLabel: string;
 
-  form: FormGroup;
-
-  maxDate = new Date();
-
   constructor(
-    public temperatureService: TemperatureService,
-    public route: ActivatedRoute,
-    private authService: AuthService,
-    private datePipe: DatePipe,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
 
+    public temperatureService: TemperatureService,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < TemperatureEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
       this.recordId = data.id;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.btnLabel = data.button;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = new FormGroup({
       temperature: new FormControl(null, {
@@ -85,6 +71,7 @@ export class TemperatureEditComponent implements OnInit, OnDestroy {
             });
           });
         } else {
+          this.isLoading = false;
           this.mode = 'create';
           this.recordId = null;
         }
@@ -124,6 +111,6 @@ export class TemperatureEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

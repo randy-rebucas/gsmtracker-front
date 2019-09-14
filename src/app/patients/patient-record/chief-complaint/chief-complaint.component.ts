@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NotificationService } from 'src/app/shared/notification.service';
+import { Router } from '@angular/router';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
 
 export interface Complaint {
   text: string;
@@ -13,24 +13,21 @@ export interface Complaint {
   templateUrl: './chief-complaint.component.html',
   styleUrls: ['./chief-complaint.component.css']
 })
-export class ChiefComplaintComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
+export class ChiefComplaintComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
   breakpoint: number;
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              public route: ActivatedRoute,
-              private notificationService: NotificationService) {}
+  constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+    ) {
+      super(authService, router, dialog);
+    }
 
   ngOnInit() {
-
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 2;
   }
 
@@ -39,6 +36,6 @@ export class ChiefComplaintComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

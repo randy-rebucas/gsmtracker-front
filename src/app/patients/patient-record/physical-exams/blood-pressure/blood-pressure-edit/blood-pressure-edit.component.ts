@@ -1,59 +1,49 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
 import { AuthService } from '../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { BpService } from '../../../services/bp.service';
 import { BpData } from '../../../models/bp-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
 
 @Component({
   selector: 'app-blood-pressure-edit',
   templateUrl: './blood-pressure-edit.component.html',
   styleUrls: ['./blood-pressure-edit.component.css']
 })
-export class BloodPressureEditComponent implements OnInit, OnDestroy {
-    private authListenerSubs: Subscription;
-    private mode = 'create';
-    private recordId: string;
+export class BloodPressureEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
 
-  perPage = 10;
-  currentPage = 1;
-  userIsAuthenticated = false;
-  isLoading = false;
-  patientId: string;
-  title: string;
-  patient: string;
+  private mode = 'create';
+
+  dialogTitle: string;
   btnLabel: string;
 
-  form: FormGroup;
   bpData: BpData;
 
-  maxDate = new Date();
-
   constructor(
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     public bpService: BpService,
-    public route: ActivatedRoute,
-    private authService: AuthService,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < BloodPressureEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
+      super(authService, router, dialog);
       this.recordId = data.id;
       this.patientId = data.patient;
-      this.title = data.title;
-      this.btnLabel = data.btnLabel;
+      this.dialogTitle = data.title;
+      this.btnLabel = data.button;
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.form = new FormGroup({
         systolic: new FormControl(null, {
@@ -86,6 +76,7 @@ export class BloodPressureEditComponent implements OnInit, OnDestroy {
             });
           });
         } else {
+          this.isLoading = false;
           this.mode = 'create';
           this.recordId = null;
         }
@@ -127,6 +118,6 @@ export class BloodPressureEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

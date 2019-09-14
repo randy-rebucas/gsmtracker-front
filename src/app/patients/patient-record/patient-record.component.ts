@@ -60,27 +60,23 @@ extends SecureComponent
   }
 
   generateQrCode(patientId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '16%';
-    dialogConfig.data = {
+    const args = {
+      width: '16%',
       id: patientId,
-      title: 'Generate QR Code'
+      dialogTitle: 'Generate QR Code',
+      dialogButton: null
     };
-    this.dialog.open(QrCodeGenerateComponent, dialogConfig);
+    super.onPopup(args, QrCodeGenerateComponent);
   }
 
   viewChart(patientId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-        id: patientId,
-        title: 'Chart'
-      };
-    this.dialog.open(PatientChartComponent, dialogConfig);
+    const args = {
+      width: '50%',
+      id: patientId,
+      dialogTitle: 'Chart',
+      dialogButton: null
+    };
+    super.onPopup(args, PatientChartComponent);
   }
 
   ngOnDestroy() {

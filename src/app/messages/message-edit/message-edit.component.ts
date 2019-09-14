@@ -7,6 +7,8 @@ import { startWith, map, debounceTime, tap, switchMap, finalize } from 'rxjs/ope
 import { MessagesService } from '../messages.service';
 import { ThreadsService } from '../threads.service';
 import { NotificationService } from 'src/app/shared/notification.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
 export interface User {
   id: string;
   name: string;
@@ -16,62 +18,48 @@ export interface User {
   templateUrl: './message-edit.component.html',
   styleUrls: ['./message-edit.component.css']
 })
-export class MessageEditComponent implements OnInit, OnDestroy {
+export class MessageEditComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
   @Input() threadId: string;
 
-  perPage = 10;
-  currentPage = 1;
-
   filteredUsers: User[] = [];
-  messageForm: FormGroup;
-  isLoading = false;
-
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-
-  userId: string;
-  page = 1;
   setRow: number;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
     private fb: FormBuilder,
     private messageService: MessagesService,
     private threadService: ThreadsService,
     private notificationService: NotificationService,
-    ) {}
+    ) {
+      super(authService, router, dialog);
+    }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
-    this.userId = this.authService.getUserId();
-
-    this.messageForm = this.fb.group({
+    this.form = this.fb.group({
       userInput: new FormControl(null),
       message: new FormControl(null, [Validators.required])
     });
 
-    this.messageForm
+    this.form
       .get('userInput')
       .valueChanges
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.messageService.search({name: value}, this.page, this.userId)
+        switchMap(value => this.messageService.search({name: value}, this.currentPage, this.userId)
         .pipe(
           finalize(() => this.isLoading = false),
           )
         )
       )
       .subscribe((users) => {
-        console.log(users);
         this.filteredUsers = users.results;
       });
   }
@@ -88,29 +76,29 @@ export class MessageEditComponent implements OnInit, OnDestroy {
        * reply
        */
       this.messageService.insert(
-        this.messageForm.value.message,
+        this.form.value.message,
         this.threadId,
         this.userId
       ).subscribe(() => {
         this.messageService.getAll(this.threadId);
-        this.messageForm.reset();
+        this.form.reset();
       });
     } else {
       /**
        * new thread
        */
       this.threadService.insert(
-        this.messageForm.value.message,
-        this.messageForm.value.userInput,
+        this.form.value.message,
+        this.form.value.userInput,
         this.userId
       ).subscribe(() => {
         this.threadService.getAll(this.userId);
-        this.messageForm.reset();
+        this.form.reset();
       });
     }
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

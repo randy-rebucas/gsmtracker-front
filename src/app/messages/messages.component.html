@@ -5,7 +5,7 @@
   <mat-grid-tile [colspan]="2" [rowspan]="6" class="grid-content">
     <mat-grid-tile-header>
         <h3>Messaging
-            <button mat-icon-button (click)="onCreate()" style="position: absolute;
+            <button mat-icon-button [routerLink]="['./new']" routerLinkActive="router-link-active"  style="position: absolute;
             right: 8px;
             top: 5px;">
                 <mat-icon>create</mat-icon>

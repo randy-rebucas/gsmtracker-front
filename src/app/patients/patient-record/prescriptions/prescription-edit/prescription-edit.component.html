@@ -1,13 +1,16 @@
-<h2 mat-dialog-title>{{ title }}
+<h2 mat-dialog-title>{{ dialogTitle }}
     <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
 </h2>
-<mat-dialog-content class="mat-typography">
+<mat-dialog-content class="mat-typography" style="min-height: 300px;">
+    <div *ngIf="isLoading" class="loading">
+        <mat-spinner [diameter]="25"></mat-spinner>
+    </div>
     <form [formGroup]="form" class="normal-form" (submit)="onSave()" *ngIf="!isLoading">
         <table>
           <tr>
             <td>
                 <mat-form-field>
-                    <input matInput readonly [matDatepicker]="picker" formControlName="record_date" [max]="maxDate" placeholder="Date">
+                    <input matInput readonly [matDatepicker]="picker" formControlName="record_date" [max]="currentDate" placeholder="Date">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker color="primary"></mat-datepicker>
                 </mat-form-field>
@@ -45,6 +48,6 @@
                 </td>
             </tr>
         </table>
-        <button mat-raised-button color="primary" type="submit">{{btnLabel}}</button>
+        <button mat-raised-button color="primary" type="submit">{{dialogButton}}</button>
     </form>
 </mat-dialog-content>

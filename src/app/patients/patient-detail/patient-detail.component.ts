@@ -56,15 +56,16 @@ implements OnInit, OnDestroy {
 
   files: UploadData[] = [];
 
-  private recordsSub: Subscription;
+  public recordsSub: Subscription;
 
   constructor(
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
 
-    public patientsService: PatientsService,
     private route: ActivatedRoute,
+    private titleService: Title,
+    public patientsService: PatientsService,
     public heightService: HeightService,
     public weightService: WeightService,
     public temperatureService: TemperatureService,
@@ -75,8 +76,7 @@ implements OnInit, OnDestroy {
     public assessmentService: AssessmentService,
     public prescriptionService: PrescriptionService,
     public notesService: NotesService,
-    public uploadService: UploadService,
-    private titleService: Title
+    public uploadService: UploadService
     ) {
       super(authService, router, dialog);
     }

@@ -17,6 +17,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { QrCodeScannerComponent } from 'src/app/qr-code/qr-code-scanner/qr-code-scanner.component';
 
 @Component({
   selector: 'app-patient-list',
@@ -81,6 +82,17 @@ import { SecureComponent } from 'src/app/secure/secure.component';
   dt {
     float: left;
     width: 100px;
+  }
+  .search-div {
+    position: relative;
+  }
+  .search-div > div {
+    position: absolute;
+    top: 1rem;
+    left: 12%;
+  }
+  .search-div > div img {
+    cursor: pointer;
   }
   `],
   templateUrl: './patient-list.component.html',
@@ -165,6 +177,16 @@ implements OnInit, OnDestroy {
       dialogButton: 'Update'
     };
     super.onPopup(args, PatientEditComponent);
+  }
+
+  onScan() {
+    const args = {
+      width: '30%',
+      id: null,
+      dialogTitle: 'Scan Code',
+      dialogButton: null
+    };
+    super.onPopup(args, QrCodeScannerComponent);
   }
 
   onDelete(patientId) {
