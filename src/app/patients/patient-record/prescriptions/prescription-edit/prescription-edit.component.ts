@@ -52,7 +52,7 @@ implements OnInit, OnDestroy {
       this.complaintId = data.complaintIds;
       this.patientId = data.patient;
       this.dialogTitle = data.title;
-      this.dialogButton = data.button;
+      this.dialogButton = data.btnLabel;
     }
 
   ngOnInit() {
@@ -90,7 +90,7 @@ implements OnInit, OnDestroy {
     return this.fb.group({
       maintenableFlg: [],
       medicine: ['', [Validators.required]],
-      preparation: ['', [Validators.required]],
+      preparation: [''],
       sig: ['', [Validators.required]],
       quantity: [1, [Validators.required]]
     });

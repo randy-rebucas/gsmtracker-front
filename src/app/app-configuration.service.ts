@@ -10,15 +10,17 @@ export class AppConfiguration {
   constructor(private httpClient: HttpClient) {
 
   }
-  title: string;
-  apiUrl: string;
+  /**
+   * Application configurations
+   */
 
   ensureInit(): Promise<any> {
     return new Promise((r, e) => {
       // mock because can't xhr local file here
       const content = {
         title : 'Clinic +',
-        apiUrl : 'http://test.api.com'
+        dayTrial : 14,
+        version : '1.0.0'
       };
       Object.assign(this, content);
       r(content);
@@ -34,4 +36,5 @@ export class AppConfiguration {
         reason => e(reason));*/
     });
   }
+
 }

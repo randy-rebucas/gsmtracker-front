@@ -6,7 +6,23 @@
     <div *ngIf="isLoading" class="loading">
         <mat-spinner [diameter]="25"></mat-spinner>
     </div>
-    <div *ngIf="!isLoading" id="print-section">
+    <div *ngIf="!isLoading" id="content">
+        <table id="prescription-heading" style="width: 100%;">
+          <tr>
+            <td colspan="4"><h2>{{clinicOwner}}</h2></td>
+          </tr>
+          <tr>
+            <td colspan="4"><h5>{{clinicName}}</h5></td>
+          </tr>
+          <tr>
+            <td colspan="2">{{clinicAddress}} <br/>
+              Tel no <span *ngFor="let phone of clinicPhone; let i = index;">{{phone.contact}} <span *ngIf="i < 1">/</span> </span>
+            </td>
+            <td colspan="2">Clinic Hours:<br/>
+              <span *ngFor="let hour of clinicHours; let o = index;">{{hour.morningOpen}} - {{hour.afternoonClose}}</span>
+            </td>
+          </tr>
+        </table>
         <!--Your html stuff that you want to print-->
         <table id="rxpad">
             <thead>
@@ -30,6 +46,11 @@
                 </tr>
             </thead>
             <tbody>
+              <tr>
+                <td colspan="4">
+                    <img src="assets/images/rx.png" alt="rx" style="width: 100px;" />
+                </td>
+              </tr>
                 <tr>
                     <td colspan="4">
                         <table id="prescriptions">
@@ -45,11 +66,11 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td rowspan="4">
+                    <td rowspan="4" #content>
                         <qrcode [qrdata]="patientId" [size]="100" [level]="'H'"></qrcode>
                     </td>
                     <td colspan="3">
-                        Irma Barbara B.Taganas-Guibone, M.D.
+                        {{clinicOwner}}
                     </td>
                 </tr>
                 <tr>
@@ -57,7 +78,7 @@
                         License No :
                     </td>
                     <td>
-                        99436
+                        {{prc}}
                     </td>
                 </tr>
                 <tr>
@@ -65,7 +86,7 @@
                         PTR No :
                     </td>
                     <td>
-                        --
+                        {{ptr}}
                     </td>
                 </tr>
                 <tr>
@@ -73,7 +94,7 @@
                         S2 No :
                     </td>
                     <td>
-                        --
+                        {{s2}}
                     </td>
                 </tr>
             </tfoot>
@@ -82,6 +103,7 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button class="mat-raised-button mat-primary" printTitle="PatientName" [useExistingCss]="true" printSectionId="print-section" ngxPrint><mat-icon>print</mat-icon> Print</button>
+    <button class="mat-raised-button mat-primary" (click)="printrx()">Direct Print</button>
+    <button class="mat-raised-button mat-primary" printTitle="PatientName" [useExistingCss]="true" printSectionId="content" ngxPrint><mat-icon>print</mat-icon> Print</button>
     <!--Your relevant print button-->
 </mat-dialog-actions>

@@ -54,6 +54,7 @@ implements OnInit, OnDestroy {
     if  (resultString != null) {
       this.patientsService.get(resultString).subscribe((response) => {
         if (response._id) {
+          this.onClose();
           this.router.navigateByUrl('/patients/' + response._id + '/record/physical-exams/height');
         }
       });

@@ -75,7 +75,7 @@ exports.update = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Setting.find({ 'userId': req.params.userId })
+    Setting.findOne({ 'userId': req.params.userId })
     .exec()
     .then(setting => {
             if (setting) {

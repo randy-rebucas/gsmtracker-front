@@ -156,19 +156,39 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-
+    // const img = this.toDataUrl('/assets/images/rx.png', this.makePDF);
+    // console.log(img);
     this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
     this.recordsSub = this.prescriptionService
       .getUpdateListener()
       .subscribe((prescriptionData: {prescriptions: PrescriptionData[], count: number}) => {
         this.isLoading = false;
-        console.log(prescriptionData.prescriptions);
         this.total = prescriptionData.count;
         this.dataSource = new MatTableDataSource(prescriptionData.prescriptions);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
   }
+
+  // toDataUrl(url, callback) {
+  //   const xhr = new XMLHttpRequest();
+  //   xhr.onload = () => {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       callback(reader.result);
+  //     };
+  //     reader.readAsDataURL(xhr.response);
+  //   };
+  //   xhr.open('GET', url);
+  //   xhr.responseType = 'blob';
+  //   xhr.send();
+  // }
+
+  // makePDF(base64Img) {
+  //   return {
+  //     bImg: base64Img
+  //   };
+  // }
 
   onPrintPreview(recordId) {
     const args = {

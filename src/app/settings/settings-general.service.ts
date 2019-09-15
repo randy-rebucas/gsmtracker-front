@@ -30,16 +30,15 @@ export class SettingsGeneralService {
       return this.http.get<{
         _id: string;
         userId: string,
-        name: string,
-        owner: string,
-        address: string,
-        email: string,
-        url: string,
-        prc: string,
-        ptr: string,
+        clinicName: string,
+        clinicOwner: string,
+        clinicAddress: string,
+        clinicEmail: string,
+        prc: number,
+        ptr: number,
         s2: string,
-        phones: [],
-        hours: []}>(
+        clinicPhone: [],
+        clinicHours: []}>(
         BACKEND_URL + '/' + userId
         );
     }

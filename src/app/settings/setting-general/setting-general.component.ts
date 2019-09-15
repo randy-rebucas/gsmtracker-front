@@ -37,7 +37,6 @@ implements OnInit, OnDestroy {
         clinicName: ['', [Validators.required]],
         clinicOwner: ['', [Validators.required]],
         clinicAddress: [''],
-        clinicUrl: [''],
         clinicEmail: [''],
         prc: [''],
         ptr: [''],
@@ -57,32 +56,32 @@ implements OnInit, OnDestroy {
 
   populateForm() {
     this.settingsGeneralService.get(this.userId).subscribe(settingData => {
+      console.log(settingData);
       this.form.patchValue({
-        clinicName: settingData[0].clinicName,
-        clinicOwner: settingData[0].clinicOwner,
-        clinicAddress: settingData[0].clinicAddress,
-        clinicUrl: settingData[0].clinicUrl,
-        clinicEmail: settingData[0].clinicEmail,
-        prc: settingData[0].prc,
-        ptr: settingData[0].ptr,
-        s2: settingData[0].s2,
+        clinicName: settingData.clinicName,
+        clinicOwner: settingData.clinicOwner,
+        clinicAddress: settingData.clinicAddress,
+        clinicEmail: settingData.clinicEmail,
+        prc: settingData.prc,
+        ptr: settingData.ptr,
+        s2: settingData.s2,
       });
 
       const contactControl = this.form.controls.clinicPhone as FormArray;
-      const contacts = settingData[0].clinicPhone;
+      const contacts = settingData.clinicPhone;
       for (let i = 1; i < contacts.length; i++) {
         contactControl.push(this.addClinicContactGroup());
       }
       this.form.patchValue({clinicPhone: contacts});
 
       const hourControl = this.form.controls.clinicHours as FormArray;
-      const hours = settingData[0].clinicHours;
+      const hours = settingData.clinicHours;
       for (let i = 1; i < hours.length; i++) {
         hourControl.push(this.addClinicHourGroup());
       }
       this.form.patchValue({clinicHours: hours});
 
-      this.settingId = settingData[0]._id;
+      this.settingId = settingData._id;
     });
   }
 

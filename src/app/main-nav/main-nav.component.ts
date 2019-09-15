@@ -17,9 +17,6 @@ export class MainNavComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  title: string;
-  subscriptionType: string;
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -40,7 +37,6 @@ implements OnInit, OnDestroy {
 
     ngOnInit() {
       super.doInit();
-      this.subscriptionType = this.authService.getUserSubscription();
     }
 
     onLogout() {

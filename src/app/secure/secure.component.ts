@@ -65,14 +65,19 @@ export class SecureComponent {
   public recordId: string;
 
   /**
+   * Application configurations
+   */
+  public trialDay: number;
+  public appName: string;
+  public appVersion: string;
+
+  /**
    * Subscriptions
    */
   public authListenerSubs: Subscription;
   public serviceSub: Subscription;
 
   form: FormGroup;
-
-
 
   constructor(
     public authService: AuthService,
@@ -81,9 +86,11 @@ export class SecureComponent {
     public appconfig: AppConfiguration
   ) {
 
-   }
+  }
 
-  doInit() {
+  async doInit() {
+    this.isLoading = true;
+
     this.userId = this.authService.getUserId();
     this.userEmail = this.authService.getUserEmail();
     this.userSubscription = this.authService.getUserSubscription();
@@ -95,7 +102,18 @@ export class SecureComponent {
         this.userIsAuthenticated = isAuthenticated;
     });
 
-    this.isLoading = true;
+    await this.loadConfig().then((config) => {
+      this.trialDay = config.config.dayTrial;
+      this.appVersion  = config.config.version;
+      this.appName = config.config.title;
+    });
+  }
+
+  async loadConfig() {
+    const appConfig = await this.appconfig.ensureInit();
+    return {
+      config: appConfig
+    };
   }
 
   doDestroy() {
