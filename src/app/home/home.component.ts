@@ -6,6 +6,7 @@ import { AppSettings } from '../shared/appsettings';
 import { AppSettingsService } from '../shared/appsettings.service';
 import { SecureComponent } from '../secure/secure.component';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from '../app-configuration.service';
 
 @Component({
   selector: 'app-home',
@@ -24,11 +25,12 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private appSettingsService: AppSettingsService,
     private titleService: Title
   ) {
-    super(authService, router, dialog);
+    super(authService, router, dialog, appconfig);
    }
 
   ngOnInit() {

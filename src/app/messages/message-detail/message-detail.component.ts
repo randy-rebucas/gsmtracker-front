@@ -7,6 +7,7 @@ import { MessagesService } from '../messages.service';
 import { MessagesData } from '../messages-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-message-detail',
@@ -36,12 +37,13 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private route: ActivatedRoute,
     private threadService: ThreadsService,
     private messageService: MessagesService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
   ngOnInit() {

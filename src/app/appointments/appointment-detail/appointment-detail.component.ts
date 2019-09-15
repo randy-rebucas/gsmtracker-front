@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { AppointmentService } from '../../appointments/appointment.service';
 import { AppointmentData } from '../../appointments/appointment-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-appointment-detail',
@@ -43,13 +44,14 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public appointmentService: AppointmentService,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < AppointmentDetailComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.appointmentId = data.id;
     }
 

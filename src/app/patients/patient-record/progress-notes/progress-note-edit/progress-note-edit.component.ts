@@ -8,6 +8,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { NotesService } from '../../services/notes.service';
 import { NoteData } from '../../models/note.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-progress-note-edit',
@@ -29,6 +30,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public notesService: NotesService,
     public route: ActivatedRoute,
@@ -36,7 +38,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < ProgressNoteEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
 
       this.recordId = data.id;
       this.complaintId = data.complaintIds;

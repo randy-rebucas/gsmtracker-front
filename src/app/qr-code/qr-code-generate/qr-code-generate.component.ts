@@ -3,6 +3,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-qr-code-generate',
@@ -20,11 +21,12 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public dialogRef: MatDialogRef < QrCodeGenerateComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
 
       this.dialogTitle = data.title;
       this.myAngularxQrCode = data.id; // 'Your QR code data string';

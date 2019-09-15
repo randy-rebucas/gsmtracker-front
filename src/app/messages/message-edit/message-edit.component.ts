@@ -9,6 +9,7 @@ import { ThreadsService } from '../threads.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 export interface User {
   id: string;
   name: string;
@@ -30,13 +31,14 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private fb: FormBuilder,
     private messageService: MessagesService,
     private threadService: ThreadsService,
     private notificationService: NotificationService,
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
   ngOnInit() {

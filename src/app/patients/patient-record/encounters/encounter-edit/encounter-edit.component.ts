@@ -15,6 +15,7 @@ import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
 import { UploadService } from 'src/app/upload/upload.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { Router } from '@angular/router';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-encounter-edit',
@@ -52,6 +53,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public complaintService: ComplaintService,
     public assessmentService: AssessmentService,
@@ -61,7 +63,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < EncounterEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       //this.recordId = data.id;
       this.patientId = data.patientIds;
       this.dialogTitle = data.title;

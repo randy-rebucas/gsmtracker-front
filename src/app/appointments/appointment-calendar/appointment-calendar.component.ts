@@ -14,6 +14,7 @@ import { AppointmentService } from '../appointment.service';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-appointment-calendar',
@@ -41,10 +42,11 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public appointmentService: AppointmentService,
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
   ngOnInit() {

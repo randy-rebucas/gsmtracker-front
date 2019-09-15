@@ -6,6 +6,7 @@ import { PrescriptionService } from '../patients/patient-record/services/prescri
 import { PatientsService } from '../patients/patients.service';
 import { SecureComponent } from '../secure/secure.component';
 import { Title } from '@angular/platform-browser';
+import { AppConfiguration } from '../app-configuration.service';
 
 @Component({
   selector: 'app-rx-pad',
@@ -28,6 +29,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public titleService: Title,
     public prescriptionService: PrescriptionService,
@@ -35,7 +37,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < RxPadComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.recordId = data.id;
       this.patientId = data.patient;
       this.title = data.title;

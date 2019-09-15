@@ -15,6 +15,7 @@ import { AssessmentService } from '../../services/assessment.service';
 import { PrescriptionService } from '../../services/prescription.service';
 import { NotesService } from '../../services/notes.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-chief-complaint-list',
@@ -39,6 +40,8 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
+
     public complaintService: ComplaintService,
     public assessmentService: AssessmentService,
     public prescriptionService: PrescriptionService,
@@ -48,7 +51,7 @@ implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;

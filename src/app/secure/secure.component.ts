@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { FormGroup } from '@angular/forms';
 import { MatDialogConfig, MatDialog } from '@angular/material';
+import { AppConfiguration } from '../app-configuration.service';
 
 @Component({
   selector: 'app-secure',
@@ -71,11 +72,16 @@ export class SecureComponent {
 
   form: FormGroup;
 
+
+
   constructor(
     public authService: AuthService,
     public router: Router,
-    public dialog: MatDialog
-  ) { }
+    public dialog: MatDialog,
+    public appconfig: AppConfiguration
+  ) {
+
+   }
 
   doInit() {
     this.userId = this.authService.getUserId();

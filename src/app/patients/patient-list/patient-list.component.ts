@@ -18,6 +18,7 @@ import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { QrCodeScannerComponent } from 'src/app/qr-code/qr-code-scanner/qr-code-scanner.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -120,13 +121,14 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private titleService: Title,
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private patientsService: PatientsService
   ) {
-    super(authService, router, dialog);
+    super(authService, router, dialog, appconfig);
   }
 
   ngOnInit() {

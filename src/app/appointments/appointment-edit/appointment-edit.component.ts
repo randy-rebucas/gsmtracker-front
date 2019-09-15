@@ -8,6 +8,7 @@ import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { MessagesService } from 'src/app/messages/messages.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 export interface User {
   id: string;
@@ -30,12 +31,13 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private appointmentService: AppointmentService,
     private messageService: MessagesService,
     private notificationService: NotificationService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
   ngOnInit() {

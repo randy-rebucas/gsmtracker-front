@@ -12,6 +12,7 @@ import { HistoryData } from '../../models/history-data.model';
 import { HistoryService } from '../../services/history.service';
 import { HistoriesEditComponent } from '../histories-edit/histories-edit.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-histories-list',
@@ -35,6 +36,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public historyService: HistoryService,
     private dialogService: DialogService,
@@ -42,7 +44,7 @@ implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: HistoryService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;

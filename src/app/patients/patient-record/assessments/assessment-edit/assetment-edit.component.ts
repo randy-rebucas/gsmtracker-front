@@ -9,6 +9,7 @@ import { AssessmentService } from '../../services/assessment.service';
 import { AssessmentData } from '../../models/assessment-data.model';
 import { ComplaintService } from '../../services/complaint.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-assessment-edit',
@@ -35,6 +36,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public assessmentService: AssessmentService,
     public complaintService: ComplaintService,
@@ -44,7 +46,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < AssessmentEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
 
       this.recordId = data.id;
       this.complaintId = data.complaintIds;

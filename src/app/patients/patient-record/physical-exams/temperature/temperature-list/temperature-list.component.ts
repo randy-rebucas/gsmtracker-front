@@ -12,6 +12,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, 
 import { DatePipe } from '@angular/common';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-temperature-list',
@@ -35,6 +36,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public temperatureService: TemperatureService,
     private dialogService: DialogService,
@@ -43,7 +45,7 @@ implements OnInit, OnDestroy {
 
     @Optional() @Inject(MAT_DIALOG_DATA) public data: TemperatureService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;

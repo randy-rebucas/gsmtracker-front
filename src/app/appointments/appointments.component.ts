@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 import { SecureComponent } from '../secure/secure.component';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from '../app-configuration.service';
 
 @Component({
   selector: 'app-appointment',
@@ -19,10 +20,11 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public titleService: Title
   ) {
-    super(authService, router, dialog);
+    super(authService, router, dialog, appconfig);
   }
 
   ngOnInit() {

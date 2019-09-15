@@ -9,6 +9,7 @@ import { DialogService } from 'src/app/shared/dialog.service';
 import { MessagesService } from '../messages.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-message-list',
@@ -26,12 +27,13 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private threadService: ThreadsService,
     private notificationService: NotificationService,
     private dialogService: DialogService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
   ngOnInit() {

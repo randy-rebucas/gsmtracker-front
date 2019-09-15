@@ -10,6 +10,7 @@ import { NoteData } from '../../models/note.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { UploadService } from 'src/app/upload/upload.service';
 import { UploadData } from 'src/app/upload/upload-data.model';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-test-result-edit',
@@ -37,6 +38,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public uploadService: UploadService,
     public route: ActivatedRoute,
@@ -44,7 +46,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < TestResultEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
 
       this.recordId = data.id;
       this.complaintId = data.complaintIds;
@@ -55,7 +57,6 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    console.log(this.patientId);
     this.form = new FormGroup({
       name: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(300) ]

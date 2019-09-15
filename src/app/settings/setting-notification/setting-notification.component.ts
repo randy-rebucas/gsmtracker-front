@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { Title } from '@angular/platform-browser';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-settings-notification',
@@ -18,10 +19,11 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public titleService: Title
   ) {
-    super(authService, router, dialog);
+    super(authService, router, dialog, appconfig);
   }
 
   ngOnInit() {

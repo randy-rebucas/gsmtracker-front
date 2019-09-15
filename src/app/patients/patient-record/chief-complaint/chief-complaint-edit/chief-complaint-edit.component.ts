@@ -11,6 +11,7 @@ import { ComplaintService } from '../../services/complaint.service';
 import { ComplaintData } from '../../models/complaint-data.model';
 import { EncounterEditComponent } from '../../encounters/encounter-edit/encounter-edit.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-chief-complaint-edit',
@@ -32,6 +33,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public complaintService: ComplaintService,
     private fb: FormBuilder,
@@ -39,7 +41,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < ChiefComplaintEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
 
       this.recordId = data.id;
       this.patientId = data.patient;

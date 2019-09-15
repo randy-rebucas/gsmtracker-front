@@ -15,6 +15,7 @@ import { ChiefComplaintEditComponent } from '../chief-complaint-edit/chief-compl
 import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
 import { UploadService } from 'src/app/upload/upload.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-chief-complaint-detail',
@@ -51,6 +52,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public activatedRoute: ActivatedRoute,
     public complaintService: ComplaintService,
@@ -60,7 +62,7 @@ implements OnInit, OnDestroy {
     public uploadService: UploadService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
 
       this.activatedRoute.parent.parent.params.subscribe(
         (param) => {

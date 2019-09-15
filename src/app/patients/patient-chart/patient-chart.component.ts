@@ -18,6 +18,7 @@ import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { Title } from '@angular/platform-browser';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-patient-chart',
@@ -60,6 +61,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private titleService: Title,
 
@@ -77,7 +79,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < PatientChartComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.dialogTitle = data.title;
       this.patientId = data.id;
      }

@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { WeightService } from '../../../services/weight.service';
 import { WeightData } from '../../../models/weight-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-weight-edit',
@@ -31,6 +32,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public weightService: WeightService,
     public route: ActivatedRoute,
@@ -38,7 +40,7 @@ implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < WeightEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.recordId = data.id;
       this.patientId = data.patient;
       this.dialogTitle = data.title;

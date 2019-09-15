@@ -3,10 +3,10 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { AppConfiguration } from '../app-configuration.service';
 import { SecureComponent } from '../secure/secure.component';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from '../app-configuration.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -30,12 +30,12 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
-    private breakpointObserver: BreakpointObserver,
-    appconfig: AppConfiguration
+    private breakpointObserver: BreakpointObserver
     ) {
-      super(authService, router, dialog);
-      this.title = appconfig.title;
+      super(authService, router, dialog, appconfig);
+
     }
 
     ngOnInit() {

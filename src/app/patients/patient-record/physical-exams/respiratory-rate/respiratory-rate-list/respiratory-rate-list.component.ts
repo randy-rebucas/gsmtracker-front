@@ -11,6 +11,7 @@ import { RprData } from '../../../models/rpr-data.model';
 import { RprService } from '../../../services/rpr.service';
 import { RespiratoryRateEditComponent } from '../respiratory-rate-edit/respiratory-rate-edit.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-respiratory-rate-list',
@@ -34,6 +35,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public rprService: RprService,
     private dialogService: DialogService,
@@ -42,7 +44,7 @@ implements OnInit, OnDestroy {
 
     @Optional() @Inject(MAT_DIALOG_DATA) public data: RprService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;

@@ -7,6 +7,7 @@ import { ComplaintService } from '../../services/complaint.service';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { ComplaintData } from '../../models/complaint-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-chief-complaint-latest',
@@ -30,12 +31,13 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public route: ActivatedRoute,
     public complaintService: ComplaintService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
   ) {
-    super(authService, router, dialog);
+    super(authService, router, dialog, appconfig);
   }
 
   ngOnInit() {

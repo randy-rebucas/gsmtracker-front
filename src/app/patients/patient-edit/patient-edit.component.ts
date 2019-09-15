@@ -8,6 +8,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-patient-edit',
@@ -28,13 +29,14 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private notificationService: NotificationService,
     private patientsService: PatientsService,
     private dialogRef: MatDialogRef < PatientEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
-    super(authService, router, dialog);
+    super(authService, router, dialog, appconfig);
 
     this.patientId = data.id;
     this.dialogTitle = data.title;

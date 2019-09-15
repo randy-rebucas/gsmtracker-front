@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+/**
+ * this will ensures all application settings
+ * such subscription
+ * API's sms
+ */
 @Injectable()
 export class AppConfiguration {
   constructor(private httpClient: HttpClient) {

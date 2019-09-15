@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { RprService } from '../../../services/rpr.service';
 import { RprData } from '../../../models/rpr-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-respiratory-rate-edit',
@@ -30,13 +31,14 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public rprService: RprService,
     private notificationService: NotificationService,
     public dialogRef: MatDialogRef < RespiratoryRateEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.recordId = data.id;
       this.patientId = data.patient;
       this.dialogTitle = data.title;

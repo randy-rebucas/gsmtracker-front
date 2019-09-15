@@ -13,6 +13,7 @@ import { AssessmentEditComponent } from '../assessment-edit/assetment-edit.compo
 import { ComplaintService } from '../../services/complaint.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-assessment-list',
@@ -112,6 +113,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public complaintService: ComplaintService,
     public assessmentService: AssessmentService,
@@ -120,7 +122,7 @@ implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: AssessmentService,
   ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;

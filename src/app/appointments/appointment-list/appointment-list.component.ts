@@ -9,6 +9,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-appointment-list',
@@ -31,12 +32,13 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public appointmentService: AppointmentService,
     private notificationService: NotificationService,
     private dialogService: DialogService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
   ngOnInit() {

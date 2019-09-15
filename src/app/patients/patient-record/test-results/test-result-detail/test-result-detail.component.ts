@@ -8,6 +8,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { TestResultEditComponent } from '../test-result-edit/test-result-edit.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-test-result-detail',
@@ -31,13 +32,14 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private activatedRoute: ActivatedRoute,
     public uploadService: UploadService,
     private dialogService: DialogService,
     private notificationService: NotificationService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;

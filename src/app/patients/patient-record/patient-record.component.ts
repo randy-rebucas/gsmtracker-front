@@ -7,6 +7,7 @@ import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-cod
 import { MatDialog } from '@angular/material';
 import { PatientChartComponent } from '../patient-chart/patient-chart.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-patient-record',
@@ -21,12 +22,13 @@ extends SecureComponent
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public patientsService: PatientsService,
     private route: ActivatedRoute,
     private titleService: Title
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
   ngOnInit() {

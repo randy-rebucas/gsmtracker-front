@@ -11,6 +11,7 @@ import { WeightEditComponent } from '../weight-edit/weight-edit.component';
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-weight-list',
@@ -29,6 +30,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public weightService: WeightService,
     private dialogService: DialogService,
@@ -37,7 +39,7 @@ implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: WeightService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;

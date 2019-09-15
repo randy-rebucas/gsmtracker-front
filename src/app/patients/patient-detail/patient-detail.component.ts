@@ -20,6 +20,7 @@ import { PatientChartComponent } from '../patient-chart/patient-chart.component'
 import { UploadService } from 'src/app/upload/upload.service';
 import { UploadData } from 'src/app/upload/upload-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-patient-detail',
@@ -62,6 +63,7 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     private route: ActivatedRoute,
     private titleService: Title,
@@ -78,7 +80,7 @@ implements OnInit, OnDestroy {
     public notesService: NotesService,
     public uploadService: UploadService
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
     }
 
     ngOnInit() {

@@ -7,6 +7,7 @@ import { SettingsGeneralService } from '../settings-general.service';
 import { Title } from '@angular/platform-browser';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
+import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-settings-general',
@@ -24,13 +25,14 @@ implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
     public titleService: Title,
     public settingsGeneralService: SettingsGeneralService,
     private notificationService: NotificationService,
     private fb: FormBuilder
     ) {
-      super(authService, router, dialog);
+      super(authService, router, dialog, appconfig);
       this.form = this.fb.group({
         clinicName: ['', [Validators.required]],
         clinicOwner: ['', [Validators.required]],
