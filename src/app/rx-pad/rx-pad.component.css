@@ -78,7 +78,8 @@ table#prescription-heading tr:nth-child(2) h5 {
   font-family: monospace;
 }
 table#prescription-heading tr:last-child td {
-  font-size: 12px;
-  font-family: monospace;
-  border-bottom: 1px solid #a9a9a9;
+  font-size: 14px;
+    font-family: monospace;
+    border-bottom: 1px solid #a9a9a9;
+    font-weight: 600;
 }

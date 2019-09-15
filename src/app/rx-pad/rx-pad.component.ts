@@ -30,6 +30,7 @@ implements OnInit, OnDestroy {
   created: string;
   complaintId: string;
   prescriptions: any;
+  myAge: number;
 
   clinicOwner: string;
   clinicName: string;
@@ -84,6 +85,14 @@ implements OnInit, OnDestroy {
         this.gender = results.patientData.gender;
         this.birthdate = results.patientData.birthdate;
         this.address = results.patientData.address;
+        const today = new Date();
+        const bDate = new Date(this.birthdate);
+        let age = today.getFullYear() - bDate.getFullYear();
+        const m = today.getMonth() - bDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < bDate.getDate())) {
+          age--;
+        }
+        this.myAge = age;
         /**
          * prescription data
          */
@@ -254,13 +263,13 @@ implements OnInit, OnDestroy {
         const element = this.prescriptions[index];
         num = (index + 1);
         pdfDoc.setFontType('regular');
-        pdfDoc.setTextColor(0, 0, 0);
+        pdfDoc.setTextColor(51, 122, 183);
         pdfDoc.text('' + num + '', 10, 87 + ( index * 10 ), null, null, 'left');
         pdfDoc.setFontType('regular');
-        pdfDoc.setTextColor(0, 0, 0);
+        pdfDoc.setTextColor(51, 122, 183);
         pdfDoc.text( element.medicine + ' ' + element.preparation, 15, 87 + ( index * 10 ), null, null, 'left');
         pdfDoc.setFontType('regular');
-        pdfDoc.setTextColor(0, 0, 0);
+        pdfDoc.setTextColor(51, 122, 183);
         pdfDoc.text(' # ' + element.quantity, 130, 87 + ( index * 10 ), null, null, 'left');
         pdfDoc.setFontType('italic');
         pdfDoc.setTextColor(51, 122, 183);

@@ -36,7 +36,7 @@
                 </tr>
                 <tr>
                     <th>Age: </th>
-                    <th>31</th>
+                    <th>{{myAge}}</th>
                     <th>Gender: </th>
                     <th>{{gender}}</th>
                 </tr>
@@ -103,7 +103,7 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button class="mat-raised-button mat-primary" (click)="printrx()">Direct Print</button>
-    <button class="mat-raised-button mat-primary" printTitle="PatientName" [useExistingCss]="true" printSectionId="content" ngxPrint><mat-icon>print</mat-icon> Print</button>
+    <button class="mat-raised-button mat-primary" (click)="printrx()"><mat-icon>print</mat-icon> Print</button>
+    <!-- <button class="mat-raised-button mat-primary" printTitle="PatientName" [useExistingCss]="true" printSectionId="content" ngxPrint><mat-icon>print</mat-icon> Print</button> -->
     <!--Your relevant print button-->
 </mat-dialog-actions>
