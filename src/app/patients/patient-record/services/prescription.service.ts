@@ -29,7 +29,7 @@ export class PrescriptionService {
           return {
             id: prescription._id,
             created: prescription.created,
-            complaintId: prescription.complaintId,
+            complaints: prescription.complaints,
             patientId: prescription.patientId,
             prescriptions: prescription.prescriptions,
           };

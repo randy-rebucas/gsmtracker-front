@@ -50,7 +50,7 @@ implements OnInit, OnDestroy {
       this.complaintId = data.complaintIds;
       this.patientId = data.patient;
       this.dialogTitle = data.title;
-      this.dialogButton = data.btnLabel;
+      this.dialogButton = data.button;
     }
 
   ngOnInit() {

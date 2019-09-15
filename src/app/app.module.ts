@@ -63,6 +63,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 import { AppointmentDetailComponent } from './appointments/appointment-detail/appointment-detail.component';
 import { SecureComponent } from './secure/secure.component';
+import { TestResultEditComponent } from './patients/patient-record/test-results/test-result-edit/test-result-edit.component';
 
 @NgModule({
   declarations: [
@@ -148,7 +149,8 @@ import { SecureComponent } from './secure/secure.component';
     DialogComponent,
     RxPadComponent,
     AppointmentDetailComponent,
-    QrCodeScannerComponent
+    QrCodeScannerComponent,
+    TestResultEditComponent
   ]
 })
 export class AppModule { }

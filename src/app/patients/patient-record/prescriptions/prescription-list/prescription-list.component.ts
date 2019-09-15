@@ -13,11 +13,103 @@ import { PrescriptionEditComponent } from '../prescription-edit/prescription-edi
 import { ComplaintService } from '../../services/complaint.service';
 import { RxPadComponent } from 'src/app/rx-pad/rx-pad.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-prescription-list',
+  styles: [`
+  table {
+    width: 100%;
+  }
+  tr {
+    cursor: pointer;
+  }
+  tr.example-detail-row {
+      height: 0;
+  }
+  tr.example-element-row:not(.example-expanded-row):hover {
+      background: #efefef;
+  }
+  tr.example-element-row:not(.example-expanded-row):active {
+      background: #efefef;
+  }
+  .example-element-row td {
+      border-bottom-width: 0;
+  }
+  .example-element-detail {
+      overflow: hidden;
+      display: flex;
+  }
+  .example-element-diagram {
+      min-width: 80px;
+      border: 2px solid black;
+      padding: 8px;
+      font-weight: lighter;
+      margin: 8px 0;
+      height: 104px;
+  }
+  .example-element-symbol {
+      font-weight: bold;
+      font-size: 40px;
+      line-height: normal;
+  }
+  .example-element-description {
+      padding: 16px;
+      width: 100%;
+  }
+  td.mat-cell.cdk-column-action.mat-column-action {
+    text-align: right;
+  }
+  td.mat-cell.cdk-column-action.mat-column-action button {
+      visibility: hidden;
+  }
+  tr:hover td.mat-cell.cdk-column-action.mat-column-action button {
+      visibility: visible;
+  }
+  .hide {
+    display: none;
+  }
+  .component-page-header {
+    padding: 2em 0 0;
+  }
+  dl {
+    margin-top: 0;
+  }
+  dt {
+    float: left;
+    width: 100px;
+  }
+  table#prescriptions {
+    width: 100%;
+    margin: 1em 0;
+  }
+
+  table#prescriptions tr td {
+    color: rgb(51, 122, 183);
+    font-weight: bold;
+    font-size: 16px;
+    font-family: monospace;
+  }
+
+  table#prescriptions tr td span {
+    font-weight: 100;
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  table#prescriptions tr td {
+    height: unset !important;
+    vertical-align: text-bottom;
+  }
+  `],
   templateUrl: './prescription-list.component.html',
-  styleUrls: ['./prescription-list.component.css']
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ]
 })
 
 export class PrescriptionListComponent
@@ -33,7 +125,8 @@ implements OnInit, OnDestroy {
   public recordsSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['prescriptions', 'action'];
+  columnsToDisplay: string[] = ['complaints', 'action'];
+  expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -67,6 +160,7 @@ implements OnInit, OnDestroy {
       .getUpdateListener()
       .subscribe((prescriptionData: {prescriptions: PrescriptionData[], count: number}) => {
         this.isLoading = false;
+        console.log(prescriptionData.prescriptions);
         this.total = prescriptionData.count;
         this.dataSource = new MatTableDataSource(prescriptionData.prescriptions);
         this.dataSource.paginator = this.paginator;

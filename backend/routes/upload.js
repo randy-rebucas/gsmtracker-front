@@ -16,7 +16,7 @@ router.get('/last/:patientId', UploadController.getLast);
 
 router.get('/complaint/:complaintId', UploadController.getByComplaint);
 
-//router.put('/:uploadId', checkAuth, SettingController.update);
+router.put('/:uploadId', UploadController.update);
 
 router.post('', checkAuth, UploadController.upload);
 

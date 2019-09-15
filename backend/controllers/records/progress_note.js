@@ -61,9 +61,21 @@ exports.getAll = (req, res, next) => {
       noteQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     noteQuery
+    .populate('complaintId')
     .exec()
         .then(documents => {
-            fetchedRecord = documents;
+          newDocuments = [];
+            documents.forEach(element => {
+              var obj = {
+                _id: element._id,
+                created: element.created,
+                complaints: element.complaintId.complaints,
+                patientId: element.patientId,
+                note: element.note
+              }
+              newDocuments.push(obj);
+            });
+            fetchedRecord = newDocuments;
             return Note.countDocuments();
         })
         .then(count => {

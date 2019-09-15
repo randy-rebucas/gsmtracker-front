@@ -4,48 +4,42 @@ import { AuthService } from '../../../../auth/auth.service';
 import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { UploadService } from 'src/app/upload/upload.service';
 import { UploadData } from 'src/app/upload/upload-data.model';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-test-result-list',
   templateUrl: './test-result-list.component.html',
   styleUrls: ['./test-result-list.component.css']
 })
-export class TestResultListComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+export class TestResultListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
+
+  public recordsSub: Subscription;
 
   files: UploadData[] = [];
-  isLoading = false;
-  total = 0;
-  perPage = 10;
-  currentPage = 1;
-
-  patientId: string;
-
-  pageSizeOptions = [5, 10, 25, 100];
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+
+    private activatedRoute: ActivatedRoute,
     public uploadService: UploadService
     ) {
-      const snapshot: RouterStateSnapshot = this.router.routerState.snapshot;
-      const splitUrl = snapshot.url.split('/');
-      this.patientId = splitUrl[2];
+      super(authService, router, dialog);
+      this.activatedRoute.parent.params.subscribe(
+        (param) => {
+          this.patientId = param.patientId;
+        }
+      );
     }
 
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
+    super.doInit();
 
     this.uploadService.getAll(this.perPage, this.currentPage, this.patientId);
-
     this.recordsSub = this.uploadService
       .getUpdateListener()
       .subscribe((fileData: {files: UploadData[], count: number}) => {
@@ -56,6 +50,6 @@ export class TestResultListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    super.doDestroy();
   }
 }

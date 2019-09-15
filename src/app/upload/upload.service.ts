@@ -55,9 +55,17 @@ export class UploadService {
   }
 
   getFile(fileId: string) {
-    return this.http.get<{ _id: string, path: string, name: string, type: string, created: string}>(
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<{ _id: string, path: string, name: string, type: string, created: string, patientId: string, complaintId: string, clientId: string}>(
       BACKEND_URL + '/' + fileId
       );
+  }
+
+  update(fileId: string, name: string) {
+    const recordData = {
+      fileId, name
+    };
+    return this.http.put(BACKEND_URL + '/' + fileId, recordData);
   }
 
   getLatest() {

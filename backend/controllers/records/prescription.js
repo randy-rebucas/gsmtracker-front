@@ -71,9 +71,21 @@ exports.getAll = (req, res, next) => {
       prescriptionQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     prescriptionQuery
+    .populate('complaintId')
     .exec()
         .then(documents => {
-            fetchedRecord = documents;
+            newDocuments = [];
+            documents.forEach(element => {
+              var obj = {
+                _id: element._id,
+                created: element.created,
+                complaints: element.complaintId.complaints,
+                patientId: element.patientId,
+                prescriptions: element.prescriptions
+              }
+              newDocuments.push(obj);
+            });
+            fetchedRecord = newDocuments;
             return Prescription.countDocuments();
         })
         .then(count => {

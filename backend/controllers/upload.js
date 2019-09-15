@@ -12,8 +12,22 @@ exports.getAll = (req, res, next) => {
     fileQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   }
   fileQuery
+  .populate('complaintId')
       .then(documents => {
-          fetchedRecord = documents;
+        newDocuments = [];
+            documents.forEach(element => {
+              var obj = {
+                _id: element._id,
+                created: element.created,
+                path: element.path,
+                type: element.type,
+                name: element.name,
+                complaints: element.complaintId.complaints,
+                patientId: element.patientId,
+              }
+              newDocuments.push(obj);
+            });
+          fetchedRecord = newDocuments;
           return Upload.countDocuments();
       })
       .then(count => {
@@ -22,6 +36,29 @@ exports.getAll = (req, res, next) => {
               files: fetchedRecord,
               max: count
           });
+      })
+      .catch(error => {
+          res.status(500).json({
+              message: error.message
+          });
+      });
+};
+
+exports.update = (req, res, next) => {
+  const file = new Upload({
+      _id: req.body.fileId,
+      name: req.body.name
+  });
+  Upload.updateOne({ _id: req.params.uploadId }, //pass doctor role for restriction
+          file
+      )
+      .exec()
+      .then(result => {
+          if (result.n > 0) {
+              res.status(200).json({ message: 'Update successful!' });
+          } else {
+              res.status(401).json({ message: 'Not authorized!' });
+          }
       })
       .catch(error => {
           res.status(500).json({

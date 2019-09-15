@@ -29,7 +29,7 @@ export class NotesService {
           return {
             id: note._id,
             created: note.created,
-            complaintId: note.complaintId,
+            complaints: note.complaints,
             patientId: note.patientId,
             note: note.note
           };

@@ -39,6 +39,7 @@ import { PatientChartComponent } from '../patient-chart/patient-chart.component'
  * imported outside of this directory to gain access of <app-upload></app-upload> component selector
  */
 import { UploadModule } from 'src/app/upload/upload.module';
+import { TestResultEditComponent } from './test-results/test-result-edit/test-result-edit.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { UploadModule } from 'src/app/upload/upload.module';
     TestResultListComponent,
     TestResultDetailComponent,
     TestResultInitialComponent,
+    TestResultEditComponent,
     ProgressNoteEditComponent,
     ProgressNoteListComponent,
     ProgressNoteLatestComponent,
