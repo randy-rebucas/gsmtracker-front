@@ -22,6 +22,8 @@ import { UploadData } from 'src/app/upload/upload-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
+import { ProfileImageComponent } from 'src/app/upload/profile-image/profile-image.component';
+
 @Component({
   selector: 'app-patient-detail',
   templateUrl: './patient-detail.component.html',
@@ -180,6 +182,16 @@ implements OnInit, OnDestroy {
         prescriptionData: prescriptionResponse,
         progressNotesData: progressNotesResponse
       };
+    }
+
+    onPictureChange() {
+      const args = {
+        width: '30%',
+        id: this.patientId,
+        dialogTitle: 'Edit photo',
+        dialogButton: 'Save'
+      };
+      super.onPopup(args, ProfileImageComponent);
     }
 
     onViewAll(targetComp: any) {

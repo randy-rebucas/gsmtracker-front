@@ -8,7 +8,7 @@
         <div *ngIf="isLoading" class="loading">
             <mat-spinner [diameter]="25"></mat-spinner>
         </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center">
+        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" (click)="onPictureChange()">
             <div *ngIf="image; then thenBlock else elseBlock"></div>
             <ng-template #thenBlock>
                 <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />

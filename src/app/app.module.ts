@@ -57,6 +57,7 @@ import { UploadModule } from './upload/upload.module';
 
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { QRCodeModule } from 'angularx-qrcode';
+import { WebcamModule } from 'ngx-webcam';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { NgxPrintModule } from 'ngx-print';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -64,6 +65,7 @@ import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 import { AppointmentDetailComponent } from './appointments/appointment-detail/appointment-detail.component';
 import { SecureComponent } from './secure/secure.component';
 import { TestResultEditComponent } from './patients/patient-record/test-results/test-result-edit/test-result-edit.component';
+import { ProfileImageComponent } from './upload/profile-image/profile-image.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,8 @@ import { TestResultEditComponent } from './patients/patient-record/test-results/
     MessageDetailComponent,
     MatDialogConfirmComponent,
     DialogComponent,
-    SecureComponent
+    SecureComponent,
+    ProfileImageComponent
   ],
   imports: [
     CommonModule,
@@ -111,7 +114,8 @@ import { TestResultEditComponent } from './patients/patient-record/test-results/
     ZXingScannerModule,
     QRCodeModule,
     UploadModule,
-    FullCalendarModule
+    FullCalendarModule,
+    WebcamModule
   ],
   providers: [
     AppConfiguration,
@@ -150,7 +154,8 @@ import { TestResultEditComponent } from './patients/patient-record/test-results/
     RxPadComponent,
     AppointmentDetailComponent,
     QrCodeScannerComponent,
-    TestResultEditComponent
+    TestResultEditComponent,
+    ProfileImageComponent
   ]
 })
 export class AppModule { }
