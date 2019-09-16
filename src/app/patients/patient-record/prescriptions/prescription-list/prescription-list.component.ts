@@ -102,6 +102,13 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     height: unset !important;
     vertical-align: text-bottom;
   }
+  table#prescriptions tr td {
+    color: rgba(0,0,0,.87) !important;
+  }
+
+  table#prescriptions tr td span {
+      color: rgb(51, 122, 183);
+  }
   `],
   templateUrl: './prescription-list.component.html',
   animations: [

@@ -9,6 +9,7 @@ export interface SettingsGeneralData {
   prc: string;
   ptr: string;
   s2: string;
+  nobreak: boolean;
   clinicPhone: Contact[];
   clinicHours: Hour[];
 }

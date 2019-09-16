@@ -41,6 +41,7 @@ implements OnInit, OnDestroy {
         prc: [''],
         ptr: [''],
         s2: [''],
+        nobreak: [''],
         clinicPhone: this.fb.array([this.addClinicContactGroup()]),
         clinicHours: this.fb.array([this.addClinicHourGroup()])
       });
@@ -56,7 +57,6 @@ implements OnInit, OnDestroy {
 
   populateForm() {
     this.settingsGeneralService.get(this.userId).subscribe(settingData => {
-      console.log(settingData);
       this.form.patchValue({
         clinicName: settingData.clinicName,
         clinicOwner: settingData.clinicOwner,
@@ -65,6 +65,7 @@ implements OnInit, OnDestroy {
         prc: settingData.prc,
         ptr: settingData.ptr,
         s2: settingData.s2,
+        nobreak: settingData.nobreak
       });
 
       const contactControl = this.form.controls.clinicPhone as FormArray;
@@ -88,8 +89,6 @@ implements OnInit, OnDestroy {
   addClinicHourGroup() {
     return this.fb.group({
       morningOpen: [''],
-      morningClose: [''],
-      afternoonOpen: [''],
       afternoonClose: ['']
     });
   }
@@ -135,10 +134,10 @@ implements OnInit, OnDestroy {
       this.form.value.clinicOwner,
       this.form.value.clinicAddress,
       this.form.value.clinicEmail,
-      this.form.value.clinicUrl,
       this.form.value.prc,
       this.form.value.ptr,
       this.form.value.s2,
+      this.form.value.nobreak,
       this.form.value.clinicPhone,
       this.form.value.clinicHours
     ).subscribe(() => {

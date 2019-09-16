@@ -2,7 +2,7 @@ const Setting = require('../models/setting');
 
 exports.create = (req, res, next) => {
     const setting = new Setting({
-      userId: req.body.userId,
+        userId: req.body.userId,
         clinicName: req.body.name,
         clinicOwner: req.body.owner,
         clinicAddress: req.body.address,
@@ -42,11 +42,11 @@ exports.update = (req, res, next) => {
         clinicName: req.body.name,
         clinicOwner: req.body.owner,
         clinicAddress: req.body.address,
-        clinicUrl: req.body.url,
         clinicEmail: req.body.email,
         prc: req.body.prc,
         ptr: req.body.ptr,
-        s2: req.body.s2
+        s2: req.body.s2,
+        nobreak: req.body.nobreak
     });
     phoneData = req.body.phones;
     for (let index = 0; index < phoneData.length; index++) {
@@ -76,8 +76,8 @@ exports.update = (req, res, next) => {
 
 exports.get = (req, res, next) => {
     Setting.findOne({ 'userId': req.params.userId })
-    .exec()
-    .then(setting => {
+        .exec()
+        .then(setting => {
             if (setting) {
                 res.status(200).json(setting);
             } else {

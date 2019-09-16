@@ -37,6 +37,7 @@ export class SettingsGeneralService {
         prc: number,
         ptr: number,
         s2: string,
+        nobreak: boolean,
         clinicPhone: [],
         clinicHours: []}>(
         BACKEND_URL + '/' + userId
@@ -50,10 +51,10 @@ export class SettingsGeneralService {
       return this.http.post<{ message: string, record: SettingsGeneralData }>(BACKEND_URL, recordData);
     }
 
-    update(id: string, name: string, owner: string, address: string, email: string, url: string, prc: string, ptr: string, s2: string, phones: [], hours: []) {
+    update(id: string, name: string, owner: string, address: string, email: string, prc: string, ptr: string, s2: string, nobreak: boolean, phones: [], hours: []) {
 
       const settingData = {
-          id: id, name: name, owner: owner, address: address, email: email, url: url, prc: prc, ptr: ptr, s2: s2, phones: phones, hours: hours
+          id: id, name: name, owner: owner, address: address, email: email, prc: prc, ptr: ptr, s2: s2, nobreak: nobreak, phones: phones, hours: hours
         };
 
       return this.http.put(BACKEND_URL + '/' + id, settingData);

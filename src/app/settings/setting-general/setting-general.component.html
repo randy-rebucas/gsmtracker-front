@@ -21,14 +21,9 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="3">
                     <mat-form-field>
                         <input matInput type="text" formControlName="clinicEmail" placeholder="Clinic Email">
-                    </mat-form-field>
-                </td>
-                <td colspan="2">
-                    <mat-form-field>
-                        <input matInput type="text" formControlName="clinicUrl" placeholder="Clinic Website">
                     </mat-form-field>
                 </td>
             </tr>
@@ -49,11 +44,10 @@
                     </mat-form-field>
                 </td>
             </tr>
-        </table>
-        <table cellspacing="0" formArrayName="clinicPhone">
-            <ng-container *ngIf="contactArray.length > 0">
+
+            <ng-container formArrayName="clinicPhone" *ngIf="contactArray.length > 0">
                 <tr *ngFor="let contact of contactArray.controls; let i = index;" [formGroupName]="i">
-                    <td class="contact-{{i}}">
+                    <td colspan="2" class="contact-{{i}}">
                         <mat-form-field>
                             <input matInput type="text" formControlName="contact" placeholder="Contact {{i+1}}">
                         </mat-form-field>
@@ -65,49 +59,42 @@
                     </td>
                 </tr>
             </ng-container>
-        </table>
 
-        <table cellspacing="0" formArrayName="clinicHours">
             <tr>
-                <td colspan="2">Morning</td>
-                <td colspan="2">Afternoon</td>
+                <td>Morning (open)</td>
+                <td>Afternoon (close)</td>
+                <td></td>
             </tr>
-            <tr *ngFor="let hour of hourArray.controls; let i = index;" [formGroupName]="i">
+            <ng-container formArrayName="clinicHours">
+                <tr *ngFor="let hour of hourArray.controls; let i = index;" [formGroupName]="i">
+                    <td>
+                        <mat-form-field>
+                            <input matInput type="text" [ngxTimepicker]="morningopenpicker" formControlName="morningOpen" placeholder="opening hour" [disableClick]="true" readonly>
+                            <ngx-material-timepicker-toggle [for]="morningopenpicker"></ngx-material-timepicker-toggle>
+                            <ngx-material-timepicker #morningopenpicker></ngx-material-timepicker>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field>
+                            <input matInput type="text" [ngxTimepicker]="afternoonclosepicker" formControlName="afternoonClose" placeholder="closing hour" [disableClick]="true" readonly>
+                            <ngx-material-timepicker-toggle [for]="afternoonclosepicker"></ngx-material-timepicker-toggle>
+                            <ngx-material-timepicker #afternoonclosepicker></ngx-material-timepicker>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <button mat-icon-button *ngIf="hourArray.controls.length < 3" (click)="addHour()" type="button"><mat-icon>add</mat-icon></button>
+                        <button mat-icon-button color="warn" *ngIf="hourArray.controls.length > 1" (click)="removeHour(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                    </td>
+                </tr>
+            </ng-container>
+            <tr>
                 <td>
-                    <mat-form-field>
-                        <input matInput type="text" [ngxTimepicker]="morningopenpicker" formControlName="morningOpen" placeholder="opening hour" [disableClick]="true" readonly>
-                        <ngx-material-timepicker-toggle [for]="morningopenpicker"></ngx-material-timepicker-toggle>
-                        <ngx-material-timepicker #morningopenpicker></ngx-material-timepicker>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field>
-                        <input matInput type="text" [ngxTimepicker]="morningclosepicker" formControlName="morningClose" placeholder="closing hour" [disableClick]="true" readonly>
-                        <ngx-material-timepicker-toggle [for]="morningclosepicker"></ngx-material-timepicker-toggle>
-                        <ngx-material-timepicker #morningclosepicker></ngx-material-timepicker>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field>
-                        <input matInput type="text" [ngxTimepicker]="afternoonopenpicker" formControlName="afternoonOpen" placeholder="opening hour" [disableClick]="true" readonly>
-                        <ngx-material-timepicker-toggle [for]="afternoonopenpicker"></ngx-material-timepicker-toggle>
-                        <ngx-material-timepicker #afternoonopenpicker></ngx-material-timepicker>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field>
-                        <input matInput type="text" [ngxTimepicker]="afternoonclosepicker" formControlName="afternoonClose" placeholder="closing hour" [disableClick]="true" readonly>
-                        <ngx-material-timepicker-toggle [for]="afternoonclosepicker"></ngx-material-timepicker-toggle>
-                        <ngx-material-timepicker #afternoonclosepicker></ngx-material-timepicker>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <button mat-icon-button *ngIf="hourArray.controls.length < 3" (click)="addHour()" type="button"><mat-icon>add</mat-icon></button>
-                    <button mat-icon-button color="warn" *ngIf="hourArray.controls.length > 1" (click)="removeHour(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                    <mat-checkbox formControlName="nobreak"> No Noon Break </mat-checkbox>
                 </td>
             </tr>
-
         </table>
+        <br/>
+        <br/>
         <button mat-raised-button color="primary" type="submit">Update</button>
     </form>
 </div>

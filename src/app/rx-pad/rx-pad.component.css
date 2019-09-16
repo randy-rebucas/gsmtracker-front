@@ -1,84 +1,112 @@
-.invoice { page-break-after: always; }
-.invoice:last-child { page-break-after: avoid; }
+.invoice {
+    page-break-after: always;
+}
 
+.invoice:last-child {
+    page-break-after: avoid;
+}
 
 mat-spinner {
-  margin: auto;
+    margin: auto;
 }
 
 .mat-dialog-title button {
-  float: right;
-  border: none;
+    float: right;
+    border: none;
 }
 
 .mat-dialog-title {
-  border-bottom: 1px solid rgb(169, 169, 169);
-  padding: 0 0 1em 0;
+    border-bottom: 1px solid rgb(169, 169, 169);
+    padding: 0 0 1em 0;
 }
 
 button.mat-raised-button mat-icon {
-  vertical-align: middle;
-  margin-right: .3em;
+    vertical-align: middle;
+    margin-right: .3em;
 }
 
 table#rxpad {
-  width: 100%;
-}
-
-table#rxpad tr th {
-  font-size: 14px;
-  font-family: monospace;
-  text-align: left;
-}
-
-table#rxpad tbody tr:last-child td {
-  height: 365px; /* 500px;*/
-  vertical-align: top;
-}
-
-table#rxpad tfoot tr td {
-  font-size: 14px;
-  font-family: monospace;
-  text-align: right;
-}
-
-table#prescriptions {
-  width: 100%;
+    width: 100%;
 }
 
 table#prescriptions tr td {
-  color: rgb(51, 122, 183);
-  font-weight: bold;
-  font-size: 14px;
-  font-family: monospace;
+    color: rgba(0, 0, 0, .87) !important;
 }
 
 table#prescriptions tr td span {
-  font-weight: 100;
-  font-size: 12px;
-  font-style: italic;
+    color: rgb(51, 122, 183);
+}
+
+table#rxpad thead tr:first-child th h2 {
+    font-family: monospace;
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+table#rxpad thead tr:nth-child(2) th h5 {
+    font-size: 16px;
+    font-family: monospace;
+    text-align: center;
+}
+
+table#rxpad tr th {
+    font-size: 14px;
+    font-family: monospace;
+    text-align: left;
+}
+
+table#rxpad tbody tr:last-child td {
+    height: 365px;
+    /* 500px;*/
+    vertical-align: top;
+}
+
+table#rxpad tfoot tr td {
+    font-size: 14px;
+    font-family: monospace;
+    text-align: right;
+}
+
+table#prescriptions {
+    width: 100%;
 }
 
 table#prescriptions tr td {
-  height: unset !important;
+    color: rgb(51, 122, 183);
+    font-weight: bold;
+    font-size: 14px;
+    font-family: monospace;
 }
 
-table#prescription-heading tr:first-child td, table#prescription-heading tr:nth-child(2) td {
-  text-align: center;
+table#prescriptions tr td span {
+    font-weight: 100;
+    font-size: 12px;
+    font-style: italic;
+}
+
+table#prescriptions tr td {
+    height: unset !important;
+}
+
+table#prescription-heading tr:first-child td,
+table#prescription-heading tr:nth-child(2) td {
+    text-align: center;
 }
 
 table#prescription-heading tr:first-child td h2 {
-  font-family: monospace;
+    font-family: monospace;
     margin: 0;
     font-size: 20px;
 }
 
 table#prescription-heading tr:nth-child(2) h5 {
-  font-size: 16px;
-  font-family: monospace;
+    font-size: 16px;
+    font-family: monospace;
 }
+
 table#prescription-heading tr:last-child td {
-  font-size: 14px;
+    font-size: 14px;
     font-family: monospace;
     border-bottom: 1px solid #a9a9a9;
     font-weight: 600;

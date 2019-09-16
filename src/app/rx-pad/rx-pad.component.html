@@ -7,25 +7,39 @@
         <mat-spinner [diameter]="25"></mat-spinner>
     </div>
     <div *ngIf="!isLoading" id="content">
-        <table id="prescription-heading" style="width: 100%;">
-          <tr>
-            <td colspan="4"><h2>{{clinicOwner}}</h2></td>
-          </tr>
-          <tr>
-            <td colspan="4"><h5>{{clinicName}}</h5></td>
-          </tr>
-          <tr>
-            <td colspan="2">{{clinicAddress}} <br/>
-              Tel no <span *ngFor="let phone of clinicPhone; let i = index;">{{phone.contact}} <span *ngIf="i < 1">/</span> </span>
-            </td>
-            <td colspan="2">Clinic Hours:<br/>
-              <span *ngFor="let hour of clinicHours; let o = index;">{{hour.morningOpen}} - {{hour.afternoonClose}}</span>
-            </td>
-          </tr>
-        </table>
         <!--Your html stuff that you want to print-->
         <table id="rxpad">
             <thead>
+                <tr>
+                    <th colspan="4">
+                        <h2>{{clinicOwner}}</h2>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="4">
+                        <h5>{{clinicName}}</h5>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        {{clinicAddress}}
+                    </th>
+                    <th colspan="2">Clinic Hours:</th>
+                </tr>
+                <tr>
+                    <th colspan="2">Tel no <span *ngFor="let phone of clinicPhone; let i = index;">{{phone.contact}} <span *ngIf="i < 1">/</span> </span>
+                    </th>
+                    <th colspan="2"><span *ngFor="let hour of clinicHours; let o = index;">{{hour.morningOpen}} - {{hour.afternoonClose}}</span></th>
+                </tr>
+                <tr>
+                    <th colspan="2"></th>
+                    <th colspan="2"><span *ngIf="noBreak">No Noon Break</span></th>
+                </tr>
+                <tr>
+                    <th colspan="4">
+                        <hr/>
+                    </th>
+                </tr>
                 <tr>
                     <th>Name: </th>
                     <th>
@@ -46,11 +60,11 @@
                 </tr>
             </thead>
             <tbody>
-              <tr>
-                <td colspan="4">
-                    <img src="assets/images/rx.png" alt="rx" style="width: 100px;" />
-                </td>
-              </tr>
+                <tr>
+                    <td colspan="4">
+                        <img src="assets/images/rx.png" alt="rx" style="width: 100px;" />
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="4">
                         <table id="prescriptions">
