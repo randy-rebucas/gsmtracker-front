@@ -16,7 +16,6 @@ export class AuthService {
   private tokenTimer: any;
   private userId: string;
   private userEmail: string;
-  private userSubscriptionType: string;
   private authStatusListener = new Subject<boolean>();
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -37,21 +36,17 @@ export class AuthService {
     return this.userEmail;
   }
 
-  getUserSubscription() {
-    return this.userSubscriptionType;
-  }
-
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
   }
 
-  createUser(firstName: string, lastName: string, clinicName: string, email: string, password: string) {
+  createUser(reqFirstName: string, reqLastName: string, reqClinicName: string, reqEmail: string, reqPassword: string) {
     const authSignup: AuthSignup = {
-      firstname: firstName,
-      lastname: lastName,
-      clinicname: clinicName,
-      email: email,
-      password: password
+      firstname: reqFirstName,
+      lastname: reqLastName,
+      clinicname: reqClinicName,
+      email: reqEmail,
+      password: reqPassword
     };
     this.http.post(BACKEND_URL + '/signup', authSignup).subscribe(() => {
       this.router.navigate(['/']);
@@ -60,9 +55,9 @@ export class AuthService {
     });
   }
 
-  login(email: string, password: string) {
-    const authData: AuthData = {email: email, password: password};
-    this.http.post<{token: string, expiresIn: number, userEmail: string, userSubscriptionType: string, userId: string}>(
+  login(reqEmail: string, reqPassword: string) {
+    const authData: AuthData = {email: reqEmail, password: reqPassword};
+    this.http.post<{token: string, expiresIn: number, userEmail: string, userId: string}>(
       BACKEND_URL + '/login',
       authData
     )
@@ -76,12 +71,11 @@ export class AuthService {
 
         this.userId = response.userId;
         this.userEmail = response.userEmail;
-        this.userSubscriptionType = response.userSubscriptionType;
 
         this.authStatusListener.next(true);
         const now = new Date();
         const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-        this.saveAuthData(token, expirationDate, this.userId, this.userEmail, this.userSubscriptionType);
+        this.saveAuthData(token, expirationDate, this.userId, this.userEmail);
         this.router.navigate(['/']);
       }
     }, error => {
@@ -102,7 +96,7 @@ export class AuthService {
 
       this.userId = authInformation.userId;
       this.userEmail = authInformation.userEmail;
-      this.userSubscriptionType = authInformation.userSubscriptionType;
+
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
     }
@@ -124,12 +118,11 @@ export class AuthService {
     }, duration * 1000);
   }
 
-  private saveAuthData(token: string, expirationDate: Date, userId: string, userEmail: string, userSubscriptionType: string) {
+  private saveAuthData(token: string, expirationDate: Date, userId: string, userEmail: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('userEmail', userEmail);
-    localStorage.setItem('userSubscriptionType', userSubscriptionType);
   }
 
   private clearAuthData() {
@@ -137,24 +130,21 @@ export class AuthService {
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
-    localStorage.removeItem('userSubscriptionType');
   }
 
   private getAuthData() {
-    const token = localStorage.getItem('token');
+    const authToken = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
-    const userId = localStorage.getItem('userId');
-    const userEmail = localStorage.getItem('userEmail');
-    const userSubscriptionType = localStorage.getItem('userSubscriptionType');
-    if (!token || !expirationDate) {
+    const authUserId = localStorage.getItem('userId');
+    const authUserEmail = localStorage.getItem('userEmail');
+    if (!authToken || !expirationDate) {
       return;
     }
     return {
-      token: token,
+      token: authToken,
       expirationDate: new Date(expirationDate),
-      userId: userId,
-      userEmail: userEmail,
-      userSubscriptionType: userSubscriptionType
-    }
+      userId: authUserId,
+      userEmail: authUserEmail
+    };
   }
 }

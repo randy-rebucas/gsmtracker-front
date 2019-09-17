@@ -2,13 +2,7 @@ const mongoose = require('mongoose');
 
 const uniqueValidator = require('mongoose-unique-validator');
 const userSchema = mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    activated: { type: Boolean, default: 1 },
-    banned: { type: Boolean, default: 0 },
-    banReason: { type: String, default: null },
-    lastIp: { type: String },
-    subscriptionType: { type: String, default: 'Free' },
+    userType:  { type: String, default: 'Patient' },
     personId: { type: mongoose.Schema.Types.ObjectId, ref: 'Person', required: true }
 });
 

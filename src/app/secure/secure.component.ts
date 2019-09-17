@@ -93,7 +93,6 @@ export class SecureComponent {
 
     this.userId = this.authService.getUserId();
     this.userEmail = this.authService.getUserEmail();
-    this.userSubscription = this.authService.getUserSubscription();
 
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authListenerSubs = this.authService
