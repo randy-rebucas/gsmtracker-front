@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const settingSchema = mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

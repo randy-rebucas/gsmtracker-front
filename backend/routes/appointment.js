@@ -6,9 +6,9 @@ const checkAuth = require('../middleware/check-auth');
 
 const router = express.Router();
 
-router.post('', checkAuth, AppointmentController.create); //extractFile,
+router.post('', checkAuth, AppointmentController.create);
 
-router.put('/updateStatus/:detailId', checkAuth, AppointmentController.updateStatus);
+router.put('/:appointmentId', checkAuth, AppointmentController.update);
 
 router.get('', AppointmentController.getAll);
 

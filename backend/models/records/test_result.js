@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const recordTestResultSchema = mongoose.Schema({
     test: { type: String, required: true },

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const avatarSchema = mongoose.Schema({
     imagePath: { type: String, required: true },

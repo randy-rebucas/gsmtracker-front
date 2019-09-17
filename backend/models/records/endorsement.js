@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const recordEndorsementSchema = mongoose.Schema({
     to: { type: String, required: true },

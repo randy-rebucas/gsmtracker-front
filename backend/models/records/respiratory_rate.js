@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const recordRespiratoryRateSchema = mongoose.Schema({
     respiratoryrate: { type: String, required: true },

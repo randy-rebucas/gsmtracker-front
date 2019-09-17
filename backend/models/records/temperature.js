@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const recordTemperatureSchema = mongoose.Schema({
     temperature: { type: String, required: true },

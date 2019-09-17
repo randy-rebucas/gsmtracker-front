@@ -6,7 +6,7 @@ const checkAuth = require('../middleware/check-auth');
 
 const router = express.Router();
 
-router.post('', checkAuth, ThreadController.create); //extractFile,
+router.post('', checkAuth, ThreadController.create);
 
 router.get('', ThreadController.getAll);
 

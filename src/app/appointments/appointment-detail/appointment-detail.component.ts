@@ -82,7 +82,7 @@ implements OnInit, OnDestroy {
   }
 
   onUpdate(detailId, status, appointmentId) {
-    this.appointmentService.updateStatus(
+    this.appointmentService.update(
       detailId,
       status,
       appointmentId

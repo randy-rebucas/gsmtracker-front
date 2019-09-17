@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('', UploadController.getAll);
 
-router.get('/:uploadId', UploadController.get);
+router.post('', checkAuth, UploadController.upload);
 
 router.get('/latest', UploadController.getCurrent);
 
@@ -16,11 +16,10 @@ router.get('/last/:patientId', UploadController.getLast);
 
 router.get('/complaint/:complaintId', UploadController.getByComplaint);
 
-router.put('/:uploadId', UploadController.update);
+router.get('/:uploadId', UploadController.get);
 
-router.post('', checkAuth, UploadController.upload);
+router.put('/:uploadId', checkAuth, UploadController.update);
 
 router.delete('/:uploadId', checkAuth, UploadController.delete);
-
 
 module.exports = router;

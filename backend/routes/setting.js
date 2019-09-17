@@ -10,6 +10,6 @@ router.get('/:userId', SettingController.get);
 
 router.put('/:userId', checkAuth, SettingController.update);
 
-router.post('', checkAuth, SettingController.create); //checkAuth,
+router.post('', checkAuth, SettingController.create);
 
 module.exports = router;

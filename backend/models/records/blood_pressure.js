@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const recordBloodPressureSchema = mongoose.Schema({
     systolic: { type: String, required: true },

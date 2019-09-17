@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const recordWeightSchema = mongoose.Schema({
     weight: { type: String, required: true },

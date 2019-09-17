@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const recordPrescriptionSchema = mongoose.Schema({
     created: { type: Date },

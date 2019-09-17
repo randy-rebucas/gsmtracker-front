@@ -90,7 +90,9 @@ exports.updatePatient = (req, res, next) => {
       }
     );
 };
-
+/**
+ * tobe transfer in network
+ */
 exports.getAllNetwork = (req, res, next) => {
   const currentPage = +req.query.page;
   const patientQuery = Patient.find({
@@ -125,7 +127,7 @@ exports.getAllNetwork = (req, res, next) => {
     );
 }
 
-exports.getPatients = (req, res, next) => {
+exports.getPatients = async (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
   const patientQuery = Patient.find({
@@ -135,7 +137,8 @@ exports.getPatients = (req, res, next) => {
   if (pageSize && currentPage) {
     patientQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   }
-  patientQuery
+
+  await patientQuery
     .populate('personId')
     .exec()
     .then(documents => {

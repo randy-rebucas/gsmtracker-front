@@ -28,7 +28,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.updateStatus = async (req, res, next) => {
+exports.update = async (req, res, next) => {
   const appointment = new Appointment({
     _id: req.body.appointmentId,
     status: req.body.status,

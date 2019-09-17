@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
 
 const attachmentSchema = mongoose.Schema({
   path: { type: String },
