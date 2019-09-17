@@ -5,6 +5,10 @@ const Auth = require('../models/auth');
 
 module.exports = async (req, res, next) => {
   try {
+    let authCheck = await Auth.findOne({ email: req.body.email });
+    if (authCheck) {
+      throw new Error('Something went wrong. Email is in used!');
+    }
     const newPerson = new Person({
         firstname: req.body.firstname,
         lastname: req.body.lastname
@@ -23,6 +27,6 @@ module.exports = async (req, res, next) => {
     req.auth = auth;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Cannot create auth credentials!' });
+    res.status(500).json({ message: error.message });
   }
 }

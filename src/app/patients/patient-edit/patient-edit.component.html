@@ -6,7 +6,7 @@
       <mat-spinner [diameter]="25"></mat-spinner>
   </div>
     <form [formGroup]="form" class="normal-form" (submit)="onSavePatient()" *ngIf="!isLoading">
-
+      <h4 subheading-1>Basic Information</h4>
         <div class="form-field-block">
             <mat-form-field>
                 <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
@@ -73,6 +73,15 @@
               </div>
             </div>
         </ng-container>
+        <h4 subheading-1>Login Access</h4>
+        <div class="form-field-block">
+          <mat-form-field>
+            <input matInput type="email" formControlName="email" placeholder="Email">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="password" formControlName="password" placeholder="password">
+          </mat-form-field>
+        </div>
         <div class="form-field-block">
           <mat-form-field>
               <textarea matInput rows="4" formControlName="comments" placeholder="Comment"></textarea>

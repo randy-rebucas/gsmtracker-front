@@ -13,14 +13,15 @@ exports.createUser = async (req, res, next) => {
       });
     let user = await newUser.save();
     if (!user) {
-      throw new Error('Something went wrong.Connot save user!');
+      throw new Error('Something went wrong.Cannot save user!');
     }
+
     const newSetting = new Setting({
         userId: req.auth.personId,
         clinicName: req.body.clinicname,
         clinicOwner: req.person.firstname + ', ' + req.person.lastname
     });
-    let setting = newSetting.save();
+    let setting = await newSetting.save();
 
     res.status(201).json({
         message: 'User created!',

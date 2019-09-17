@@ -55,6 +55,8 @@ implements OnInit, OnDestroy {
       gender: ['', [Validators.required]],
       birthdate: ['', [Validators.required]],
       comments: [''],
+      email: [''],
+      password: [''],
       addresses: this.fb.array([this.addAddressGroup()])
     });
 
@@ -63,7 +65,6 @@ implements OnInit, OnDestroy {
         this.isLoading = true;
         this.patientsService.get(this.patientId).subscribe(patientData => {
           this.isLoading = false;
-          console.log(patientData);
           this.personId = patientData.personId;
           this.form.patchValue({
             bloodType: patientData.bloodType,
@@ -82,10 +83,6 @@ implements OnInit, OnDestroy {
           }
           this.form.patchValue({addresses: address});
 
-          // this.patient = {
-          //   userId: patientData.userId,
-          //   personId: patientData.personId,
-          // };
         });
       } else {
         this.isLoading = false;
@@ -133,7 +130,9 @@ implements OnInit, OnDestroy {
         this.form.value.gender,
         this.form.value.birthdate,
         this.form.value.addresses,
-        this.form.value.comments
+        this.form.value.comments,
+        this.form.value.email,
+        this.form.value.password
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
@@ -151,7 +150,9 @@ implements OnInit, OnDestroy {
         this.form.value.gender,
         this.form.value.birthdate,
         this.form.value.addresses,
-        this.form.value.comments
+        this.form.value.comments,
+        this.form.value.email,
+        this.form.value.password
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');

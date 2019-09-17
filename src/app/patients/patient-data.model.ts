@@ -11,13 +11,16 @@ export interface PatientData {
   contact: string;
   gender: string;
   birthdate: string;
+  email: string;
+  password: string;
   addresses: Address[];
 }
 
 export interface Address {
-  maintenableFlg: boolean;
-  medicine: string;
-  preparation: string;
-  sig: string;
-  quantity: number;
+  address1: string;
+  address2: string;
+  city: string;
+  province: string;
+  postalCode: number;
+  country: string;
 }

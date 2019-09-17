@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { PatientData } from './patient-data.model';
+import { EmailValidator } from '@angular/forms';
 
 const BACKEND_URL = environment.apiUrl + '/patients';
 
@@ -64,7 +65,7 @@ export class PatientsService {
   }
 
   // tslint:disable-next-line:max-line-length
-  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string) {
+  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string, reqEmail: string, resPass: string) {
       const patientData = {
         firstname: Firstname,
         midlename: Midlename,
@@ -74,13 +75,15 @@ export class PatientsService {
         gender: Gender,
         birthdate: Birthdate,
         address: Addresses,
-        comments: Comments
+        comments: Comments,
+        email: reqEmail,
+        password: resPass
       };
       return this.http.post<{ message: string, patient: PatientData }>(BACKEND_URL, patientData);
   }
 
   // tslint:disable-next-line:max-line-length
-  update(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string) {
+  update(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string, reqEmail: string, reqPass: string) {
     const patientData = {
       id: Id,
       firstname: Firstname,
@@ -91,7 +94,9 @@ export class PatientsService {
       gender: Gender,
       birthdate: Birthdate,
       address: Addresses,
-      comments: Comments
+      comments: Comments,
+      email: reqEmail,
+      password: reqPass
     };
     return this.http.put(BACKEND_URL + '/' + Id + '/' + PersonId, patientData);
   }
