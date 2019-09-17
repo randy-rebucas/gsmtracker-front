@@ -6,14 +6,6 @@ const personSchema = mongoose.Schema({
     lastname: { type: String, required: true },
     contact: { type: String, default: null },
     gender: { type: String, default: null },
-    // address: { type: String, default: null },
-    /**
-     * implement multi address
-     * Edifice Number - Main Road
-     * Barangay, Town
-     * Postal Code Province
-     * country
-     */
     address: [{
       address1: { type: String, required: true }, // street address
       address2: { type: String }, // street address line 2
