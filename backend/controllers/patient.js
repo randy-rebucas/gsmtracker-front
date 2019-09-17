@@ -8,9 +8,13 @@ exports.createPatient = (req, res, next) => {
       lastname: req.body.lastname,
       contact: req.body.contact,
       gender: req.body.gender,
-      birthdate: req.body.birthdate,
-      address: req.body.address
+      birthdate: req.body.birthdate
+      // address: req.body.address // update
     });
+    addressData = req.body.address;
+    for (let index = 0; index < addressData.length; index++) {
+      person.address.push(addressData[index]);
+    }
     person.save()
       .then(createdPerson => {
         const patient = new Patient({
@@ -48,6 +52,7 @@ exports.updatePatient = (req, res, next) => {
     bloodType: req.body.bloodType,
     comments: req.body.comments
   });
+
   Patient
     .updateOne(
       {
@@ -59,24 +64,51 @@ exports.updatePatient = (req, res, next) => {
     .then(
       result => {
         if (result.n > 0) {
-          const filter = { _id: req.params.personId };
-          const update = {
+          console.log(req.params);
+          // const filter = { _id: req.params.personId };
+          // const person = {
+          //   firstname: req.body.firstname,
+          //   midlename: req.body.midlename,
+          //   lastname: req.body.lastname,
+          //   contact: req.body.contact,
+          //   gender: req.body.gender,
+          //   birthdate: req.body.birthdate,
+          //   // address: req.body.address
+          // };
+          // addressData = req.body.address;
+          // for (let index = 0; index < addressData.length; index++) {
+          //   update.address.push(addressData[index]);
+          // }
+          const person = new Person({
+            _id: req.params.personId,
             firstname: req.body.firstname,
             midlename: req.body.midlename,
             lastname: req.body.lastname,
             contact: req.body.contact,
             gender: req.body.gender,
-            birthdate: req.body.birthdate,
-            address: req.body.address
-          };
-
-          Person.findOneAndUpdate(filter, update, {new: true}, (err, doc) => {
-            if (err) {
-                console.log("Something wrong when updating data!");
-            }
-            res.status(200).json({ message: 'Update successful!' });
+            birthdate: req.body.birthdate
           });
-
+          addressData = req.body.address;
+          for (let index = 0; index < addressData.length; index++) {
+            person.address.push(addressData[index]);
+          }
+          Person.updateOne(
+            { _id: req.params.personId }, //pass doctor role for restriction
+            person
+              )
+              .exec()
+              .then(result => {
+                  if (result.n > 0) {
+                      res.status(200).json({ message: 'Update successful!' });
+                  } else {
+                      res.status(401).json({ message: 'Not authorized!' });
+                  }
+              })
+              .catch(error => {
+                  res.status(500).json({
+                      message: error.message
+                  });
+              });
         } else {
           res.status(401).json({ message: 'Not authorized!' });
         }
@@ -188,7 +220,7 @@ exports.getPatient = (req, res, next) => {
             contact: patient.personId.contact,
             gender: patient.personId.gender,
             birthdate: patient.personId.birthdate,
-            address: patient.personId.address,
+            addresses: patient.personId.address,
             createdAt: patient.personId.createdAt
           });
         } else {

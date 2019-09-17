@@ -10,32 +10,26 @@
         <div class="form-field-block">
             <mat-form-field>
                 <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
-                <mat-error *ngIf="form.get('firstname').invalid">Please enter firstname</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input matInput type="text" formControlName="midlename" placeholder="Midlename">
-                <mat-error *ngIf="form.get('midlename').invalid">Please enter midlename</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input matInput type="text" formControlName="lastname" placeholder="Lastname">
-                <mat-error *ngIf="form.get('lastname').invalid">Please enter lastname</mat-error>
             </mat-form-field>
         </div>
         <div class="form-field-block">
             <mat-form-field>
                 <input matInput type="number" formControlName="contact" placeholder="Contact">
-                <mat-error *ngIf="form.get('contact').invalid">Please enter contact</mat-error>
             </mat-form-field>
             <mat-form-field>
               <input matInput type="text" formControlName="bloodType" placeholder="Blood Type">
-              <mat-error *ngIf="form.get('bloodType').invalid">Please enter blood type</mat-error>
           </mat-form-field>
             <mat-form-field>
                 <mat-select formControlName="gender" placeholder="Gender">
                     <mat-option value="Male">Male</mat-option>
                     <mat-option value="Female">Female</mat-option>
                 </mat-select>
-                <mat-error *ngIf="form.get('gender').invalid">Please enter gender</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input matInput readonly [matDatepicker]="picker" formControlName="birthdate" placeholder="Birthdate">
@@ -43,12 +37,42 @@
                 <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
             </mat-form-field>
         </div>
-        <div class="form-field-block">
-            <mat-form-field>
-                <textarea matInput rows="4" formControlName="address" placeholder="Address"></textarea>
-                <mat-error *ngIf="form.get('address').invalid">Please enter address</mat-error>
-            </mat-form-field>
-        </div>
+        <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
+            <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+              <h4 subheading-1>Address {{i+1}}</h4>
+              <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="address1" placeholder="Street Address">
+                </mat-form-field>
+              </div>
+              <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
+                </mat-form-field>
+              </div>
+              <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="city" placeholder="City">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="province" placeholder="Province">
+                </mat-form-field>
+              </div>
+              <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="postalCode" placeholder="Postal Code">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="country" placeholder="Country">
+                  </mat-form-field>
+              </div>
+
+              <div class="action">
+                  <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                  <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+              </div>
+            </div>
+        </ng-container>
         <div class="form-field-block">
           <mat-form-field>
               <textarea matInput rows="4" formControlName="comments" placeholder="Comment"></textarea>

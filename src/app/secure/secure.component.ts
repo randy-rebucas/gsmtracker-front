@@ -36,7 +36,7 @@ export class SecureComponent {
   public gender: string;
   public birthdate: string;
   public address: string;
-
+  public addresses: any[];
   /**
    * patient data types
    */

@@ -11,5 +11,13 @@ export interface PatientData {
   contact: string;
   gender: string;
   birthdate: string;
-  address: string;
+  addresses: Address[];
+}
+
+export interface Address {
+  maintenableFlg: boolean;
+  medicine: string;
+  preparation: string;
+  sig: string;
+  quantity: number;
 }

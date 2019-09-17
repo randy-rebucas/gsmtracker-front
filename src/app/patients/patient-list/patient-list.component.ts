@@ -57,10 +57,21 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
       font-weight: bold;
       font-size: 40px;
       line-height: normal;
+      text-align: center;
   }
   .example-element-description {
       padding: 16px;
       width: 100%;
+      position: relative;
+  }
+  .example-element-description .view {
+    position: absolute;
+    right: 0;
+    top: 0;
+    visibility: hidden;
+  }
+  .example-element-description:hover .view {
+    visibility: visible;
   }
   td.mat-cell.cdk-column-action.mat-column-action {
     text-align: right;
@@ -95,6 +106,9 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   .search-div > div img {
     cursor: pointer;
   }
+  .example-element-description dl dd {
+    padding-left: 5em;
+}
   `],
   templateUrl: './patient-list.component.html',
   animations: [
@@ -140,6 +154,7 @@ implements OnInit, OnDestroy {
       .getUpdateListener()
       .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {
         this.isLoading = false;
+        console.log(patientData.patients);
         this.total = patientData.patientCount;
         this.dataSource = new MatTableDataSource(patientData.patients);
         this.dataSource.paginator = this.paginator;

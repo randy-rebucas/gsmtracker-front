@@ -85,7 +85,7 @@ implements OnInit, OnDestroy {
         this.contact = results.patientData.contact;
         this.gender = results.patientData.gender;
         this.birthdate = results.patientData.birthdate;
-        this.address = results.patientData.address;
+        this.addresses = results.patientData.addresses;
         const today = new Date();
         const bDate = new Date(this.birthdate);
         let age = today.getFullYear() - bDate.getFullYear();

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 
 import { PatientsService } from '../patients.service';
 import { PatientData } from '../patient-data.model';
@@ -33,6 +33,7 @@ implements OnInit, OnDestroy {
 
     private notificationService: NotificationService,
     private patientsService: PatientsService,
+    private fb: FormBuilder,
     private dialogRef: MatDialogRef < PatientEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
@@ -45,35 +46,16 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-
-    this.form = new FormGroup({
-      firstname: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50) ]
-      }),
-      midlename: new FormControl(null, {
-        validators: [Validators.required]
-      }),
-      lastname: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
-      }),
-      bloodType: new FormControl(null, {
-        validators: [Validators.required, Validators.maxLength(3) ]
-      }),
-      contact: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(7), Validators.maxLength(13)]
-      }),
-      gender: new FormControl(null, {
-        validators: [Validators.required]
-      }),
-      birthdate: new FormControl(null, {
-        validators: [Validators.required]
-      }),
-      address: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(3), Validators.maxLength(250)]
-      }),
-      comments: new FormControl(null, {
-        validators: [Validators.minLength(3), Validators.maxLength(350)]
-      })
+    this.form = this.fb.group({
+      firstname: ['', [Validators.required]],
+      midlename: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
+      bloodType: ['', [Validators.required]],
+      contact: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      birthdate: ['', [Validators.required]],
+      comments: [''],
+      addresses: this.fb.array([this.addAddressGroup()])
     });
 
     if (this.patientId) {
@@ -81,37 +63,60 @@ implements OnInit, OnDestroy {
         this.isLoading = true;
         this.patientsService.get(this.patientId).subscribe(patientData => {
           this.isLoading = false;
-          this.patient = {
-            id: patientData._id,
+          console.log(patientData);
+          this.personId = patientData.personId;
+          this.form.patchValue({
             bloodType: patientData.bloodType,
             comments: patientData.comments,
-            userId: patientData.userId,
-            personId: patientData.personId,
             firstname: patientData.firstname,
             midlename: patientData.midlename,
             lastname: patientData.lastname,
             contact: patientData.contact,
             gender: patientData.gender,
-            birthdate: patientData.birthdate,
-            address: patientData.address,
-          };
-          this.form.setValue({
-            bloodType: this.patient.bloodType,
-            comments: this.patient.comments,
-            firstname: this.patient.firstname,
-            midlename: this.patient.midlename,
-            lastname: this.patient.lastname,
-            contact: this.patient.contact,
-            gender: this.patient.gender,
-            birthdate: this.patient.birthdate,
-            address: this.patient.address,
+            birthdate: patientData.birthdate
           });
+          const addressControl = this.form.controls.addresses as FormArray;
+          const address = patientData.addresses;
+          for (let i = 1; i < address.length; i++) {
+            addressControl.push(this.addAddressGroup());
+          }
+          this.form.patchValue({addresses: address});
+
+          // this.patient = {
+          //   userId: patientData.userId,
+          //   personId: patientData.personId,
+          // };
         });
       } else {
         this.isLoading = false;
         this.mode = 'create';
         this.patientId = null;
       }
+  }
+
+  addAddressGroup() {
+    return this.fb.group({
+      address1: ['', [Validators.required]],
+      address2: [''],
+      city: ['', [Validators.required]],
+      province: ['', [Validators.required]],
+      postalCode: ['', [Validators.required]],
+      country: ['', [Validators.required]]
+    });
+  }
+
+  addAddress() {
+    this.addressArray.push(this.addAddressGroup());
+  }
+
+  removeAddress(index) {
+    this.addressArray.removeAt(index);
+    this.addressArray.markAsDirty();
+    this.addressArray.markAsTouched();
+  }
+
+  get addressArray() {
+    return this.form.get('addresses') as FormArray;
   }
 
   onSavePatient() {
@@ -127,7 +132,7 @@ implements OnInit, OnDestroy {
         this.form.value.bloodType,
         this.form.value.gender,
         this.form.value.birthdate,
-        this.form.value.address,
+        this.form.value.addresses,
         this.form.value.comments
       ).subscribe(() => {
         this.onClose();
@@ -137,7 +142,7 @@ implements OnInit, OnDestroy {
     } else {
       this.patientsService.update(
         this.patientId,
-        this.patient.personId,
+        this.personId,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -145,7 +150,7 @@ implements OnInit, OnDestroy {
         this.form.value.bloodType,
         this.form.value.gender,
         this.form.value.birthdate,
-        this.form.value.address,
+        this.form.value.addresses,
         this.form.value.comments
       ).subscribe(() => {
         this.onClose();

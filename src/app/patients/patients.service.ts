@@ -58,13 +58,13 @@ export class PatientsService {
 
   get(patientId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ _id: string, bloodType: string, comments: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, address: string }>(
+    return this.http.get<{ _id: string, bloodType: string, comments: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [] }>(
         BACKEND_URL + '/' + patientId
       );
   }
 
   // tslint:disable-next-line:max-line-length
-  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
+  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string) {
       const patientData = {
         firstname: Firstname,
         midlename: Midlename,
@@ -73,14 +73,14 @@ export class PatientsService {
         bloodType: BloodType,
         gender: Gender,
         birthdate: Birthdate,
-        address: Address,
+        address: Addresses,
         comments: Comments
       };
       return this.http.post<{ message: string, patient: PatientData }>(BACKEND_URL, patientData);
   }
 
   // tslint:disable-next-line:max-line-length
-  update(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Address: string, Comments: string) {
+  update(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string) {
     const patientData = {
       id: Id,
       firstname: Firstname,
@@ -90,7 +90,7 @@ export class PatientsService {
       bloodType: BloodType,
       gender: Gender,
       birthdate: Birthdate,
-      address: Address,
+      address: Addresses,
       comments: Comments
     };
     return this.http.put(BACKEND_URL + '/' + Id + '/' + PersonId, patientData);
