@@ -148,13 +148,12 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
     this.titleService.setTitle('Patients');
-
+    console.log(this.userId);
     this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
     this.patientsSub = this.patientsService
       .getUpdateListener()
       .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {
         this.isLoading = false;
-        console.log(patientData.patients);
         this.total = patientData.patientCount;
         this.dataSource = new MatTableDataSource(patientData.patients);
         this.dataSource.paginator = this.paginator;

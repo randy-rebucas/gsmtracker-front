@@ -1,3 +1,13 @@
-person
-    auth
-        users
+person [5d81876bb542dc3628a7455e]
+1
+2
+    auth [5d81876bb542dc3628a7455e]
+    1
+    2
+        users [5d81876bb542dc3628a7455e]
+        1
+        2
+            doctors [dynamic data] // should bare the parent user id
+            patients [dynamic data]
+            1
+            2

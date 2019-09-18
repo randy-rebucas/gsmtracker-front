@@ -18,8 +18,8 @@ export class PatientsService {
     private http: HttpClient
     ) {}
 
-  getAll(userId: string, patientPerPage: number, currentPage: number) {
-    const queryParams = `?userId=${userId}&pagesize=${patientPerPage}&page=${currentPage}`;
+  getAll(licenseId: string, patientPerPage: number, currentPage: number) {
+    const queryParams = `?licenseId=${licenseId}&pagesize=${patientPerPage}&page=${currentPage}`;
     this.http.get<{message: string, patients: any, maxPatients: number }>(
       BACKEND_URL + queryParams
     )
@@ -65,7 +65,7 @@ export class PatientsService {
   }
 
   // tslint:disable-next-line:max-line-length
-  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string, reqEmail: string, resPass: string) {
+  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string, reqEmail: string, resPass: string, activeUserId: string) {
       const patientData = {
         firstname: Firstname,
         midlename: Midlename,
@@ -77,7 +77,8 @@ export class PatientsService {
         address: Addresses,
         comments: Comments,
         email: reqEmail,
-        password: resPass
+        password: resPass,
+        userId: activeUserId
       };
       return this.http.post<{ message: string, patient: PatientData }>(BACKEND_URL, patientData);
   }

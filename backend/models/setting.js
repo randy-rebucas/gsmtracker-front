@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const settingSchema = mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    licenseId: { type: mongoose.Schema.Types.ObjectId, ref: 'License', required: true },
     clinicOwner: { type: String, required: true },
     clinicName: { type: String },
     clinicAddress: { type: String },
