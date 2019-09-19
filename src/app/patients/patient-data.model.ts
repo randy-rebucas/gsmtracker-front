@@ -14,6 +14,7 @@ export interface PatientData {
   email: string;
   password: string;
   addresses: Address[];
+  meta: Meta[];
 }
 
 export interface Address {
@@ -23,4 +24,9 @@ export interface Address {
   province: string;
   postalCode: number;
   country: string;
+}
+
+export interface Meta {
+  label: string;
+  value: string;
 }

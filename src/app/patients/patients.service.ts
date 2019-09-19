@@ -39,7 +39,8 @@ export class PatientsService {
             gender: patient.personId.gender,
             birthdate: patient.personId.birthdate,
             address: patient.personId.address,
-            created: patient.personId.created
+            created: patient.personId.created,
+            meta: patient.metaData
           };
         }), maxPatients: patientData.maxPatients};
       })

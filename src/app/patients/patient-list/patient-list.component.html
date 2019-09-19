@@ -53,14 +53,8 @@
         <ng-container matColumnDef="expandedDetail">
             <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                 <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                    <div class="example-element-diagram">
-                        <div class="example-element-position"> Blood Type </div>
-                        <div class="example-element-symbol"> {{element.bloodType}} </div>
-                        <div class="example-element-name"> Created At </div>
-                        <div class="example-element-weight"> {{element.created | date}} </div>
-                    </div>
+                    <button mat-icon-button [routerLink]="['./', element.id]" class="view" title="View Detail"><mat-icon>remove_red_eye</mat-icon></button>
                     <div class="example-element-description">
-                        <button mat-icon-button [routerLink]="['./', element.id]" class="view" title="View Detail"><mat-icon>remove_red_eye</mat-icon></button>
                         <dl *ngFor="let address of element.address; let i = index;">
                             <dt>Address {{i+1}}:</dt>
                             <dd>
@@ -72,10 +66,12 @@
                                 {{address.country}}
                             </dd>
                         </dl>
-                        <dl>
-                            <dt>Comments:</dt>
-                            <dd>{{element.comments}}</dd>
-                        </dl>
+                    </div>
+                    <div class="element-metadata">
+                      <dl *ngFor="let meta of element.meta; let m = index;">
+                        <dt>{{meta.label}}:</dt>
+                        <dd>{{meta.value}}</dd>
+                      </dl>
                     </div>
                 </div>
             </td>

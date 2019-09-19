@@ -60,9 +60,13 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
       text-align: center;
   }
   .example-element-description {
-      padding: 16px;
-      width: 100%;
+      padding: 16px 0;
       position: relative;
+      margin-right: 2em;
+  }
+  .element-metadata {
+    padding: 16px 0;
+    position: relative;
   }
   .example-element-description .view {
     position: absolute;
@@ -70,6 +74,12 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     top: 0;
     visibility: hidden;
   }
+  .example-element-detail > div {
+    width: 40%;
+}
+dl {
+  margin: 0;
+}
   .example-element-description:hover .view {
     visibility: visible;
   }
@@ -108,6 +118,14 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   }
   .example-element-description dl dd {
     padding-left: 5em;
+}
+.example-element-detail {
+  position: relative;
+}
+.example-element-detail button {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
   `],
   templateUrl: './patient-list.component.html',
