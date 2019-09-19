@@ -49,17 +49,19 @@ input[type="file"] {
     padding: 0 0 1em 0;
 }
 
-.addressGroup {
+.addressGroup, .metaGroup {
   position: relative;
 }
 
-.addressGroup .action {
+.addressGroup .action,
+.metaGroup .action {
   position: absolute;
   top: 0;
   right: 0;
   visibility: hidden;
 }
 
-.addressGroup:hover .action {
+.addressGroup:hover .action,
+.metaGroup:hover .action {
   visibility: visible;
 }

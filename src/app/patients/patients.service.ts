@@ -65,20 +65,19 @@ export class PatientsService {
   }
 
   // tslint:disable-next-line:max-line-length
-  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string, reqEmail: string, resPass: string, activeUserId: string) {
+  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: [], reqEmail: string, resPass: string, reqLicenseId: string) {
       const patientData = {
         firstname: Firstname,
         midlename: Midlename,
         lastname: Lastname,
         contact: Contact,
-        bloodType: BloodType,
         gender: Gender,
         birthdate: Birthdate,
         address: Addresses,
-        comments: Comments,
+        meta: Meta,
         email: reqEmail,
         password: resPass,
-        userId: activeUserId
+        licenseId: reqLicenseId
       };
       return this.http.post<{ message: string, patient: PatientData }>(BACKEND_URL, patientData);
   }

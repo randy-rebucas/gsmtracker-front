@@ -16,6 +16,7 @@ export class AuthService {
   private tokenTimer: any;
   private userId: string;
   private userEmail: string;
+  private licenseId: string;
   private authStatusListener = new Subject<boolean>();
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -34,6 +35,10 @@ export class AuthService {
 
   getUserEmail() {
     return this.userEmail;
+  }
+
+  getLicenseId() {
+    return this.licenseId;
   }
 
   getAuthStatusListener() {
@@ -57,7 +62,7 @@ export class AuthService {
 
   login(reqEmail: string, reqPassword: string) {
     const authData: AuthData = {email: reqEmail, password: reqPassword};
-    this.http.post<{token: string, expiresIn: number, userEmail: string, userId: string}>(
+    this.http.post<{token: string, expiresIn: number, userEmail: string, userId: string, licenseId: string}>(
       BACKEND_URL + '/login',
       authData
     )
@@ -71,11 +76,12 @@ export class AuthService {
 
         this.userId = response.userId;
         this.userEmail = response.userEmail;
+        this.licenseId = response.licenseId;
 
         this.authStatusListener.next(true);
         const now = new Date();
         const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-        this.saveAuthData(token, expirationDate, this.userId, this.userEmail);
+        this.saveAuthData(token, expirationDate, this.userId, this.userEmail, this.licenseId);
         this.router.navigate(['/']);
       }
     }, error => {
@@ -96,6 +102,7 @@ export class AuthService {
 
       this.userId = authInformation.userId;
       this.userEmail = authInformation.userEmail;
+      this.licenseId = authInformation.licenseId;
 
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
@@ -118,11 +125,12 @@ export class AuthService {
     }, duration * 1000);
   }
 
-  private saveAuthData(token: string, expirationDate: Date, userId: string, userEmail: string) {
+  private saveAuthData(token: string, expirationDate: Date, userId: string, userEmail: string, licenseId: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('userEmail', userEmail);
+    localStorage.setItem('licenseId', licenseId);
   }
 
   private clearAuthData() {
@@ -130,6 +138,7 @@ export class AuthService {
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('licenseId');
   }
 
   private getAuthData() {
@@ -137,6 +146,7 @@ export class AuthService {
     const expirationDate = localStorage.getItem('expiration');
     const authUserId = localStorage.getItem('userId');
     const authUserEmail = localStorage.getItem('userEmail');
+    const authLicenseId = localStorage.getItem('licenseId');
     if (!authToken || !expirationDate) {
       return;
     }
@@ -144,7 +154,8 @@ export class AuthService {
       token: authToken,
       expirationDate: new Date(expirationDate),
       userId: authUserId,
-      userEmail: authUserEmail
+      userEmail: authUserEmail,
+      licenseId: authLicenseId
     };
   }
 }

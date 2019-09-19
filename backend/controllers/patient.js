@@ -1,7 +1,6 @@
 const Person = require('../models/person');
 const User = require('../models/user');
 const Patient = require('../models/patient');
-const License = require('../models/license');
 
 exports.createPatient = async(req, res, next) => {
     try {
@@ -21,37 +20,23 @@ exports.createPatient = async(req, res, next) => {
             throw new Error('Something went wrong.Cannot update person!');
         }
 
-        let license = await License.findOne({ personId: req.body.userId });
-
         const newUser = new User({
             userType: 'Patient',
             personId: req.auth.personId,
-            licenseId: license._id
+            licenseId: req.body.licenseId,
+            metaData: req.body.meta
         });
         let user = await newUser.save();
-        console.log(user);
+
         if (!user) {
             throw new Error('Something went wrong.Cannot save user!');
         }
-        /**
-         * set this to dynamic data
-         */
-        const newPatient = new Patient({
-            bloodType: req.body.bloodType,
-            comments: req.body.comments,
-            personId: req.person._id,
-            userId: user._id,
-            licenseId: license._id
-        });
-        let patient = await newPatient.save();
-        if (!patient) {
-            throw new Error('Something went wrong.Cannot save patient!');
-        }
+
         res.status(200).json({
             message: 'Patient added successfully',
             patients: {
-                ...patient,
-                id: patient._id,
+                ...user,
+                id: user._id,
             }
         });
     } catch (e) {
@@ -161,7 +146,7 @@ exports.getAllNetwork = (req, res, next) => {
 exports.getPatients = async(req, res, next) => {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const patientQuery = Patient.find({
+    const patientQuery = User.find({
         'licenseId': req.query.licenseId
     });
 
@@ -171,8 +156,10 @@ exports.getPatients = async(req, res, next) => {
 
     await patientQuery
         .populate('personId')
+        .where('userType', 'Patient')
         .exec()
         .then(documents => {
+          console.log(documents);
             fetchedPatients = documents;
             return Patient.countDocuments();
         })

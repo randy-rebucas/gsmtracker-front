@@ -148,8 +148,7 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
     this.titleService.setTitle('Patients');
-    console.log(this.userId);
-    this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
+    this.patientsService.getAll(this.licenseId, this.perPage, this.currentPage);
     this.patientsSub = this.patientsService
       .getUpdateListener()
       .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {

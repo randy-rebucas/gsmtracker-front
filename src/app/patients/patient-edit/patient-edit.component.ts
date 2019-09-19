@@ -50,14 +50,13 @@ implements OnInit, OnDestroy {
       firstname: ['', [Validators.required]],
       midlename: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
-      bloodType: ['', [Validators.required]],
       contact: ['', [Validators.required]],
       gender: ['', [Validators.required]],
       birthdate: ['', [Validators.required]],
-      comments: [''],
       email: [''],
       password: [''],
-      addresses: this.fb.array([this.addAddressGroup()])
+      addresses: this.fb.array([this.addAddressGroup()]),
+      metas: this.fb.array([this.addMetaGroup()])
     });
 
     if (this.patientId) {
@@ -67,8 +66,6 @@ implements OnInit, OnDestroy {
           this.isLoading = false;
           this.personId = patientData.personId;
           this.form.patchValue({
-            bloodType: patientData.bloodType,
-            comments: patientData.comments,
             firstname: patientData.firstname,
             midlename: patientData.midlename,
             lastname: patientData.lastname,
@@ -102,8 +99,19 @@ implements OnInit, OnDestroy {
     });
   }
 
+  addMetaGroup() {
+    return this.fb.group({
+      label: ['', [Validators.required]],
+      value: ['', [Validators.required]]
+    });
+  }
+
   addAddress() {
     this.addressArray.push(this.addAddressGroup());
+  }
+
+  addMeta() {
+    this.metaArray.push(this.addMetaGroup());
   }
 
   removeAddress(index) {
@@ -112,8 +120,18 @@ implements OnInit, OnDestroy {
     this.addressArray.markAsTouched();
   }
 
+  removeMeta(index) {
+    this.metaArray.removeAt(index);
+    this.metaArray.markAsDirty();
+    this.metaArray.markAsTouched();
+  }
+
   get addressArray() {
     return this.form.get('addresses') as FormArray;
+  }
+
+  get metaArray() {
+    return this.form.get('metas') as FormArray;
   }
 
   onSavePatient() {
@@ -126,18 +144,17 @@ implements OnInit, OnDestroy {
         this.form.value.midlename,
         this.form.value.lastname,
         this.form.value.contact,
-        this.form.value.bloodType,
         this.form.value.gender,
         this.form.value.birthdate,
         this.form.value.addresses,
-        this.form.value.comments,
+        this.form.value.metas,
         this.form.value.email,
         this.form.value.password,
-        this.userId
+        this.licenseId
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
+        this.patientsService.getAll(this.licenseId, this.perPage, this.currentPage);
       });
     } else {
       this.patientsService.update(
@@ -157,7 +174,7 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
+        this.patientsService.getAll(this.licenseId, this.perPage, this.currentPage);
       });
     }
   }

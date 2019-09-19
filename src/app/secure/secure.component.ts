@@ -49,7 +49,7 @@ export class SecureComponent {
    */
   public userId: string;
   public userEmail: string;
-  public userSubscription: string;
+  public licenseId: string;
 
   /**
    * common variables
@@ -93,6 +93,7 @@ export class SecureComponent {
 
     this.userId = this.authService.getUserId();
     this.userEmail = this.authService.getUserEmail();
+    this.licenseId = this.authService.getLicenseId();
 
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authListenerSubs = this.authService
