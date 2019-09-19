@@ -49,7 +49,6 @@ extends SecureComponent
         this.contact = results.patientData.contact;
         this.gender = results.patientData.gender;
         this.birthdate = results.patientData.birthdate;
-        this.bloodType = results.patientData.bloodType;
       })
       .catch(err => console.log(err));
   }

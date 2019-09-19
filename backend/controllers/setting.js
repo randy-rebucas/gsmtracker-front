@@ -2,7 +2,7 @@ const Setting = require('../models/setting');
 
 exports.create = (req, res, next) => {
     const setting = new Setting({
-        userId: req.body.userId,
+        licenseId: req.body.licenseId,
         clinicName: req.body.name,
         clinicOwner: req.body.owner,
         clinicAddress: req.body.address,
@@ -37,6 +37,7 @@ exports.create = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
+  console.log(req.params);
     const setting = new Setting({
         _id: req.body.id,
         clinicName: req.body.name,
@@ -56,7 +57,7 @@ exports.update = (req, res, next) => {
     for (let index = 0; index < hourData.length; index++) {
         setting.clinicHours.push(hourData[index]);
     }
-    Setting.updateOne({ _id: req.params.userId },
+    Setting.updateOne({ licenseId: req.params.licenseId },
             setting
         )
         .exec()
@@ -75,7 +76,7 @@ exports.update = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Setting.findOne({ 'userId': req.params.userId })
+    Setting.findOne({ 'licenseId': req.params.licenseId })
         .exec()
         .then(setting => {
             if (setting) {

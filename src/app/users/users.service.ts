@@ -2,107 +2,103 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 import { environment } from '../../environments/environment';
 import { UserData } from './user-data.model';
 
-const BACKEND_URL = environment.apiUrl + '/patients';
+const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable({providedIn: 'root'})
-
 export class UsersService {
-  private patients: UserData[] = [];
-  private patientsUpdated = new Subject<{ patients: UserData[], patientCount: number }>();
+  private users: UserData[] = [];
+  private usersUpdated = new Subject<{ users: UserData[], counts: number }>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private datePipe: DatePipe
+    private http: HttpClient
     ) {}
 
-  getPatients(clientId: string, patientPerPage: number, currentPage: number) {
-    const queryParams = `?client=${clientId}&pagesize=${patientPerPage}&page=${currentPage}`;
-    this.http.get<{message: string, patients: any, maxPatients: number }>(
+  getAll(userType: string, licenseId: string, perPage: number, currentPage: number) {
+    const queryParams = `?usertype=${userType}&licenseId=${licenseId}&pagesize=${perPage}&page=${currentPage}`;
+    this.http.get<{message: string, users: any, counts: number }>(
       BACKEND_URL + queryParams
     )
     .pipe(
-      map(patientData => {
-        return { patients: patientData.patients.map(patient => {
+      map(userData => {
+        return { users: userData.users.map(user => {
           return {
-            id: patient._id,
-            firstname: patient.firstname,
-            midlename: patient.midlename,
-            lastname: patient.lastname,
-            contact: patient.contact,
-            gender: patient.gender,
-            birthdate: patient.birthdate,
-            address: patient.address,
-            imagePath: patient.imagePath,
-            client_id: patient.client_id
+            id: user._id,
+            bloodType: user.bloodType,
+            comments: user.comments,
+            userId: user.userId,
+            personId: user.personId._id,
+            firstname: user.personId.firstname,
+            midlename: user.personId.midlename,
+            lastname: user.personId.lastname,
+            contact: user.personId.contact,
+            gender: user.personId.gender,
+            birthdate: user.personId.birthdate,
+            address: user.personId.address,
+            created: user.personId.created,
+            meta: user.metaData
           };
-        }), maxPatients: patientData.maxPatients};
+        }), max: userData.counts};
       })
     )
-    .subscribe((transformpatientsData) => {
-      this.patients = transformpatientsData.patients;
-      this.patientsUpdated.next({
-        patients: [...this.patients],
-        patientCount: transformpatientsData.maxPatients
+    .subscribe((transformData) => {
+      this.users = transformData.users;
+      this.usersUpdated.next({
+        users: [...this.users],
+        counts: transformData.max
       });
     });
   }
 
-  getPatientUpdateListener() {
-    return this.patientsUpdated.asObservable();
+  getUpdateListener() {
+    return this.usersUpdated.asObservable();
   }
 
-  getPatient(id: string) {
+  get(userId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ _id: string; firstname: string, midlename: string, lastname: string, contact: string, gender: string, birthdate: string, address: string, imagePath: string, client_id: string
-    }>(
-      BACKEND_URL + '/' + id
+    return this.http.get<{ id: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [] }>(
+        BACKEND_URL + '/' + userId
       );
   }
 
-  addPatient(firstname: string, midlename: string, lastname: string, contact: string, gender: string, birthdate: string, address: string, image: File
-    ) {
-    const patientData = new FormData();
-    patientData.append('firstname', firstname);
-    patientData.append('midlename', midlename);
-    patientData.append('lastname', lastname);
-    patientData.append('contact', contact);
-    patientData.append('gender', gender);
-    patientData.append('birthdate', birthdate);
-    patientData.append('address', address);
-    patientData.append('image', image, firstname);
-    return this.http.post<{ message: string, patient: UserData }>(BACKEND_URL, patientData);
-  }
-
-  updatePatient(id: string, firstname: string, midlename: string, lastname: string, contact: string, gender: string, birthdate: string, address: string, image: File | string) {
-    let patientData: UserData | FormData;
-    if (typeof(image) === 'object') {
-      patientData = new FormData();
-      patientData.append('id', id);
-      patientData.append('firstname', firstname);
-      patientData.append('midlename', midlename);
-      patientData.append('lastname', lastname);
-      patientData.append('contact', contact);
-      patientData.append('gender', gender);
-      patientData.append('birthdate', birthdate);
-      patientData.append('address', address);
-      patientData.append('image', image, firstname);
-    } else {
-      patientData = {
-        id: id, firstname: firstname, midlename: midlename, lastname: lastname, contact: contact, gender: gender, birthdate: birthdate, address: address, imagePath: image, client: null
+  // tslint:disable-next-line:max-line-length
+  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: [], reqEmail: string, resPass: string, reqLicenseId: string) {
+      const userData = {
+        firstname: Firstname,
+        midlename: Midlename,
+        lastname: Lastname,
+        contact: Contact,
+        gender: Gender,
+        birthdate: Birthdate,
+        address: Addresses,
+        meta: Meta,
+        email: reqEmail,
+        password: resPass,
+        licenseId: reqLicenseId
       };
-    }
-
-    return this.http.put(BACKEND_URL + '/' + id, patientData);
+      return this.http.post<{ message: string, user: UserData }>(BACKEND_URL, userData);
   }
 
-  deletePatient(userId: string) {
+  // tslint:disable-next-line:max-line-length
+  update(Id: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: []) {
+    const userData = {
+      id: Id,
+      firstname: Firstname,
+      midlename: Midlename,
+      lastname: Lastname,
+      contact: Contact,
+      gender: Gender,
+      birthdate: Birthdate,
+      address: Addresses,
+      meta: Meta
+    };
+    return this.http.put(BACKEND_URL + '/' + Id, userData);
+  }
+
+  delete(userId: string) {
     return this.http.delete(BACKEND_URL + '/' + userId);
   }
 

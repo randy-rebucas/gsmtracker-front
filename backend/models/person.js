@@ -7,6 +7,7 @@ const personSchema = mongoose.Schema({
     contact: { type: String, default: null },
     gender: { type: String, default: null },
     address: [{
+      current: { type: Boolean },
       address1: { type: String, required: true }, // street address
       address2: { type: String }, // street address line 2
       city: { type: String, required: true },

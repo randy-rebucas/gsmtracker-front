@@ -1,8 +1,9 @@
 const Person = require('../models/person');
+const Auth = require('../models/auth');
 const User = require('../models/user');
 const Patient = require('../models/patient');
 
-exports.createPatient = async(req, res, next) => {
+exports.create = async(req, res, next) => {
     try {
         const newPerson = new Person({
             _id: req.auth.personId,
@@ -21,7 +22,7 @@ exports.createPatient = async(req, res, next) => {
         }
 
         const newUser = new User({
-            userType: 'Patient',
+            userType: 'patient',
             personId: req.auth.personId,
             licenseId: req.body.licenseId,
             metaData: req.body.meta
@@ -43,69 +44,31 @@ exports.createPatient = async(req, res, next) => {
         res.status(500).json({
             message: e.message
         });
-        // this will eventually be handled by your error handling middleware
-        // next(e)
     }
 };
 
-exports.updatePatient = (req, res, next) => {
-    const patient = new Patient({
-        _id: req.body.id,
-        bloodType: req.body.bloodType,
-        comments: req.body.comments
-    });
+exports.update = async (req, res, next) => {
+  try {
 
-    Patient
-        .updateOne({
-                _id: req.params.patientId //userId: req.userData.userId
-            },
-            patient
-        )
-        .exec()
-        .then(
-            result => {
-                if (result.n > 0) {
-                    const person = new Person({
-                        _id: req.params.personId,
-                        firstname: req.body.firstname,
-                        midlename: req.body.midlename,
-                        lastname: req.body.lastname,
-                        contact: req.body.contact,
-                        gender: req.body.gender,
-                        birthdate: req.body.birthdate
-                    });
-                    addressData = req.body.address;
-                    for (let index = 0; index < addressData.length; index++) {
-                        person.address.push(addressData[index]);
-                    }
-                    Person.updateOne({ _id: req.params.personId }, //pass doctor role for restriction
-                            person
-                        )
-                        .exec()
-                        .then(result => {
-                            if (result.n > 0) {
-                                res.status(200).json({ message: 'Update successful!' });
-                            } else {
-                                res.status(401).json({ message: 'Not authorized!' });
-                            }
-                        })
-                        .catch(error => {
-                            res.status(500).json({
-                                message: error.message
-                            });
-                        });
-                } else {
-                    res.status(401).json({ message: 'Not authorized!' });
-                }
-            }
-        )
-        .catch(
-            error => {
-                res.status(500).json({
-                    message: error.message
-                });
-            }
-        );
+    const newUser = new User({
+      _id: req.body.id
+    });
+    metaData = req.body.meta;
+    for (let index = 0; index < metaData.length; index++) {
+      newUser.metaData.push(metaData[index]);
+    }
+    let updatedUser = await User.updateOne({ _id: req.body.id }, newUser);
+    if (!updatedUser) {
+        throw new Error('Something went wrong.Cannot update user!');
+    }
+
+    res.status(200).json({ message: 'Update successful!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 /**
  * tobe transfer in network
@@ -143,114 +106,75 @@ exports.getAllNetwork = (req, res, next) => {
         );
 }
 
-exports.getPatients = async(req, res, next) => {
+exports.getAll = async (req, res, next) => {
+  try {
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
-    const patientQuery = User.find({
-        'licenseId': req.query.licenseId
-    });
+    const patientQuery = User.find({ 'licenseId': req.query.licenseId });
 
     if (pageSize && currentPage) {
         patientQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
 
-    await patientQuery
-        .populate('personId')
-        .where('userType', 'Patient')
-        .exec()
-        .then(documents => {
-          console.log(documents);
-            fetchedPatients = documents;
-            return Patient.countDocuments();
-        })
-        .then(
-            count => {
-                res.status(200).json({
-                    message: 'Patient fetched successfully!',
-                    patients: fetchedPatients,
-                    maxPatients: count
-                });
-            }
-        )
-        .catch(
-            error => {
-                res.status(500).json({
-                    message: error.message
-                });
-            }
-        );
+    let patients = await patientQuery.populate('personId').where('userType', 'patient').exec();
+    let count = await User.countDocuments({'userType': 'patient'});
+
+    res.status(200).json({
+        message: 'Patient fetched successfully!',
+        patients: patients,
+        maxPatients: count
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getPatient = (req, res, next) => {
-    Patient
-        .findById(
-            req.params.patientId
-        )
-        .populate(
-            'personId'
-        )
-        .exec()
-        .then(
-            patient => {
-                if (patient) {
-                    res.status(200).json({
-                        _id: patient._id,
-                        bloodType: patient.bloodType,
-                        comments: patient.comments,
-                        userId: patient.userId,
-                        personId: patient.personId._id,
-                        firstname: patient.personId.firstname,
-                        lastname: patient.personId.lastname,
-                        midlename: patient.personId.midlename,
-                        contact: patient.personId.contact,
-                        gender: patient.personId.gender,
-                        birthdate: patient.personId.birthdate,
-                        addresses: patient.personId.address,
-                        createdAt: patient.personId.createdAt
-                    });
-                } else {
-                    res.status(404).json({
-                        message: 'patient not found'
-                    });
-                }
-            }
-        )
-        .catch(
-            error => {
-                res.status(500).json({
-                    message: error.message
-                });
-            }
-        );
+exports.get = async (req, res, next) => {
+  try {
+    let user = await User.findById(req.params.patientId).populate('personId').exec();
+    if (!user) {
+      throw new Error('Something went wrong. Cannot find patient id !' + req.params.patientId);
+    }
+    res.status(200).json({
+        id: user._id,
+        userId: user.userId,
+        meta: user.metaData,
+        personId: user.personId._id,
+        firstname: user.personId.firstname,
+        lastname: user.personId.lastname,
+        midlename: user.personId.midlename,
+        contact: user.personId.contact,
+        gender: user.personId.gender,
+        birthdate: user.personId.birthdate,
+        addresses: user.personId.address,
+        createdAt: user.personId.created
+    });
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.deletePatient = (req, res, next) => {
-    Patient
-        .deleteOne({
-            _id: req.params.patientId,
-            userId: req.userData.userId //only owner can delete
-        })
-        .exec()
-        .then(
-            result => {
-                if (result.n > 0) {
-                    res.status(200)
-                        .json({
-                            message: 'Deletion successfull!'
-                        });
-                } else {
-                    res.status(401)
-                        .json({
-                            message: 'Not Authorized!'
-                        });
-                }
-            }
-        )
-        .catch(
-            error => {
-                res.status(500).json({
-                    message: error.message
-                });
-            }
-        );
+exports.delete = async (req, res, next) => {
+  try {
+    let user = await User.findById(req.params.patientId).exec();
+    if (user.licenseId != req.userData.licenseId) {
+      throw new Error('Not Authorized!');
+    }
+    await Auth.deleteOne({personId: user.personId});
+    await Person.deleteOne({_id: user.personId});
+    await User.deleteOne({_id: user._id});
+
+    res.status(200).json({
+        message: 'Deletion successfull!'
+    });
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };

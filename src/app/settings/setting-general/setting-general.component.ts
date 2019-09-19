@@ -56,7 +56,7 @@ implements OnInit, OnDestroy {
   }
 
   populateForm() {
-    this.settingsGeneralService.get(this.userId).subscribe(settingData => {
+    this.settingsGeneralService.get(this.licenseId).subscribe(settingData => {
       this.form.patchValue({
         clinicName: settingData.clinicName,
         clinicOwner: settingData.clinicOwner,
@@ -130,6 +130,7 @@ implements OnInit, OnDestroy {
   onSaveGenSetting() {
     this.settingsGeneralService.update(
       this.settingId,
+      this.licenseId,
       this.form.value.clinicName,
       this.form.value.clinicOwner,
       this.form.value.clinicAddress,

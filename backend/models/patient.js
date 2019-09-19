@@ -5,7 +5,7 @@ const patientSchema = mongoose.Schema({
     comments: { type: String, default: null },
     personId: { type: mongoose.Schema.Types.ObjectId, ref: 'Person', required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    licenseId: { type: mongoose.Schema.Types.ObjectId, ref: 'License', required: true } //license
+    licenseId: { type: mongoose.Schema.Types.ObjectId, ref: 'License', required: true }
 });
 
 module.exports = mongoose.model('Patients', patientSchema);

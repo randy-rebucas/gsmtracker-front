@@ -37,6 +37,12 @@
         <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
             <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
               <h4 subheading-1>Address {{i+1}}</h4>
+              <ng-container *ngIf="i < 1">
+                  <div class="form-field-block">
+                      <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
+                    </div>
+              </ng-container>
+
               <div class="form-field-block">
                 <mat-form-field>
                     <input matInput type="text" formControlName="address1" placeholder="Street Address">
@@ -70,8 +76,8 @@
               </div>
             </div>
         </ng-container>
-        <h4 subheading-1>Login Access</h4>
-        <div class="form-field-block">
+        <h4 subheading-1 *ngIf="!patientId">Login Access</h4>
+        <div class="form-field-block"  *ngIf="!patientId">
           <mat-form-field>
             <input matInput type="email" formControlName="email" placeholder="Email">
           </mat-form-field>

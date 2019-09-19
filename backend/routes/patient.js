@@ -8,19 +8,19 @@ const preAuth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('', checkAuth, preAuth, PatientController.createPatient);
+router.post('', checkAuth, preAuth, PatientController.create);
 
-router.get('', PatientController.getPatients);
+router.get('', PatientController.getAll);
 
-router.get('/:patientId', PatientController.getPatient);
+router.get('/:patientId', PatientController.get);
 
-router.put('/:patientId/:personId', checkAuth, preAuth, PatientController.updatePatient);
+router.put('/:patientId', checkAuth, preAuth, PatientController.update);
+
+router.delete('/:patientId', checkAuth, PatientController.delete);
+
 /**
  * to be remove
  */
 router.get('/network', PatientController.getAllNetwork);
-
-router.delete('/:patientId', checkAuth, PatientController.deletePatient);
-
 
 module.exports = router;

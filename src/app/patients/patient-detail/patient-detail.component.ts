@@ -104,7 +104,6 @@ implements OnInit, OnDestroy {
         this.contact = results.patientData.contact;
         this.gender = results.patientData.gender;
         this.birthdate = results.patientData.birthdate;
-        this.bloodType = results.patientData.bloodType;
 
         if (Object.keys(results.heightData).length) {
           this.height = results.heightData[0].height;

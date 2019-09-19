@@ -65,9 +65,14 @@ import { TestResultListComponent } from './patients/patient-record/test-results/
 import { TestResultDetailComponent } from './patients/patient-record/test-results/test-result-detail/test-result-detail.component';
 import { TestResultInitialComponent } from './patients/patient-record/test-results/test-result-initial/test-result-initial.component';
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
+import { UserListComponent } from './users/user-list/user-list.component';
+import { UsersComponent } from './users/users.component';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent },
+    { path: 'users', component: UsersComponent, canActivate: [AuthGuard], children: [
+      { path: '', component: UserListComponent }
+    ] },
     { path: 'patients', component: PatientsComponent, canActivate: [AuthGuard], children: [
       { path: '', component: PatientListComponent },
       { path: ':patientId', component: PatientDetailComponent },

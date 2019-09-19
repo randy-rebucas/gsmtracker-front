@@ -60,7 +60,7 @@ export class PatientsService {
 
   get(patientId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ _id: string, bloodType: string, comments: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [] }>(
+    return this.http.get<{ id: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [] }>(
         BACKEND_URL + '/' + patientId
       );
   }
@@ -84,22 +84,19 @@ export class PatientsService {
   }
 
   // tslint:disable-next-line:max-line-length
-  update(Id: string, PersonId: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, BloodType: string, Gender: string, Birthdate: string, Addresses: [], Comments: string, reqEmail: string, reqPass: string) {
+  update(Id: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: []) {
     const patientData = {
       id: Id,
       firstname: Firstname,
       midlename: Midlename,
       lastname: Lastname,
       contact: Contact,
-      bloodType: BloodType,
       gender: Gender,
       birthdate: Birthdate,
       address: Addresses,
-      comments: Comments,
-      email: reqEmail,
-      password: reqPass
+      meta: Meta
     };
-    return this.http.put(BACKEND_URL + '/' + Id + '/' + PersonId, patientData);
+    return this.http.put(BACKEND_URL + '/' + Id, patientData);
   }
 
   delete(patientId: string) {

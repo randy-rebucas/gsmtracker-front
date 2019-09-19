@@ -80,6 +80,13 @@ implements OnInit, OnDestroy {
           }
           this.form.patchValue({addresses: address});
 
+          const metaControl = this.form.controls.metas as FormArray;
+          const meta = patientData.meta;
+          for (let i = 1; i < meta.length; i++) {
+            metaControl.push(this.addMetaGroup());
+          }
+          this.form.patchValue({metas: meta});
+
         });
       } else {
         this.isLoading = false;
@@ -90,6 +97,7 @@ implements OnInit, OnDestroy {
 
   addAddressGroup() {
     return this.fb.group({
+      current: [],
       address1: ['', [Validators.required]],
       address2: [''],
       city: ['', [Validators.required]],
@@ -159,18 +167,14 @@ implements OnInit, OnDestroy {
     } else {
       this.patientsService.update(
         this.patientId,
-        this.personId,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
         this.form.value.contact,
-        this.form.value.bloodType,
         this.form.value.gender,
         this.form.value.birthdate,
         this.form.value.addresses,
-        this.form.value.comments,
-        this.form.value.email,
-        this.form.value.password
+        this.form.value.metas
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');

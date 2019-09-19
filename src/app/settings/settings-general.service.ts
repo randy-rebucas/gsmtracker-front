@@ -26,10 +26,9 @@ export class SettingsGeneralService {
       return this.settingsUpdated.asObservable();
     }
 
-    get(userId: string) {
+    get(licenseId: string) {
       return this.http.get<{
         _id: string;
-        userId: string,
         clinicName: string,
         clinicOwner: string,
         clinicAddress: string,
@@ -40,7 +39,7 @@ export class SettingsGeneralService {
         nobreak: boolean,
         clinicPhone: [],
         clinicHours: []}>(
-        BACKEND_URL + '/' + userId
+        BACKEND_URL + '/' + licenseId
         );
     }
 
@@ -51,13 +50,13 @@ export class SettingsGeneralService {
       return this.http.post<{ message: string, record: SettingsGeneralData }>(BACKEND_URL, recordData);
     }
 
-    update(id: string, name: string, owner: string, address: string, email: string, prc: string, ptr: string, s2: string, nobreak: boolean, phones: [], hours: []) {
+    update(id: string, licenseId: string, name: string, owner: string, address: string, email: string, prc: string, ptr: string, s2: string, nobreak: boolean, phones: [], hours: []) {
 
       const settingData = {
           id: id, name: name, owner: owner, address: address, email: email, prc: prc, ptr: ptr, s2: s2, nobreak: nobreak, phones: phones, hours: hours
         };
 
-      return this.http.put(BACKEND_URL + '/' + id, settingData);
+      return this.http.put(BACKEND_URL + '/' + licenseId, settingData);
     }
 
 }

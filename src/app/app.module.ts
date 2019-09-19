@@ -66,6 +66,8 @@ import { AppointmentDetailComponent } from './appointments/appointment-detail/ap
 import { SecureComponent } from './secure/secure.component';
 import { TestResultEditComponent } from './patients/patient-record/test-results/test-result-edit/test-result-edit.component';
 import { ProfileImageComponent } from './upload/profile-image/profile-image.component';
+import { UserListComponent } from './users/user-list/user-list.component';
+import { UsersModule } from './users/users.module';
 
 @NgModule({
   declarations: [
@@ -105,6 +107,7 @@ import { ProfileImageComponent } from './upload/profile-image/profile-image.comp
     LayoutModule,
     HttpClientModule,
     PatientsModule,
+    UsersModule,
     PatientRecordsModule,
     FormsModule,
     ReactiveFormsModule,
