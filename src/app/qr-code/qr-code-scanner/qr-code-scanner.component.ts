@@ -53,9 +53,9 @@ implements OnInit, OnDestroy {
   handleQrCodeResult(resultString: string) {
     if  (resultString != null) {
       this.patientsService.get(resultString).subscribe((response) => {
-        if (response._id) {
+        if (response.userId) {
           this.onClose();
-          this.router.navigateByUrl('/patients/' + response._id + '/record/physical-exams/height');
+          this.router.navigateByUrl('/patients/' + response.userId + '/record/physical-exams/height');
         }
       });
     }

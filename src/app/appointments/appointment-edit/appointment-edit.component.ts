@@ -9,6 +9,7 @@ import { MessagesService } from 'src/app/messages/messages.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { NetworksService } from 'src/app/networks/networks.service';
 
 export interface User {
   id: string;
@@ -35,6 +36,7 @@ implements OnInit, OnDestroy {
 
     private appointmentService: AppointmentService,
     private messageService: MessagesService,
+    private networksService: NetworksService,
     private notificationService: NotificationService
     ) {
       super(authService, router, dialog, appconfig);
@@ -42,7 +44,7 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-
+    console.log(this.userId);
     this.form = new FormGroup({
       userInput: new FormControl(null),
       title: new FormControl(null, {
@@ -51,9 +53,6 @@ implements OnInit, OnDestroy {
       start: new FormControl(null, {
         validators: [Validators.required]
       })
-      // end: new FormControl(null, {
-      //   validators: [Validators.required]
-      // })
     });
 
     this.form
@@ -62,13 +61,14 @@ implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.messageService.search({name: value}, this.currentPage, this.userId)
+        switchMap(value => this.networksService.search({name: value}, this.currentPage, this.userId)
         .pipe(
           finalize(() => this.isLoading = false),
           )
         )
       )
       .subscribe((users) => {
+        console.log(users);
         this.filteredUsers = users.results;
       });
 
@@ -88,11 +88,11 @@ implements OnInit, OnDestroy {
       this.form.value.userInput,
       this.form.value.title,
       this.form.value.start,
-      this.userId
+      this.licenseId
     ).subscribe(() => {
       this.form.reset();
       this.notificationService.success(':: Added successfully');
-      this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
+      this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
     });
   }
 

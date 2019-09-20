@@ -78,7 +78,7 @@ implements OnInit, OnDestroy {
         /**
          * person data
          */
-        this.id = results.patientData._id;
+        this.id = results.patientData.userId;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
         this.lastname = results.patientData.lastname;

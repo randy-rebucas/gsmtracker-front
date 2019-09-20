@@ -47,40 +47,41 @@ exports.create = async(req, res, next) => {
     }
 };
 
-exports.update = async (req, res, next) => {
-  try {
+exports.update = async(req, res, next) => {
+    try {
 
-    const newUser = new User({
-      _id: req.body.id
-    });
-    metaData = req.body.meta;
-    for (let index = 0; index < metaData.length; index++) {
-      newUser.metaData.push(metaData[index]);
+        const newUser = new User({
+            _id: req.body.id
+        });
+        metaData = req.body.meta;
+        for (let index = 0; index < metaData.length; index++) {
+            newUser.metaData.push(metaData[index]);
+        }
+        let updatedUser = await User.updateOne({ _id: req.body.id }, newUser);
+        if (!updatedUser) {
+            throw new Error('Something went wrong.Cannot update user!');
+        }
+
+        res.status(200).json({ message: 'Update successful!' });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
     }
-    let updatedUser = await User.updateOne({ _id: req.body.id }, newUser);
-    if (!updatedUser) {
-        throw new Error('Something went wrong.Cannot update user!');
-    }
-
-    res.status(200).json({ message: 'Update successful!' });
-
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
 };
 /**
  * tobe transfer in network
  */
 exports.getAllNetwork = (req, res, next) => {
     const currentPage = +req.query.page;
-    const patientQuery = Patient.find({
-        'userId': req.query.userId
+    const patientQuery = User.find({
+        'licenseId': req.query.licenseId
     });
     patientQuery
         .populate('personId')
         .then(documents => {
+            console.log(documents);
             fetchedPatients = documents;
             return Patient.countDocuments();
         })
@@ -106,75 +107,74 @@ exports.getAllNetwork = (req, res, next) => {
         );
 }
 
-exports.getAll = async (req, res, next) => {
-  try {
-    const pageSize = +req.query.pagesize;
-    const currentPage = +req.query.page;
-    const patientQuery = User.find({ 'licenseId': req.query.licenseId });
+exports.getAll = async(req, res, next) => {
+    try {
+        const pageSize = +req.query.pagesize;
+        const currentPage = +req.query.page;
+        const patientQuery = User.find({ 'licenseId': req.query.licenseId });
 
-    if (pageSize && currentPage) {
-        patientQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+        if (pageSize && currentPage) {
+            patientQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+        }
+
+        let patients = await patientQuery.populate('personId').where('userType', 'patient').exec();
+        let count = await User.countDocuments({ 'userType': 'patient' });
+
+        res.status(200).json({
+            message: 'Patient fetched successfully!',
+            patients: patients,
+            maxPatients: count
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
     }
-
-    let patients = await patientQuery.populate('personId').where('userType', 'patient').exec();
-    let count = await User.countDocuments({'userType': 'patient'});
-
-    res.status(200).json({
-        message: 'Patient fetched successfully!',
-        patients: patients,
-        maxPatients: count
-    });
-
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
 };
 
-exports.get = async (req, res, next) => {
-  try {
-    let user = await User.findById(req.params.patientId).populate('personId').exec();
-    if (!user) {
-      throw new Error('Something went wrong. Cannot find patient id !' + req.params.patientId);
+exports.get = async(req, res, next) => {
+    try {
+        let user = await User.findById(req.params.patientId).populate('personId').exec();
+        if (!user) {
+            throw new Error('Something went wrong. Cannot find patient id !' + req.params.patientId);
+        }
+        res.status(200).json({
+            userId: user._id,
+            meta: user.metaData,
+            personId: user.personId._id,
+            firstname: user.personId.firstname,
+            lastname: user.personId.lastname,
+            midlename: user.personId.midlename,
+            contact: user.personId.contact,
+            gender: user.personId.gender,
+            birthdate: user.personId.birthdate,
+            addresses: user.personId.address,
+            created: user.personId.created
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
     }
-    res.status(200).json({
-        id: user._id,
-        userId: user.userId,
-        meta: user.metaData,
-        personId: user.personId._id,
-        firstname: user.personId.firstname,
-        lastname: user.personId.lastname,
-        midlename: user.personId.midlename,
-        contact: user.personId.contact,
-        gender: user.personId.gender,
-        birthdate: user.personId.birthdate,
-        addresses: user.personId.address,
-        createdAt: user.personId.created
-    });
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
 };
 
-exports.delete = async (req, res, next) => {
-  try {
-    let user = await User.findById(req.params.patientId).exec();
-    if (user.licenseId != req.userData.licenseId) {
-      throw new Error('Not Authorized!');
-    }
-    await Auth.deleteOne({personId: user.personId});
-    await Person.deleteOne({_id: user.personId});
-    await User.deleteOne({_id: user._id});
+exports.delete = async(req, res, next) => {
+    try {
+        let user = await User.findById(req.params.patientId).exec();
+        if (user.licenseId != req.userData.licenseId) {
+            throw new Error('Not Authorized!');
+        }
+        await Auth.deleteOne({ personId: user.personId });
+        await Person.deleteOne({ _id: user.personId });
+        await User.deleteOne({ _id: user._id });
 
-    res.status(200).json({
-        message: 'Deletion successfull!'
-    });
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
+        res.status(200).json({
+            message: 'Deletion successfull!'
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 };

@@ -12,6 +12,8 @@ router.put('/:networkId', checkAuth, NetworkController.update);
 
 router.get('', NetworkController.getAll);
 
+router.get('/mynetwork', NetworkController.getMyNetwork);
+
 router.get('/:networkId', NetworkController.get);
 
 router.delete('/:networkId', checkAuth, NetworkController.delete);

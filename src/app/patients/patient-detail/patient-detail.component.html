@@ -214,7 +214,7 @@
         </mat-grid-tile-footer>
     </mat-grid-tile>
 
-    <mat-grid-tile [colspan]="1" [rowspan]="3" class="grid-content">
+    <mat-grid-tile [colspan]="1" [rowspan]="4" class="grid-content">
         <div style="padding: 1em;">
             Quick Actions
             <mat-list>
@@ -230,6 +230,9 @@
                 <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
                         fingerprint
                         </i> &nbsp; Generate QR Code </mat-list-item>
+                <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
+                        group
+                                </i> &nbsp; Network Request </mat-list-item>
             </mat-list>
             Support
             <mat-list>

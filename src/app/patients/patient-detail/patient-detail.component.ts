@@ -23,6 +23,8 @@ import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 import { ProfileImageComponent } from 'src/app/upload/profile-image/profile-image.component';
+import { NetworksService } from 'src/app/networks/networks.service';
+import { NotificationService } from 'src/app/shared/notification.service';
 
 @Component({
   selector: 'app-patient-detail',
@@ -80,7 +82,9 @@ implements OnInit, OnDestroy {
     public assessmentService: AssessmentService,
     public prescriptionService: PrescriptionService,
     public notesService: NotesService,
-    public uploadService: UploadService
+    public uploadService: UploadService,
+    public networksService: NetworksService,
+    private notificationService: NotificationService
     ) {
       super(authService, router, dialog, appconfig);
     }
@@ -95,9 +99,11 @@ implements OnInit, OnDestroy {
       this.getPatientData(this.patientId)
       .then((results) => {
         this.isLoading = false;
+        console.log(results.patientData);
         this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
 
-        // this.id = results.patientData._id;
+        this.personId = results.patientData.personId;
+        this.patientId = results.patientData.userId;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
         this.lastname = results.patientData.lastname;
@@ -259,6 +265,11 @@ implements OnInit, OnDestroy {
 
     gotoRecord() {
       this.router.navigate(['./record/physical-exams'], {relativeTo: this.route});
+    }
+
+    async addToNetwork(requesterId) {
+      const network = await this.networksService.insert(requesterId, this.userId).toPromise();
+      this.notificationService.success(':: request sent');
     }
 
     ngOnDestroy() {

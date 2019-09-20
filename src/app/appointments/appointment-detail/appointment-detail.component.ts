@@ -61,11 +61,10 @@ implements OnInit, OnDestroy {
     this.appointmentService.get(this.appointmentId)
       .subscribe(recordData => {
         this.isLoading = false;
-        this.id = recordData._id;
+        this.appointmentId = recordData.appointmentId;
         this.title = recordData.title;
         this.start = recordData.start;
         this.end = recordData.end;
-        this.clientId = recordData.clientId;
         this.status = recordData.status;
 
         this.fullname = recordData.fullname;

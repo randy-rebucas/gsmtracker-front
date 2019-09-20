@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { PatientData } from './patient-data.model';
-import { EmailValidator } from '@angular/forms';
 
 const BACKEND_URL = environment.apiUrl + '/patients';
 
@@ -57,11 +56,11 @@ export class PatientsService {
   getUpdateListener() {
     return this.patientsUpdated.asObservable();
   }
-
-  get(patientId: string) {
+  
+  get(userId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ id: string, personId: string, userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [] }>(
-        BACKEND_URL + '/' + patientId
+    return this.http.get<{ userId: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [] }>(
+        BACKEND_URL + '/' + userId
       );
   }
 

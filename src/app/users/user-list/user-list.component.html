@@ -7,9 +7,15 @@
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
         </mat-form-field>
         <div (click)="onScan()">
-          <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
+            <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
+        </div>
+        <div class="filter">
+            <mat-select placeholder="Select User" (change)="changeUser($event)">
+                <mat-option *ngFor="let suit of oppoSuits">{{suit}}</mat-option>
+            </mat-select>
         </div>
     </div>
+
     <table mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
         <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
             <div *ngIf="column === 'image'">
@@ -62,16 +68,15 @@
                                 <ng-container *ngIf="address.address2">
                                     {{address.address2}} <br/>
                                 </ng-container>
-                                {{address.postalCode}} {{address.province}}, {{address.city}}<br/>
-                                {{address.country}}
+                                {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
                             </dd>
                         </dl>
                     </div>
                     <div class="element-metadata">
-                      <dl *ngFor="let meta of element.meta; let m = index;">
-                        <dt>{{meta.label}}:</dt>
-                        <dd>{{meta.value}}</dd>
-                      </dl>
+                        <dl *ngFor="let meta of element.meta; let m = index;">
+                            <dt>{{meta.label}}:</dt>
+                            <dd>{{meta.value}}</dd>
+                        </dl>
                     </div>
                 </div>
             </td>

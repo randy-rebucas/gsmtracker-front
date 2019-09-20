@@ -20,8 +20,8 @@ export class MessagesService {
     private http: HttpClient
     ) {}
 
-  search(filter: {name: string} = {name: ''}, page: number, userId: string): Observable<IUserResponse> {
-    const queryParams = `?userId=${userId}&page=${page}`;
+  search(filter: {name: string} = {name: ''}, page: number, licenseId: string): Observable<IUserResponse> {
+    const queryParams = `?licenseId=${licenseId}&page=${page}`;
     return this.http.get<IUserResponse>(environment.apiUrl + '/patients/network' + queryParams)
     .pipe(
       tap((response: IUserResponse) => {

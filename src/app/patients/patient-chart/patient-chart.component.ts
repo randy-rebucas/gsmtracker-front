@@ -92,7 +92,7 @@ implements OnInit, OnDestroy {
         this.isLoading = false;
         this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Chart');
 
-        // this.id = results.patientData._id;
+        this.patientId = results.patientData.userId;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
         this.lastname = results.patientData.lastname;

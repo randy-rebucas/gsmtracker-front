@@ -126,6 +126,10 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     right: 0;
     top: 0;
   }
+  .filter {
+    width: 15%;
+    margin-left: 4em;
+}
   `],
   templateUrl: './user-list.component.html',
   animations: [
@@ -142,6 +146,7 @@ implements OnInit, OnDestroy {
 
   private usersSub: Subscription;
   private usertype = 'patient';
+  oppoSuits: any = ['Doctor', 'Patient'];
 
   dataSource: MatTableDataSource<any>;
   columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
@@ -196,6 +201,18 @@ implements OnInit, OnDestroy {
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
     this.usersService.getAll(this.usertype, this.licenseId, this.perPage, this.currentPage);
+  }
+
+  changeUser(filterVal: any) {
+    console.log(filterVal.target.value.trim().toLowerCase());
+    // if (filterVal == "0")
+    //     this.forecasts = this.cacheForecasts;
+    // else
+    //     this.forecasts = this.cacheForecasts.filter((item) => item.summary == filterVal);
+    // this.isLoading = true;
+    // this.currentPage = pageData.pageIndex + 1;
+    // this.perPage = pageData.pageSize;
+    // this.usersService.getAll(this.usertype, this.licenseId, this.perPage, this.currentPage);
   }
 
   // onCreate() {
