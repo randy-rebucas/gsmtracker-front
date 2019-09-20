@@ -61,10 +61,9 @@ implements OnInit, OnDestroy {
     this.appointmentService.get(this.appointmentId)
       .subscribe(recordData => {
         this.isLoading = false;
-        this.appointmentId = recordData.appointmentId;
+        this.id = recordData.appointmentId;
         this.title = recordData.title;
         this.start = recordData.start;
-        this.end = recordData.end;
         this.status = recordData.status;
 
         this.fullname = recordData.fullname;
@@ -80,15 +79,14 @@ implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  onUpdate(detailId, status, appointmentId) {
+  onUpdate(appointmentId, status) {
     this.appointmentService.update(
-      detailId,
-      status,
-      appointmentId
+      appointmentId,
+      status
     ).subscribe(() => {
       this.onClose();
       this.notificationService.success(':: Updated successfully');
-      this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
+      this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
     });
   }
 

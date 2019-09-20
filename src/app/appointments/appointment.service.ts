@@ -68,11 +68,12 @@ export class AppointmentService {
     return this.http.post<{ message: string, record: AppointmentData }>(BACKEND_URL, appointmentData);
   }
 
-  update(detailId: string, status: number, appointmentId: string) {
+  update(appointmentId: string, status: number) {
     const detailData = {
-      detailId, status, appointmentId
+      appointmentId, status
     };
-    return this.http.put(BACKEND_URL + '/' + detailId, detailData);
+    console.log(detailData);
+    return this.http.put(BACKEND_URL + '/' + appointmentId, detailData);
   }
 
   delete(appointmentId: string) {

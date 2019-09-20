@@ -42,7 +42,7 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    console.log(this.userId);
+
     this.form = new FormGroup({
       userInput: new FormControl(null),
       title: new FormControl(null, {
@@ -66,7 +66,6 @@ implements OnInit, OnDestroy {
         )
       )
       .subscribe((users) => {
-        console.log(users);
         this.filteredUsers = users.results;
       });
 

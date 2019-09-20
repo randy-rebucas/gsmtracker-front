@@ -44,7 +44,7 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
 
-    this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
+    this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
     this.recordsSub = this.appointmentService
       .getUpdateListener()
       .subscribe((appointmentData: {appointments: AppointmentData[], count: number}) => {
@@ -67,7 +67,7 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
+    this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
   }
 
   viewEvent(eventId) {
@@ -87,7 +87,7 @@ implements OnInit, OnDestroy {
       if (res) {
         this.appointmentService.delete(appointmentId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
-          this.appointmentService.getAll(this.userId, this.perPage, this.currentPage);
+          this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
         });
       }
     });
