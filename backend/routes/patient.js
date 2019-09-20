@@ -12,15 +12,13 @@ router.post('', checkAuth, preAuth, PatientController.create);
 
 router.get('', PatientController.getAll);
 
+router.get('/search', PatientController.search);
+
 router.get('/:patientId', PatientController.get);
 
 router.put('/:patientId', checkAuth, preAuth, PatientController.update);
 
 router.delete('/:patientId', checkAuth, PatientController.delete);
 
-/**
- * to be remove
- */
-router.get('/network', PatientController.getAllNetwork);
 
 module.exports = router;

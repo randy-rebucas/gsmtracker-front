@@ -5,11 +5,10 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { AppointmentService } from '../appointment.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
-import { MessagesService } from 'src/app/messages/messages.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
-import { NetworksService } from 'src/app/networks/networks.service';
+import { PatientsService } from 'src/app/patients/patients.service';
 
 export interface User {
   id: string;
@@ -35,8 +34,7 @@ implements OnInit, OnDestroy {
     public appconfig: AppConfiguration,
 
     private appointmentService: AppointmentService,
-    private messageService: MessagesService,
-    private networksService: NetworksService,
+    private patientsService: PatientsService,
     private notificationService: NotificationService
     ) {
       super(authService, router, dialog, appconfig);
@@ -61,7 +59,7 @@ implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.networksService.search({name: value}, this.currentPage, this.userId)
+        switchMap(value => this.patientsService.search({name: value}, this.currentPage, this.licenseId)
         .pipe(
           finalize(() => this.isLoading = false),
           )

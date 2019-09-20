@@ -73,15 +73,14 @@ exports.update = async(req, res, next) => {
 /**
  * tobe transfer in network
  */
-exports.getAllNetwork = (req, res, next) => {
-    const currentPage = +req.query.page;
+exports.search = (req, res, next) => {
     const patientQuery = User.find({
         'licenseId': req.query.licenseId
     });
     patientQuery
         .populate('personId')
+        .where('userType', 'patient')
         .then(documents => {
-            console.log(documents);
             fetchedPatients = documents;
             return Patient.countDocuments();
         })

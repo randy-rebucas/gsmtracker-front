@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { PatientData } from './patient-data.model';
+
+import {User, IUserResponse} from '../users/user.class';
 
 const BACKEND_URL = environment.apiUrl + '/patients';
 
@@ -16,6 +18,19 @@ export class PatientsService {
   constructor(
     private http: HttpClient
     ) {}
+
+  search(filter: {name: string} = {name: ''}, page: number, licenseId: string): Observable<IUserResponse> {
+    const queryParams = `?licenseId=${licenseId}&page=${page}`;
+    return this.http.get<IUserResponse>(BACKEND_URL + '/search' + queryParams)
+    .pipe(
+      tap((response: IUserResponse) => {
+        response.results = response.results
+          .map(user => new User(user.id, user.name))
+          .filter(user => user.name.includes(filter.name));
+        return response;
+      })
+    );
+  }
 
   getAll(licenseId: string, patientPerPage: number, currentPage: number) {
     const queryParams = `?licenseId=${licenseId}&pagesize=${patientPerPage}&page=${currentPage}`;
