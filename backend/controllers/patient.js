@@ -49,7 +49,6 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
     try {
-
         const newUser = new User({
             _id: req.body.id
         });
@@ -70,40 +69,28 @@ exports.update = async(req, res, next) => {
         });
     }
 };
-/**
- * tobe transfer in network
- */
-exports.search = (req, res, next) => {
-    const patientQuery = User.find({
-        'licenseId': req.query.licenseId
+
+exports.search = async (req, res, next) => {
+  try {
+    const patientQuery = User.find({'licenseId': req.query.licenseId});
+    let patient = await patientQuery.populate('personId').where('userType', 'patient');
+    const result = [];
+    patient.forEach(element => {
+        let fullname = element.personId.firstname + ', ' + element.personId.lastname;
+        result.push({ id: element.personId._id, name: fullname });
     });
-    patientQuery
-        .populate('personId')
-        .where('userType', 'patient')
-        .then(documents => {
-            fetchedPatients = documents;
-            return Patient.countDocuments();
-        })
-        .then(
-            count => {
-                const result = [];
-                fetchedPatients.forEach(element => {
-                    let fullname = element.personId.firstname + ', ' + element.personId.lastname;
-                    result.push({ id: element.personId._id, name: fullname });
-                });
-                res.status(200).json({
-                    total: count,
-                    results: result
-                });
-            }
-        )
-        .catch(
-            error => {
-                res.status(500).json({
-                    message: error.message
-                });
-            }
-        );
+
+    let count = await Patient.countDocuments({'licenseId': req.query.licenseId});
+
+    res.status(200).json({
+      total: count,
+      results: result
+    });
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 }
 
 exports.getAll = async(req, res, next) => {

@@ -20,19 +20,6 @@ export class MessagesService {
     private http: HttpClient
     ) {}
 
-  search(filter: {name: string} = {name: ''}, page: number, licenseId: string): Observable<IUserResponse> {
-    const queryParams = `?licenseId=${licenseId}&page=${page}`;
-    return this.http.get<IUserResponse>(environment.apiUrl + '/patients/network' + queryParams)
-    .pipe(
-      tap((response: IUserResponse) => {
-        response.results = response.results
-          .map(user => new User(user.id, user.name))
-          .filter(user => user.name.includes(filter.name));
-        return response;
-      })
-    );
-  }
-
   getAll(threadId: string) {
     const queryParams = `?threadId=${threadId}`;
     this.http.get<{message: string, messages: any }>(
@@ -57,6 +44,13 @@ export class MessagesService {
         messages: [...this.messages]
       });
     });
+  }
+
+  getMessages(threadId: string) {
+    const queryParams = `?threadId=${threadId}`;
+    return this.http.get<{message: string, messages: any }>(
+      BACKEND_URL + queryParams
+    );
   }
 
   getUpdateListener() {

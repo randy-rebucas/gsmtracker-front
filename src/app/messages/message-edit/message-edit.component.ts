@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { PatientsService } from 'src/app/patients/patients.service';
 export interface User {
   id: string;
   name: string;
@@ -36,6 +37,7 @@ implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private messageService: MessagesService,
     private threadService: ThreadsService,
+    private patientsService: PatientsService,
     private notificationService: NotificationService,
     ) {
       super(authService, router, dialog, appconfig);
@@ -54,10 +56,10 @@ implements OnInit, OnDestroy {
       .valueChanges
       .pipe(
         debounceTime(300),
-        tap(() => this.loading = true),
-        switchMap(value => this.messageService.search({name: value}, this.currentPage, this.userId)
+        tap(() => this.isLoading = true),
+        switchMap(value => this.patientsService.search({name: value}, this.currentPage, this.licenseId)
         .pipe(
-          finalize(() => this.loading = false),
+          finalize(() => this.isLoading = false),
           )
         )
       )

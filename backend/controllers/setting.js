@@ -1,6 +1,7 @@
 const Setting = require('../models/setting');
 
-exports.create = (req, res, next) => {
+exports.create = async (req, res, next) => {
+  try {
     const setting = new Setting({
         licenseId: req.body.licenseId,
         clinicName: req.body.name,
@@ -20,24 +21,27 @@ exports.create = (req, res, next) => {
     for (let index = 0; index < hourData.length; index++) {
         setting.clinicHours.push(hourData[index]);
     }
-    setting.save().then(createdSetting => {
-            res.status(201).json({
-                message: 'Setting added successfully',
-                setting: {
-                    ...createdSetting,
-                    id: createdSetting._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: 'Creating a setting failed!'
-            });
-        });
+    let settings = await setting.save();
+    if (!settings) {
+      throw new Error('Something went wrong.Cannot create settings!');
+    }
+
+    res.status(201).json({
+        message: 'Setting added successfully',
+        setting: {
+            ...settings,
+            id: settings._id,
+        }
+    });
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
 
-exports.update = (req, res, next) => {
-  console.log(req.params);
+exports.update = async(req, res, next) => {
+  try {
     const setting = new Setting({
         _id: req.body.id,
         clinicName: req.body.name,
@@ -57,37 +61,29 @@ exports.update = (req, res, next) => {
     for (let index = 0; index < hourData.length; index++) {
         setting.clinicHours.push(hourData[index]);
     }
-    Setting.updateOne({ licenseId: req.params.licenseId },
-            setting
-        )
-        .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Settings update successful!' });
-            } else {
-                res.status(401).json({ message: 'Not authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: 'Unable to update settings!'
-            });
-        });
+    let settings = await Setting.updateOne({ licenseId: req.params.licenseId }, setting).exec();
+    if (!settings) {
+      throw new Error('Something went wrong.Cannot update settings!');
+    }
+
+    res.status(200).json({ message: 'Settings update successful!' });
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-    Setting.findOne({ 'licenseId': req.params.licenseId })
-        .exec()
-        .then(setting => {
-            if (setting) {
-                res.status(200).json(setting);
-            } else {
-                res.status(404).json({ message: 'setting not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.get = async(req, res, next) => {
+  try {
+    let setting = await Setting.findOne({ 'licenseId': req.params.licenseId }).exec();
+
+    res.status(200).json(setting);
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };

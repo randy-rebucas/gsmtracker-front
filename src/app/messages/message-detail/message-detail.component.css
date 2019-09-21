@@ -26,9 +26,12 @@ h4.mat-line small:before {
   flex-wrap: wrap !important;
 }
 div#reply-area {
-  height: 480px;
+  height: 570px;
   overflow-y: auto;
 }
 mat-list {
-  min-height: 258px;
+  min-height: 348px;
+}
+.mat-card-subtitle {
+  margin-bottom: unset;
 }

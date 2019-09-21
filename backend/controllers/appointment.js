@@ -64,7 +64,6 @@ exports.getAll = async(req, res, next) => {
         let appointments = await query.populate('patientId').exec();
         newAppointments = [];
         appointments.forEach(element => {
-            //create object
             var myObj = {
                 _id: element._id,
                 title: element.title,
@@ -76,11 +75,10 @@ exports.getAll = async(req, res, next) => {
                 fullname: element.patientId.firstname + ' ' + element.patientId.midlename + ', ' + element.patientId.lastname,
                 status: element.status
             };
-            //   //push the object to your array
             newAppointments.push(myObj);
         });
 
-        let count = await Appointment.countDocuments();
+        let count = await Appointment.countDocuments({ 'licenseId': req.query.licenseId });
 
         res.status(200).json({
             message: 'Fetched successfully!',

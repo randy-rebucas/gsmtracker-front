@@ -20,8 +20,6 @@ exports.create = async(req, res, next) => {
         res.status(500).json({
             message: e.message
         });
-        // this will eventually be handled by your error handling middleware
-        // next(e)
     }
 };
 
@@ -62,7 +60,7 @@ exports.getMyNetwork = async(req, res, next) => {
                     select: 'firstname midlename lastname' // space separated (selected fields only)
                 }
             }).exec();
-        console.log(network);
+
         const result = [];
         network.forEach(element => {
             let fullname = element.personId.firstname + ', ' + element.personId.lastname;
@@ -84,14 +82,13 @@ exports.getMyNetwork = async(req, res, next) => {
 }
 
 exports.getAll = async(req, res, next) => {
-
-    const networkQuery = Network.find({ 'requesteeId': req.query.requesteeId }); //
+  try {
+    let networkQuery = await Network.find({ 'requesteeId': req.query.requesteeId }); //
     if (pageSize && currentPage) {
         networkQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
     let network = await networkQuery.populate('requesteeId').exec();
 
-    console.log(network);
     const result = [];
     network.forEach(element => {
         let fullname = element.personId.firstname + ', ' + element.personId.lastname;
@@ -104,43 +101,44 @@ exports.getAll = async(req, res, next) => {
         total: count,
         results: result
     });
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-    Network.findById(req.params.networkId)
-        .populate('requesterId', 'firstname midlename lastname')
-        .exec()
-        .then(network => {
-            if (network) {
-                res.status(200).json({
-                    _id: network._id,
-                    status: network.status,
-                    fullname: network.requesterId.firstname + ' ' + network.requesterId.midlename + ', ' + network.requesterId.lastname,
-                    requesterId: network.requesterId._id
-                });
-            } else {
-                res.status(404).json({ message: 'thread not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.get = async(req, res, next) => {
+  try {
+    let network = await Network.findById(req.params.networkId).populate('requesterId', 'firstname midlename lastname').exec();
+    if (!network) {
+      throw new Error('Something went wrong.!');
+    }
+    res.status(200).json({
+        _id: network._id,
+        status: network.status,
+        fullname: network.requesterId.firstname + ' ' + network.requesterId.midlename + ', ' + network.requesterId.lastname,
+        requesterId: network.requesterId._id
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.delete = (req, res, next) => {
-    Network.deleteOne({ _id: req.params.networkId })
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Deletion successfull!' });
-            } else {
-                res.status(401).json({ message: 'Not Authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.delete = async(req, res, next) => {
+  try {
+    await Network.deleteOne({ _id: req.params.networkId });
+
+    res.status(200).json({
+      message: 'Deletion successfull!'
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };

@@ -1,4 +1,4 @@
-<mat-card class="example-card" style="min-height: 139px;" (click)="onProfile(personId)">
+<mat-card class="example-card" style="min-height: 46px;" (click)="onProfile(personId)">
   <div *ngIf="isLoading" class="loading">
       <mat-spinner [diameter]="25"></mat-spinner>
   </div>
@@ -9,14 +9,6 @@
     <mat-card-title>{{fullname}}</mat-card-title>
     <mat-card-subtitle>Created : {{created}}</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content *ngIf="!isLoading">
-    <dl class="recepient-detail">
-        <dt>Gender</dt> <dd>: {{gender}}</dd>
-        <dt>Birthdate</dt> <dd>: {{birthdate | date}}</dd>
-        <dt>Contact</dt> <dd>: {{contact}}</dd>
-        <dt>Address</dt> <dd>: {{address}}</dd>
-    </dl>
-  </mat-card-content>
 </mat-card>
 <div id="reply-area" style="min-height: 480px;">
   <div *ngIf="isLoading" class="loading">

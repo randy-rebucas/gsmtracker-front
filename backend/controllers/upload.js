@@ -2,210 +2,203 @@ const IncomingForm = require('formidable').IncomingForm
 const Upload = require('../models/upload');
 const moment = require('moment');
 
-exports.getAll = (req, res, next) => {
-  const pageSize = +req.query.pagesize;
-  const currentPage = +req.query.page;
-  const fileQuery = Upload.find({ 'patientId': req.query.patientId });
+exports.getAll = async (req, res, next) => {
+  try {
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const fileQuery = Upload.find({ 'patientId': req.query.patientId });
 
-  let fetchedRecord;
-  if (pageSize && currentPage) {
-    fileQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+    if (pageSize && currentPage) {
+      fileQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+    }
+    let file = await fileQuery.populate('complaintId');
+    if (!file) {
+      throw new Error('Something went wrong.Cannot fetch all files!');
+    }
+    newFiles = [];
+    file.forEach(element => {
+      var obj = {
+        _id: element._id,
+        created: element.created,
+        path: element.path,
+        type: element.type,
+        name: element.name,
+        complaints: element.complaintId.complaints,
+        patientId: element.patientId,
+      }
+      newFiles.push(obj);
+    });
+
+    let count = await Upload.countDocuments({ 'patientId': req.query.patientId });
+
+    res.status(200).json({
+      message: 'Fetched successfully!',
+      files: newFiles,
+      max: count
+    });
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
   }
-  fileQuery
-  .populate('complaintId')
-      .then(documents => {
-        newDocuments = [];
-            documents.forEach(element => {
-              var obj = {
-                _id: element._id,
-                created: element.created,
-                path: element.path,
-                type: element.type,
-                name: element.name,
-                complaints: element.complaintId.complaints,
-                patientId: element.patientId,
-              }
-              newDocuments.push(obj);
-            });
-          fetchedRecord = newDocuments;
-          return Upload.countDocuments();
-      })
-      .then(count => {
-          res.status(200).json({
-              message: 'Fetched successfully!',
-              files: fetchedRecord,
-              max: count
-          });
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
 };
 
-exports.update = (req, res, next) => {
-  const file = new Upload({
-      _id: req.body.fileId,
-      name: req.body.name
-  });
-  Upload.updateOne({ _id: req.params.uploadId }, //pass doctor role for restriction
-          file
-      )
-      .exec()
-      .then(result => {
-          if (result.n > 0) {
-              res.status(200).json({ message: 'Update successful!' });
-          } else {
-              res.status(401).json({ message: 'Not authorized!' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+exports.update = async(req, res, next) => {
+  try {
+    const newFile = new Upload({
+        _id: req.body.fileId,
+        name: req.body.name
+    });
+    let file = await Upload.updateOne({ _id: req.params.uploadId }, newFile).exec();
+    if (!file) {
+      throw new Error('Something went wrong.Cannot update the file!');
+    }
+
+    res.status(200).json({ message: 'Update successful!' });
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-  Upload.findById(req.params.uploadId).then(file => {
-          if (file) {
-              res.status(200).json(file);
-          } else {
-              res.status(404).json({ message: 'file not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+exports.get = async(req, res, next) => {
+  try {
+    let file = await Upload.findById(req.params.uploadId);
+    if (!file) {
+      throw new Error('Something went wrong.Cannot find file id: '+req.params.uploadId);
+    }
+
+    res.status(200).json(file);
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
 
-exports.getCurrent = (req, res, next) => {
-  const today = moment().startOf('day');
+exports.getCurrent = async(req, res, next) => {
+  try {
+    const today = moment().startOf('day');
 
-  Upload.find({
+    let file = await Upload.find({
           created: {
               $gte: today.toDate(),
               $lte: moment(today).endOf('day').toDate()
           }
-      })
-      .then(file => {
-          if (file) {
-              res.status(200).json(file);
-          } else {
-              res.status(404).json({ message: 'file not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
       });
+    if (!file) {
+      throw new Error('Something went wrong. No file found!');
+    }
+
+    res.status(200).json(file);
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
 
-exports.getLast = (req, res, next) => {
-  Upload.find({ 'patientId': req.params.patientId })
-      .limit(1)
-      .sort({ 'created': 'desc' })
-      .exec()
-      .then(file => {
-          if (file) {
-              res.status(200).json(file);
-          } else {
-              res.status(404).json({ message: 'file not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+exports.getLast = async (req, res, next) => {
+  try {
+    let file = await Upload.find({ 'patientId': req.params.patientId }).limit(1).sort({ 'created': 'desc' }).exec();
+
+    if (!file) {
+      throw new Error('Something went wrong. No file found!');
+    }
+    res.status(200).json(file);
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
 
 /**
  * @param complaintId
  * @since v1
  */
-exports.getByComplaint = (req, res, next) => {
-  Upload.find({
-        complaintId: req.params.complaintId
-      })
-      .exec()
-      .then(file => {
-          if (file) {
-              res.status(200).json(file);
-          } else {
-              res.status(404).json({ message: 'file not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
-};
+exports.getByComplaint = async(req, res, next) => {
+  try {
+    let file = await Upload.find({complaintId: req.params.complaintId}).exec();
 
-exports.upload = (req, res, next) => {
-  var form = new IncomingForm();
-  form.uploadDir = 'attachments';
-  form.keepExtensions = true;
-  form.type = 'multipart';
-  form.maxFieldsSize = 20 * 1024 * 1024; //10mb
-  form.maxFileSize = 200 * 1024 * 1024;
-  form.hash = true;
-  form.multiples = false;
-  form.on('field', function(name, value) {
-    // console.log(name + ': ' + value);
-  });
+    if (!file) {
+      throw new Error('Something went wrong. No file found!');
+    }
 
-  form.on('file', (name, file) => {
-    // Do something with the file
-    // e.g. save it to the database
-    // you can access it using file.path
-  });
+    res.status(200).json(file);
 
-  form.on('error', (err) => {
-    console.log(err);
-  });
-
-  form.on('end', () => {
-    res.json()
-  });
-
-  form.parse(req, function(err, fields, files) {
-    // console.log(req.body);
-    // console.log(fields.patient);
-    // console.log(files.file.path);
-    const url = req.protocol + '://' + req.get('host');
-    const upload = new Upload({
-      path: url + '/' + files.file.path,
-      name: files.file.name,
-      type: files.file.type,
-      patientId: fields.patientId,
-      clientId: fields.clientId,
-      complaintId: fields.complaintId
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
     });
-    upload.save();
+  }
+};
 
-  });
+exports.upload = async (req, res, next) => {
+  try {
+    var form = new IncomingForm();
+    form.uploadDir = 'attachments';
+    form.keepExtensions = true;
+    form.type = 'multipart';
+    form.maxFieldsSize = 20 * 1024 * 1024; //10mb
+    form.maxFileSize = 200 * 1024 * 1024;
+    form.hash = true;
+    form.multiples = false;
+    // form.on('field', function(name, value) {
+    //   // console.log(name + ': ' + value);
+    // });
+
+    // form.on('file', (name, file) => {
+
+    // });
+
+    form.on('error', (err) => {
+      console.log(err);
+    });
+
+    form.on('end', () => {
+      res.json()
+    });
+
+    form.parse(req, function(err, fields, files) {
+      const url = req.protocol + '://' + req.get('host');
+      const upload = new Upload({
+        path: url + '/' + files.file.path,
+        name: files.file.name,
+        type: files.file.type,
+        patientId: fields.patientId,
+        clientId: fields.clientId,
+        complaintId: fields.complaintId
+      });
+      upload.save();
+
+    });
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
 
 
-exports.delete = (req, res, next) => {
-  Upload.deleteOne({ _id: req.params.uploadId }) //pass doctors role for restriction
-  .exec()
-      .then(result => {
-          if (result.n > 0) {
-              res.status(200).json({ message: 'Deletion successfull!' });
-          } else {
-              res.status(401).json({ message: 'Not Authorized!' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+exports.delete = async(req, res, next) => {
+  try {
+    let file = await Upload.deleteOne({ _id: req.params.uploadId }).exec();
+    if (!file) {
+      throw new Error('Something went wrong. Cannot delete this file!');
+    }
+
+    res.status(200).json({ message: 'Deletion successfull!' });
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
 };
