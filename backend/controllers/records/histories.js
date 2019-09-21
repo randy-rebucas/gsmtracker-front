@@ -34,7 +34,7 @@ exports.update = async(req, res, next) => {
         _id: req.body.historyId,
         type: req.body.type,
         description: req.body.description,
-        created: req.body.created_date,
+        created: req.body.created,
         patientId: req.body.patientId
     });
     let history = await Histories.updateOne({ _id: req.params.historyId }, newHistory).exec();

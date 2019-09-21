@@ -35,7 +35,7 @@ exports.update = async (req, res, next) => {
         _id: req.body.bloodPressureId,
         systolic: req.body.systolic,
         diastolic: req.body.diastolic,
-        created: req.body.created_date,
+        created: req.body.created,
         patientId: req.body.patientId
     });
     let bp = await BloodPressure.updateOne({ _id: req.params.bloodPressureId }, newBp).exec();

@@ -169,7 +169,7 @@ exports.getLast = async(req, res, next) => {
  */
 exports.getByComplaint = async(req, res, next) => {
   try {
-    let assessment = Assessment.find({complaintId: req.params.complaintId}).exec();
+    let assessment = await Assessment.find({complaintId: req.params.complaintId}).exec();
     if (!assessment) {
       throw new Error('Something went wrong. No assessment found!');
     }

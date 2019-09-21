@@ -16,8 +16,8 @@ exports.create = async(req, res, next) => {
     res.status(201).json({
         message: 'Successfully added',
         temperature: {
-            ...createdRecord,
-            id: createdRecord._id,
+            ...temperature,
+            id: temperature._id,
         }
     });
 
@@ -33,7 +33,7 @@ exports.update = async(req, res, next) => {
     const newTemperature = new Temperature({
         _id: req.body.temperatureId,
         temperature: req.body.temperature,
-        created: req.body.created_date,
+        created: req.body.created,
         patientId: req.body.patienId
     });
     let temperature = await Temperature.updateOne({ _id: req.params.temperatureId }, newTemperature).exec();

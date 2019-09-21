@@ -32,7 +32,7 @@ exports.update = async(req, res, next) => {
     const newHeight = new Height({
         _id: req.body.heightId,
         height: req.body.height,
-        created: req.body.created_date,
+        created: req.body.created,
         patientId: req.body.patientId
     });
     let height = await Height.updateOne({ _id: req.params.heightId }, newHeight).exec();

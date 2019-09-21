@@ -33,7 +33,7 @@ exports.update = async(req, res, next) => {
     const newWeight = new Weight({
         _id: req.body.weightId,
         weight: req.body.weight,
-        created: req.body.created_date,
+        created: req.body.created,
         patientId: req.body.patientId
     });
     let weight = await Weight.updateOne({ _id: req.params.weightId }, newWeight).exec();

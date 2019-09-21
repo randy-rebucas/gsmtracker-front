@@ -54,9 +54,19 @@
                     <th>Gender: </th>
                     <th>{{gender}}</th>
                 </tr>
-                <tr>
+                <tr class="address">
                     <th>Address:</th>
-                    <th colspan="3"> {{address}}</th>
+                    <th colspan="3">
+                        <ng-container *ngFor="let address of addresses; let i = index;">
+                          <ng-container *ngIf="address.current">
+                              {{address.address1}}<br/>
+                              <ng-container *ngIf="address.address2">
+                                  {{address.address2}} <br/>
+                              </ng-container>
+                              {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
+                          </ng-container>
+                        </ng-container>
+                    </th>
                 </tr>
             </thead>
             <tbody>

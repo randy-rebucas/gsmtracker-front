@@ -33,7 +33,7 @@ exports.update = async(req, res, next) => {
     const newPespiratoryRate = new RespiratoryRate({
         _id: req.body.respiratoryRateId,
         respiratoryrate: req.body.respiratoryrate,
-        created: req.body.created_date,
+        created: req.body.created,
         patientId: req.body.patientId
     });
     let respiratoryRate = await RespiratoryRate.updateOne({ _id: req.params.respiratoryRateId }, newPespiratoryRate).exec();

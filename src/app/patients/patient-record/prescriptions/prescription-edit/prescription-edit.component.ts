@@ -83,6 +83,7 @@ implements OnInit, OnDestroy {
         } else {
           this.mode = 'create';
           this.recordId = null;
+          this.isLoading = false;
         }
   }
 

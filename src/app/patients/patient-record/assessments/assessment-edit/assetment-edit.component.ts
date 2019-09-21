@@ -57,7 +57,6 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-
     this.form = this.fb.group({
       record_date: [new Date(), [Validators.required]],
         diagnosis: this.fb.array([this.addDiagnosisGroup()]),
@@ -87,6 +86,7 @@ implements OnInit, OnDestroy {
         } else {
           this.mode = 'create';
           this.recordId = null;
+          this.isLoading = false;
         }
   }
 
@@ -142,15 +142,9 @@ implements OnInit, OnDestroy {
         this.form.value.diagnosis,
         this.form.value.treatments
       ).subscribe(() => {
-        this.complaintService.getLatest().subscribe(
-          recordData => {
-            this.complaintId = null;
-            if (Object.keys(recordData).length) {
-              this.complaintId = recordData[0]._id;
-              this.assessmentService.getAll(this.perPage, this.currentPage, recordData[0]._id);
-            }
-          }
-        );
+
+        this.assessmentService.getAll(this.perPage, this.currentPage, this.patientId);
+
         this.onClose();
         this.notificationService.success(':: Added successfully');
       });

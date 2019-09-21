@@ -33,7 +33,7 @@ exports.update = async(req, res, next) => {
     const newNote = new Note({
         _id: req.body.progressNoteId,
         note: req.body.note,
-        created: req.body.created_date,
+        created: req.body.created,
         complaintId: req.body.complaintId,
         patientId: req.body.patientId
     });
