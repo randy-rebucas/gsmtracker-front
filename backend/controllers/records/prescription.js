@@ -1,9 +1,9 @@
 const Prescription = require('../../models/records/prescription');
 const moment = require('moment');
 
-exports.create = (req, res, next) => {
-
-    const prescription = new Prescription({
+exports.create = async(req, res, next) => {
+  try{
+    const newPrescription = new Prescription({
       created: req.body.created,
       complaintId: req.body.complaintId,
       patientId: req.body.patientId
@@ -11,27 +11,31 @@ exports.create = (req, res, next) => {
 
     prescriptionData = req.body.prescriptions;
     for (let index = 0; index < prescriptionData.length; index++) {
-      prescription.prescriptions.push(prescriptionData[index]);
+      newPrescription.prescriptions.push(prescriptionData[index]);
     }
 
-    prescription.save().then(createdRecord => {
-            res.status(201).json({
-                message: 'Successfully added',
-                prescription: {
-                    ...createdRecord,
-                    id: createdRecord._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let prescription = await newPrescription.save();
+    if (!prescription) {
+      throw new Error('Something went wrong. Cannot create prescription!');
+    }
+    res.status(201).json({
+        message: 'Successfully added',
+        prescription: {
+            ...prescription,
+            id: prescription._id,
+        }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.update = (req, res, next) => {
-    const prescription = new Prescription({
+exports.update = async(req, res, next) => {
+  try{
+    const newPrescription = new Prescription({
       _id: req.body.prescriptionId,
       created: req.body.created,
       complaintId: req.body.complaintId,
@@ -39,167 +43,137 @@ exports.update = (req, res, next) => {
     });
     prescriptionData = req.body.prescriptions;
     for (let index = 0; index < prescriptionData.length; index++) {
-      prescription.prescriptions.push(prescriptionData[index]);
+      newPrescription.prescriptions.push(prescriptionData[index]);
     }
 
-    Prescription.updateOne(
-      { _id: req.params.prescriptionId }, //pass doctor role for restriction
-      prescription
-        )
-        .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Update successful!' });
-            } else {
-                res.status(401).json({ message: 'Not authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let prescription = await Prescription.updateOne({ _id: req.params.prescriptionId }, newPrescription).exec();
+    if (!prescription) {
+      throw new Error('Something went wrong. Cannot update prescription!');
+    }
+
+    res.status(200).json({ message: 'Update successful!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getAll = (req, res, next) => {
+exports.getAll = async(req, res, next) => {
+  try{
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
     const prescriptionQuery = Prescription.find({ 'patientId': req.query.patientId }).sort({'created': 'desc'});
 
-    let fetchedRecord;
     if (pageSize && currentPage) {
       prescriptionQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    prescriptionQuery
-    .populate('complaintId')
-    .exec()
-        .then(documents => {
-            newDocuments = [];
-            documents.forEach(element => {
-              var obj = {
-                _id: element._id,
-                created: element.created,
-                complaints: element.complaintId.complaints,
-                patientId: element.patientId,
-                prescriptions: element.prescriptions
-              }
-              newDocuments.push(obj);
-            });
-            fetchedRecord = newDocuments;
-            return Prescription.countDocuments();
-        })
-        .then(count => {
-            res.status(200).json({
-                message: 'Fetched successfully!',
-                prescriptions: fetchedRecord,
-                max: count
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let prescription = await prescriptionQuery.populate('complaintId').exec();
+    newPrescription = [];
+    prescription.forEach(element => {
+      var obj = {
+        _id: element._id,
+        created: element.created,
+        complaints: element.complaintId.complaints,
+        patientId: element.patientId,
+        prescriptions: element.prescriptions
+      }
+      newPrescription.push(obj);
+    });
+
+    let count = await Prescription.countDocuments({ 'patientId': req.query.patientId });
+
+    res.status(200).json({
+        message: 'Fetched successfully!',
+        prescriptions: newPrescription,
+        max: count
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-  Prescription.findById(req.params.prescriptionId)
-  .exec()
-  .then(prescription => {
-            if (prescription) {
-                res.status(200).json(prescription);
-            } else {
-                res.status(404).json({ message: 'prescription not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.get = async(req, res, next) => {
+  try{
+    let prescription = await Prescription.findById(req.params.prescriptionId).exec();
+    if (!prescription) {
+      throw new Error('Something went wrong. Cannot be found prescription id: '+req.params.prescriptionId);
+    }
+    res.status(200).json(prescription);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getCurrent = (req, res, next) => {
-  const today = moment().startOf('day');
+exports.getCurrent = async(req, res, next) => {
+  try {
+    const today = moment().startOf('day');
 
-  Prescription.find({
+    let prescription = await Prescription.find({
           created: {
               $gte: today.toDate(),
               $lte: moment(today).endOf('day').toDate()
           }
-      })
-      .exec()
-      .then(prescription => {
-          if (prescription) {
-              res.status(200).json(prescription);
-          } else {
-              res.status(404).json({ message: 'prescription not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+      }).exec();
+
+    res.status(200).json(prescription);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getLast = (req, res, next) => {
-  Prescription.find({
-    patientId: req.params.patientId
-      })
+exports.getLast = async(req, res, next) => {
+  try{
+    let prescription = await Prescription.find({patientId: req.params.patientId})
       .limit(1)
       .sort({ 'created': 'desc' })
-      .exec()
-      .then(prescription => {
-          if (prescription) {
-              res.status(200).json(prescription);
-          } else {
-              res.status(404).json({ message: 'prescription not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+      .exec();
+
+    res.status(200).json(prescription);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 /**
  * @param complaintId
  * @since v1
  */
-exports.getByComplaint = (req, res, next) => {
-  Prescription.find({
-          complaintId: req.params.complaintId
-        })
-        .exec()
-        .then(prescription => {
-            if (prescription) {
-                res.status(200).json(prescription);
-            } else {
-                res.status(404).json({ message: 'prescription not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.getByComplaint = async(req, res, next) => {
+  try{
+    let prescription = await Prescription.find({complaintId: req.params.complaintId}).exec();
+
+    res.status(200).json(prescription);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.delete = (req, res, next) => {
-  Prescription.deleteOne({ _id: req.params.prescriptionId }) //pass doctors role for restriction
-  .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Deletion successfull!' });
-            } else {
-                res.status(401).json({ message: 'Not Authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.delete = async(req, res, next) => {
+  try{
+    await Prescription.deleteOne({ _id: req.params.prescriptionId }).exec();
+
+    res.status(200).json({ message: 'Deletion successfull!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 

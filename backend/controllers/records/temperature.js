@@ -1,103 +1,101 @@
 const Temperature = require('../../models/records/temperature');
 const moment = require('moment');
 
-exports.create = (req, res, next) => {
-    const temperature = new Temperature({
+exports.create = async(req, res, next) => {
+  try{
+    const newTemperature = new Temperature({
         temperature: req.body.temperature,
         created: req.body.created,
         patientId: req.body.patientId
     });
-    temperature.save().then(createdRecord => {
-            res.status(201).json({
-                message: 'Successfully added',
-                temperature: {
-                    ...createdRecord,
-                    id: createdRecord._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let temperature = await newTemperature.save();
+    if (!temperature) {
+      throw new Error('Something went wrong. Cannot create temperature!');
+    }
+
+    res.status(201).json({
+        message: 'Successfully added',
+        temperature: {
+            ...createdRecord,
+            id: createdRecord._id,
+        }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.update = (req, res, next) => {
-    const temperature = new Temperature({
+exports.update = async(req, res, next) => {
+  try{
+    const newTemperature = new Temperature({
         _id: req.body.temperatureId,
         temperature: req.body.temperature,
         created: req.body.created_date,
         patientId: req.body.patienId
     });
-    Temperature.updateOne({ _id: req.params.temperatureId }, //pass doctor role for restriction
-            temperature
-        )
-        .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Update successful!' });
-            } else {
-                res.status(401).json({ message: 'Not authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let temperature = await Temperature.updateOne({ _id: req.params.temperatureId }, newTemperature).exec();
+    if (!temperature) {
+      throw new Error('Something went wrong. Cannot update temperature!');
+    }
+
+    res.status(200).json({ message: 'Update successful!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getAll = (req, res, next) => {
+exports.getAll = async(req, res, next) => {
+  try{
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
     const temperatureQuery = Temperature.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
-    let fetchedRecord;
     if (pageSize && currentPage) {
         temperatureQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    temperatureQuery
-    .exec()
-        .then(documents => {
-            fetchedRecord = documents;
-            return Temperature.countDocuments();
-        })
-        .then(count => {
-            res.status(200).json({
-                message: 'Fetched successfully!',
-                temperatures: fetchedRecord,
-                max: count
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let temperature = await temperatureQuery.exec();
+
+    let count = await Temperature.countDocuments({ 'patientId': req.query.patientId });
+
+    res.status(200).json({
+        message: 'Fetched successfully!',
+        temperatures: temperature,
+        max: count
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-    Temperature.findById(req.params.temperatureId)
-    .exec()
-    .then(temperature => {
-            if (temperature) {
-                res.status(200).json(temperature);
-            } else {
-                res.status(404).json({ message: 'temperature not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.get = async(req, res, next) => {
+  try{
+    let temperature = await Temperature.findById(req.params.temperatureId).exec();
+    if (!temperature) {
+      throw new Error('Something went wrong. Cannot be found temperature id: '+req.params.temperatureId);
+    }
+    res.status(200).json(temperature);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getCurrent = (req, res, next) => {
+exports.getCurrent = async(req, res, next) => {
+  try{
     const today = moment().startOf('day');
     // 'patient': req.params.patientId
-    Temperature.find({
+    let temperature = await Temperature.find({
       patientId: req.params.patientId,
             created: {
                 $gte: today.toDate(),
@@ -105,52 +103,41 @@ exports.getCurrent = (req, res, next) => {
             }
         })
         .exec()
-        .then(temperature => {
-            if (temperature) {
-                res.status(200).json(temperature);
-            } else {
-                res.status(404).json({ message: 'temperature not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+
+    res.status(200).json(temperature);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getLast = (req, res, next) => {
-  Temperature.find({ 'patientId': req.params.patientId })
+exports.getLast = async(req, res, next) => {
+  try{
+    let temperature = await Temperature.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
-      .exec()
-      .then(temperature => {
-          if (temperature) {
-              res.status(200).json(temperature);
-          } else {
-              res.status(404).json({ message: 'temperature not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+      .exec();
+
+    res.status(200).json(temperature);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.delete = (req, res, next) => {
-    Temperature.deleteOne({ _id: req.params.temperatureId }) //pass doctors role for restriction
-    .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Deletion successfull!' });
-            } else {
-                res.status(401).json({ message: 'Not Authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.delete = async(req, res, next) => {
+  try{
+    await Temperature.deleteOne({ _id: req.params.temperatureId }).exec();
+
+    res.status(200).json({ message: 'Deletion successfull!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };

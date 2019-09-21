@@ -1,156 +1,143 @@
 const Weight = require('../../models/records/weight');
 const moment = require('moment');
 
-exports.create = (req, res, next) => {
-    const weight = new Weight({
+exports.create = async(req, res, next) => {
+  try{
+    const newWeight = new Weight({
         weight: req.body.weight,
         created: req.body.created,
         patientId: req.body.patientId
     });
-    weight.save().then(createdRecord => {
-            res.status(201).json({
-                message: 'Successfully added',
-                weight: {
-                    ...createdRecord,
-                    id: createdRecord._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let weight = await newWeight.save();
+    if (!weight) {
+      throw new Error('Something went wrong. Cannot create weight!');
+    }
+
+    res.status(201).json({
+        message: 'Successfully added',
+        weight: {
+            ...weight,
+            id: weight._id,
+        }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.update = (req, res, next) => {
-    const weight = new Weight({
+exports.update = async(req, res, next) => {
+  try{
+    const newWeight = new Weight({
         _id: req.body.weightId,
         weight: req.body.weight,
         created: req.body.created_date,
         patientId: req.body.patientId
     });
-    Weight.updateOne({ _id: req.params.weightId }, //pass doctor role for restriction
-            weight
-        )
-        .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Update successful!' });
-            } else {
-                res.status(401).json({ message: 'Not authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let weight = await Weight.updateOne({ _id: req.params.weightId }, newWeight).exec();
+    if (!weight) {
+      throw new Error('Something went wrong. Cannot update weight!');
+    }
+
+    res.status(200).json({ message: 'Update successful!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getAll = (req, res, next) => {
+exports.getAll = async(req, res, next) => {
+  try{
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
     const weightQuery = Weight.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
-    let fetchedRecord;
     if (pageSize && currentPage) {
         weightQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    weightQuery
-      .exec()
-        .then(documents => {
-            fetchedRecord = documents;
-            return Weight.countDocuments();
-        })
-        .then(count => {
-            res.status(200).json({
-                message: 'Fetched successfully!',
-                weights: fetchedRecord,
-                max: count
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let weight = await weightQuery.exec();
+
+    let count = await Weight.countDocuments({ 'patientId': req.query.patientId });
+
+    res.status(200).json({
+        message: 'Fetched successfully!',
+        weights: weight,
+        max: count
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-    Weight.findById(req.params.weightId)
-    .exec()
-    .then(weight => {
-            if (weight) {
-                res.status(200).json(weight);
-            } else {
-                res.status(404).json({ message: 'weight not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.get = async(req, res, next) => {
+  try{
+    let weight = await Weight.findById(req.params.weightId).exec()
+    if (!weight) {
+      throw new Error('Something went wrong. Cannot be found weight id: '+req.params.weightId);
+    }
+    res.status(200).json(weight);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getCurrent = (req, res, next) => {
+exports.getCurrent = async(req, res, next) => {
+  try{
     const today = moment().startOf('day');
 
-    Weight.find({
+    let weight = await Weight.find({
       patient: req.params.patientId,
             created: {
                 $gte: today.toDate(),
                 $lte: moment(today).endOf('day').toDate()
             }
         })
-        .exec()
-        .then(weight => {
-            if (weight) {
-                res.status(200).json(weight);
-            } else {
-                res.status(404).json({ message: 'weight not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+        .exec();
+
+    res.status(200).json(weight);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getLast = (req, res, next) => {
-  Weight.find({ 'patientId': req.params.patientId })
+exports.getLast = async(req, res, next) => {
+  try{
+    let weight = await Weight.find({ 'patientId': req.params.patientId })
       .limit(1)
       .sort({ 'created': 'desc' })
-      .exec()
-      .then(weight => {
-          if (weight) {
-              res.status(200).json(weight);
-          } else {
-              res.status(404).json({ message: 'weight not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
+      .exec();
+
+    res.status(200).json(weight);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.delete = (req, res, next) => {
-  Weight.deleteOne({ _id: req.params.weightId }) //pass doctors role for restriction
-    .exec()
-    .then(result => {
-        if (result.n > 0) {
-            res.status(200).json({ message: 'Deletion successfull!' });
-        } else {
-            res.status(401).json({ message: 'Not Authorized!' });
-        }
-    })
-    .catch(error => {
-        res.status(500).json({
-            message: error.message
-        });
+exports.delete = async(req, res, next) => {
+  try{
+    await Weight.deleteOne({ _id: req.params.weightId }).exec();
+
+    res.status(200).json({ message: 'Deletion successfull!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
     });
+  }
 };

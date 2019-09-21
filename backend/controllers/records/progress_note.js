@@ -1,189 +1,169 @@
 const Note = require('../../models/records/progress_note');
 const moment = require('moment');
 
-exports.create = (req, res, next) => {
-    const note = new Note({
+exports.create = async(req, res, next) => {
+  try{
+    const newNote = new Note({
       note: req.body.note,
         created: req.body.created,
         complaintId: req.body.complaintId,
         patientId: req.body.patientId
     });
-    note.save().then(createdRecord => {
-      console.log(createdRecord);
-            res.status(201).json({
-                message: 'Successfully added',
-                note: {
-                    ...createdRecord,
-                    id: createdRecord._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let note = await newNote.save();
+    if (!note) {
+      throw new Error('Something went wrong. Cannot create note!');
+    }
+    res.status(201).json({
+        message: 'Successfully added',
+        note: {
+            ...note,
+            id: note._id,
+        }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.update = (req, res, next) => {
-    const note = new Note({
+exports.update = async(req, res, next) => {
+  try{
+    const newNote = new Note({
         _id: req.body.progressNoteId,
         note: req.body.note,
         created: req.body.created_date,
         complaintId: req.body.complaintId,
         patientId: req.body.patientId
     });
-    Note.updateOne({ _id: req.params.progressNoteId }, //pass doctor role for restriction
-      note
-        )
-        .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Update successful!' });
-            } else {
-                res.status(401).json({ message: 'Not authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let note = await Note.updateOne({ _id: req.params.progressNoteId }, newNote).exec();
+    if (!note) {
+      throw new Error('Something went wrong. Cannot update note!');
+    }
+
+    res.status(200).json({ message: 'Update successful!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getAll = (req, res, next) => {
+exports.getAll = async(req, res, next) => {
+  try{
     const pageSize = +req.query.pagesize;
     const currentPage = +req.query.page;
     const noteQuery = Note.find({ 'patientId': req.query.patientId }).sort({'created': 'desc'});
 
-    let fetchedRecord;
     if (pageSize && currentPage) {
       noteQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    noteQuery
-    .populate('complaintId')
-    .exec()
-        .then(documents => {
-          newDocuments = [];
-            documents.forEach(element => {
-              var obj = {
-                _id: element._id,
-                created: element.created,
-                complaints: element.complaintId.complaints,
-                patientId: element.patientId,
-                note: element.note
-              }
-              newDocuments.push(obj);
-            });
-            fetchedRecord = newDocuments;
-            return Note.countDocuments();
-        })
-        .then(count => {
-            res.status(200).json({
-                message: 'Fetched successfully!',
-                notes: fetchedRecord,
-                max: count
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let note = await noteQuery.populate('complaintId').exec();
+
+    newNotes = [];
+    note.forEach(element => {
+      var obj = {
+        _id: element._id,
+        created: element.created,
+        complaints: element.complaintId.complaints,
+        patientId: element.patientId,
+        note: element.note
+      }
+      newNotes.push(obj);
+    });
+
+    let count = await Note.countDocuments({ 'patientId': req.query.patientId });
+
+    res.status(200).json({
+        message: 'Fetched successfully!',
+        notes: newNotes,
+        max: count
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-  Note.findById(req.params.progressNoteId)
-  .exec()
-  .then(note => {
-            if (note) {
-                res.status(200).json(note);
-            } else {
-                res.status(404).json({ message: 'note not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.get = async(req, res, next) => {
+  try{
+    let note = await Note.findById(req.params.progressNoteId).exec();
+    if (!note) {
+      throw new Error('Something went wrong. Cannot be found note id: '+req.params.progressNoteId);
+    }
+    res.status(200).json(note);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getCurrent = (req, res, next) => {
-  const today = moment().startOf('day');
+exports.getCurrent = async(req, res, next) => {
+  try{
+    const today = moment().startOf('day');
 
-  Note.find({
-          created: {
+    let note = await Note.find({
+            created: {
               $gte: today.toDate(),
               $lte: moment(today).endOf('day').toDate()
           }
-      })
-      .exec()
-      .then(note => {
-          if (note) {
-              res.status(200).json(note);
-          } else {
-              res.status(404).json({ message: 'note not found' });
-          }
-      })
-      .catch(error => {
-          res.status(500).json({
-              message: error.message
-          });
-      });
-};
+      }).exec();
 
-exports.getLast = (req, res, next) => {
-  Note.find({ 'patientId': req.params.patientId })
-    .limit(1)
-    .sort({ 'created': 'desc' })
-    .exec()
-    .then(note => {
-        if (note) {
-            res.status(200).json(note);
-        } else {
-            res.status(404).json({ message: 'note not found' });
-        }
-    })
-    .catch(error => {
-        res.status(500).json({
-            message: error.message
-        });
+    res.status(200).json(note);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
     });
+  }
 };
 
-exports.getByComplaint = (req, res, next) => {
-  Note.find({
-    complaintId: req.params.complaintId
-  })
-  .exec()
-  .then(note => {
-      if (note) {
-          res.status(200).json(note);
-      } else {
-          res.status(404).json({ message: 'note not found' });
-      }
-  })
-  .catch(error => {
-      res.status(500).json({
-          message: error.message
-      });
-  });
+exports.getLast = async(req, res, next) => {
+  try{
+    let note = await Note.find({ 'patientId': req.params.patientId })
+      .limit(1)
+      .sort({ 'created': 'desc' })
+      .exec();
+
+    res.status(200).json(note);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.delete = (req, res, next) => {
-  Note.deleteOne({ _id: req.params.progressNoteId }) //pass doctors role for restriction
-  .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Deletion successfull!' });
-            } else {
-                res.status(401).json({ message: 'Not Authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.getByComplaint = async(req, res, next) => {
+  try{
+    let note = await Note.find({
+      complaintId: req.params.complaintId
+    }).exec();
+
+    res.status(200).json(note);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
+};
+
+exports.delete = async(req, res, next) => {
+  try{
+    await Note.deleteOne({ _id: req.params.progressNoteId }).exec();
+
+    res.status(200).json({ message: 'Deletion successfull!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };

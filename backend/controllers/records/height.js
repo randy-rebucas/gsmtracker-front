@@ -1,157 +1,142 @@
 const Height = require('../../models/records/height');
 const moment = require('moment');
 
-exports.create = (req, res, next) => {
-    const height = new Height({
+exports.create = async(req, res, next) => {
+  try {
+    const newHeight = new Height({
         height: req.body.height,
         created: req.body.created,
         patientId: req.body.patientId
     });
-    height.save().then(createdRecord => {
-            res.status(201).json({
-                message: 'Successfully added',
-                height: {
-                    ...createdRecord,
-                    id: createdRecord._id,
-                }
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let height = await newHeight.save();
+    if (!height) {
+      throw new Error('Something went wrong. Cannot create height!');
+    }
+    res.status(201).json({
+        message: 'Successfully added',
+        height: {
+            ...height,
+            id: height._id,
+        }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.update = (req, res, next) => {
-    const height = new Height({
+exports.update = async(req, res, next) => {
+  try {
+    const newHeight = new Height({
         _id: req.body.heightId,
         height: req.body.height,
         created: req.body.created_date,
         patientId: req.body.patientId
     });
-    Height.updateOne({ _id: req.params.heightId }, //pass doctor role for restriction
-            height
-        )
-        .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Update successful!' });
-            } else {
-                res.status(401).json({ message: 'Not authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+    let height = await Height.updateOne({ _id: req.params.heightId }, newHeight).exec();
+    if (!height) {
+      throw new Error('Something went wrong. Cannot update height!');
+    }
+
+    res.status(200).json({ message: 'Update successful!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getAll = (req, res, next) => {
+exports.getAll = async(req, res, next) => {
+  try {
     const currentPage = +req.query.page;
     const pageSize = +req.query.pagesize;
     const heightQuery = Height.find({ 'patientId': req.query.patientId }).sort({ 'created': 'desc' });
 
-    let fetchedRecord;
-
     if (pageSize && currentPage) {
         heightQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    heightQuery
-      .exec()
-        .then(documents => {
-            fetchedRecord = documents;
-            return Height.countDocuments();
-        })
-        .then(count => {
-            res.status(200).json({
-                message: 'Fetched successfully!',
-                heights: fetchedRecord,
-                max: count
-            });
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+
+    let height = await heightQuery.exec();
+
+    let count = await Height.countDocuments({ 'patientId': req.query.patientId });
+
+    res.status(200).json({
+        message: 'Fetched successfully!',
+        heights: height,
+        max: count
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.get = (req, res, next) => {
-    Height.findById(req.params.heightId)
-    .exec()
-    .then(height => {
-            if (height) {
-                res.status(200).json(height);
-            } else {
-                res.status(404).json({ message: 'height not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.get = async(req, res, next) => {
+  try {
+    let height = await Height.findById(req.params.heightId).exec();
+    if (!height) {
+      throw new Error('Something went wrong. Cannot be found height id: '+req.params.heightId);
+    }
+    res.status(200).json(height);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getCurrent = (req, res, next) => {
+exports.getCurrent = async(req, res, next) => {
+  try {
     const today = moment().startOf('day');
     //addpatient id
-    Height.find({
+    let height = await Height.find({
       patient: req.params.patientId,
             created: {
                 $gte: today.toDate(),
                 $lte: moment(today).endOf('day').toDate()
             }
-        })
-        .exec()
-        .then(height => {
-            if (height) {
-                res.status(200).json(height);
-            } else {
-                res.status(404).json({ message: 'height not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+        }).exec();
+
+    res.status(200).json(height);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.getLast = (req, res, next) => {
-    Height.find({ 'patientId': req.params.patientId })
+exports.getLast = async(req, res, next) => {
+  try {
+    let height = await Height.find({ 'patientId': req.params.patientId })
         .limit(1)
         .sort({ 'created': 'desc' })
-        .exec()
-        .then(height => {
-            if (height) {
-                res.status(200).json(height);
-            } else {
-                res.status(404).json({ message: 'height not found' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+        .exec();
+
+    res.status(200).json(height);
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
 
-exports.delete = (req, res, next) => {
-    Height.deleteOne({ _id: req.params.heightId }) //pass doctors role for restriction
-      .exec()
-        .then(result => {
-            if (result.n > 0) {
-                res.status(200).json({ message: 'Deletion successfull!' });
-            } else {
-                res.status(401).json({ message: 'Not Authorized!' });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                message: error.message
-            });
-        });
+exports.delete = async(req, res, next) => {
+  try {
+    await Height.deleteOne({ _id: req.params.heightId }).exec();
+
+    res.status(200).json({ message: 'Deletion successfull!' });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
 };
