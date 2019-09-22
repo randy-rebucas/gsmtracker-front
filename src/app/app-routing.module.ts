@@ -12,8 +12,9 @@ import { EncountersComponent } from './patients/patient-record/encounters/encoun
 import { EncounterListComponent } from './patients/patient-record/encounters/encounter-list/encounter-list.component';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { SettingsComponent } from './settings/settings.component';
-import { SettingsGeneralComponent } from './settings/setting-general/setting-general.component';
-import { SettingsNotificationComponent } from './settings/setting-notification/setting-notification.component';
+import { ProfileComponent } from './settings/profile/profile.component';
+import { ClinicComponent } from './settings/clinic/clinic.component';
+import { NotificationComponent } from './settings/notification/notification.component';
 import { ChiefComplaintComponent } from './patients/patient-record/chief-complaint/chief-complaint.component';
 import { ChiefComplaintEditComponent } from './patients/patient-record/chief-complaint/chief-complaint-edit/chief-complaint-edit.component';
 import { ChiefComplaintListComponent } from './patients/patient-record/chief-complaint/chief-complaint-list/chief-complaint-list.component';
@@ -117,9 +118,10 @@ const appRoutes: Routes = [
       ] },
     ] },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], children: [
-      { path: '', redirectTo: '/settings/general', pathMatch: 'full' },
-      { path: 'general', component: SettingsGeneralComponent },
-      { path: 'notifications', component: SettingsNotificationComponent }
+      { path: '', redirectTo: '/settings/profile', pathMatch: 'full' },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'clinic', component: ClinicComponent },
+      { path: 'notifications', component: NotificationComponent }
     ] },
     { path: 'appointments', component: AppointmentsComponent, canActivate: [AuthGuard], children: [
       { path: '', component: AppointmentListComponent },

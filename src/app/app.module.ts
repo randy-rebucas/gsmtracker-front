@@ -22,8 +22,9 @@ import { HomeComponent } from './home/home.component';
 import { PatientsModule } from './patients/patients.module';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { SettingsComponent } from './settings/settings.component';
-import { SettingsGeneralComponent } from './settings/setting-general/setting-general.component';
-import { SettingsNotificationComponent } from './settings/setting-notification/setting-notification.component';
+import { ProfileComponent } from './settings/profile/profile.component';
+import { ClinicComponent } from './settings/clinic/clinic.component';
+import { NotificationComponent } from './settings/notification/notification.component';
 import { MatDialogConfirmComponent } from './mat-dialog-confirm/mat-dialog-confirm.component';
 import { PatientRecordsModule } from './patients/patient-record/patient-records.module';
 import { PatientEditComponent } from './patients/patient-edit/patient-edit.component';
@@ -86,8 +87,9 @@ import { UsersModule } from './users/users.module';
     QrCodeScannerComponent,
     QrCodeGenerateComponent,
     SettingsComponent,
-    SettingsGeneralComponent,
-    SettingsNotificationComponent,
+    ProfileComponent,
+    ClinicComponent,
+    NotificationComponent,
     MessagesComponent,
     MessageListComponent,
     MessageEditComponent,

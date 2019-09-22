@@ -99,7 +99,7 @@ implements OnInit, OnDestroy {
       this.getPatientData(this.patientId)
       .then((results) => {
         this.isLoading = false;
-        console.log(results.patientData);
+
         this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
 
         this.personId = results.patientData.personId;

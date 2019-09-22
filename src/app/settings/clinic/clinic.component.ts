@@ -10,11 +10,11 @@ import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
-  selector: 'app-settings-general',
-  templateUrl: './setting-general.component.html',
-  styleUrls: ['./setting-general.component.css']
+  selector: 'app-clinic',
+  templateUrl: './clinic.component.html',
+  styleUrls: ['./clinic.component.css']
 })
-export class SettingsGeneralComponent
+export class ClinicComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
@@ -50,7 +50,7 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    this.titleService.setTitle('Settings - General');
+    this.titleService.setTitle('Settings - Clinic');
 
     this.populateForm();
   }

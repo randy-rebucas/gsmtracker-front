@@ -59,7 +59,7 @@ export class UsersService {
 
   get(userId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ userId: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [] }>(
+    return this.http.get<{ userId: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [], email: string }>(
         BACKEND_URL + '/' + userId
       );
   }

@@ -30,7 +30,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         dialogConfig.data = {
           message: errorMessage
         };
-    
+
         this.dialog.open(ErrorComponent, dialogConfig);
         return throwError(error);
       })

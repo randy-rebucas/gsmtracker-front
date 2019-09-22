@@ -180,10 +180,12 @@ exports.getAll = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
     try {
-        let user = await User.findById(req.params.userId).populate('personId').exec();
+        let user = await User.findOne({personId: req.params.userId}).populate('personId').exec();
+        let auth = await Auth.findOne({personId: req.params.userId}).exec();
         if (!user) {
             throw new Error('Something went wrong. Cannot find patient id !' + req.params.userId);
         }
+
         res.status(200).json({
             userId: user._id,
             meta: user.metaData,
@@ -195,7 +197,8 @@ exports.get = async(req, res, next) => {
             gender: user.personId.gender,
             birthdate: user.personId.birthdate,
             addresses: user.personId.address,
-            created: user.personId.created
+            created: user.personId.created,
+            email: auth.email
         });
     } catch (error) {
         res.status(500).json({
