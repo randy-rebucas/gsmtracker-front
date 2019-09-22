@@ -129,6 +129,7 @@ exports.getCurrent = async(req, res, next) => {
     const today = moment().startOf('day');
 
     let assessment = await Assessment.find({
+      'patientId': req.params.patientId,
             created: {
                 $gte: today.toDate(),
                 $lte: moment(today).endOf('day').toDate()

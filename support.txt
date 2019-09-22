@@ -10,31 +10,31 @@ Surgical history 		– operation dates, reports
 	planned procedure
 	surgeon
 	note
-	
+
 Obstetric history 		– the number of pregnancies, complications, pregnancy outcomes
 	dates
 	place of delivery/abortion
 	duration preg.
 	Hrs of Labor
-	Type of delivery 
+	Type of delivery
 	complications mother and/or infant
 	sex
 	birth weight
 	present health
 	physician
-	
+
 Family History 			– immediate family health status, the cause of death, common family diseases
 	Name
 	Relationship
 	DOB
 	Health Condition (illnesses eg: cancer, diabetes)
-	
+
 Social History 			– past and current occupations, community support, etc.
 	tobacco use
 	alcohol use
 	education
 	occupation
-	
+
 Habits 					– alcohol consumption, exercise, diet, smoking, sexual history
 
 MEDICAL ENCOUNTER (to be added on patient chart)
@@ -64,3 +64,19 @@ Neurologic examination
 Skin
 ---------
 providers such as laboratories, specialists, medical imaging facilities, emergency facilities, schools, and pharmacies
+
+Drugs
+Conditions
+Procedures
+Consult
+Calculators
+virtual consultation
+
+---------
+- Blood Pressure
+- Peak Flow
+- Dietary Intake
+- Blood Glucose
+- Height
+- Exercise
+- Weight

@@ -30,6 +30,8 @@ var networkRouter = require('./routes/network');
 var appointmentsRouter = require('./routes/appointment');
 var uploadRouter = require('./routes/upload');
 
+var queRouter = require('./routes/que');
+
 var driveRouter = require('./routes/drive');
 var cors = require('cors');
 
@@ -126,6 +128,7 @@ app.use('/api/appointments', appointmentsRouter);
 
 app.use('/api/drive', driveRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/api/que', queRouter);
 //app.use((req, res, next) => {
 //    res.sendFile(path.join(__dirname, 'angular', 'index.html'));
 //});

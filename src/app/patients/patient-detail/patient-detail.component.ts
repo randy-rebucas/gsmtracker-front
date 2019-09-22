@@ -25,6 +25,7 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 import { ProfileImageComponent } from 'src/app/upload/profile-image/profile-image.component';
 import { NetworksService } from 'src/app/networks/networks.service';
 import { NotificationService } from 'src/app/shared/notification.service';
+import { QueService } from 'src/app/que/que.service';
 
 @Component({
   selector: 'app-patient-detail',
@@ -61,6 +62,8 @@ implements OnInit, OnDestroy {
 
   files: UploadData[] = [];
 
+  queNumber: number;
+
   public recordsSub: Subscription;
 
   constructor(
@@ -84,7 +87,8 @@ implements OnInit, OnDestroy {
     public notesService: NotesService,
     public uploadService: UploadService,
     public networksService: NetworksService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private queService: QueService
     ) {
       super(authService, router, dialog, appconfig);
     }
@@ -265,6 +269,12 @@ implements OnInit, OnDestroy {
 
     gotoRecord() {
       this.router.navigate(['./record/physical-exams'], {relativeTo: this.route});
+    }
+
+    moveToQue(personId) {
+      this.queService.insert(personId, this.licenseId).subscribe((res) => {
+        this.notificationService.success(':: on que done. #' + res.que.queNumber);
+      });
     }
 
     async addToNetwork(requesterId) {

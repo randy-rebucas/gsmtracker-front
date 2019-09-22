@@ -70,6 +70,15 @@ import { ProfileImageComponent } from './upload/profile-image/profile-image.comp
 import { UserListComponent } from './users/user-list/user-list.component';
 import { UsersModule } from './users/users.module';
 
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { QueComponent } from './que/que.component';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -98,6 +107,7 @@ import { UsersModule } from './users/users.module';
     MatDialogConfirmComponent,
     DialogComponent,
     SecureComponent,
+    QueComponent,
     ProfileImageComponent
   ],
   imports: [
@@ -120,18 +130,31 @@ import { UsersModule } from './users/users.module';
     QRCodeModule,
     UploadModule,
     FullCalendarModule,
-    WebcamModule
+    WebcamModule,
+    PerfectScrollbarModule
   ],
   providers: [
     AppConfiguration,
     UploadService,
     {
+        provide: PERFECT_SCROLLBAR_CONFIG,
+        useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    },
+    {
         provide: APP_INITIALIZER,
         useFactory: AppConfigurationFactory,
         deps: [AppConfiguration, HttpClient], multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    },
     DatePipe,
     Title
   ],

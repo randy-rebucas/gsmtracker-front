@@ -1,0 +1,11 @@
+<mat-list style="text-align: center;">
+  <mat-list-item *ngFor="let que of queing; let i = index;" class="lead-{{i}}">
+    <h3 matLine> {{que.queNumber}} </h3>
+    <p matLine (click)="gotoRecord(que.id)">
+      <span> {{que.fullname}} </span>
+    </p>
+  </mat-list-item>
+  <ng-container *ngIf="queing.length < 1">
+    <h3 matSubheader>No patient on que!</h3>
+  </ng-container>
+</mat-list>

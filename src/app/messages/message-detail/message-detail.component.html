@@ -15,13 +15,15 @@
       <mat-spinner [diameter]="25"></mat-spinner>
   </div>
   <div *ngIf="!isLoading">
-    <mat-list>
-      <mat-list-item *ngFor="let message of messages">
-        <mat-icon mat-list-icon class="md-24">face</mat-icon>
-        <h4 mat-line>{{message.fullname}} <small> {{message.created}} </small></h4>
-        <p mat-line> {{message.message}} </p>
-      </mat-list-item>
-    </mat-list>
+    <perfect-scrollbar style="max-height: 356px;">
+      <mat-list>
+        <mat-list-item *ngFor="let message of messages">
+          <mat-icon mat-list-icon class="md-24">face</mat-icon>
+          <h4 mat-line>{{message.fullname}} <small> {{message.created}} </small></h4>
+          <p mat-line> {{message.message}} </p>
+        </mat-list-item>
+      </mat-list>
+    </perfect-scrollbar>
     <app-message-edit [threadId]="threadId"></app-message-edit>
   </div>
 </div>

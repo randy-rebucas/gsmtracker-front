@@ -8,9 +8,9 @@ mat-icon.md-48 {
 }
 
 mat-list {
-  height: 705px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  height: 590px;
+  /*overflow-y: auto;
+  overflow-x: hidden;*/
 }
 
 small.mat-line {
