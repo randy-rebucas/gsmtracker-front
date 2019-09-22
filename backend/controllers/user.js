@@ -127,7 +127,8 @@ exports.create = async(req, res, next) => {
 exports.update = async(req, res, next) => {
     try {
         const newUser = new User({
-            _id: req.body.id
+            _id: req.body.id,
+            userType: 'doctor'
         });
         metaData = req.body.meta;
         for (let index = 0; index < metaData.length; index++) {
