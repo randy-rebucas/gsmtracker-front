@@ -2,18 +2,57 @@
     <p>Home</p>
 </div>
 <div *ngIf="userIsAuthenticated">
-    <mat-grid-list cols="2" rowHeight="350px" [gutterSize]="'10px'">
-        <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
+    <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
+        <div fxFlex>
+            <app-stat [bgClass]="'danger'" [icon]="'dashboard'" [count]="13" [label]="'New Tickets!'"></app-stat>
+        </div>
+        <div fxFlex>
+            <app-stat [bgClass]="'warn'" [icon]="'view_list'" [count]="12" [label]="'New task!'"></app-stat>
+        </div>
+        <div fxFlex>
+            <app-stat [bgClass]="'success'" [icon]="'shopping_cart'" [count]="124" [label]="'New Orders!'"></app-stat>
+        </div>
+        <div fxFlex>
+            <app-stat [bgClass]="'info'" [icon]="'contact_support'" [count]="13" [label]="'New Tickets!'"></app-stat>
+        </div>
+    </div>
+    <mat-grid-list cols="3" rowHeight="350px" [gutterSize]="'10px'">
+        <mat-grid-tile [colspan]="1" [rowspan]="1" class="grid-content">
             <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
-                <h1 class="mat-headline">Reports</h1>
-                {{trialDay}} <br/>
-                {{appVersion}}
+                <h1 class="mat-headline">Stats</h1>
+                <div class="chart-container" style="position: relative; height:15vh; width:25vw">
+                    <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"></canvas>
+                </div>
             </div>
         </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1" class="grid-content">
+            <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
+                <h1 class="mat-headline">Stats</h1>
+                <div class="chart-container" style="position: relative; height:15vh; width:25vw">
+                    <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"></canvas>
+                </div>
+            </div>
+        </mat-grid-tile>
+
         <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
             <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
                 <h1 class="mat-headline">Queing</h1>
                 <app-que></app-que>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
+            <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
+                <h1 class="mat-headline">Stats</h1>
+                <div class="chart-container" style="position: relative; height:25vh; width:45vw">
+                    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
+                                </canvas>
+                </div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1" class="grid-content">
+            <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
+                <h1 class="mat-headline">News</h1>
+
             </div>
         </mat-grid-tile>
     </mat-grid-list>

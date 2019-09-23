@@ -70,7 +70,12 @@ import { UserListComponent } from './users/user-list/user-list.component';
 import { UsersComponent } from './users/users.component';
 
 const appRoutes: Routes = [
-    { path: '', component: HomeComponent },
+    // { path: '',
+    //   loadChildren: './layout/layout.module#LayoutModule'
+    // },
+    { path: '',
+      component: HomeComponent
+    },
     { path: 'users', component: UsersComponent, canActivate: [AuthGuard], children: [
       { path: '', component: UserListComponent }
     ] },

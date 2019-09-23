@@ -19,6 +19,7 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     font-size: 8rem;
     margin: 0;
     font-weight: 100;
+    line-height: 1;
   }
   mat-list-item.lead-0 p {
     margin: 0;
@@ -28,6 +29,7 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     font-size: 5rem;
     margin: 0;
     font-weight: 100;
+    line-height: 1;
   }
   mat-list-item.lead-1 p {
     font-size: 24px;

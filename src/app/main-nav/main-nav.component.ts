@@ -7,11 +7,84 @@ import { SecureComponent } from '../secure/secure.component';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from '../app-configuration.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
-  styleUrls: ['./main-nav.component.css']
+  styles: [`
+  .sidenav-container {
+    height: 100%;
+  }
+
+  .sidenav {
+      width: 250px;
+  }
+
+  mat-icon.sidenav-icon {
+    margin-right: 15px;
+  }
+  /**/
+
+  :host {
+      display: block;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 1000;
+  }
+
+  .nav-brand {
+      width: 215px;
+      text-align: center;
+  }
+
+  .topnav-icon {
+      text-decoration: none;
+      display: flex;
+      color: #fff;
+  }
+
+  span.nav-spacer {
+      flex: 1 1 auto;
+  }
+
+  .visible-md {
+      display: none;
+  }
+
+  .visible-sm {
+      display: none;
+  }
+
+  @media screen and (max-width: 992px) {
+      .visible-md {
+          display: block;
+      }
+  }
+
+  @media screen and (max-width: 768px) {
+      .visible-sm {
+          display: block;
+      }
+      .nav-brand {
+          width: 100%;
+      }
+  }
+
+  @media screen and (max-width: 768px) {
+      .hidden-sm {
+          display: none;
+      }
+  }
+
+  div#app-details {
+    position: fixed;
+    bottom: 0;
+    padding: 1em;
+}
+  `]
 })
 export class MainNavComponent
 extends SecureComponent
@@ -29,6 +102,7 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
+    private translate: TranslateService,
     private breakpointObserver: BreakpointObserver
     ) {
       super(authService, router, dialog, appconfig);
@@ -41,6 +115,10 @@ implements OnInit, OnDestroy {
 
     onLogout() {
       this.authService.logout();
+    }
+
+    changeLang(language: string) {
+      this.translate.use(language);
     }
 
     ngOnDestroy() {

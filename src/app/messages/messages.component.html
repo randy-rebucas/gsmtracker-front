@@ -1,46 +1,42 @@
-<div class="component-page-header">
-  <h1 class="mat-headline"> Messages</h1>
-</div>
 <mat-grid-list cols="7" rowHeight="100px" [gutterSize]="'10px'">
-  <mat-grid-tile [colspan]="2" [rowspan]="6" class="grid-content">
-    <mat-grid-tile-header>
-        <h3>Messaging
-            <button mat-icon-button [routerLink]="['./new']" routerLinkActive="router-link-active"  style="position: absolute;
+    <mat-grid-tile [colspan]="2" [rowspan]="6" class="grid-content">
+        <mat-grid-tile-header>
+            <h3>Messaging
+                <button mat-icon-button [routerLink]="['./new']" routerLinkActive="router-link-active" style="position: absolute;
             right: 8px;
             top: 5px;">
                 <mat-icon>create</mat-icon>
           </button>
-        </h3>
-    </mat-grid-tile-header>
-    <div class="grid-inner-content grid-inner-content-list">
-      <app-message-list></app-message-list>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="3" [rowspan]="6" class="grid-content" style="position: relative;">
-    <div class="grid-inner-content grid-inner-content-list">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="2" [rowspan]="3" class="grid-content">
-    <div class="grid-inner-content grid-inner-content-list">
-      <div style="padding: 1em;">
-          <p>Ads</p>
-      </div>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
-    <div class="grid-inner-content grid-inner-content-list">
-      <div style="padding: 1em;">
-          <p>Updates</p>
-      </div>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-content">
-    <div class="grid-inner-content grid-inner-content-list">
-      <div style="padding: 1em;">
-          <p>News</p>
-      </div>
-    </div>
-  </mat-grid-tile>
+            </h3>
+        </mat-grid-tile-header>
+        <div class="grid-inner-content grid-inner-content-list">
+            <app-message-list></app-message-list>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="3" [rowspan]="6" class="grid-content" style="position: relative;">
+        <div class="grid-inner-content grid-inner-content-list">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2" [rowspan]="3" class="grid-content">
+        <div class="grid-inner-content grid-inner-content-list">
+            <div style="padding: 1em;">
+                <p>Ads</p>
+            </div>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
+        <div class="grid-inner-content grid-inner-content-list">
+            <div style="padding: 1em;">
+                <p>Updates</p>
+            </div>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-content">
+        <div class="grid-inner-content grid-inner-content-list">
+            <div style="padding: 1em;">
+                <p>News</p>
+            </div>
+        </div>
+    </mat-grid-tile>
 </mat-grid-list>
-

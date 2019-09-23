@@ -24,7 +24,7 @@ implements OnInit, OnDestroy {
   public recordsSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['title', 'start', 'end', 'fullname', 'status', 'action'];
+  displayedColumns: string[] = ['title', 'start', 'fullname', 'status', 'action'];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 

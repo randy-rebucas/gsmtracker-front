@@ -1,45 +1,89 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-        <mat-toolbar>Menu</mat-toolbar>
+    <mat-sidenav #drawer class="sidenav" [opened]="true" fixedInViewport="false" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+        <mat-toolbar color="primary">{{ appName }}</mat-toolbar>
         <mat-nav-list>
-            <a mat-list-item href="#">Link 1</a>
-            <a mat-list-item href="#">Link 2</a>
-            <a mat-list-item href="#">Link 3</a>
+            <a mat-list-item routerLink="/" routerLinkActive="active">
+                <mat-icon class="sidenav-icon mat-icon material-icons" role="img" aria-hidden="true">dashboard</mat-icon>
+                Dashboard
+            </a>
+            <a mat-list-item routerLink="/patients" routerLinkActive="active">
+                <mat-icon class="sidenav-icon mat-icon material-icons" role="img" aria-hidden="true">people</mat-icon>
+                Patients
+            </a>
+            <a mat-list-item routerLink="/appointments" routerLinkActive="active">
+                <mat-icon class="sidenav-icon mat-icon material-icons" role="img" aria-hidden="true">calendar_today</mat-icon>
+                Appointments
+            </a>
+            <a mat-list-item routerLink="/messages" routerLinkActive="active">
+                <mat-icon class="sidenav-icon mat-icon material-icons" role="img" aria-hidden="true">message</mat-icon>
+                Messages
+            </a>
+            <a mat-list-item routerLink="/settings/clinic" routerLinkActive="active">
+                <mat-icon class="sidenav-icon mat-icon material-icons" role="img" aria-hidden="true">build</mat-icon>
+                Settings
+            </a>
         </mat-nav-list>
+        <div id="app-details">
+            Remaining days: {{trialDay}} <br/> App Version:{{appVersion}}
+        </div>
     </mat-sidenav>
     <mat-sidenav-content>
-
-        <mat-toolbar color="primary">
+        <mat-toolbar color="primary" class="fix-nav">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
                 <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
-            <span>
+            <!--<div class="nav-brand">
+                {{ appName }}
+            </div>-->
+            <span class="nav-spacer"></span>
+
+            <button class="hidden-sm" mat-icon-button [matMenuTriggerFor]="language">
+                    <mat-icon>language</mat-icon>
+                </button>
+            <mat-menu #language="matMenu">
+                <button mat-menu-item (click)="changeLang('en')">
+                        <span>{{ 'English' | translate }}</span>
+                    </button>
+                <!--<button mat-menu-item (click)="changeLang('fr')">
+                        <span>{{ 'French' | translate }}</span>
+                    </button>
+                <button mat-menu-item (click)="changeLang('ur')">
+                        <span>{{ 'Urdu' | translate }}s</span>
+                    </button>-->
+            </mat-menu>
+            <button class="hidden-sm" mat-icon-button [matMenuTriggerFor]="profile">
+                    <mat-icon>account_circle</mat-icon>
+                </button>
+            <mat-menu #profile="matMenu">
+                <button mat-menu-item routerLink="/settings">
+                    <mat-icon>person</mat-icon>
+                    <span>{{ 'Profile' | translate }}</span>
+                </button>
+                <!--<button mat-menu-item>
+                        <mat-icon>inbox</mat-icon>
+                        <span>{{ 'Inbox' | translate }}</span>
+                    </button>-->
+                <button mat-menu-item routerLink="/settings/clinic">
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Settings' | translate }}</span>
+                </button>
+            </mat-menu>
+            <button mat-icon-button (click)="onLogout()">
+                    <mat-icon>exit_to_app</mat-icon>
+                </button>
+
+            <!--<span>
               <a routerLink="/">{{ appName }} <span *ngIf="userIsAuthenticated"></span></a>
             </span>
             <span class="spacer"></span>
             <ul>
-                <li *ngIf="userIsAuthenticated">
-                    <a mat-button routerLink="/patients" routerLinkActive="mat-accent">Patients</a>
-                </li>
-                <li *ngIf="userIsAuthenticated">
-                    <a mat-button routerLink="/appointments" routerLinkActive="mat-accent">Appointments</a>
-                </li>
-                <li *ngIf="userIsAuthenticated">
-                  <a mat-button routerLink="/messages" routerLinkActive="mat-accent">Messages</a>
-              </li>
-                <li *ngIf="userIsAuthenticated">
-                    <a mat-button routerLink="/settings" routerLinkActive="mat-accent">Settings</a>
-                </li>
-                <li *ngIf="userIsAuthenticated">
-                    <button mat-button (click)="onLogout()">Logout</button>
-                </li>
                 <li *ngIf="!userIsAuthenticated">
                     <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent">Login</a>
                 </li>
                 <li *ngIf="!userIsAuthenticated">
                     <a mat-button routerLink="/auth/signup" routerLinkActive="mat-accent">Signup</a>
                 </li>
-            </ul>
+            </ul>-->
         </mat-toolbar>
         <!-- Add Content Here -->
         <ng-content></ng-content>

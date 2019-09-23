@@ -62,6 +62,7 @@ import { WebcamModule } from 'ngx-webcam';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { NgxPrintModule } from 'ngx-print';
 import { LayoutModule } from '@angular/cdk/layout';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 import { AppointmentDetailComponent } from './appointments/appointment-detail/appointment-detail.component';
 import { SecureComponent } from './secure/secure.component';
@@ -75,8 +76,25 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { QueComponent } from './que/que.component';
 
+// import ngx-translate and the http loader
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { StatModule } from './shared/stat/stat.module';
+import { ChartsModule } from 'ng2-charts';
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
+};
+
+// AoT requires an exported function for factories
+export const createTranslateLoader = (http: HttpClient) => {
+  /* for development
+  return new TranslateHttpLoader(
+      http,
+      '/start-javascript/sb-admin-material/master/dist/assets/i18n/',
+      '.json'
+  );*/
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 };
 
 @NgModule({
@@ -115,12 +133,21 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FlexLayoutModule,
+    FlexLayoutModule.withConfig({addFlexToParent: false}),
     LayoutModule,
+    OverlayModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+    }),
     PatientsModule,
     UsersModule,
     PatientRecordsModule,
+    StatModule,
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
@@ -130,6 +157,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     QRCodeModule,
     UploadModule,
     FullCalendarModule,
+    ChartsModule,
     WebcamModule,
     PerfectScrollbarModule
   ],
@@ -190,4 +218,9 @@ export class AppModule { }
 
 export function AppConfigurationFactory( appConfig: AppConfiguration ) {
     return () => appConfig.ensureInit();
+}
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }

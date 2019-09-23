@@ -30,7 +30,30 @@ import { QueService } from 'src/app/que/que.service';
 @Component({
   selector: 'app-patient-detail',
   templateUrl: './patient-detail.component.html',
-  styleUrls: ['./patient-detail.component.css']
+  styles: [`
+  mat-grid-tile.grid-content>::ng-deep .mat-figure {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .mat-grid-tile {
+    border: 1px solid rgba(0, 0, 0, .12);
+  }
+  .mat-grid-tile-footer {
+    background: #efefef !important;
+    color: #555 !important;
+  }
+  .grid-inner-content-list {
+    margin-top: 3em;
+    padding: 1em;
+    width: 100%;
+  }
+  table {
+    width: 100%;
+  }
+  .action-button {
+    margin-top: 3em;
+  }
+`]
 })
 export class PatientDetailComponent
 extends SecureComponent
