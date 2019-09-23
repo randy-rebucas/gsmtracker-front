@@ -19,6 +19,15 @@ import { TranslateService } from '@ngx-translate/core';
 
   .sidenav {
       width: 250px;
+      margin-top: 4em;
+  }
+
+  mat-toolbar.fix-nav {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1;
+    left: 0;
   }
 
   mat-icon.sidenav-icon {
@@ -36,8 +45,7 @@ import { TranslateService } from '@ngx-translate/core';
   }
 
   .nav-brand {
-      width: 215px;
-      text-align: center;
+      width: 250px;
   }
 
   .topnav-icon {
@@ -83,7 +91,7 @@ import { TranslateService } from '@ngx-translate/core';
     position: fixed;
     bottom: 0;
     padding: 1em;
-}
+  }
   `]
 })
 export class MainNavComponent

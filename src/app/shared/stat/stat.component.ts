@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-stat',
@@ -11,8 +12,15 @@ export class StatComponent implements OnInit {
     @Input() count: number;
     @Input() label: string;
     @Input() data: number;
+    @Input() link: string;
 
-    constructor() {}
+    constructor(public router: Router) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+      console.log(this.link);
+    }
+
+    onDetails(arg) {
+      this.router.navigate(['/' + arg + '']);
+    }
 }

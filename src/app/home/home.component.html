@@ -4,19 +4,19 @@
 <div *ngIf="userIsAuthenticated">
     <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
         <div fxFlex>
-            <app-stat [bgClass]="'danger'" [icon]="'dashboard'" [count]="13" [label]="'New Tickets!'"></app-stat>
+            <app-stat [bgClass]="'danger'" [icon]="'people'" [count]="newPatient" [label]="'New Patient!'" [link]="'patients'"></app-stat>
         </div>
         <div fxFlex>
-            <app-stat [bgClass]="'warn'" [icon]="'view_list'" [count]="12" [label]="'New task!'"></app-stat>
+            <app-stat [bgClass]="'warn'" [icon]="'calendar_today'" [count]="newAppointment" [label]="'New Appointment!'" [link]="'appointments'"></app-stat>
         </div>
         <div fxFlex>
-            <app-stat [bgClass]="'success'" [icon]="'shopping_cart'" [count]="124" [label]="'New Orders!'"></app-stat>
+            <app-stat [bgClass]="'success'" [icon]="'message'" [count]="newMessage" [label]="'New Message!'" [link]="'messages'"></app-stat>
         </div>
         <div fxFlex>
-            <app-stat [bgClass]="'info'" [icon]="'contact_support'" [count]="13" [label]="'New Tickets!'"></app-stat>
+            <app-stat [bgClass]="'info'" [icon]="'contact_support'" [count]="canceledVisit" [label]="'Canceled Visit!'" [link]="'visits'"></app-stat>
         </div>
     </div>
-    <mat-grid-list cols="3" rowHeight="350px" [gutterSize]="'10px'">
+    <mat-grid-list [cols]="breakpoint" rowHeight="350px" [gutterSize]="'10px'">
         <mat-grid-tile [colspan]="1" [rowspan]="1" class="grid-content">
             <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
                 <h1 class="mat-headline">Stats</h1>
@@ -36,7 +36,9 @@
 
         <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
             <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
-                <h1 class="mat-headline">Queing</h1>
+                <mat-grid-tile-header>
+                    <h3>Queing </h3>
+                </mat-grid-tile-header>
                 <app-que></app-que>
             </div>
         </mat-grid-tile>
@@ -51,8 +53,9 @@
         </mat-grid-tile>
         <mat-grid-tile [colspan]="1" [rowspan]="1" class="grid-content">
             <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
-                <h1 class="mat-headline">News</h1>
-
+                <mat-grid-tile-header>
+                    <h3>Update</h3>
+                </mat-grid-tile-header>
             </div>
         </mat-grid-tile>
     </mat-grid-list>

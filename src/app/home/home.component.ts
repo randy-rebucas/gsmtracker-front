@@ -29,6 +29,12 @@ extends SecureComponent
 implements OnInit, OnDestroy {
   @Input() title: string;
 
+  newPatient: number;
+  newAppointment: number;
+  newMessage: number;
+  canceledVisit: number;
+  breakpoint: number;
+
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -40,7 +46,7 @@ implements OnInit, OnDestroy {
     super(authService, router, dialog, appconfig);
    }
 
-   public barChartOptions = {
+  public barChartOptions = {
     scaleShowVerticalLines: false,
     responsive: true
   };
@@ -59,11 +65,25 @@ implements OnInit, OnDestroy {
   public pieChartLabels = ['Sales Q1', 'Sales Q2', 'Sales Q3', 'Sales Q4'];
   public pieChartData = [120, 150, 180, 90];
   public pieChartType = 'pie';
-  
+
   ngOnInit() {
     super.doInit();
+    if (!this.userIsAuthenticated) {
+      this.router.navigate(['/auth/login']);
+    }
 
     this.titleService.setTitle('Home');
+
+    this.newPatient = 19;
+    this.newAppointment = 2;
+    this.newMessage = 3;
+    this.canceledVisit = 1;
+
+    this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
+  }
+
+  onResize(event) {
+    this.breakpoint = (event.target.innerWidth <= 400) ? 1 : 3;
   }
 
   ngOnDestroy() {

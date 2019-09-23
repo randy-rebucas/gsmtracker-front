@@ -58,9 +58,6 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
       padding: 16px;
       width: 100%;
   }
-  td.mat-cell.cdk-column-action.mat-column-action {
-    text-align: right;
-  }
   td.mat-cell.cdk-column-action.mat-column-action button {
       visibility: hidden;
   }

@@ -14,10 +14,10 @@
                 <td mat-cell *matCellDef="let element">
                     <div *ngIf="element.imagePath; then thenBlock else elseBlock"></div>
                     <ng-template #thenBlock>
-                        <img [src]="element.imagePath" [alt]="element.firstname" style="width:40px; height:auto; vertical-align: middle;" />
+                        <img [src]="element.imagePath" [alt]="element.firstname" style="width:40px; height:auto; vertical-align: middle;border-radius: 100%;" />
                     </ng-template>
                     <ng-template #elseBlock>
-                        <img src="assets/images/blank.png" [alt]="element.firstname" style="width:40px; height:auto; vertical-align: middle;" />
+                        <img src="assets/images/blank.png" [alt]="element.firstname" style="width:40px; height:auto; vertical-align: middle;border-radius: 100%;" />
                     </ng-template>
                 </td>
             </div>

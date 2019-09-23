@@ -1,29 +1,41 @@
-<mat-card>
-    <mat-card-title>
-        Login
-    </mat-card-title>
-    <mat-card-content>
-        <mat-spinner *ngIf="isLoading"></mat-spinner>
-        <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
-            <table style="width: 100%;">
-                <tr>
-                    <td cols-an="2">Demo Account</td>
-                </tr>
-                <tr>
-                    <td>email: rebucasrandy1986@gmail.com</td>
-                    <td>pass: 11111111</td>
-                </tr>
-            </table>
-            <mat-form-field>
-                <input matInput name="email" type="email" ngModel placeholder="Email" #emailInput="ngModel" required email>
-                <mat-error *ngIf="emailInput.invalid">Please enter valid email</mat-error>
-            </mat-form-field>
+<div class="login-page">
+  <div class="content">
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading" class="login-form" fxFlex>
+          <div class="text-center">
+              <h2 class="app-name">Clinic+</h2>
+          </div>
+          <div fxFlex  fxlayout="row" fxlayout.lt-md="column">
+              <div fxFlexFill>
+                  <mat-form-field class="w-100">
+                      <input matInput name="email" type="email" ngModel placeholder="Email" #emailInput="ngModel" required email>
+                      <mat-error *ngIf="emailInput.invalid">Please enter valid email</mat-error>
+                  </mat-form-field>
+              </div>
+          </div>
+          <div fxFlex  fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlexFill>
+                  <mat-form-field class="w-100">
+                      <input matInput type="password" name="password" ngModel placeholder="Password" #passwordInput="ngModel" required>
+                      <mat-error *ngIf="passwordInput.invalid">Please enter valid password</mat-error>
+                  </mat-form-field>
+              </div>
+          </div>
+          <div fxFlex  fxLayout="row" fxLayout.lt-md="column" style="margin: 20px 0 30px 0">
+              <div fxFlex>
+                  <!-- <mat-checkbox color="primary">Remember Me</mat-checkbox> -->
+                  <a (click)="onSignup()" style="cursor: pointer;">Register</a>
+              </div>
+              <div fxFlex  fxLayoutAlign="end">
+                  <a (click)="onForgot()" style="cursor: pointer;">Forget Password</a>
+              </div>
+          </div>
+          <div fxFlex  fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlexFill>
+                  <button mat-raised-button color="primary" class="w-100" type="submit">Login</button>
+              </div>
+          </div>
 
-            <mat-form-field>
-                <input matInput type="password" name="password" ngModel placeholder="Password" #passwordInput="ngModel" required>
-                <mat-error *ngIf="passwordInput.invalid">Please enter valid password</mat-error>
-            </mat-form-field>
-            <button mat-raised-button color="primary" type="submit" *ngIf="!isLoading">Login</button>
-        </form>
-    </mat-card-content>
-</mat-card>
+      </form>
+  </div>
+</div>

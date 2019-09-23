@@ -12,7 +12,8 @@ import { TranslateService } from '@ngx-translate/core';
   }
   main {
     padding: 15px;
-    height: 100%;
+    height: 95%;
+    margin-top: 4em;
   }
   app-main-nav {
       height: 100%;

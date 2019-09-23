@@ -1,21 +1,53 @@
-mat-form-field,
-textarea {
-    width: 100%;
+.signup-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
 }
-
-mat-spinner {
-    margin: auto;
+.signup-page:after {
+  content: '';
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 50%;
+  right: 0;
 }
-
-mat-card {
-    width: 40%;
-    margin: 1rem auto;
+.signup-page:before {
+  content: '';
+  background: #3f51b5;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
+.signup-page .content {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-button.mat-raised-button.mat-primary.ng-star-inserted {
-    margin-top: 2em;
 }
+.signup-page .content .app-name {
+  margin-top: 0px;
+  padding-bottom: 10px;
+  font-size: 32px;
+}
+.signup-page .content .signup-form {
+  padding: 40px;
+  background: #fff;
+  width: 500px;
+  box-shadow: 0 0 10px #b7b7b7;
 
-table {
-    width: 100%;
+}
+.signup-page .content .signup-form input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset;
+}
+.text-center {
+  text-align: center;
+}
+.w-100 {
+  width: 100%;
 }
