@@ -11,6 +11,7 @@ import { SettingsGeneralService } from '../settings/settings-general.service';
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { DatePipe } from '@angular/common';
+import { QueService } from '../que/que.service';
 
 @Component({
   selector: 'app-rx-pad',
@@ -52,6 +53,7 @@ implements OnInit, OnDestroy {
     public prescriptionService: PrescriptionService,
     public patientsService: PatientsService,
     public settingsGeneralService: SettingsGeneralService,
+    private queService: QueService,
     public dialogRef: MatDialogRef < RxPadComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
@@ -78,6 +80,7 @@ implements OnInit, OnDestroy {
         /**
          * person data
          */
+        this.personId = results.patientData.personId;
         this.id = results.patientData.userId;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
@@ -359,6 +362,8 @@ implements OnInit, OnDestroy {
 
       pdfDoc.autoPrint();
       pdfDoc.output('dataurlnewwindow');
+
+      this.queService.findDelete(this.personId);
     });
 
   }

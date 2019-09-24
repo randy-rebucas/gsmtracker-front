@@ -75,3 +75,16 @@ exports.delete = async(req, res, next) => {
         });
     }
 };
+
+exports.deleteAll = async(req, res, next) => {
+    try {
+        await Que.deleteMany({ licenseId: req.params.licenseId }).exec();
+        res.status(200).json({
+            message: 'Deletion successfull!'
+        });
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};

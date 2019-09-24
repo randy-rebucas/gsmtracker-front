@@ -8,6 +8,9 @@ import { AppConfiguration } from '../app-configuration.service';
 import { PatientsService } from '../patients/patients.service';
 import { Subscription } from 'rxjs';
 import { AppointmentService } from '../appointments/appointment.service';
+import { QueService } from '../que/que.service';
+import { NotificationService } from '../shared/notification.service';
+import { DialogService } from '../shared/dialog.service';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +28,18 @@ import { AppointmentService } from '../appointments/appointment.service';
   .mb-20 {
     margin-bottom: 1em;
   }
+  canvas.chartjs-render-monitor {
+    opacity: .2;
+  }
+  .grid-inner-content.grid-inner-content-list.chart h1 {
+    position: absolute;
+    top: 28%;
+    left: 45%;
+  }
+  mat-grid-tile-header.mat-grid-tile-header button {
+    position: absolute;
+    right: 0;
+}
   `]
 })
 export class HomeComponent
@@ -50,9 +65,12 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
+    private notificationService: NotificationService,
+    private dialogService: DialogService,
     private titleService: Title,
     private patientsService: PatientsService,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private queService: QueService
   ) {
     super(authService, router, dialog, appconfig);
    }
@@ -114,6 +132,20 @@ implements OnInit, OnDestroy {
 
   onResize(event) {
     this.breakpoint = (event.target.innerWidth <= 400) ? 1 : 3;
+  }
+
+  onClear() {
+    console.log('clear');
+    this.queService.clear(this.licenseId);
+    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+    .afterClosed().subscribe(res => {
+      if (res) {
+        this.queService.clear(this.licenseId).subscribe(() => {
+          this.queService.getAll(this.licenseId);
+          this.notificationService.warn('! Deleted successfully');
+        });
+      }
+    });
   }
 
   ngOnDestroy() {

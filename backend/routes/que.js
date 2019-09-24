@@ -12,5 +12,6 @@ router.get('', QueController.getAll);
 
 router.delete('/:queId', checkAuth, QueController.delete);
 
+router.delete('/clear/:licenseId', checkAuth, QueController.deleteAll);
 
 module.exports = router;

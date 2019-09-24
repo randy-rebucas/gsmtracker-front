@@ -26,18 +26,54 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     font-size: 3rem;
   }
   mat-list-item.lead-1 h3 {
-    font-size: 5rem;
+    font-size: 6rem;
     margin: 0;
     font-weight: 100;
     line-height: 1;
   }
   mat-list-item.lead-1 p {
-    font-size: 24px;
+    font-size: 30px;
     margin: 0;
   }
   .mat-list-item-content {
     border-bottom: 1px solid gainsboro !important;
     padding: 1em;
+  }
+  mat-list-item.lead-2 h3 {
+    font-size: 4rem;
+    font-weight: 100;
+    margin: 0;
+    line-height: 1;
+  }
+  mat-list-item.lead-2 p {
+    font-size: 22px;
+    line-height: 1;
+    margin-top: 0;
+}
+  mat-list-item.lead-3 h3 {
+    font-size: 2em;
+    font-weight: 100;
+    margin: 0;
+    line-height: 1;
+  }
+  mat-list-item.lead-3 p {
+    font-size: 20px;
+    line-height: 1;
+    margin: 0rem 0 1em;
+}
+  mat-list-item.lead-4 h3 {
+    font-weight: 100;
+    margin: 0;
+    line-height: 1;
+  }
+  mat-list-item:first-child {
+    position: relative;
+  }
+  mat-list-item:first-child:before {
+    content: "Serving :";
+    position: absolute;
+    left: -195px;
+    top: 50px;
   }
   `]
 })

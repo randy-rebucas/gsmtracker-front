@@ -57,5 +57,12 @@ export class QueService {
     return this.http.delete(BACKEND_URL + '/' + queId);
   }
 
+  findDelete(personId) {
+    return this.http.delete(BACKEND_URL + '/smooth/' + personId);
+  }
+
+  clear(licenseId: string) {
+    return this.http.delete(BACKEND_URL + '/clear/' + licenseId);
+  }
 
 }
