@@ -16,6 +16,8 @@ router.get('/search', PatientController.search);
 
 router.get('/:patientId', PatientController.get);
 
+router.get('/new/:licenseId', PatientController.getNewPatient);
+
 router.put('/:patientId', checkAuth, preAuth, PatientController.update);
 
 router.delete('/:patientId', checkAuth, PatientController.delete);

@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { SecureComponent } from '../secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from '../app-configuration.service';
+import { PatientsService } from '../patients/patients.service';
+import { Subscription } from 'rxjs';
+import { AppointmentService } from '../appointments/appointment.service';
 
 @Component({
   selector: 'app-home',
@@ -35,13 +38,21 @@ implements OnInit, OnDestroy {
   canceledVisit: number;
   breakpoint: number;
 
+  private patientsChartSub: Subscription;
+  public barChartData: any;
+  public barChartLabels: any;
+  public barChartType: string;
+  public barChartLegend: boolean;
+
   constructor(
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    private titleService: Title
+    private titleService: Title,
+    private patientsService: PatientsService,
+    private appointmentService: AppointmentService
   ) {
     super(authService, router, dialog, appconfig);
    }
@@ -50,13 +61,6 @@ implements OnInit, OnDestroy {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  public barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-  public barChartType = 'bar';
-  public barChartLegend = true;
-  public barChartData = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  ];
 
   public doughnutChartLabels = ['Sales Q1', 'Sales Q2', 'Sales Q3', 'Sales Q4'];
   public doughnutChartData = [120, 150, 180, 90];
@@ -74,12 +78,38 @@ implements OnInit, OnDestroy {
 
     this.titleService.setTitle('Home');
 
-    this.newPatient = 19;
-    this.newAppointment = 2;
+    this.patientsService.getAllNew(this.licenseId).subscribe((res) => {
+      this.newPatient = res.count;
+    });
+
+    this.appointmentService.getAllNew(this.licenseId).subscribe((res) => {
+      this.newAppointment = res.count;
+    });
+
     this.newMessage = 3;
     this.canceledVisit = 1;
 
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
+
+
+    // this.patientsService.getAllPatientByYear(this.licenseId);
+    // this.patientsChartSub = this.patientsService
+    // .getUpdateListener()
+    // .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {
+      //   this.isLoading = false;
+      //   this.total = patientData.patientCount;
+      //   this.dataSource = new MatTableDataSource(patientData.patients);
+      //   this.dataSource.paginator = this.paginator;
+      //   this.dataSource.sort = this.sort;
+      // });
+
+    this.barChartType = 'bar';
+    this.barChartLegend = true;
+    this.barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+    this.barChartData = [
+      {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
+      {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
+    ];
   }
 
   onResize(event) {

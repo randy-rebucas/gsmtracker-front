@@ -86,6 +86,17 @@ import { TranslateService } from '@ngx-translate/core';
           display: none;
       }
   }
+  @media (min-width: 320px) and (max-width: 576px) {
+    .sidenav {
+      margin-top: unset;
+    }
+  }
+  @media (min-width: 1200px) {
+    .sidenav {
+      transform: none;
+      visibility: visible;
+    }
+  }
 
   div#app-details {
     position: fixed;

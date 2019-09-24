@@ -2,6 +2,7 @@ const Person = require('../models/person');
 const Auth = require('../models/auth');
 const User = require('../models/user');
 const Patient = require('../models/patient');
+const moment = require('moment');
 
 exports.create = async(req, res, next) => {
     try {
@@ -70,27 +71,27 @@ exports.update = async(req, res, next) => {
     }
 };
 
-exports.search = async (req, res, next) => {
-  try {
-    const patientQuery = User.find({'licenseId': req.query.licenseId});
-    let patient = await patientQuery.populate('personId').where('userType', 'patient');
-    const result = [];
-    patient.forEach(element => {
-        let fullname = element.personId.firstname + ', ' + element.personId.lastname;
-        result.push({ id: element.personId._id, name: fullname });
-    });
+exports.search = async(req, res, next) => {
+    try {
+        const patientQuery = User.find({ 'licenseId': req.query.licenseId });
+        let patient = await patientQuery.populate('personId').where('userType', 'patient');
+        const result = [];
+        patient.forEach(element => {
+            let fullname = element.personId.firstname + ', ' + element.personId.lastname;
+            result.push({ id: element.personId._id, name: fullname });
+        });
 
-    let count = await Patient.countDocuments({'licenseId': req.query.licenseId});
+        let count = await Patient.countDocuments({ 'licenseId': req.query.licenseId });
 
-    res.status(200).json({
-      total: count,
-      results: result
-    });
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
+        res.status(200).json({
+            total: count,
+            results: result
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 }
 
 exports.getAll = async(req, res, next) => {
@@ -138,6 +139,30 @@ exports.get = async(req, res, next) => {
             addresses: user.personId.address,
             created: user.personId.created
         });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+exports.getNewPatient = async(req, res, next) => {
+    try {
+        const today = moment().startOf('day');
+
+        let newPatientCount = await User.countDocuments({
+                'licenseId': req.params.licenseId,
+                'userType': 'patient'
+            })
+            .populate({
+                path: 'personId',
+                match: { created: { $gte: today.toDate(), $lte: moment(today).endOf('day').toDate() } },
+            }).exec()
+
+        res.status(200).json({
+            count: newPatientCount
+        });
+
     } catch (error) {
         res.status(500).json({
             message: error.message

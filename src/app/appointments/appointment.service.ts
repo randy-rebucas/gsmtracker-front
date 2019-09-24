@@ -61,6 +61,13 @@ export class AppointmentService {
       );
   }
 
+  getAllNew(licenseId: string) {
+    // tslint:disable-next-line: max-line-length
+    return this.http.get<{ count: number }>(
+        BACKEND_URL + '/new/' + licenseId
+      );
+  }
+  
   insert(users: string, title: string, start: string, licenseId: string) {
     const appointmentData = {
       users, title, start, licenseId

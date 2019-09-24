@@ -68,10 +68,53 @@ export class PatientsService {
     });
   }
 
+  getAllPatientByYear(licenseId: string) {
+    const queryParams = `?licenseId=${licenseId}`;
+    this.http.get<{message: string, patients: any, maxPatients: number }>(
+      BACKEND_URL + queryParams
+    )
+    .pipe(
+      map(patientData => {
+        return { patients: patientData.patients.map(patient => {
+          return {
+            id: patient._id,
+            bloodType: patient.bloodType,
+            comments: patient.comments,
+            userId: patient.userId,
+            personId: patient.personId._id,
+            firstname: patient.personId.firstname,
+            midlename: patient.personId.midlename,
+            lastname: patient.personId.lastname,
+            contact: patient.personId.contact,
+            gender: patient.personId.gender,
+            birthdate: patient.personId.birthdate,
+            address: patient.personId.address,
+            created: patient.personId.created,
+            meta: patient.metaData
+          };
+        }), maxPatients: patientData.maxPatients};
+      })
+    )
+    .subscribe((transformpatientsData) => {
+      this.patients = transformpatientsData.patients;
+      this.patientsUpdated.next({
+        patients: [...this.patients],
+        patientCount: transformpatientsData.maxPatients
+      });
+    });
+  }
+  // {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
   getUpdateListener() {
     return this.patientsUpdated.asObservable();
   }
-  
+
+  getAllNew(licenseId: string) {
+    // tslint:disable-next-line: max-line-length
+    return this.http.get<{ count: number }>(
+        BACKEND_URL + '/new/' + licenseId
+      );
+  }
+
   get(userId: string) {
     // tslint:disable-next-line: max-line-length
     return this.http.get<{ userId: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [] }>(

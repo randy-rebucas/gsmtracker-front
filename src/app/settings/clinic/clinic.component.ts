@@ -12,7 +12,56 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-clinic',
   templateUrl: './clinic.component.html',
-  styleUrls: ['./clinic.component.css']
+  styles: [`
+  .arrayGroup {
+    position: relative;
+  }
+
+  .arrayGroup .action {
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
+  }
+
+  .arrayGroup:hover .action {
+    visibility: visible;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+
+  mat-form-field:not(:first-child) {
+      margin-left: 1em;
+  }
+  form.normal-form {
+    width: 50%;
+    margin: 3em 0;
+  }
+  mat-form-field.time {
+    width: 49%;
+    flex-direction: row;
+  }
+  .form-field-block {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: row;
+      flex-basis: auto;
+  }
+  .mat-form-field-flex .mat-form-field-infix ngx-material-timepicker-toggle button {
+    position: absolute !important;
+    right: 0;
+    top: 0;
+  }
+  .action-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  mat-form-field.contact {
+    width: 49%;
+  }
+  `]
 })
 export class ClinicComponent
 extends SecureComponent

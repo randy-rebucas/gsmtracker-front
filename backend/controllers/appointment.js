@@ -115,6 +115,26 @@ exports.get = async(req, res, next) => {
     }
 };
 
+exports.getNewAppointment = async(req, res, next) => {
+    try {
+        const today = moment().startOf('day');
+
+        let newAppointmentCount = await Appointment.countDocuments({
+            'licenseId': req.params.licenseId,
+            'status': 0
+        }).exec()
+
+        res.status(200).json({
+            count: newAppointmentCount
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
 exports.delete = async(req, res, next) => {
     try {
         let appointment = await Appointment.findById(req.params.appointmentId).exec();
