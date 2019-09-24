@@ -14,4 +14,6 @@ router.delete('/:queId', checkAuth, QueController.delete);
 
 router.delete('/clear/:licenseId', checkAuth, QueController.deleteAll);
 
+router.delete('/smooth/:personId/:licenseId', checkAuth, QueController.deleteSmooth);
+
 module.exports = router;

@@ -88,3 +88,36 @@ exports.deleteAll = async(req, res, next) => {
         });
     }
 };
+
+exports.deleteSmooth = async(req, res, next) => {
+    try {
+        let que = await Que.findOne({ 'personId': req.params.personId }).exec();
+        await Que.deleteOne({ _id: que._id }).exec();
+        res.status(200).json({
+            message: 'Deletion successfull!'
+        });
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+};
+
+exports.getNext = async(req, res, next) => {
+
+    try {
+        let nextQue = await Que.findOne({ 'licenseId': req.params.licenseId }).populate('personId').sort({ created: -1 }).exec();
+        if (!nextQue) {
+            throw new Error('Something went wrong.!');
+        }
+        res.status(200).json({
+            _id: nextQue._id,
+            personId: nextQue.personId._id
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};

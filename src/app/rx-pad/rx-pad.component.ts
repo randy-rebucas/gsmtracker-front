@@ -363,7 +363,10 @@ implements OnInit, OnDestroy {
       pdfDoc.autoPrint();
       pdfDoc.output('dataurlnewwindow');
 
-      this.queService.findDelete(this.personId);
+      this.queService.findDelete(this.personId).subscribe((res) => {
+        // redirect to encounter
+        console.log(res);
+      });
     });
 
   }
