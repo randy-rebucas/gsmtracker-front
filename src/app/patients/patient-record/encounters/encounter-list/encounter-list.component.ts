@@ -1,48 +1,94 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../auth/auth.service';
-import { Router, ActivatedRoute, Params, ParamMap, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
-import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
-import { DatePipe } from '@angular/common';
+import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { DialogService } from 'src/app/shared/dialog.service';
+import { SecureComponent } from 'src/app/secure/secure.component';
+import { AppConfiguration } from 'src/app/app-configuration.service';
+import { QueService } from 'src/app/que/que.service';
+import { QueData } from 'src/app/que/que-data.model';
 
 @Component({
   selector: 'app-encounter-list',
   templateUrl: './encounter-list.component.html',
-  styleUrls: ['./encounter-list.component.css']
-})
-export class EncounterListComponent implements OnInit, OnDestroy {
+  styles: [`
+  .hide {
+    display: none;
+  }
 
-  private recordsSub: Subscription;
-  private authListenerSubs: Subscription;
+  #no-data {
+      width: 100%;
+      text-align: center;
+  }
+  mat-cell:last-of-type {
+    justify-content: flex-end;
+  }
+  `]
+})
+export class EncounterListComponent
+extends SecureComponent
+implements OnInit, OnDestroy {
+
+  records: QueService[] = [];
+  public recordsSub: Subscription;
+
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['que', 'name', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
-    // @Optional() @Inject(MAT_DIALOG_DATA) public data: HistoryService,
+    public authService: AuthService,
+    public router: Router,
+    public dialog: MatDialog,
+    public appconfig: AppConfiguration,
 
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private datePipe: DatePipe,
+    public queService: QueService,
     private dialogService: DialogService,
-    private authService: AuthService,
-    private router: Router,
-    private notificationService: NotificationService) {
-      const snapshot: RouterStateSnapshot = this.router.routerState.snapshot;
-      const splitUrl = snapshot.url.split('/');
-    //   this.patientId = splitUrl[2];
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute,
+
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: QueService
+    ) {
+      super(authService, router, dialog, appconfig);
     }
 
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['type', 'description', 'created', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
+    ngOnInit() {
+      super.doInit();
 
-  ngOnInit() {
+      this.queService.getAll(this.licenseId);
+      this.recordsSub = this.queService
+      .getUpdateListener()
+      .subscribe((queData: {ques: QueData[], count: number}) => {
+        this.isLoading = false;
+        this.total = queData.count;
+        this.dataSource = new MatTableDataSource(queData.ques);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
+    }
 
-  }
+    onDelete(queId) {
+      this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+      .afterClosed().subscribe(res => {
+        if (res) {
+          this.queService.delete(queId).subscribe(() => {
+            this.notificationService.warn('! Deleted successfully');
+            this.queService.getAll(this.licenseId);
+          });
+        }
+      });
+    }
 
-  ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
-  }
+    onDetail(queId) {
+      console.log(queId);
+      this.router.navigate(['./', queId], {relativeTo: this.activatedRoute});
+    }
+
+    ngOnDestroy() {
+      super.doDestroy();
+    }
 }

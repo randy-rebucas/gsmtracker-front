@@ -35,11 +35,13 @@ import { PrescriptionLatestComponent } from './prescriptions/prescription-latest
 import { ProgressNoteLatestComponent } from './progress-notes/progress-note-latest/progress-note-latest.component';
 import { PatientChartComponent } from '../patient-chart/patient-chart.component';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 /**
  * imported outside of this directory to gain access of <app-upload></app-upload> component selector
  */
 import { UploadModule } from 'src/app/upload/upload.module';
 import { TestResultEditComponent } from './test-results/test-result-edit/test-result-edit.component';
+import { EncounterFormComponent } from './encounters/encounter-form/encounter-form.component';
 
 
 @NgModule({
@@ -47,6 +49,7 @@ import { TestResultEditComponent } from './test-results/test-result-edit/test-re
     EncountersComponent,
     EncounterListComponent,
     EncounterEditComponent,
+    EncounterFormComponent,
     ChiefComplaintComponent,
     ChiefComplaintEditComponent,
     ChiefComplaintListComponent,
@@ -81,7 +84,8 @@ import { TestResultEditComponent } from './test-results/test-result-edit/test-re
     AngularMaterialModule,
     PhysicalExamsModule,
     RouterModule,
-    UploadModule
+    UploadModule,
+    FlexLayoutModule.withConfig({addFlexToParent: false})
   ]
 })
 export class PatientRecordsModule {}

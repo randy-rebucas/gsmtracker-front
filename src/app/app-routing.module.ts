@@ -10,6 +10,7 @@ import { PatientDetailComponent } from './patients/patient-detail/patient-detail
 import { PatientListComponent } from './patients/patient-list/patient-list.component';
 import { EncountersComponent } from './patients/patient-record/encounters/encounters.component';
 import { EncounterListComponent } from './patients/patient-record/encounters/encounter-list/encounter-list.component';
+import { EncounterEditComponent } from './patients/patient-record/encounters/encounter-edit/encounter-edit.component';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileComponent } from './settings/profile/profile.component';
@@ -68,13 +69,17 @@ import { TestResultInitialComponent } from './patients/patient-record/test-resul
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import { UsersComponent } from './users/users.component';
+import { EncounterFormComponent } from './patients/patient-record/encounters/encounter-form/encounter-form.component';
 
 const appRoutes: Routes = [
-    // { path: '',
-    //   loadChildren: './layout/layout.module#LayoutModule'
-    // },
     { path: '',
       component: HomeComponent
+    },
+    {
+      path: 'encounter', component: EncountersComponent, canActivate: [AuthGuard], children: [
+        { path: '', component: EncounterListComponent },
+        { path: ':encounterId', component: EncounterFormComponent }
+      ]
     },
     { path: 'users', component: UsersComponent, canActivate: [AuthGuard], children: [
       { path: '', component: UserListComponent }

@@ -126,11 +126,9 @@ implements OnInit, OnDestroy {
       this.getPatientData(this.patientId)
       .then((results) => {
         this.isLoading = false;
-
         this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
 
         this.personId = results.patientData.personId;
-        this.patientId = results.patientData.userId;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
         this.lastname = results.patientData.lastname;
@@ -294,8 +292,8 @@ implements OnInit, OnDestroy {
       this.router.navigate(['./record/physical-exams'], {relativeTo: this.route});
     }
 
-    moveToQue(personId) {
-      this.queService.insert(personId, this.licenseId).subscribe((res) => {
+    moveToQue(patientId) {
+      this.queService.insert(patientId, this.licenseId).subscribe((res) => {
         this.notificationService.success(':: on que done. #' + res.que.queNumber);
       });
     }

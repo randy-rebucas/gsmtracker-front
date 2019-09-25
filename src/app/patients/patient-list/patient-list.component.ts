@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageEvent, MatDialog } from '@angular/material';
 import { MatSort } from '@angular/material/sort';
@@ -86,12 +86,6 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   td.mat-cell.cdk-column-action.mat-column-action {
     text-align: right;
   }
-  td.mat-cell.cdk-column-action.mat-column-action button {
-      visibility: hidden;
-  }
-  tr:hover td.mat-cell.cdk-column-action.mat-column-action button {
-      visibility: visible;
-  }
   .hide {
     display: none;
   }
@@ -158,7 +152,8 @@ implements OnInit, OnDestroy {
     private titleService: Title,
     private dialogService: DialogService,
     private notificationService: NotificationService,
-    private patientsService: PatientsService
+    private patientsService: PatientsService,
+    private route: ActivatedRoute
   ) {
     super(authService, router, dialog, appconfig);
   }
@@ -232,6 +227,13 @@ implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  /**
+   * userId
+   */
+  onDetail(userId) {
+    this.router.navigate(['./', userId], {relativeTo: this.route});
   }
 
   ngOnDestroy() {

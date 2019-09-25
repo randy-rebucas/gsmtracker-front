@@ -36,7 +36,7 @@ import { DialogService } from '../shared/dialog.service';
     top: 28%;
     left: 45%;
   }
-  mat-grid-tile-header.mat-grid-tile-header button {
+  mat-grid-tile-header.mat-grid-tile-header .action-button {
     position: absolute;
     right: 0;
 }
@@ -135,7 +135,6 @@ implements OnInit, OnDestroy {
   }
 
   onClear() {
-    console.log('clear');
     this.queService.clear(this.licenseId);
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
@@ -146,6 +145,10 @@ implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  onOpen() {
+    window.open('/encounter', '_blank');
   }
 
   ngOnDestroy() {

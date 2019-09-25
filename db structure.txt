@@ -9,5 +9,18 @@ person [5d81876bb542dc3628a7455e]
         2
             doctors [dynamic data] // should bare the parent user id
             patients [dynamic data]
+              encounter [multi]
+                chief-complaint
+                history-of-present-illness
+                past-medical-history
+                social-history
+                family-history
+                physical-exams [multi]
+                  Temperature : 36.3
+                order
+                prescription
+                test-results
+                progress-notes
+              record {summary}
             1
             2

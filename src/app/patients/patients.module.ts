@@ -9,6 +9,7 @@ import { PatientEditComponent } from './patient-edit/patient-edit.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 import { PatientRecordComponent } from './patient-record/patient-record.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { PatientRecordComponent } from './patient-record/patient-record.componen
     CommonModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    RouterModule
+    RouterModule,
+    PerfectScrollbarModule
   ]
 })
 export class PatientsModule {}

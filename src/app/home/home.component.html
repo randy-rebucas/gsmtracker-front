@@ -47,15 +47,21 @@
             <div class="grid-inner-content grid-inner-content-list" style="padding: 1em;">
                 <mat-grid-tile-header>
                     <h3>Queing </h3>
-                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="onClear()">
-                            <mat-icon>delete_outline</mat-icon>
-                            <span>Clear</span>
+                    <div class="action-button">
+                        <button mat-icon-button (click)="onOpen()" aria-label="view">
+                            <mat-icon>launch</mat-icon>
                         </button>
-                    </mat-menu>
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="more">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="onClear()">
+                                <mat-icon>delete_outline</mat-icon>
+                                <span>Clear</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+
                 </mat-grid-tile-header>
                 <app-que></app-que>
             </div>

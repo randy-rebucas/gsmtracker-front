@@ -2,6 +2,7 @@
     <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
 </h2>
 <mat-dialog-content class="mat-typography" style="min-height: 300px;">
+  <perfect-scrollbar style="max-height: 536px;">
   <div *ngIf="isLoading" class="loading">
       <mat-spinner [diameter]="25"></mat-spinner>
   </div>
@@ -104,4 +105,6 @@
         </ng-container>
         <button mat-raised-button color="primary" type="submit">{{btnLabel}}</button>
     </form>
+  </perfect-scrollbar>
 </mat-dialog-content>
+

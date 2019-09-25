@@ -1,20 +1,30 @@
 const Que = require('../models/que');
-
+const User = require('../models/user');
+const Person = require('../models/person');
 const moment = require('moment');
 const count = 0;
 
 exports.create = async(req, res, next) => {
     try {
-        let queCheck = await Que.findOne({ personId: req.body.personId }).populate('personId').exec();
+        let queCheck = await Que.findOne({ userId: req.body.patientId })
+          .populate({
+            path: 'userId',
+            populate: {
+              path: 'personId',
+              model: Person
+            }
+          })
+          .exec();
+
         if (queCheck) {
-            throw new Error('Something went wrong.' + queCheck.personId.firstname + ' ' + queCheck.personId.lastname + ' already on que!');
+          throw new Error('Something went wrong.' + queCheck.userId.personId.firstname + ' ' + queCheck.userId.personId.lastname + ' already on que!');
         }
 
         let count = await Que.countDocuments({ 'licenseId': req.body.licenseId });
 
         const queData = new Que({
             queNumber: '00' + (count + 1),
-            personId: req.body.personId,
+            userId: req.body.patientId,
             licenseId: req.body.licenseId
         });
         let que = await queData.save();
@@ -38,7 +48,13 @@ exports.getAll = async(req, res, next) => {
 
         const que = await Que.find({ 'licenseId': req.query.licenseId })
             .sort({ 'queNumber': 'asc' })
-            .populate('personId')
+            .populate({
+              path: 'userId',
+              populate: {
+                path: 'personId',
+                model: Person
+              }
+            })
             .exec();
 
         newQueings = [];
@@ -46,12 +62,12 @@ exports.getAll = async(req, res, next) => {
             var myObj = {
                 id: element._id,
                 queNum: element.queNumber,
-                fullname: element.personId.firstname + ' ' + element.personId.lastname,
-                personId: element.personId._id
+                fullname: element.userId.personId.firstname + ' ' + element.userId.personId.lastname,
+                userId: element.userId._id
             };
             newQueings.push(myObj);
         });
-        console.log(newQueings);
+
         res.status(200).json({
             ques: newQueings
         });

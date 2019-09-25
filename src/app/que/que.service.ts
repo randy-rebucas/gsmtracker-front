@@ -12,7 +12,7 @@ const BACKEND_URL = environment.apiUrl + '/que';
 
 export class QueService {
   private ques: QueData[] = [];
-  private quesUpdated = new Subject<{ ques: QueData[] }>();
+  private quesUpdated = new Subject<{ ques: QueData[], count: number }>();
 
   constructor(
     private http: HttpClient
@@ -20,7 +20,7 @@ export class QueService {
 
     getAll(licenseId: string) {
       const queryParams = `?licenseId=${licenseId}`;
-      this.http.get<{message: string, ques: any }>(
+      this.http.get<{message: string, ques: any, max: number }>(
         BACKEND_URL + queryParams
       )
       .pipe(
@@ -31,13 +31,14 @@ export class QueService {
               queNumber: que.queNum,
               fullname: que.fullname
             };
-          })};
+          }), max: queData.max};
         })
       )
       .subscribe((transformData) => {
         this.ques = transformData.ques;
         this.quesUpdated.next({
-          ques: [...this.ques]
+          ques: [...this.ques],
+          count: transformData.max
         });
       });
     }
@@ -46,9 +47,9 @@ export class QueService {
     return this.quesUpdated.asObservable();
   }
 
-  insert(personId: string, licenseId: string) {
+  insert(patientId: string, licenseId: string) {
     const queData = {
-      personId, licenseId
+      patientId, licenseId
     };
     return this.http.post<{ message: string, que: QueData }>(BACKEND_URL, queData);
   }
