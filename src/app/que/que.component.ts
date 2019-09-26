@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { QueData } from '../que/que-data.model';
 import { QueService } from '../que/que.service';
@@ -92,7 +92,8 @@ implements OnInit, OnDestroy {
 
     private queService: QueService,
     private notificationService: NotificationService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private route: ActivatedRoute
     ) {
       super(authService, router, dialog, appconfig);
     }
@@ -121,8 +122,8 @@ implements OnInit, OnDestroy {
     });
   }
 
-  gotoRecord(queId) {
-    console.log(queId);
+  gotoRecord(patientId) {
+    this.router.navigate(['/patients/' + patientId + '/record/chief-complaints']);
   }
 
   ngOnDestroy() {

@@ -29,7 +29,8 @@ export class QueService {
             return {
               id: que.id,
               queNumber: que.queNum,
-              fullname: que.fullname
+              fullname: que.fullname,
+              patientId: que.userId
             };
           }), max: queData.max};
         })

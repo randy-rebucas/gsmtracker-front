@@ -42,6 +42,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { UploadModule } from 'src/app/upload/upload.module';
 import { TestResultEditComponent } from './test-results/test-result-edit/test-result-edit.component';
 import { EncounterFormComponent } from './encounters/encounter-form/encounter-form.component';
+import { OrdersComponent } from './orders/orders.component';
+import { OrderListComponent } from './orders/order-list/order-list.component';
+import { OrderEditComponent } from './orders/order-edit/order-edit.component';
 
 
 @NgModule({
@@ -76,7 +79,10 @@ import { EncounterFormComponent } from './encounters/encounter-form/encounter-fo
     ProgressNoteEditComponent,
     ProgressNoteListComponent,
     ProgressNoteLatestComponent,
-    PatientChartComponent
+    PatientChartComponent,
+    OrdersComponent,
+    OrderListComponent,
+    OrderEditComponent
   ],
   imports: [
     CommonModule,

@@ -70,6 +70,8 @@ import { MessageEditComponent } from './messages/message-edit/message-edit.compo
 import { UserListComponent } from './users/user-list/user-list.component';
 import { UsersComponent } from './users/users.component';
 import { EncounterFormComponent } from './patients/patient-record/encounters/encounter-form/encounter-form.component';
+import { OrdersComponent } from './patients/patient-record/orders/orders.component';
+import { OrderEditComponent } from './patients/patient-record/orders/order-edit/order-edit.component';
 
 const appRoutes: Routes = [
     { path: '',
@@ -88,7 +90,18 @@ const appRoutes: Routes = [
       { path: '', component: PatientListComponent },
       { path: ':patientId', component: PatientDetailComponent },
       { path: ':patientId/record', component: PatientRecordComponent, children: [
-        { path: '', redirectTo: 'physical-exams', pathMatch: 'full' },
+        { path: '', redirectTo: 'chief-complaints', pathMatch: 'full' },
+        { path: 'chief-complaints', component: ChiefComplaintComponent, children: [
+          { path: '', component: ChiefComplaintListComponent },
+          { path: ':complaintId', component: ChiefComplaintDetailComponent, children: [
+            { path: '', component: AssessmentListComponent }, //change component filtered by complaint id
+            { path: 'prescription', component: PrescriptionsComponent, children: [
+              { path: '', component: PrescriptionListComponent },
+              { path: ':precriptionId', component: PrescriptionListComponent } //prescription detail
+            ] },
+          ] },
+        ] },
+        { path: 'histories', component: HistoriesListComponent },
         { path: 'physical-exams', component: PhysicalExamsComponent, children: [
           { path: '', redirectTo: 'height', pathMatch: 'full' },
           { path: 'height', component: HeightListComponent },
@@ -107,24 +120,16 @@ const appRoutes: Routes = [
             ] },
           ] },
         ] },
-        { path: 'chief-complaints', component: ChiefComplaintComponent, children: [
-          { path: '', component: ChiefComplaintListComponent },
-          { path: ':complaintId', component: ChiefComplaintDetailComponent, children: [
-            { path: '', component: AssessmentListComponent }, //change component filtered by complaint id
-            { path: 'prescription', component: PrescriptionsComponent, children: [
-              { path: '', component: PrescriptionListComponent },
-              { path: ':precriptionId', component: PrescriptionListComponent } //prescription detail
-            ] },
-          ] },
+        { path: 'orders', component: OrdersComponent, children: [
+          { path: ':orderId', component: OrdersComponent }
         ] },
-        { path: 'histories', component: HistoriesListComponent },
-        { path: 'assessments', component: AssessmentListComponent },
         { path: 'prescriptions', component: PrescriptionListComponent },
-        { path: 'progress-notes', component: ProgressNoteListComponent },
         { path: 'test-results', component: TestResultsComponent, children: [
           { path: '', component: TestResultInitialComponent },
           { path: ':fileId', component: TestResultDetailComponent }
-        ] }
+        ] },
+        { path: 'progress-notes', component: ProgressNoteListComponent },
+        { path: 'assessments', component: AssessmentListComponent }
       ] },
     ] },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], children: [

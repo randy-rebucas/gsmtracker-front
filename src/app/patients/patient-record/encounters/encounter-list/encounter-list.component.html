@@ -41,14 +41,13 @@
                 </mat-footer-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row matRipple class="element-row" *matRowDef="let row; columns: displayedColumns;" (click)="onDetail(row.id)"></mat-row>
+            <mat-row matRipple class="element-row" *matRowDef="let row; columns: displayedColumns;" (click)="onDetail(row.patientId)"></mat-row>
             <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
             <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
         </mat-table>
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage"></mat-paginator>
     </div>
     <div fxFlex="40%">
-      News
+        News
     </div>
 </div>
-

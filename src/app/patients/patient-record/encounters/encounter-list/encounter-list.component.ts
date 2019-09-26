@@ -83,9 +83,8 @@ implements OnInit, OnDestroy {
       });
     }
 
-    onDetail(queId) {
-      console.log(queId);
-      this.router.navigate(['./', queId], {relativeTo: this.activatedRoute});
+    onDetail(patientId) {
+      this.router.navigate(['/patients/' + patientId + '/record/chief-complaints']);
     }
 
     ngOnDestroy() {
