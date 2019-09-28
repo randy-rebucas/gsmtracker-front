@@ -19,14 +19,26 @@ import { OrderService } from '../services/order.service';
   .mat-card-subtitle {
     margin-bottom: unset;
   }
-  .mat-card {
+  .mat-card-title {
+    margin-bottom: unset !important;
+    font-size: 14px;
+  }
+  mat-card {
+    margin-bottom: 1em;
     border-radius: 0;
+  }
+  button.mat-menu-trigger {
+    position: absolute;
+    right: 0;
+    top: 5px;
   }
   `]
 })
 export class OrdersComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
+  panelOpenState = true;
+  listOpenState = true;
 
   constructor(
     public authService: AuthService,
@@ -58,6 +70,14 @@ implements OnInit, OnDestroy {
         validators: [Validators.required]
       })
     });
+  }
+
+  onOpenForm() {
+    this.panelOpenState = ! this.panelOpenState;
+  }
+
+  onOpenList() {
+    this.listOpenState = ! this.listOpenState;
   }
 
   onSave() {

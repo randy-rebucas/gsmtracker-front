@@ -106,6 +106,10 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   table#prescriptions tr td span {
       color: rgb(51, 122, 183);
   }
+
+  td.mat-cell button {
+    float: right;
+  }
   `],
   templateUrl: './prescription-list.component.html',
   animations: [
@@ -209,33 +213,6 @@ implements OnInit, OnDestroy {
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
     this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
-  }
-
-  onCreate(complaintId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      id: null,
-      title: 'New record',
-      complaintIds: complaintId,
-      btnLabel: 'Save'
-    };
-    this.dialog.open(PrescriptionEditComponent, dialogConfig);
-  }
-
-  onEdit(prescriptionId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-        id: prescriptionId,
-        title: 'Update record',
-        patient: this.patientId,
-        btnLabel: 'Update'
-    };
-    this.dialog.open(PrescriptionEditComponent, dialogConfig);
   }
 
   onDelete(prescriptionId) {

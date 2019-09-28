@@ -1,37 +1,44 @@
 
-    <mat-table [dataSource]="dataSource" matSort>
-
-        <!-- Complaint Column -->
-        <ng-container matColumnDef="order">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Order </mat-header-cell>
-            <mat-cell *matCellDef="let row"> <!-- [routerLink]="['./', row.id]"-->
-                <div [innerHTML]="row.order"></div>
-            </mat-cell>
-        </ng-container>
-
-        <!-- Created Column -->
-        <ng-container matColumnDef="created">
-            <mat-header-cell *matHeaderCellDef> Created </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-                {{ row.created | date:'medium' }}
-            </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="action">
-            <mat-header-cell *matHeaderCellDef style="text-align: right;">
-            </mat-header-cell>
-            <mat-cell *matCellDef="let row">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows style="width:100%;">
+      <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+        <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
+        <ng-template #thenBlockRow>
+            <th mat-header-cell *matHeaderCellDef style="text-align: right;">
+            </th>
+            <td mat-cell *matCellDef="let element">
                 <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="onDelete(row.id)"> <!--disabled-->
-                            <mat-icon>delete_outline</mat-icon>
-                            <span>Delete</span>
-                        </button>
-                </mat-menu>
-            </mat-cell>
-        </ng-container>
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="onDelete(element.id)"> <!--disabled-->
+                      <mat-icon>delete_outline</mat-icon>
+                      <span>Delete</span>
+                  </button>
+            </mat-menu>
+            </td>
+        </ng-template>
+        <ng-template #elseBlockRow>
+            <th mat-header-cell *matHeaderCellDef> {{column | titlecase}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{ element.created | date:'medium' }}
+              </td>
+        </ng-template>
+    </ng-container>
+    <!-- Expanded Content Column - The detail element is made up of this one column -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+          <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <div class="example-element-order"  style="width: 100%;">
+                  <div [innerHTML]="element.order"></div>
+              </div>
+          </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
         <ng-container matColumnDef="loading">
             <mat-footer-cell *matFooterCellDef colspan="3">
                 <p class="mat-body">Loading data...</p>
@@ -39,12 +46,11 @@
         </ng-container>
         <ng-container matColumnDef="noData">
             <mat-footer-cell *matFooterCellDef colspan="3" id="no-data">
-                <p class="mat-body">No complaint data.</p>
+                <p class="mat-body">No progress note data.</p>
             </mat-footer-cell>
         </ng-container>
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row matRipple *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
-        <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
-    </mat-table>
+        <tr mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></tr>
+        <tr mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></tr>
+    </table>
     <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage"></mat-paginator>
+

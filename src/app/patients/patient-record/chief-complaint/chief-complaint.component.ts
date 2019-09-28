@@ -33,16 +33,26 @@ export interface Complaint {
   .mat-card-subtitle {
     margin-bottom: unset;
   }
-  .mat-card {
+  .mat-card-title {
+    margin-bottom: unset !important;
+    font-size: 14px;
+  }
+  mat-card {
+    margin-bottom: 1em;
     border-radius: 0;
+  }
+  button.mat-menu-trigger {
+    position: absolute;
+    right: 0;
+    top: 5px;
   }
   `]
 })
 export class ChiefComplaintComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
-  breakpoint: number;
-  private mode = 'create';
+  panelOpenState = true;
+  listOpenState = true;
 
   constructor(
     public authService: AuthService,
@@ -60,7 +70,6 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    this.breakpoint = (window.innerWidth <= 400) ? 1 : 2;
     this.activatedRoute.parent.params.subscribe(
       (param) => {
         this.patientId = param.patientId;
@@ -78,8 +87,12 @@ implements OnInit, OnDestroy {
 
   }
 
-  onResize(event) {
-    this.breakpoint = (event.target.innerWidth <= 400) ? 1 : 2;
+  onOpenForm() {
+    this.panelOpenState = ! this.panelOpenState;
+  }
+
+  onOpenList() {
+    this.listOpenState = ! this.listOpenState;
   }
 
   onSave() {

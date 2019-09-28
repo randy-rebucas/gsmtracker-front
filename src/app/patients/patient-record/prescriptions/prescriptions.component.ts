@@ -19,7 +19,12 @@ import { NotificationService } from 'src/app/shared/notification.service';
   .mat-card-subtitle {
     margin-bottom: unset;
   }
-  .mat-card {
+  .mat-card-title {
+    margin-bottom: unset !important;
+    font-size: 14px;
+  }
+  mat-card {
+    margin-bottom: 1em;
     border-radius: 0;
   }
   .form-field-block {
@@ -43,12 +48,18 @@ import { NotificationService } from 'src/app/shared/notification.service';
   mat-form-field.record-date {
     width: 25%;
   }
+  button.mat-menu-trigger {
+    position: absolute;
+    right: 0;
+    top: 5px;
+  }
   `]
 })
 export class PrescriptionsComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
-
+  panelOpenState = true;
+  listOpenState = true;
 
   constructor(
     public authService: AuthService,
@@ -75,6 +86,14 @@ implements OnInit, OnDestroy {
       record_date: [new Date(), [Validators.required]],
       prescriptions: this.fb.array([this.addPrescriptionGroup()])
     });
+  }
+
+  onOpenForm() {
+    this.panelOpenState = ! this.panelOpenState;
+  }
+
+  onOpenList() {
+    this.listOpenState = ! this.listOpenState;
   }
 
   addPrescriptionGroup() {
