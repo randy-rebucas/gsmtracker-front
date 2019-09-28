@@ -4,11 +4,8 @@
         <!-- Complaint Column -->
         <ng-container matColumnDef="complaints">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Complaints </mat-header-cell>
-            <mat-cell *matCellDef="let row" [routerLink]="['./', row.id]">
-                <!-- (click)="onFilter(row.id)" -->
-                <mat-chip-list>
-                    <mat-chip *ngFor="let complaint of row.complaints" color="primary" selected>{{ complaint.complaint.length > 50 ? complaint.complaint.substring(0,50)+"..." : complaint.complaint }}</mat-chip>
-                </mat-chip-list>
+            <mat-cell *matCellDef="let row"> <!-- [routerLink]="['./', row.id]"-->
+                <div [innerHTML]="row.complaints"></div>
             </mat-cell>
         </ng-container>
 
@@ -22,9 +19,9 @@
 
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef style="text-align: right;">
-                <button mat-icon-button color="primary" (click)="onCreate()">
+                <!-- <button mat-icon-button color="primary" (click)="onCreate()">
                       <mat-icon>add</mat-icon>
-                  </button>
+                  </button> -->
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
                 <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">

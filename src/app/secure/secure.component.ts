@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { FormGroup } from '@angular/forms';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { AppConfiguration } from '../app-configuration.service';
+import { UsersService } from '../users/users.service';
 
 @Component({
   selector: 'app-secure',
@@ -65,6 +66,10 @@ export class SecureComponent {
   public recordId: string;
 
   /**
+   * user Id
+   */
+  public Id: string;
+  /**
    * Application configurations
    */
   public trialDay: number;
@@ -83,7 +88,7 @@ export class SecureComponent {
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
-    public appconfig: AppConfiguration
+    public appconfig: AppConfiguration,
   ) {
 
   }

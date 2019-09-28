@@ -8,17 +8,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
-import { PatientData } from '../patient-data.model';
 import { AuthService } from 'src/app/auth/auth.service';
-import { PatientsService } from '../patients.service';
 
 import { NotificationService } from 'src/app/shared/notification.service';
-
 import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { QrCodeScannerComponent } from 'src/app/qr-code/qr-code-scanner/qr-code-scanner.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { UsersService } from 'src/app/users/users.service';
+import { UserData } from 'src/app/users/user-data.model';
 
 @Component({
   selector: 'app-patient-list',
@@ -135,7 +134,7 @@ export class PatientListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  private patientsSub: Subscription;
+  private usersSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
   columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
@@ -152,8 +151,8 @@ implements OnInit, OnDestroy {
     private titleService: Title,
     private dialogService: DialogService,
     private notificationService: NotificationService,
-    private patientsService: PatientsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private usersService: UsersService
   ) {
     super(authService, router, dialog, appconfig);
   }
@@ -161,13 +160,13 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
     this.titleService.setTitle('Patients');
-    this.patientsService.getAll(this.licenseId, this.perPage, this.currentPage);
-    this.patientsSub = this.patientsService
+    this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
+    this.usersSub = this.usersService
       .getUpdateListener()
-      .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {
+      .subscribe((userData: {users: UserData[], counts: number}) => {
         this.isLoading = false;
-        this.total = patientData.patientCount;
-        this.dataSource = new MatTableDataSource(patientData.patients);
+        this.total = userData.counts;
+        this.dataSource = new MatTableDataSource(userData.users);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
@@ -184,7 +183,7 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.patientsService.getAll(this.userId, this.perPage, this.currentPage);
+    this.usersService.getAll('patient', this.userId, this.perPage, this.currentPage);
   }
 
   onCreate() {
@@ -217,12 +216,12 @@ implements OnInit, OnDestroy {
     super.onPopup(args, QrCodeScannerComponent);
   }
 
-  onDelete(patientId) {
+  onDelete(Id) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.patientsService.delete(patientId).subscribe(() => {
-          this.patientsService.getAll(this.licenseId, this.perPage, this.currentPage);
+        this.usersService.delete(Id).subscribe(() => {
+          this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
           this.notificationService.warn('! Deleted successfully');
         });
       }
@@ -238,6 +237,6 @@ implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     super.doDestroy();
-    this.patientsSub.unsubscribe();
+    this.usersSub.unsubscribe();
   }
 }

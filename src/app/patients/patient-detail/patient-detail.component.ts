@@ -31,33 +31,57 @@ import { QueService } from 'src/app/que/que.service';
   selector: 'app-patient-detail',
   templateUrl: './patient-detail.component.html',
   styles: [`
-  mat-grid-tile.grid-content>::ng-deep .mat-figure {
-    align-items: flex-start;
-    justify-content: flex-start;
+  /* */
+  .area {
+    /*border: 1px solid rgba(0, 0, 0, .12);
+    padding: 1em;*/
   }
-  .mat-grid-tile {
-    border: 1px solid rgba(0, 0, 0, .12);
+  .header {
+    text-align: right;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+    padding-bottom: 1em;
   }
-  .mat-grid-tile-footer {
-    background: #efefef !important;
-    color: #555 !important;
+  .side {
+    border-right: 1px solid rgba(0, 0, 0, .12);
   }
-  .grid-inner-content-list {
-    margin-top: 3em;
-    padding: 1em;
-    width: 100%;
+  .side > div > div:first-child {
+    text-align: center;
   }
-  table {
-    width: 100%;
+  .content {
+
   }
-  .action-button {
-    margin-top: 3em;
+  .footer {
+
+  }
+  .action-button button {
+    margin-left: 8px;
+    text-align: right;
+  }
+  :host /deep/ .mat-card-header-text {
+    /* CSS styles go here */
+    margin: 0px;
+  }
+  .mat-card-subtitle {
+    margin-bottom: unset;
+  }
+  .mat-card {
+    border-radius: 0;
+  }
+  .fxRecord {
+    margin-bottom: 1em;
+  }
+  .fxRecord.hasMinHeight mat-card {
+    min-height: 142px;
+  }
+  .hide {
+    display: none;
   }
 `]
 })
 export class PatientDetailComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
+  perscriptionColumns: string[] = ['maintenable', 'medicine', 'preparation', 'sig', 'qty'];
 
   height: number;
   heightCreated = new Date();
@@ -289,7 +313,7 @@ implements OnInit, OnDestroy {
     }
 
     gotoRecord() {
-      this.router.navigate(['./record/physical-exams'], {relativeTo: this.route});
+      this.router.navigate(['./record/chief-complaints'], {relativeTo: this.route});
     }
 
     moveToQue(patientId) {

@@ -34,7 +34,6 @@ import { TemperatureEditComponent } from './patients/patient-record/physical-exa
 import { BloodPressureEditComponent } from './patients/patient-record/physical-exams/blood-pressure/blood-pressure-edit/blood-pressure-edit.component';
 import { RespiratoryRateEditComponent } from './patients/patient-record/physical-exams/respiratory-rate/respiratory-rate-edit/respiratory-rate-edit.component';
 import { ChiefComplaintEditComponent } from './patients/patient-record/chief-complaint/chief-complaint-edit/chief-complaint-edit.component';
-import { HistoriesEditComponent } from './patients/patient-record/histories/histories-edit/histories-edit.component';
 import { AssessmentEditComponent } from './patients/patient-record/assessments/assessment-edit/assetment-edit.component';
 import { PrescriptionEditComponent } from './patients/patient-record/prescriptions/prescription-edit/prescription-edit.component';
 import { ProgressNoteEditComponent } from './patients/patient-record/progress-notes/progress-note-edit/progress-note-edit.component';
@@ -68,7 +67,6 @@ import { AppointmentDetailComponent } from './appointments/appointment-detail/ap
 import { SecureComponent } from './secure/secure.component';
 import { TestResultEditComponent } from './patients/patient-record/test-results/test-result-edit/test-result-edit.component';
 import { ProfileImageComponent } from './upload/profile-image/profile-image.component';
-import { UserListComponent } from './users/user-list/user-list.component';
 import { UsersModule } from './users/users.module';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -81,6 +79,8 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { StatModule } from './shared/stat/stat.module';
 import { ChartsModule } from 'ng2-charts';
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { HistoriesModule } from './patients/patient-record/histories/histories.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -148,6 +148,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     UsersModule,
     PatientRecordsModule,
     StatModule,
+    HistoriesModule,
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
@@ -159,7 +160,8 @@ export const createTranslateLoader = (http: HttpClient) => {
     FullCalendarModule,
     ChartsModule,
     WebcamModule,
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    EditorModule
   ],
   providers: [
     AppConfiguration,
@@ -197,7 +199,6 @@ export const createTranslateLoader = (http: HttpClient) => {
     BloodPressureEditComponent,
     RespiratoryRateEditComponent,
     ChiefComplaintEditComponent,
-    HistoriesEditComponent,
     AssessmentEditComponent,
     PrescriptionEditComponent,
     ProgressNoteEditComponent,

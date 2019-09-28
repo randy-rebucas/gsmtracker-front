@@ -25,11 +25,9 @@ export class UsersService {
     .pipe(
       map(userData => {
         return { users: userData.users.map(user => {
+          console.log(user);
           return {
             id: user._id,
-            bloodType: user.bloodType,
-            comments: user.comments,
-            userId: user.userId,
             personId: user.personId._id,
             firstname: user.personId.firstname,
             midlename: user.personId.midlename,
@@ -59,11 +57,10 @@ export class UsersService {
 
   get(userId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ userId: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [], email: string }>(
+    return this.http.get<{ userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [], email: string }>(
         BACKEND_URL + '/' + userId
       );
   }
-
   // tslint:disable-next-line:max-line-length
   insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: [], reqEmail: string, resPass: string, reqLicenseId: string) {
       const userData = {

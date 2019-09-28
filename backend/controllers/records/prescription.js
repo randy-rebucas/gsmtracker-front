@@ -5,7 +5,6 @@ exports.create = async(req, res, next) => {
   try{
     const newPrescription = new Prescription({
       created: req.body.created,
-      complaintId: req.body.complaintId,
       patientId: req.body.patientId
     });
 
@@ -38,7 +37,6 @@ exports.update = async(req, res, next) => {
     const newPrescription = new Prescription({
       _id: req.body.prescriptionId,
       created: req.body.created,
-      complaintId: req.body.complaintId,
       patientId: req.body.patientId
     });
     prescriptionData = req.body.prescriptions;
@@ -69,13 +67,12 @@ exports.getAll = async(req, res, next) => {
     if (pageSize && currentPage) {
       prescriptionQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    let prescription = await prescriptionQuery.populate('complaintId').exec();
+    let prescription = await prescriptionQuery.exec();
     newPrescription = [];
     prescription.forEach(element => {
       var obj = {
         _id: element._id,
         created: element.created,
-        complaints: element.complaintId.complaints,
         patientId: element.patientId,
         prescriptions: element.prescriptions
       }
@@ -138,22 +135,6 @@ exports.getLast = async(req, res, next) => {
       .limit(1)
       .sort({ 'created': 'desc' })
       .exec();
-
-    res.status(200).json(prescription);
-
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
-};
-/**
- * @param complaintId
- * @since v1
- */
-exports.getByComplaint = async(req, res, next) => {
-  try{
-    let prescription = await Prescription.find({complaintId: req.params.complaintId}).exec();
 
     res.status(200).json(prescription);
 

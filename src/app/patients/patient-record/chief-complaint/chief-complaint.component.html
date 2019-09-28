@@ -1,28 +1,32 @@
-<router-outlet></router-outlet>
-<!--
-  abdominal pain,
-  flank pain,
-  overdose (intentional),
-abdominal problems,
-fluid/nutrition alteration,
-peripheral vascular/leg pain,
-allergies/hives/med reaction/sting,
-foreign body procedure
-assault, rape follow-up psychiatric/social problems
-back pain genito-urinary problem respiratory problems
-bites gun-shot wound skin complaint/trauma
-body aches gynecological problem stabbing
-burns headache stroke/CVA
-cardiac arrest hemorrhage substance abuse
-cardio-vascular complaint industrial/machinery accidents fainting/syncope
-chest pain infection temperature related
-convulsions, seizures ingestion (accidental) traffic injury
-dental, toothache laceration traumatic injuries specific (FT)
-diabetic problems medication refill unconsciousness
-(specific) diagnosis (FT) neck pain unknown problem (man down)
-dizzy needlestick vaginal bleeding
-ear/nose/throat problems neurological complaint weakness
-eye problem obstetrical problem
-fall orthopedic injury
-fever other (FT)
-  -->
+<div fxLayout='row' fxLayoutGap="20px">
+    <div fxFlex="70%">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Chief Complaint</mat-card-title>
+          </mat-card-header>
+          <form [formGroup]="form" class="normal-form" (submit)="onSave()">
+              <mat-form-field class="record-date">
+                  <input matInput readonly [matDatepicker]="picker" formControlName="record_date" [max]="currentDate" placeholder="Date">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker color="primary"></mat-datepicker>
+              </mat-form-field>
+              <editor formControlName="complaint" [init]="{plugins: 'link'}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              <br/>
+              <button mat-raised-button color="primary" type="submit">Submit</button>
+            </form>
+          <ng-container>
+            <div class="hidden" id="social-list">
+                <app-chief-complaint-list></app-chief-complaint-list>
+            </div>
+          </ng-container>
+      </mat-card>
+
+    </div>
+    <div fxFlex="30%">
+        <mat-list dense>
+            <h3 matSubheader>Common Complaint list</h3>
+            <mat-list-item> updating... </mat-list-item>
+          </mat-list>
+    </div>
+</div>
+<!-- <router-outlet></router-outlet> -->

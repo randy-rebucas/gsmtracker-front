@@ -71,6 +71,7 @@ implements OnInit, OnDestroy {
     private patientsService: PatientsService,
     private appointmentService: AppointmentService,
     private queService: QueService
+
   ) {
     super(authService, router, dialog, appconfig);
    }
@@ -90,9 +91,6 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    if (!this.userIsAuthenticated) {
-      this.router.navigate(['/auth/login']);
-    }
 
     this.titleService.setTitle('Home');
 
@@ -108,7 +106,6 @@ implements OnInit, OnDestroy {
     this.canceledVisit = 1;
 
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
-
 
     // this.patientsService.getAllPatientByYear(this.licenseId);
     // this.patientsChartSub = this.patientsService

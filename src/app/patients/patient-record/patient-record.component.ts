@@ -13,26 +13,37 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   selector: 'app-patient-record',
   templateUrl: './patient-record.component.html',
   styles: [`
-  mat-grid-tile.grid-content>::ng-deep .mat-figure {
-    align-items: flex-start;
-    justify-content: flex-start;
+  /* */
+  .area {
+    /*border: 1px solid rgba(0, 0, 0, .12);
+    padding: 1em;*/
   }
-  .mat-grid-tile {
-    border: 1px solid rgba(0, 0, 0, .12);
+  .header {
+    text-align: right;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+    padding-bottom: 1em;
   }
-  .mat-grid-tile-footer {
-    background: #efefef !important;
-    color: #555 !important;
+  .side {
+    border-right: 1px solid rgba(0, 0, 0, .12);
   }
-  .grid-inner-content-list {
-    padding: 1em;
-    width: 100%;
+  .side > div > div:first-child {
+    text-align: center;
   }
-  table {
-    width: 100%;
+  .content {
+
   }
-  .action-button {
-    margin-top: 3em;
+  .footer {
+
+  }
+  .action-button button {
+    margin-left: 8px;
+    text-align: right;
+  }
+  .fxRecord {
+    margin-bottom: 1em;
+  }
+  .hide {
+    display: none;
   }
   `]
 })

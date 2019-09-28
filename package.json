@@ -32,6 +32,7 @@
     "@fullcalendar/timegrid": "^4.3.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@tinymce/tinymce-angular": "^3.3.1",
     "@zxing/library": "^0.15.2",
     "@zxing/ngx-scanner": "^2.0.1",
     "angularx-qrcode": "^1.6.4",

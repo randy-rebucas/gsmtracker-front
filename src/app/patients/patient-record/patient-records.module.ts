@@ -10,8 +10,6 @@ import { ChiefComplaintEditComponent } from './chief-complaint/chief-complaint-e
 import { ChiefComplaintListComponent } from './chief-complaint/chief-complaint-list/chief-complaint-list.component';
 import { ChiefComplaintLatestComponent } from './chief-complaint/chief-complaint-latest/chief-complaint-latest.component';
 import { HistoriesComponent } from './histories/histories.component';
-import { HistoriesEditComponent } from './histories/histories-edit/histories-edit.component';
-import { HistoriesListComponent } from './histories/histories-list/histories-list.component';
 import { PhysicalExamsComponent } from './physical-exams/physical-exams.component';
 import { AssessmentsComponent } from './assessments/assessments.component';
 import { AssessmentEditComponent } from './assessments/assessment-edit/assetment-edit.component';
@@ -34,18 +32,19 @@ import { EncounterEditComponent } from './encounters/encounter-edit/encounter-ed
 import { PrescriptionLatestComponent } from './prescriptions/prescription-latest/prescription-latest.component';
 import { ProgressNoteLatestComponent } from './progress-notes/progress-note-latest/progress-note-latest.component';
 import { PatientChartComponent } from '../patient-chart/patient-chart.component';
-
-import { FlexLayoutModule } from '@angular/flex-layout';
-/**
- * imported outside of this directory to gain access of <app-upload></app-upload> component selector
- */
-import { UploadModule } from 'src/app/upload/upload.module';
 import { TestResultEditComponent } from './test-results/test-result-edit/test-result-edit.component';
 import { EncounterFormComponent } from './encounters/encounter-form/encounter-form.component';
 import { OrdersComponent } from './orders/orders.component';
 import { OrderListComponent } from './orders/order-list/order-list.component';
 import { OrderEditComponent } from './orders/order-edit/order-edit.component';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+/**
+ * imported outside of this directory to gain access of <app-upload></app-upload> component selector
+ */
+import { UploadModule } from 'src/app/upload/upload.module';
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { HistoriesModule } from './histories/histories.module';
 
 @NgModule({
   declarations: [
@@ -58,9 +57,6 @@ import { OrderEditComponent } from './orders/order-edit/order-edit.component';
     ChiefComplaintListComponent,
     ChiefComplaintLatestComponent,
     ChiefComplaintDetailComponent,
-    HistoriesComponent,
-    HistoriesEditComponent,
-    HistoriesListComponent,
     PhysicalExamsComponent,
     AssessmentsComponent,
     AssessmentEditComponent,
@@ -91,6 +87,8 @@ import { OrderEditComponent } from './orders/order-edit/order-edit.component';
     PhysicalExamsModule,
     RouterModule,
     UploadModule,
+    EditorModule,
+    HistoriesModule,
     FlexLayoutModule.withConfig({addFlexToParent: false})
   ]
 })

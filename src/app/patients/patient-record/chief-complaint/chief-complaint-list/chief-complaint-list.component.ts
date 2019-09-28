@@ -49,10 +49,11 @@ implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
+
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ComplaintService,
     ) {
       super(authService, router, dialog, appconfig);
-      this.activatedRoute.parent.parent.params.subscribe(
+      this.activatedRoute.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;
         }

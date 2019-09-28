@@ -10,7 +10,9 @@ import { PatientListComponent } from './patient-list/patient-list.component';
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 import { PatientRecordComponent } from './patient-record/patient-record.component';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
     ReactiveFormsModule,
     AngularMaterialModule,
     RouterModule,
-    PerfectScrollbarModule
+    EditorModule,
+    PerfectScrollbarModule,
+    FlexLayoutModule.withConfig({addFlexToParent: false})
   ]
 })
 export class PatientsModule {}

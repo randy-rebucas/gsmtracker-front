@@ -1,0 +1,26 @@
+
+<mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Family History</mat-card-title>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onOpenForm()">
+              <mat-icon>input</mat-icon>
+              <span>{{panelOpenState ? 'Close' : 'Open'}} Form</span>
+          </button>
+          <button mat-menu-item (click)="onOpenList()"> <!--disabled-->
+              <mat-icon>list</mat-icon>
+              <span>{{listOpenState ? 'Close' : 'Open'}} List</span>
+          </button>
+      </mat-menu>
+    </mat-card-header>
+    <ng-container *ngIf="panelOpenState">
+        <app-family-form></app-family-form>
+    </ng-container>
+
+    <ng-container *ngIf="listOpenState">
+          <app-family-list></app-family-list>
+    </ng-container>
+</mat-card>

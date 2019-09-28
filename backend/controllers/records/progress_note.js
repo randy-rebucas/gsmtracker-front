@@ -6,7 +6,6 @@ exports.create = async(req, res, next) => {
     const newNote = new Note({
       note: req.body.note,
         created: req.body.created,
-        complaintId: req.body.complaintId,
         patientId: req.body.patientId
     });
     let note = await newNote.save();
@@ -34,7 +33,6 @@ exports.update = async(req, res, next) => {
         _id: req.body.progressNoteId,
         note: req.body.note,
         created: req.body.created,
-        complaintId: req.body.complaintId,
         patientId: req.body.patientId
     });
     let note = await Note.updateOne({ _id: req.params.progressNoteId }, newNote).exec();
@@ -60,14 +58,13 @@ exports.getAll = async(req, res, next) => {
     if (pageSize && currentPage) {
       noteQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    let note = await noteQuery.populate('complaintId').exec();
+    let note = await noteQuery.exec();
 
     newNotes = [];
     note.forEach(element => {
       var obj = {
         _id: element._id,
         created: element.created,
-        complaints: element.complaintId.complaints,
         patientId: element.patientId,
         note: element.note
       }
@@ -130,21 +127,6 @@ exports.getLast = async(req, res, next) => {
       .limit(1)
       .sort({ 'created': 'desc' })
       .exec();
-
-    res.status(200).json(note);
-
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
-};
-
-exports.getByComplaint = async(req, res, next) => {
-  try{
-    let note = await Note.find({
-      complaintId: req.params.complaintId
-    }).exec();
 
     res.status(200).json(note);
 

@@ -1,292 +1,278 @@
-<div class="action-button">
-    <button class="mat-raised-button mat-accent" (click)="moveToQue(patientId)" style="float: right; margin-top: -50px; margin-right: 9em;">Move to Que</button>
-    <button class="mat-raised-button mat-primary" (click)="gotoRecord()" style="float: right; margin-top: -50px;">Go to Record</button>
+<div
+  gdAreas="header header | side content | footer footer"
+  gdGap="16px"
+  gdRows="auto auto auto"
+  gdColumns="300px auto"
+  gdAreas.lt-md="header | side | content | footer"
+  gdRows.lt-md="auto auto auto auto"
+  gdColumns.lt-md="auto">
+  <div class="area header" gdArea="header">
+      <div class="action-button">
+          <button class="mat-raised-button mat-accent" (click)="moveToQue(patientId)">Move to Que</button>
+          <button class="mat-raised-button mat-primary" (click)="gotoRecord()">Go to Record</button>
+      </div>
+  </div>
+  <div class="area side" gdArea="side">
+      <div fxLayout='row wrap' fxLayoutGap="10px">
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+            <div style="min-height: 184px;">
+              <div *ngIf="isLoading" class="loading">
+                  <mat-spinner [diameter]="25"></mat-spinner>
+              </div>
+              <div *ngIf="!isLoading" (click)="onPictureChange()">
+                  <div *ngIf="image; then thenBlock else elseBlock"></div>
+                  <ng-template #thenBlock>
+                      <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
+                  </ng-template>
+                  <ng-template #elseBlock>
+                      <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
+                  </ng-template>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+            <div style="min-height: 158px;">
+                <div *ngIf="isLoading" class="loading">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                </div>
+                <div *ngIf="!isLoading">
+                    <h3>{{firstname + ' ' + midlename + ' ' + lastname}} </h3>
+                    <address style="font-style: initial;">
+                        Blood Type: {{bloodType}} <br/>
+                        Contact: {{contact}} <br/>
+                        Gender: {{gender}} <br/>
+                        Birthdate: {{ birthdate | date }}
+                    </address>
+                </div>
+              </div>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <div>
+                  Quick Actions
+                  <mat-list>
+                      <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
+                              message
+                              </i> &nbsp; Message </mat-list-item>
+                      <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
+                          calendar_today
+                          </i> &nbsp; Appointment </mat-list-item>
+                      <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
+                        remove_red_eye
+                              </i> &nbsp; View Chart </mat-list-item>
+                      <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
+                              fingerprint
+                              </i> &nbsp; Generate QR Code </mat-list-item>
+                      <!-- <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
+                              group
+                                      </i> &nbsp; Network Request </mat-list-item> -->
+                  </mat-list>
+
+              </div>
+          </div>
+      </div>
+
+  </div>
+  <div class="area content" gdArea="content">
+      <div fxLayout='row wrap' fxLayoutGap="10px">
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord" >
+              <mat-card class="example-card">
+                <mat-card-header>
+                  <mat-card-title>Temperature</mat-card-title>
+                  <mat-card-subtitle>{{temperatureCreated | date}}</mat-card-subtitle>
+                </mat-card-header>
+                <h1>{{temperature}}<span *ngIf="temperature == null">--</span> &#8451;</h1>
+                <mat-card-content>
+                  <p>Previous record: 45cm</p>
+                </mat-card-content>
+              </mat-card>
+          </div>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Blood Pressure</mat-card-title>
+                    <mat-card-subtitle>{{tempCreated | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                  <h1>{{tempSystolic}}/{{tempDiastolic}} <span *ngIf="tempSystolic == null && tempDiastolic == null">--/--</span></h1>
+                  <mat-card-content>
+                    <p>Previous record: 45cm</p>
+                  </mat-card-content>
+                </mat-card>
+          </div>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Respiratory Rate</mat-card-title>
+                    <mat-card-subtitle>{{respiratoryRateCreated | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                  <h1>{{respiratoryRate}}<span *ngIf="respiratoryRate == null">--</span> bpm</h1>
+                  <mat-card-content>
+                    <p>Previous record: 45cm</p>
+                  </mat-card-content>
+                </mat-card>
+          </div>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Pulse</mat-card-title>
+                    <mat-card-subtitle>Current record</mat-card-subtitle>
+                  </mat-card-header>
+                  <h1>--</h1>
+                  <mat-card-content>
+                    <p>Previous record: 45cm</p>
+                  </mat-card-content>
+                </mat-card>
+          </div>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Oxygen Saturation%</mat-card-title>
+                    <mat-card-subtitle>Current record</mat-card-subtitle>
+                  </mat-card-header>
+                  <h1>--%</h1>
+                  <mat-card-content>
+                    <p>Previous record: 45cm</p>
+                  </mat-card-content>
+                </mat-card>
+          </div>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Pain Score (out 10)</mat-card-title>
+                    <mat-card-subtitle>Current record</mat-card-subtitle>
+                  </mat-card-header>
+                  <h1>--/--</h1>
+                  <mat-card-content>
+                    <p>Previous record: 45cm</p>
+                  </mat-card-content>
+                </mat-card>
+          </div>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Height</mat-card-title>
+                    <mat-card-subtitle>{{heightCreated | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                  <h1>{{height}}<span *ngIf="height == null">--</span> cm</h1>
+                  <mat-card-content>
+                    <p>Previous record: 45cm</p>
+                  </mat-card-content>
+                </mat-card>
+          </div>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Weight</mat-card-title>
+                    <mat-card-subtitle>{{weightCreated | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                  <h1>{{weight}}<span *ngIf="weight == null">--</span> kg</h1>
+                  <mat-card-content>
+                    <p>Previous record: 45cm</p>
+                  </mat-card-content>
+                </mat-card>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Complaints</mat-card-title>
+                  </mat-card-header>
+                  <div [innerHTML]="complaints"></div>
+                  <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span>
+                </mat-card>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Assessments</mat-card-title>
+                  </mat-card-header>
+                  <div fxLayout='row wrap' fxLayoutGap="10px">
+                      <div fxFlex="47.9%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord" >
+                          <mat-list dense>
+                              <h3 matSubheader> Diagnosis </h3>
+                              <mat-list-item *ngFor="let diagnose of diagnosis"> {{diagnose.diagnose}} </mat-list-item>
+                          </mat-list>
+                      </div>
+                      <div fxFlex="47.9%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord" >
+                          <mat-list dense>
+                              <h3 matSubheader> Treatments </h3>
+                              <mat-list-item *ngFor="let treatment of treatments"> {{treatment.treatment}} </mat-list-item>
+                          </mat-list>
+                      </div>
+                  </div>
+                </mat-card>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Prescriptions</mat-card-title>
+                  </mat-card-header>
+                  <mat-table [dataSource]="prescriptions">
+                      <!-- isMaintenable Column -->
+                      <ng-container matColumnDef="maintenable">
+                        <mat-header-cell *matHeaderCellDef> isMaintenable </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.maintenableFlg}} </mat-cell>
+                      </ng-container>
+
+                      <!-- Medicine Column -->
+                      <ng-container matColumnDef="medicine">
+                        <mat-header-cell *matHeaderCellDef> Medicine </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.medicine}} </mat-cell>
+                      </ng-container>
+
+                      <!-- Preparation Column -->
+                      <ng-container matColumnDef="preparation">
+                        <mat-header-cell *matHeaderCellDef> Preparation </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.preparation}} </mat-cell>
+                      </ng-container>
+
+                      <!-- Sig Column -->
+                      <ng-container matColumnDef="sig">
+                        <mat-header-cell *matHeaderCellDef> Sig </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.sig}} </mat-cell>
+                      </ng-container>
+
+                      <!-- Quantity Column -->
+                      <ng-container matColumnDef="qty">
+                          <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="noData">
+                            <mat-footer-cell *matFooterCellDef colspan="3" id="no-data">
+                                <p class="mat-body">No prescription data.</p>
+                            </mat-footer-cell>
+                        </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="perscriptionColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: perscriptionColumns;"></mat-row>
+                      <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': (prescriptions!=null && prescriptions.length==0)}"></mat-footer-row>
+                    </mat-table>
+                </mat-card>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Progress notes</mat-card-title>
+                  </mat-card-header>
+                  <div [innerHTML]="progressNotes"></div>
+                  <span *ngIf="progressNotes == null"><p class="mat-body-1">No notes record!</p></span>
+
+                </mat-card>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <mat-card class="example-card">
+                  <mat-card-header>
+                    <mat-card-title>Test Results</mat-card-title>
+                  </mat-card-header>
+                  <p class="mat-body-1">No notes record!</p>
+
+                </mat-card>
+          </div>
+      </div>
+  </div>
+  <div class="area footer" gdArea="footer">
+    <!-- Footer -->
+  </div>
 </div>
 
-<mat-grid-list cols="6" rowHeight="100px" [gutterSize]="'10px'">
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" (click)="onPictureChange()">
-            <div *ngIf="image; then thenBlock else elseBlock"></div>
-            <ng-template #thenBlock>
-                <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
-            </ng-template>
-            <ng-template #elseBlock>
-                <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
-            </ng-template>
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <mat-grid-tile-header>
-            <h3>Height</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
-        line-height: 0.8;">
-            <mat-icon style="transform: rotate(90deg);
-            position: absolute;
-            left: 20%;
-            font-size: 60px;
-            top: 35%;">straighten</mat-icon>
-            {{height}}<span *ngIf="height == null">--</span> cm <br/>
-            <span style="font-size: 16px;">{{heightCreated | date}}</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('height')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <mat-grid-tile-header>
-            <h3>Weight</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
-        line-height: 0.8;">
-            <mat-icon style="transform: rotate(90deg);
-        position: absolute;
-        left: 20%;
-        font-size: 60px;
-        top: 35%;">settings_input_svideo</mat-icon>
-            {{weight}}<span *ngIf="weight == null">--</span> kg <br/>
-            <span style="font-size: 16px;">{{weightCreated | date}}</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('weight')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <mat-grid-tile-header>
-            <h3>Temperature</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
-        line-height: 0.8;">
-            <mat-icon style="position: absolute;
-            left: 5%;
-            font-size: 60px;
-            top: 35%;">whatshot</mat-icon>
-            {{temperature}}<span *ngIf="temperature == null">--</span> &#8451; <br/>
-            <span style="font-size: 16px;">{{temperatureCreated | date}}</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('temperature')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <mat-grid-tile-header>
-            <h3>Blood Pressure</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
-        line-height: 0.8;">
-            <mat-icon style="position: absolute;
-            left: 5%;
-            font-size: 60px;
-            top: 35%;">alarm</mat-icon>
-            {{tempSystolic}}/{{tempDiastolic}} <span *ngIf="tempSystolic == null && tempDiastolic == null">--</span> <br/>
-            <span style="font-size: 16px;"> {{tempCreated | date}}</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('blood-pressure')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <mat-grid-tile-header>
-            <h3>Respiratory rate</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center" style="font-size: 30px;
-        line-height: 0.8;">
-            <mat-icon style="position: absolute;
-            left: 5%;
-            font-size: 60px;
-            top: 35%;">vibration</mat-icon>
-            {{respiratoryRate}}<span *ngIf="respiratoryRate == null">--</span> bpm <br/>
-            <span style="font-size: 16px;"> {{respiratoryRateCreated | date}}</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('respiratory-rate')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div style="padding: 1em;" *ngIf="!isLoading">
-            <h3>{{firstname + ' ' + midlename + ' ' + lastname}} </h3>
-            <address style="font-style: initial;">
-                Blood Type: {{bloodType}} <br/>
-                Contact: {{contact}} <br/>
-                Gender: {{gender}} <br/>
-                Birthdate: {{ birthdate | date }}
-            </address>
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
-        <mat-grid-tile-header>
-            <h3>Histories</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
-            <ul style="list-style: none;
-          padding: 0;
-          line-height: 2;
-          margin: 0;">
-                <li *ngFor="let history of histories"><strong>{{history.type}}</strong> : {{history.description}}</li>
-            </ul>
-            <span *ngIf="histories == null">--</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('histories')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
-        <mat-grid-tile-header>
-            <h3>Complaints</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
-            <ul style="list-style: none;
-            padding: 0;
-            line-height: 2;
-            margin: 0;">
-                <li *ngFor="let complaint of complaints">{{complaint.complaint}}</li>
-            </ul>
-            <span *ngIf="complaints == null">--</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('chief-complaints')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
-        <mat-grid-tile-header>
-            <h3>Assessments</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
-            <table class="table">
-                <tr>
-                    <td>Diagnosis</td>
-                    <td>Treatments</td>
-                </tr>
-                <tr>
-                    <td>
-                        <ul style="list-style: none;
-                  padding: 0;
-                  line-height: 2;
-                  margin: 0;">
-                            <li *ngFor="let diagnose of diagnosis">{{diagnose.diagnose}}</li>
-                        </ul>
-                        <span *ngIf="diagnosis == null">--</span>
-                    </td>
-                    <td>
-                        <ul style="list-style: none;
-                  padding: 0;
-                  line-height: 2;
-                  margin: 0;">
-                            <li *ngFor="let treatment of treatments">{{treatment.treatment}}</li>
-                        </ul>
-                        <span *ngIf="treatments == null">--</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('assessments')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
 
-    <mat-grid-tile [colspan]="1" [rowspan]="4" class="grid-content">
-        <div style="padding: 1em;">
-            Quick Actions
-            <mat-list>
-                <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
-                        message
-                        </i> &nbsp; Message </mat-list-item>
-                <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
-                    calendar_today
-                    </i> &nbsp; Appointment </mat-list-item>
-                <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
-                  remove_red_eye
-                        </i> &nbsp; View Chart </mat-list-item>
-                <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
-                        fingerprint
-                        </i> &nbsp; Generate QR Code </mat-list-item>
-                <!-- <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
-                        group
-                                </i> &nbsp; Network Request </mat-list-item> -->
-            </mat-list>
 
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="3" [rowspan]="2" class="grid-content">
-        <mat-grid-tile-header>
-            <h3>Prescriptions</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
-            <table class="table">
-                <tr>
-                    <td>Medicine</td>
-                    <td>Preparation</td>
-                    <td>Sig</td>
-                    <td>Qty</td>
-                </tr>
-                <tr *ngFor="let prescription of prescriptions">
-                    <td>
-                        {{prescription.medicine}}
-                    </td>
-                    <td>
-                        {{prescription.preparation}}
-                    </td>
-                    <td>
-                        {{prescription.sig}}
-                    </td>
-                    <td>
-                        {{prescription.quantity}}
-                    </td>
-                </tr>
-            </table>
-            <span *ngIf="prescriptions == null">--</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('prescriptions')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="2" [rowspan]="2" class="grid-content">
-        <mat-grid-tile-header>
-            <h3>Progress notes</h3>
-        </mat-grid-tile-header>
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-list">
-            {{progressNotes}}
-            <span *ngIf="progressNotes == null">--</span>
-        </div>
-        <mat-grid-tile-footer>
-            <a style="cursor: pointer;" (click)="onViewAll('progress-notes')">View All</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-
-</mat-grid-list>

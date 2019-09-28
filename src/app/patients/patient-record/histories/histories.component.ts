@@ -8,7 +8,14 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-histories',
   templateUrl: './histories.component.html',
-  styleUrls: ['./histories.component.css']
+  styles: [`
+  mat-form-field.record-date {
+    width: 30%;
+  }
+  .mat-form-field {
+    display: block;
+  }
+  `]
 })
 export class HistoriesComponent
 extends SecureComponent

@@ -2,7 +2,8 @@ export interface ComplaintData {
   id: string;
   created: string;
   patientId: string;
-  complaints: Complaints[];
+  complaint: string;
+  // complaints: Complaints[];
 }
 
 export interface Complaints {

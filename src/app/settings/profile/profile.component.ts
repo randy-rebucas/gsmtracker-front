@@ -86,7 +86,6 @@ implements OnInit, OnDestroy {
 
     this.usersService.get(this.userId).subscribe(userData => {
       this.isLoading = false;
-      this.personId = userData.personId;
       this.uId = userData.userId;
       this.form.patchValue({
         firstname: userData.firstname,

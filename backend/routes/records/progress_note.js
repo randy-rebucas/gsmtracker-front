@@ -16,8 +16,6 @@ router.get('/latest', Controller.getCurrent);
 
 router.get('/last/:patientId', Controller.getLast);
 
-router.get('/complaint/:complaintId', Controller.getByComplaint);
-
 router.get('/:progressNoteId', Controller.get);
 
 router.delete('/:progressNoteId', checkAuth, Controller.delete);

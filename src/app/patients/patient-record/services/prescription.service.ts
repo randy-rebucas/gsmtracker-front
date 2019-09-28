@@ -29,7 +29,6 @@ export class PrescriptionService {
           return {
             id: prescription._id,
             created: prescription.created,
-            complaints: prescription.complaints,
             patientId: prescription.patientId,
             prescriptions: prescription.prescriptions,
           };
@@ -50,39 +49,39 @@ export class PrescriptionService {
   }
 
   get(prescriptionId: string) {
-    return this.http.get<{ _id: string, created: string, patientId: string, complaintId: string, prescriptions: [] }>(
+    return this.http.get<{ _id: string, created: string, patientId: string, prescriptions: [] }>(
       BACKEND_URL + '/' + prescriptionId
       );
   }
 
   getLatest() {
-    return this.http.get<{ _id: string, created: string, patientId: string, complaintId: string, prescriptions: [] }>(
+    return this.http.get<{ _id: string, created: string, patientId: string, prescriptions: [] }>(
       BACKEND_URL + '/latest'
       );
   }
 
   getByComplaintId(complaintId) {
-    return this.http.get<{ _id: string, created: string, patientId: string, complaintId: string, prescriptions: [] }>(
+    return this.http.get<{ _id: string, created: string, patientId: string, prescriptions: [] }>(
       BACKEND_URL + '/complaint/' + complaintId
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string, created: string, patientId: string, complaintId: string, prescriptions: [] }>(
+    return this.http.get<{ _id: string, created: string, patientId: string, prescriptions: [] }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(created: string, complaintId: string, patientId: string, prescriptions: []) {
+  insert(created: string, patientId: string, prescriptions: []) {
     const recordData = {
-      created, complaintId, patientId, prescriptions
+      created, patientId, prescriptions
     };
     return this.http.post<{ message: string, record: PrescriptionData }>(BACKEND_URL, recordData);
   }
 
-  update(prescriptionId: string, created: string, complaintId: string, patientId: string, prescriptions: []) {
+  update(prescriptionId: string, created: string, patientId: string, prescriptions: []) {
     const recordData = {
-      prescriptionId, created, complaintId, patientId, prescriptions
+      prescriptionId, created, patientId, prescriptions
       };
     return this.http.put(BACKEND_URL + '/' + prescriptionId, recordData);
   }

@@ -48,31 +48,31 @@ export class ComplaintService {
   }
 
   get(complaintId: string) {
-    return this.http.get<{ _id: string; complaints: [], created: string, patientId: string }>(
+    return this.http.get<{ _id: string; complaints: string, created: string, patientId: string }>(
       BACKEND_URL + '/' + complaintId
       );
   }
 
   getLatest() {
-    return this.http.get<{ _id: string; complaints: [], created: string, patientId: string }>(
+    return this.http.get<{ _id: string; complaints: string, created: string, patientId: string }>(
       BACKEND_URL + '/latest'
       );
   }
 
   getLast(patientId) {
-    return this.http.get<{ _id: string, complaints: [], created: string, patientId: string }>(
+    return this.http.get<{ _id: string, complaints: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(created: string, patientId: string, complaints: []) {
+  insert(created: string, patientId: string, complaints: string) {
     const recordData = {
       created, patientId, complaints
     };
     return this.http.post<{ message: string, complaint: ComplaintData }>(BACKEND_URL, recordData);
   }
 
-  update(complaintId: string, created: string, patientId: string, complaints: []) {
+  update(complaintId: string, created: string, patientId: string, complaints: string) {
     const recordData = {
       complaintId, created, patientId, complaints
     };

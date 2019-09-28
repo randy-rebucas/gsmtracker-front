@@ -23,6 +23,7 @@ var historyRouter = require('./routes/records/history');
 var prescriptionRouter = require('./routes/records/prescription');
 var notesRouter = require('./routes/records/progress_note');
 var assessmentsRouter = require('./routes/records/assessment');
+var orderRouter = require('./routes/records/order');
 
 var threadRouter = require('./routes/thread');
 var messagesRouter = require('./routes/message');
@@ -120,6 +121,7 @@ app.use('/api/histories', historyRouter);
 app.use('/api/prescriptions', prescriptionRouter);
 app.use('/api/progress-notes', notesRouter);
 app.use('/api/assessments', assessmentsRouter);
+app.use('/api/orders', orderRouter);
 
 app.use('/api/thread', threadRouter);
 app.use('/api/messages', messagesRouter);

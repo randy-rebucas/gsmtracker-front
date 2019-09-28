@@ -118,7 +118,6 @@ implements OnInit, OnDestroy {
     if (this.mode === 'create') {
       this.prescriptionService.insert(
         this.form.value.record_date,
-        this.complaintId,
         this.patientId,
         this.form.value.prescriptions
       ).subscribe(() => {
@@ -138,7 +137,6 @@ implements OnInit, OnDestroy {
       this.prescriptionService.update(
         this.recordId,
         this.form.value.record_date,
-        this.complaintId,
         this.patientId,
         this.form.value.prescriptions
       ).subscribe(() => {

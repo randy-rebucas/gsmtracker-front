@@ -29,7 +29,6 @@ export class NotesService {
           return {
             id: note._id,
             created: note.created,
-            complaints: note.complaints,
             patientId: note.patientId,
             note: note.note
           };
@@ -50,39 +49,33 @@ export class NotesService {
   }
 
   get(progressNoteId: string) {
-    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string}>(
+    return this.http.get<{ _id: string, note: string, created: string, patientId: string}>(
       BACKEND_URL + '/' + progressNoteId
       );
   }
 
   getLatest() {
-    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string }>(
+    return this.http.get<{ _id: string, note: string, created: string, patientId: string }>(
       BACKEND_URL + '/latest'
       );
   }
 
-  getByComplaintId(complaintId) {
-    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string }>(
-      BACKEND_URL + '/complaint/' + complaintId
-      );
-  }
-
   getLast(patientId) {
-    return this.http.get<{ _id: string, note: string, created: string, complaintId: string, patientId: string }>(
+    return this.http.get<{ _id: string, note: string, created: string, patientId: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(note: string, created: string, complaintId: string, patientId: string) {
+  insert(note: string, created: string, patientId: string) {
     const recordData = {
-      note, created, complaintId, patientId
+      note, created, patientId
     };
     return this.http.post<{ message: string, record: NoteData }>(BACKEND_URL, recordData);
   }
 
-  update(progressNoteId: string, note: string, created: string, complaintId: string, patientId: string) {
+  update(progressNoteId: string, note: string, created: string, patientId: string) {
     const recordData = {
-      progressNoteId, note, created, complaintId, patientId
+      progressNoteId, note, created, patientId
     };
     return this.http.put(BACKEND_URL + '/' + progressNoteId, recordData);
   }

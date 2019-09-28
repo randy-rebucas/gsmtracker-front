@@ -1,5 +1,6 @@
 const Person = require('../models/person');
 const Auth = require('../models/auth');
+const License = require('../models/license');
 const User = require('../models/user');
 const Patient = require('../models/patient');
 const moment = require('moment');
@@ -17,7 +18,7 @@ exports.create = async(req, res, next) => {
         for (let index = 0; index < addressData.length; index++) {
             newPerson.address.push(addressData[index]);
         }
-        let updatedPerson = await Person.updateOne({ _id: req.person._id }, newPerson);
+        let updatedPerson = await Person.updateOne({ _id: req.auth.personId }, newPerson);
         if (!updatedPerson) {
             throw new Error('Something went wrong.Cannot update person!');
         }
@@ -25,13 +26,21 @@ exports.create = async(req, res, next) => {
         const newUser = new User({
             userType: 'patient',
             personId: req.auth.personId,
-            licenseId: req.body.licenseId,
             metaData: req.body.meta
         });
         let user = await newUser.save();
 
         if (!user) {
             throw new Error('Something went wrong.Cannot save user!');
+        }
+
+        const newLicense = new License({
+          userId: user._id,
+          licenseKey: req.body.licenseId
+        });
+        let license = await newLicense.save();
+        if (!license) {
+            throw new Error('Something went wrong.Cannot save license!');
         }
 
         res.status(200).json({

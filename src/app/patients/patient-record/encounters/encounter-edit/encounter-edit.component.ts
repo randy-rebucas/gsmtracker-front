@@ -162,14 +162,14 @@ implements OnInit, OnDestroy {
   }
 
   getProgressNotes(complaintId) {
-    this.notesService.getByComplaintId(complaintId).subscribe(
-      recordData => {
-        if (Object.keys(recordData).length) {
-          this.noteId = recordData[0]._id;
-          this.note = recordData[0].note;
-        }
-      }
-    );
+    // this.notesService.getByComplaintId(complaintId).subscribe(
+    //   recordData => {
+    //     if (Object.keys(recordData).length) {
+    //       this.noteId = recordData[0]._id;
+    //       this.note = recordData[0].note;
+    //     }
+    //   }
+    // );
   }
 
   onPrintPreview(recordId, patientId) {

@@ -18,3 +18,28 @@ mat-grid-list ::ng-deep figure {
 .mat-grid-tile:not(:first-child) {
   overflow: auto;
 }
+
+
+:host /deep/ .mat-card-header-text {
+  /* CSS styles go here */
+  margin: 0px;
+}
+.mat-card-subtitle {
+  margin-bottom: unset;
+}
+.mat-card {
+  border-radius: 0;
+}
+.form-field-block {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  flex-basis: auto;
+}
+mat-form-field {
+  width: 100%;
+}
+.action-btn {
+  position: absolute;
+  right: 15px;
+}

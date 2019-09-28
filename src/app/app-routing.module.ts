@@ -20,8 +20,6 @@ import { ChiefComplaintComponent } from './patients/patient-record/chief-complai
 import { ChiefComplaintEditComponent } from './patients/patient-record/chief-complaint/chief-complaint-edit/chief-complaint-edit.component';
 import { ChiefComplaintListComponent } from './patients/patient-record/chief-complaint/chief-complaint-list/chief-complaint-list.component';
 import { HistoriesComponent } from './patients/patient-record/histories/histories.component';
-import { HistoriesListComponent } from './patients/patient-record/histories/histories-list/histories-list.component';
-import { HistoriesEditComponent } from './patients/patient-record/histories/histories-edit/histories-edit.component';
 import { PhysicalExamsComponent } from './patients/patient-record/physical-exams/physical-exams.component';
 import { AssessmentsComponent } from './patients/patient-record/assessments/assessments.component';
 import { AssessmentListComponent } from './patients/patient-record/assessments/assessment-list/assessment-list.component';
@@ -67,25 +65,19 @@ import { TestResultListComponent } from './patients/patient-record/test-results/
 import { TestResultDetailComponent } from './patients/patient-record/test-results/test-result-detail/test-result-detail.component';
 import { TestResultInitialComponent } from './patients/patient-record/test-results/test-result-initial/test-result-initial.component';
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
-import { UserListComponent } from './users/user-list/user-list.component';
 import { UsersComponent } from './users/users.component';
 import { EncounterFormComponent } from './patients/patient-record/encounters/encounter-form/encounter-form.component';
 import { OrdersComponent } from './patients/patient-record/orders/orders.component';
-import { OrderEditComponent } from './patients/patient-record/orders/order-edit/order-edit.component';
 
 const appRoutes: Routes = [
-    { path: '',
-      component: HomeComponent
-    },
+    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     {
       path: 'encounter', component: EncountersComponent, canActivate: [AuthGuard], children: [
         { path: '', component: EncounterListComponent },
         { path: ':encounterId', component: EncounterFormComponent }
       ]
     },
-    { path: 'users', component: UsersComponent, canActivate: [AuthGuard], children: [
-      { path: '', component: UserListComponent }
-    ] },
+    { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
     { path: 'patients', component: PatientsComponent, canActivate: [AuthGuard], children: [
       { path: '', component: PatientListComponent },
       { path: ':patientId', component: PatientDetailComponent },
@@ -101,7 +93,7 @@ const appRoutes: Routes = [
             ] },
           ] },
         ] },
-        { path: 'histories', component: HistoriesListComponent },
+        { path: 'histories', component: HistoriesComponent },
         { path: 'physical-exams', component: PhysicalExamsComponent, children: [
           { path: '', redirectTo: 'height', pathMatch: 'full' },
           { path: 'height', component: HeightListComponent },
@@ -123,13 +115,13 @@ const appRoutes: Routes = [
         { path: 'orders', component: OrdersComponent, children: [
           { path: ':orderId', component: OrdersComponent }
         ] },
-        { path: 'prescriptions', component: PrescriptionListComponent },
+        { path: 'prescriptions', component: PrescriptionsComponent },
         { path: 'test-results', component: TestResultsComponent, children: [
           { path: '', component: TestResultInitialComponent },
           { path: ':fileId', component: TestResultDetailComponent }
         ] },
-        { path: 'progress-notes', component: ProgressNoteListComponent },
-        { path: 'assessments', component: AssessmentListComponent }
+        { path: 'progress-notes', component: ProgressNotesComponent },
+        { path: 'assessments', component: AssessmentsComponent }
       ] },
     ] },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], children: [

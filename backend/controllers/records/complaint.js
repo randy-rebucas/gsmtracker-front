@@ -5,12 +5,13 @@ exports.create = async(req, res, next) => {
   try {
     const newComplaint = new Complaint({
         created: req.body.created,
-        patientId: req.body.patientId
+        patientId: req.body.patientId,
+        complaints: req.body.complaints
     });
-    complaintData = req.body.complaints;
-    for (let index = 0; index < complaintData.length; index++) {
-      newComplaint.complaints.push(complaintData[index]);
-    }
+    // complaintData = req.body.complaints;
+    // for (let index = 0; index < complaintData.length; index++) {
+    //   newComplaint.complaints.push(complaintData[index]);
+    // }
     let complaint = await newComplaint.save();
     if (!complaint) {
       throw new Error('Something went wrong. Cannot create complaint!');
@@ -35,12 +36,13 @@ exports.update = async(req, res, next) => {
     const newComplaint = new Complaint({
         _id: req.body.complaintId,
         created: req.body.created,
-        patientId: req.body.patientId
+        patientId: req.body.patientId,
+        complaints: req.body.complaints
     });
-    complaintData = req.body.complaints;
-    for (let index = 0; index < complaintData.length; index++) {
-      newComplaint.complaints.push(complaintData[index]);
-    }
+    // complaintData = req.body.complaints;
+    // for (let index = 0; index < complaintData.length; index++) {
+    //   newComplaint.complaints.push(complaintData[index]);
+    // }
     let complaint = await Complaint.updateOne({ _id: req.params.complaintId },newComplaint).exec();
     if (!complaint) {
       throw new Error('Something went wrong. Cannot update complaint!');

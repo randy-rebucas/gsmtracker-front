@@ -4,30 +4,37 @@ import { AuthService } from '../../../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
-import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
 import { DialogService } from 'src/app/shared/dialog.service';
 
-import { HistoryData } from '../../models/history-data.model';
-import { HistoryService } from '../../services/history.service';
-// import { HistoriesEditComponent } from '../histories-edit/histories-edit.component';
+import { AssessmentService } from '../../services/assessment.service';
+import { PrescriptionService } from '../../services/prescription.service';
+import { NotesService } from '../../services/notes.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { OrderService } from '../../services/order.service';
+import { OrderData } from '../../models/order-data.model';
 
 @Component({
   selector: 'app-order-list',
   templateUrl: './order-list.component.html',
-  styles: [``]
+  styles: [`
+  .hide {
+    display: none;
+  }
+  `]
 })
 export class OrderListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  records: HistoryService[] = [];
+  records: OrderService[] = [];
+  orders: OrderData[] = [];
 
   public recordsSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['type', 'description', 'created', 'action'];
+  displayedColumns: string[] = ['order', 'created', 'action'];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -37,11 +44,12 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public historyService: HistoryService,
+    public orderService: OrderService,
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: HistoryService
+
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: OrderService,
     ) {
       super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.params.subscribe(
@@ -54,13 +62,13 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
 
-    this.historyService.getAll(this.perPage, this.currentPage, this.patientId);
-    this.recordsSub = this.historyService
+    this.orderService.getAll(this.perPage, this.currentPage, this.patientId);
+    this.recordsSub = this.orderService
       .getUpdateListener()
-      .subscribe((historyData: {histories: HistoryData[], count: number}) => {
+      .subscribe((orderData: {orders: OrderData[], count: number}) => {
         this.isLoading = false;
-        this.total = historyData.count;
-        this.dataSource = new MatTableDataSource(historyData.histories);
+        this.total = orderData.count;
+        this.dataSource = new MatTableDataSource(orderData.orders);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
@@ -77,38 +85,16 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.historyService.getAll(this.perPage, this.currentPage, this.patientId);
+    this.orderService.getAll(this.perPage, this.currentPage, this.patientId);
   }
 
-//   onCreate() {
-//     const args = {
-//       width: '30%',
-//       id: null,
-//       dialogTitle: 'New Record',
-//       dialogButton: 'Save',
-//       patient: this.patientId
-//     };
-//     super.onPopup(args, HistoriesEditComponent);
-//   }
-
-//   onEdit(historyId) {
-//     const args = {
-//       width: '30%',
-//       id: historyId,
-//       dialogTitle: 'Update Record',
-//       dialogButton: 'Update',
-//       patient: this.patientId
-//     };
-//     super.onPopup(args, HistoriesEditComponent);
-//   }
-
-  onDelete(historyId) {
+  onDelete(complaintId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.historyService.delete(historyId).subscribe(() => {
+        this.orderService.delete(complaintId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
-          this.historyService.getAll(this.perPage, this.currentPage, this.patientId);
+          this.orderService.getAll(this.perPage, this.currentPage, this.patientId);
         });
       }
     });

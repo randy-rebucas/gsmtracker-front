@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const recordProgressNoteSchema = mongoose.Schema({
   note: { type: String, required: true },
   created: { type: Date },
-  complaintId: { type: mongoose.Schema.Types.ObjectId, ref: 'Complaint', required: true },
   patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true }
 });
 

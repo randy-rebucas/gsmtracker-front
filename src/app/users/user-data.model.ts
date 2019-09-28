@@ -18,6 +18,7 @@ export interface UserData {
 }
 
 export interface Address {
+  current: boolean;
   address1: string;
   address2: string;
   city: string;

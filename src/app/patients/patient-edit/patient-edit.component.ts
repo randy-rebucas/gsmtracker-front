@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { UsersService } from 'src/app/users/users.service';
 
 @Component({
   selector: 'app-patient-edit',
@@ -33,13 +34,14 @@ implements OnInit, OnDestroy {
 
     private notificationService: NotificationService,
     private patientsService: PatientsService,
+    private usersService: UsersService,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef < PatientEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
     super(authService, router, dialog, appconfig);
 
-    this.patientId = data.id;
+    this.Id = data.id;
     this.dialogTitle = data.title;
     this.btnLabel = data.button;
   }
@@ -59,29 +61,28 @@ implements OnInit, OnDestroy {
       metas: this.fb.array([this.addMetaGroup()])
     });
 
-    if (this.patientId) {
+    if (this.Id) {
         this.mode = 'edit';
         this.isLoading = true;
-        this.patientsService.get(this.patientId).subscribe(patientData => {
+        this.usersService.get(this.Id).subscribe(userData => {
           this.isLoading = false;
-          this.personId = patientData.personId;
           this.form.patchValue({
-            firstname: patientData.firstname,
-            midlename: patientData.midlename,
-            lastname: patientData.lastname,
-            contact: patientData.contact,
-            gender: patientData.gender,
-            birthdate: patientData.birthdate
+            firstname: userData.firstname,
+            midlename: userData.midlename,
+            lastname: userData.lastname,
+            contact: userData.contact,
+            gender: userData.gender,
+            birthdate: userData.birthdate
           });
           const addressControl = this.form.controls.addresses as FormArray;
-          const address = patientData.addresses;
+          const address = userData.addresses;
           for (let i = 1; i < address.length; i++) {
             addressControl.push(this.addAddressGroup());
           }
           this.form.patchValue({addresses: address});
 
           const metaControl = this.form.controls.metas as FormArray;
-          const meta = patientData.meta;
+          const meta = userData.meta;
           for (let i = 1; i < meta.length; i++) {
             metaControl.push(this.addMetaGroup());
           }
@@ -91,13 +92,13 @@ implements OnInit, OnDestroy {
       } else {
         this.isLoading = false;
         this.mode = 'create';
-        this.patientId = null;
+        this.Id = null;
       }
   }
 
   addAddressGroup() {
     return this.fb.group({
-      current: [],
+      current: [true],
       address1: ['', [Validators.required]],
       address2: [''],
       city: ['', [Validators.required]],
@@ -146,8 +147,8 @@ implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
-    if (this.mode === 'create') {
-      this.patientsService.insert(
+    if (!this.Id) {
+      this.usersService.insert(
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -162,11 +163,11 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.patientsService.getAll(this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
       });
     } else {
-      this.patientsService.update(
-        this.patientId,
+      this.usersService.update(
+        this.Id,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -178,7 +179,7 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.patientsService.getAll(this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
       });
     }
   }

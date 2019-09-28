@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from '../angular-material.module';
 import { UsersComponent } from './users.component';
 // import { PatientEditComponent } from './patient-edit/patient-edit.component';
-import { UserListComponent } from './user-list/user-list.component';
 // import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 
 
@@ -14,7 +13,6 @@ import { UserListComponent } from './user-list/user-list.component';
   declarations: [
     UsersComponent,
     // PatientEditComponent,
-    UserListComponent,
     // PatientDetailComponent,
     // PatientRecordComponent
   ],

@@ -1,72 +1,92 @@
-<div class="action-button">
-    <button class="mat-raised-button mat-accent" (click)="onCancelVisit(patientId)" style="float: right; margin-top: -50px;">Cancel Visit</button>
-</div>
-<mat-grid-list cols="6" rowHeight="100px" [gutterSize]="'10px'">
-    <mat-grid-tile [colspan]="1" [rowspan]="2">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" class="grid-inner-content grid-inner-content-center">
-            <div *ngIf="image; then thenBlock else elseBlock"></div>
-            <ng-template #thenBlock>
-                <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
-            </ng-template>
-            <ng-template #elseBlock>
-                <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
-            </ng-template>
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="5" [rowspan]="1" class="grid-content" style="border: none;">
-        <div class="grid-inner-content grid-inner-content-list">
-            <nav mat-tab-nav-bar>
-                <a mat-tab-link routerLink="./chief-complaints" routerLinkActive #rlaChiefComplaint="routerLinkActive" [active]="rlaChiefComplaint.isActive">Chief complaints</a>
-                <a mat-tab-link routerLink="./histories" routerLinkActive #rlaHistories="routerLinkActive" [active]="rlaHistories.isActive">Histories</a>
-                <a mat-tab-link routerLink="./physical-exams" routerLinkActive #rlaPhysicalExams="routerLinkActive" [active]="rlaPhysicalExams.isActive">Physical exams</a>
-                <a mat-tab-link routerLink="./orders" routerLinkActive #rlaOrders="routerLinkActive" [active]="rlaOrders.isActive">Orders</a>
-                <a mat-tab-link routerLink="./prescriptions" routerLinkActive #rlaPrescriptions="routerLinkActive" [active]="rlaPrescriptions.isActive">Prescriptions</a>
-                <a mat-tab-link routerLink="./test-results" routerLinkActive #rlaTestResult="routerLinkActive" [active]="rlaTestResult.isActive">Test Results</a>
-                <a mat-tab-link routerLink="./progress-notes" routerLinkActive #rlaProgressNotes="routerLinkActive" [active]="rlaProgressNotes.isActive">Progress Notes</a>
-                <a mat-tab-link routerLink="./assessments" routerLinkActive #rlaAssessments="routerLinkActive" [active]="rlaAssessments.isActive">Assessments</a>
-            </nav>
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="5" [rowspan]="8" class="grid-content" style="border: none;">
-        <div class="grid-inner-content grid-inner-content-list">
-            <router-outlet></router-outlet>
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="2" class="grid-content">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div *ngIf="!isLoading" style="padding: 1em;">
-            <h3>{{firstname + ' ' + midlename + ' ' + lastname}} </h3>
-            <address style="font-style: initial;">
-                Blood Type: {{bloodType}} <br/>
-                Contact: {{contact}} <br/>
-                Gender: {{gender}} <br/>
-                Birthdate: {{ birthdate | date }}
-            </address>
-        </div>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="3" class="grid-content">
-        <div style="padding: 1em;">
-            Quick Actions
-            <mat-list>
-                <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
-                            message
-                            </i> &nbsp; Message </mat-list-item>
-                <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
-                        calendar_today
-                        </i> &nbsp; Appointment </mat-list-item>
-                <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
-                remove_red_eye
-                      </i> &nbsp; View Chart </mat-list-item>
-                <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
-                      fingerprint
-                      </i> &nbsp; Generate QR Code </mat-list-item>
-            </mat-list>
+<div
+  gdAreas="header header | side content | footer footer"
+  gdGap="16px"
+  gdRows="auto auto auto"
+  gdColumns="300px auto"
+  gdAreas.lt-md="header | side | content | footer"
+  gdRows.lt-md="auto auto auto auto"
+  gdColumns.lt-md="auto">
+  <div class="area header" gdArea="header">
+      <div class="action-button">
+          <button class="mat-raised-button mat-accent" (click)="onCancelVisit(patientId)">Cancel Visit</button>
+      </div>
+  </div>
+  <div class="area side" gdArea="side">
+      <div fxLayout='row wrap' fxLayoutGap="10px">
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+            <div style="min-height: 184px;">
+              <div *ngIf="isLoading" class="loading">
+                  <mat-spinner [diameter]="25"></mat-spinner>
+              </div>
+              <div *ngIf="!isLoading">
+                  <div *ngIf="image; then thenBlock else elseBlock"></div>
+                  <ng-template #thenBlock>
+                      <img src="{{image}}" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
+                  </ng-template>
+                  <ng-template #elseBlock>
+                      <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 180px;" />
+                  </ng-template>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+            <div style="min-height: 158px;">
+                <div *ngIf="isLoading" class="loading">
+                    <mat-spinner [diameter]="25"></mat-spinner>
+                </div>
+                <div *ngIf="!isLoading">
+                    <h3>{{firstname + ' ' + midlename + ' ' + lastname}} </h3>
+                    <address style="font-style: initial;">
+                        Blood Type: {{bloodType}} <br/>
+                        Contact: {{contact}} <br/>
+                        Gender: {{gender}} <br/>
+                        Birthdate: {{ birthdate | date }}
+                    </address>
+                </div>
+              </div>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <div>
+                  Quick Actions
+                  <mat-list>
+                      <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
+                              message
+                              </i> &nbsp; Message </mat-list-item>
+                      <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
+                          calendar_today
+                          </i> &nbsp; Appointment </mat-list-item>
+                      <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
+                        remove_red_eye
+                              </i> &nbsp; View Chart </mat-list-item>
+                      <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
+                              fingerprint
+                              </i> &nbsp; Generate QR Code </mat-list-item>
+                      <!-- <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
+                              group
+                                      </i> &nbsp; Network Request </mat-list-item> -->
+                  </mat-list>
 
-        </div>
-    </mat-grid-tile>
-</mat-grid-list>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="area content" gdArea="content">
+      <nav mat-tab-nav-bar>
+          <a mat-tab-link routerLink="./chief-complaints" routerLinkActive #rlaChiefComplaint="routerLinkActive" [active]="rlaChiefComplaint.isActive">Chief complaints</a>
+          <a mat-tab-link routerLink="./histories" routerLinkActive #rlaHistories="routerLinkActive" [active]="rlaHistories.isActive">Histories</a>
+          <a mat-tab-link routerLink="./physical-exams" routerLinkActive #rlaPhysicalExams="routerLinkActive" [active]="rlaPhysicalExams.isActive">Physical exams</a>
+          <a mat-tab-link routerLink="./orders" routerLinkActive #rlaOrders="routerLinkActive" [active]="rlaOrders.isActive">Orders</a>
+          <a mat-tab-link routerLink="./prescriptions" routerLinkActive #rlaPrescriptions="routerLinkActive" [active]="rlaPrescriptions.isActive">Prescriptions</a>
+          <a mat-tab-link routerLink="./test-results" routerLinkActive #rlaTestResult="routerLinkActive" [active]="rlaTestResult.isActive">Test Results</a>
+          <a mat-tab-link routerLink="./progress-notes" routerLinkActive #rlaProgressNotes="routerLinkActive" [active]="rlaProgressNotes.isActive">Progress Notes</a>
+          <a mat-tab-link routerLink="./assessments" routerLinkActive #rlaAssessments="routerLinkActive" [active]="rlaAssessments.isActive">Assessments</a>
+      </nav>
+      <div style="margin-top: 1em;">
+        <router-outlet></router-outlet>
+      </div>
+
+  </div>
+  <div class="area footer" gdArea="footer">
+    <!-- Footer -->
+  </div>
+</div>

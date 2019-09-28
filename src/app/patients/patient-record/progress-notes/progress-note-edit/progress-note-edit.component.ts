@@ -68,7 +68,6 @@ implements OnInit, OnDestroy {
               id: recordData._id,
               note: recordData.note,
               created: recordData.created,
-              complaintId: recordData.complaintId,
               patientId: recordData.patientId
             };
             this.form.setValue({
@@ -91,7 +90,6 @@ implements OnInit, OnDestroy {
       this.notesService.insert(
         this.form.value.note,
         this.form.value.record_date,
-        this.complaintId,
         this.patientId,
       ).subscribe(() => {
         this.onClose();
@@ -111,7 +109,6 @@ implements OnInit, OnDestroy {
         this.recordId,
         this.form.value.note,
         this.form.value.record_date,
-        this.complaintId,
         this.patientId,
       ).subscribe(() => {
         this.onClose();

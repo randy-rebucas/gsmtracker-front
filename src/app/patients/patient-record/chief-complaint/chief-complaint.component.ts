@@ -1,9 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../../auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
+import { ComplaintService } from '../services/complaint.service';
+import { NotificationService } from 'src/app/shared/notification.service';
 
 export interface Complaint {
   text: string;
@@ -12,18 +15,45 @@ export interface Complaint {
 @Component({
   selector: 'app-chief-complaint',
   templateUrl: './chief-complaint.component.html',
-  styleUrls: ['./chief-complaint.component.css']
+  styles: [`
+  mat-form-field.record-date {
+    width: 30%;
+  }
+  .mat-form-field {
+    display: block;
+  }
+  .action-button button {
+    margin-left: 8px;
+    text-align: right;
+  }
+  :host /deep/ .mat-card-header-text {
+    /* CSS styles go here */
+    margin: 0px;
+  }
+  .mat-card-subtitle {
+    margin-bottom: unset;
+  }
+  .mat-card {
+    border-radius: 0;
+  }
+  `]
 })
 export class ChiefComplaintComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
   breakpoint: number;
+  private mode = 'create';
 
   constructor(
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
-    public appconfig: AppConfiguration
+    public appconfig: AppConfiguration,
+
+    private fb: FormBuilder,
+    private complaintService: ComplaintService,
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute
     ) {
       super(authService, router, dialog, appconfig);
     }
@@ -31,10 +61,43 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 2;
+    this.activatedRoute.parent.params.subscribe(
+      (param) => {
+        this.patientId = param.patientId;
+      }
+    );
+
+    this.form = new FormGroup({
+      complaint: new FormControl(null, {
+        validators: [Validators.required, Validators.maxLength(500) ]
+      }),
+      record_date: new FormControl(new Date(), {
+        validators: [Validators.required]
+      })
+    });
+
   }
 
   onResize(event) {
     this.breakpoint = (event.target.innerWidth <= 400) ? 1 : 2;
+  }
+
+  onSave() {
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.complaintService.insert(
+      this.form.value.record_date,
+      this.patientId,
+      this.form.value.complaint
+    ).subscribe(() => {
+      this.form.reset();
+      this.notificationService.success(':: Added successfully');
+      this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
+      // redirect histories
+    });
+
   }
 
   ngOnDestroy() {

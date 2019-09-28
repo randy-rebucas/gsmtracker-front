@@ -90,7 +90,7 @@ implements OnInit, OnDestroy {
   public recordsSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
-  columnsToDisplay: string[] = ['complaints', 'action'];
+  columnsToDisplay: string[] = ['date', 'action'];
   expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
