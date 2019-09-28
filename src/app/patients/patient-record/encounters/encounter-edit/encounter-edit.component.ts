@@ -138,16 +138,16 @@ implements OnInit, OnDestroy {
   }
 
   getAssessement(complaintId) {
-    this.assessmentService.getByComplaintId(complaintId).subscribe(
-      recordData => {
-        console.log(recordData);
-        if (Object.keys(recordData).length) {
-          this.assessmentId = recordData[0]._id;
-          this.diagnosis = recordData[0].diagnosis;
-          this.treatments = recordData[0].treatments;
-        }
-      }
-    );
+    // this.assessmentService.getByComplaintId(complaintId).subscribe(
+    //   recordData => {
+    //     console.log(recordData);
+    //     if (Object.keys(recordData).length) {
+    //       this.assessmentId = recordData[0]._id;
+    //       this.diagnosis = recordData[0].diagnosis;
+    //       this.treatments = recordData[0].treatments;
+    //     }
+    //   }
+    // );
   }
 
   getPrescription(complaintId) {

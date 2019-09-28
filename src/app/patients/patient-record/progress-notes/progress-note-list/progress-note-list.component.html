@@ -10,10 +10,6 @@
                     <mat-icon>more_vert</mat-icon>
                 </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="onEdit(element.id)">
-                        <mat-icon>launch</mat-icon>
-                        <span>Edit</span>
-                    </button>
                     <button mat-menu-item (click)="onDelete(element.id)"> <!--disabled-->
                       <mat-icon>delete_outline</mat-icon>
                       <span>Delete</span>

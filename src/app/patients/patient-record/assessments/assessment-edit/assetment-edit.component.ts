@@ -137,7 +137,6 @@ implements OnInit, OnDestroy {
     if (this.mode === 'create') {
       this.assessmentService.insert(
         this.form.value.record_date,
-        this.complaintId,
         this.patientId,
         this.form.value.diagnosis,
         this.form.value.treatments
@@ -152,7 +151,6 @@ implements OnInit, OnDestroy {
       this.assessmentService.update(
         this.recordId,
         this.form.value.record_date,
-        this.complaintId,
         this.patientId,
         this.form.value.diagnosis,
         this.form.value.treatments

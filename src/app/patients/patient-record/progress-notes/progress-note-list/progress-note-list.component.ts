@@ -69,6 +69,9 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   .component-page-header {
     padding: 2em 0 0;
   }
+  td.mat-cell button {
+    float: right;
+  }
   `],
   templateUrl: './progress-note-list.component.html',
   animations: [
@@ -137,32 +140,6 @@ implements OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  onCreate(complaintId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      id: null,
-      title: 'New record',
-      complaintIds: complaintId,
-      btnLabel: 'Save'
-    };
-    this.dialog.open(ProgressNoteEditComponent, dialogConfig);
-  }
-
-  onEdit(progressNoteId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-        id: progressNoteId,
-        title: 'Update record',
-        patient: this.patientId,
-        btnLabel: 'Update'
-    };
-    this.dialog.open(ProgressNoteEditComponent, dialogConfig);
   }
 
   onDelete(progressNoteId) {

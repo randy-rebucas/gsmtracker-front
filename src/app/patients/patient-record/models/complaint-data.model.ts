@@ -3,9 +3,5 @@ export interface ComplaintData {
   created: string;
   patientId: string;
   complaint: string;
-  // complaints: Complaints[];
 }
 
-export interface Complaints {
-  complaint: string;
-}

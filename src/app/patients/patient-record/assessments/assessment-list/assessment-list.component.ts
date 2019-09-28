@@ -4,16 +4,15 @@ import { AuthService } from '../../../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
-import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, MatDialogConfig } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
 import { DialogService } from 'src/app/shared/dialog.service';
 
-import { AssessmentData } from '../../models/assessment-data.model';
-import { AssessmentService } from '../../services/assessment.service';
-import { AssessmentEditComponent } from '../assessment-edit/assetment-edit.component';
-import { ComplaintService } from '../../services/complaint.service';
+import { NotesService } from '../../services/notes.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { AssessmentService } from '../../services/assessment.service';
+import { AssessmentData } from '../../models/assessment-data.model';
 
 @Component({
   selector: 'app-assessment-list',
@@ -57,7 +56,6 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
       padding: 16px;
       width: 100%;
   }
-
   td.mat-cell.cdk-column-action.mat-column-action button {
       visibility: hidden;
   }
@@ -70,16 +68,14 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   .component-page-header {
     padding: 2em 0 0;
   }
-  dl {
-    margin-top: 0;
+  td.mat-cell button {
+    float: right;
   }
-  dt {
-    float: left;
-    width: 100px;
-  }
-  table.assessment-table tr td {
-    vertical-align: text-bottom;
-  }
+  .example-element-assessment h4 {
+    font-weight: 500;
+    text-decoration: underline;
+    font-size: 16px;
+}
   `],
   templateUrl: './assessment-list.component.html',
   animations: [
@@ -95,14 +91,13 @@ extends SecureComponent
 implements OnInit, OnDestroy {
 
   records: AssessmentService[] = [];
-  assessments: AssessmentData[] = [];
 
   complaintId: string;
 
   public recordsSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
-  columnsToDisplay: string[] = ['complaints', 'action'];
+  columnsToDisplay: string[] = ['date', 'action'];
   expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -113,13 +108,12 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public complaintService: ComplaintService,
     public assessmentService: AssessmentService,
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: AssessmentService,
-  ) {
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: NotesService,
+    ) {
       super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.params.subscribe(
         (param) => {
@@ -127,7 +121,6 @@ implements OnInit, OnDestroy {
         }
       );
     }
-
 
   ngOnInit() {
     super.doInit();
@@ -142,41 +135,21 @@ implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
+
   }
 
-  onCreate(complaintId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '30%';
-    dialogConfig.data = {
-      id: null,
-      title: 'New record',
-      complaintIds: complaintId,
-      btnLabel: 'Save'
-    };
-    this.dialog.open(AssessmentEditComponent, dialogConfig);
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
-  onEdit(assessmentId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '30%';
-    dialogConfig.data = {
-        id: assessmentId,
-        title: 'Update record',
-        patient: this.patientId,
-        btnLabel: 'Update'
-    };
-    this.dialog.open(AssessmentEditComponent, dialogConfig);
-  }
-
-  onDelete(assessmentId) {
+  onDelete(progressNoteId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.assessmentService.delete(assessmentId).subscribe(() => {
+        this.assessmentService.delete(progressNoteId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
           this.assessmentService.getAll(this.perPage, this.currentPage, this.patientId);
         });

@@ -5,17 +5,18 @@ exports.create = async(req, res, next) => {
   try {
     const newAssessment = new Assessment({
         created: req.body.created,
-        complaintId: req.body.complaintId,
+        diagnosis: req.body.diagnosis,
+        treatments: req.body.treatments,
         patientId: req.body.patientId
     });
-    assessmentData = req.body.diagnosis;
-    for (let index = 0; index < assessmentData.length; index++) {
-      newAssessment.diagnosis.push(assessmentData[index]);
-    }
-    treatmentData = req.body.treatments;
-    for (let index = 0; index < treatmentData.length; index++) {
-      newAssessment.treatments.push(treatmentData[index]);
-    }
+    // assessmentData = req.body.diagnosis;
+    // for (let index = 0; index < assessmentData.length; index++) {
+    //   newAssessment.diagnosis.push(assessmentData[index]);
+    // }
+    // treatmentData = req.body.treatments;
+    // for (let index = 0; index < treatmentData.length; index++) {
+    //   newAssessment.treatments.push(treatmentData[index]);
+    // }
     let assessment = await newAssessment.save();
     if (!assessment) {
       throw new Error('Something went wrong. Cannot create assessment!');
@@ -41,17 +42,18 @@ exports.update = async (req, res, next) => {
     const newAssessment = new Assessment({
         _id: req.body.assessmentId,
         created: req.body.created,
-        complaintId: req.body.complaintId,
+        diagnosis: req.body.diagnosis,
+        treatments: req.body.treatments,
         patientId: req.body.patientId
     });
-    assessmentData = req.body.diagnosis;
-    for (let index = 0; index < assessmentData.length; index++) {
-      newAssessment.diagnosis.push(assessmentData[index]);
-    }
-    treatmentData = req.body.treatments;
-    for (let index = 0; index < treatmentData.length; index++) {
-      newAssessment.treatments.push(treatmentData[index]);
-    }
+    // assessmentData = req.body.diagnosis;
+    // for (let index = 0; index < assessmentData.length; index++) {
+    //   newAssessment.diagnosis.push(assessmentData[index]);
+    // }
+    // treatmentData = req.body.treatments;
+    // for (let index = 0; index < treatmentData.length; index++) {
+    //   newAssessment.treatments.push(treatmentData[index]);
+    // }
     let assessment = await Assessment.updateOne({ _id: req.params.assessmentId }, newAssessment).exec();
     if (!assessment) {
       throw new Error('Something went wrong. Cannot update assessment!');
@@ -75,7 +77,7 @@ exports.getAll = async (req, res, next) => {
     if (pageSize && currentPage) {
         assessmentQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    let assessment = await assessmentQuery.populate('complaintId').exec();
+    let assessment = await assessmentQuery.exec();
     if (!assessment) {
       throw new Error('Something went wrong. Cannot fetch all assessment!');
     }
@@ -85,7 +87,6 @@ exports.getAll = async (req, res, next) => {
       var obj = {
         _id: element._id,
         created: element.created,
-        complaints: element.complaintId.complaints,
         patientId: element.patientId,
         diagnosis: element.diagnosis,
         treatments: element.treatments
@@ -152,25 +153,6 @@ exports.getCurrent = async(req, res, next) => {
 exports.getLast = async(req, res, next) => {
   try {
     let assessment = await Assessment.find({ 'patientId': req.params.patientId }).limit(1).sort({ 'created': 'desc' }).exec();
-    if (!assessment) {
-      throw new Error('Something went wrong. No assessment found!');
-    }
-
-    res.status(200).json(assessment);
-
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
-};
-/**
- * @param complaintId
- * @since v1
- */
-exports.getByComplaint = async(req, res, next) => {
-  try {
-    let assessment = await Assessment.find({complaintId: req.params.complaintId}).exec();
     if (!assessment) {
       throw new Error('Something went wrong. No assessment found!');
     }

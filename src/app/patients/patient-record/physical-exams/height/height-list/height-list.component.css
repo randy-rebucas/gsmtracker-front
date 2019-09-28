@@ -78,3 +78,8 @@ td.mat-cell.cdk-column-action.mat-column-action button {
 tr:hover td.mat-cell.cdk-column-action.mat-column-action button {
     visibility: visible;
 }
+
+/* mat-row mat-cell:last-child {
+  display: flex;
+  justify-content: flex-end;
+} */

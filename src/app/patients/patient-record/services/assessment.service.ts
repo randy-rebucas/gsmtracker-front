@@ -29,7 +29,6 @@ export class AssessmentService {
             return {
               id: assessment._id,
               created: assessment.created,
-              complaints: assessment.complaints,
               patientId: assessment.patientId,
               diagnosis: assessment.diagnosis,
               treatments: assessment.treatments
@@ -51,39 +50,33 @@ export class AssessmentService {
   }
 
   get(assessmentId: string) {
-    return this.http.get<{ _id: string; complaintId: string, diagnosis: [], treatments: [] }>(
+    return this.http.get<{ _id: string; diagnosis: string, treatments: string }>(
       BACKEND_URL + '/' + assessmentId
       );
   }
 
   getLatest() {
-    return this.http.get<{ _id: string; complaintId: string, diagnosis: [], treatments: [] }>(
+    return this.http.get<{ _id: string; diagnosis: string, treatments: string }>(
       BACKEND_URL + '/latest'
       );
   }
 
-  getByComplaintId(complaintId) {
-    return this.http.get<{ _id: string; complaintId: string, diagnosis: [], treatments: [] }>(
-      BACKEND_URL + '/complaint/' + complaintId
-      );
-  }
-
   getLast(patientId) {
-    return this.http.get<{ _id: string, complaintId: string, diagnosis: [], treatments: [] }>(
+    return this.http.get<{ _id: string, diagnosis: string, treatments: string }>(
       BACKEND_URL + '/last/' + patientId
       );
   }
 
-  insert(created: string, complaintId: string, patientId: string, diagnosis: [], treatments: []) {
+  insert(created: string, patientId: string, diagnosis: string, treatments: string) {
     const recordData = {
-      created, complaintId, patientId, diagnosis, treatments
+      created, patientId, diagnosis, treatments
     };
     return this.http.post<{ message: string, record: AssessmentData }>(BACKEND_URL, recordData);
   }
 
-  update(assessmentId: string, created: string, complaintId: string, patientId: string, diagnosis: [], treatments: []) {
+  update(assessmentId: string, created: string, patientId: string, diagnosis: string, treatments: string) {
     const recordData = {
-      assessmentId, created, complaintId, patientId, diagnosis, treatments
+      assessmentId, created, patientId, diagnosis, treatments
     };
     return this.http.put(BACKEND_URL + '/' + assessmentId, recordData);
   }
