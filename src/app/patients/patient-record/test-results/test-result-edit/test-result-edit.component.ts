@@ -5,8 +5,6 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
-import { NotesService } from '../../services/notes.service';
-import { NoteData } from '../../models/note.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { UploadService } from 'src/app/upload/upload.service';
 import { UploadData } from 'src/app/upload/upload-data.model';
@@ -24,7 +22,6 @@ implements OnInit, OnDestroy {
   uploadData: UploadData;
   private mode = 'create';
 
-  complaintId: string;
   dialogTitle: string;
   dialogButton: string;
 
@@ -49,7 +46,6 @@ implements OnInit, OnDestroy {
       super(authService, router, dialog, appconfig);
 
       this.recordId = data.id;
-      this.complaintId = data.complaintIds;
       this.patientId = data.patient;
       this.dialogTitle = data.title;
       this.dialogButton = data.btnLabel;
@@ -71,8 +67,7 @@ implements OnInit, OnDestroy {
         name: recordData.name,
         type: recordData.type,
         patientId: recordData.patientId,
-        complaintId: recordData.complaintId,
-        clientId: recordData.clientId,
+        licenseId: recordData.licenseId,
         created: recordData.created
       };
       this.form.setValue({

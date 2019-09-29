@@ -113,7 +113,7 @@
           <h3>Test Result</h3>
       </mat-grid-tile-header>
       <div class="grid-inner-content grid-inner-content-list">
-        <app-upload [complaintId]="id"></app-upload>
+        <app-upload></app-upload>
           <ul id="file-gallery">
             <li *ngFor="let attachment of attachments">
               <img src="{{attachment.path}}" alt="{{attachment.name}}">

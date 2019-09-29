@@ -48,6 +48,7 @@ import { HistoriesModule } from './histories/histories.module';
 import { AllergyEditComponent } from './allergies/allergy-edit/allergy-edit.component';
 import { AllergyListComponent } from './allergies/allergy-list/allergy-list.component';
 import { AllergiesComponent } from './allergies/allergies.component';
+import { TestResultModule } from './test-results/test-result.module';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { AllergiesComponent } from './allergies/allergies.component';
     UploadModule,
     EditorModule,
     HistoriesModule,
+    TestResultModule,
     FlexLayoutModule.withConfig({addFlexToParent: false})
   ]
 })

@@ -25,8 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [UploadComponent],
   exports: [UploadComponent],
   schemas: [
-    CUSTOM_ELEMENTS_SCHEMA,
-    NO_ERRORS_SCHEMA
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class UploadModule {}

@@ -81,14 +81,14 @@ implements OnInit, OnDestroy {
     /**
      * get complaint
      */
-    this.getComplaint(this.id);
+    // this.getComplaint(this.id);
 
-    this.recordsSub = this.complaintService
-    .getUpdateListener()
-    .subscribe(() => {
-      this.isLoading = false;
-      this.getComplaint(this.id);
-    });
+    // this.recordsSub = this.complaintService
+    // .getUpdateListener()
+    // .subscribe(() => {
+    //   this.isLoading = false;
+    //   this.getComplaint(this.id);
+    // });
     /**
      * get assessment
      */
@@ -128,33 +128,33 @@ implements OnInit, OnDestroy {
     /**
      * get progress notes
      */
-    this.getAttachments(this.id);
+    // this.getAttachments(this.id);
 
-    this.recordsSub = this.uploadService
-    .getUpdateListener()
-    .subscribe(() => {
-      this.isLoading = false;
-      this.getAttachments(this.id);
-    });
+    // this.recordsSub = this.uploadService
+    // .getUpdateListener()
+    // .subscribe(() => {
+    //   this.isLoading = false;
+    //   this.getAttachments(this.id);
+    // });
   }
 
-  getComplaint(complaintId) {
-    this.complaintService.get(complaintId).subscribe(recordData => {
-      this.id = recordData._id;
-      this.complaints = recordData.complaints;
-      this.created = recordData.created;
-    });
-  }
+  // getComplaint(complaintId) {
+  //   this.complaintService.get(complaintId).subscribe(recordData => {
+  //     this.id = recordData._id;
+  //     this.complaints = recordData.complaints;
+  //     this.created = recordData.created;
+  //   });
+  // }
 
-  getAttachments(complaintId) {
-    this.uploadService.getByComplaintId(complaintId).subscribe(
-      recordData => {
-        if (Object.keys(recordData).length) {
-          this.attachments = recordData;
-        }
-      }
-    );
-  }
+  // getAttachments(complaintId) {
+  //   this.uploadService.getByComplaintId(complaintId).subscribe(
+  //     recordData => {
+  //       if (Object.keys(recordData).length) {
+  //         this.attachments = recordData;
+  //       }
+  //     }
+  //   );
+  // }
 
   getAssessement(complaintId) {
     // this.assessmentService.getByComplaintId(complaintId).subscribe(

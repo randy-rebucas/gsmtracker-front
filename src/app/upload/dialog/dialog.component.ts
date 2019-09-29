@@ -8,7 +8,26 @@ import { AuthService } from 'src/app/auth/auth.service';
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.css'],
+  styles: [`
+  .add-files-btn {
+    float: right;
+  }
+
+  :host {
+    height: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+
+  .container {
+    height: 100%;
+  }
+  `]
 })
 export class DialogComponent implements OnInit, OnDestroy {
   @ViewChild('file', {static: false}) file;
@@ -21,7 +40,7 @@ export class DialogComponent implements OnInit, OnDestroy {
   userId: string;
   patientId: string;
   title: string;
-  complaintId: string;
+  licenseId: string;
 
   progress;
   canBeClosed = true;
@@ -38,12 +57,12 @@ export class DialogComponent implements OnInit, OnDestroy {
     ) {
       this.patientId = data.patientId;
       this.title = data.title;
-      this.complaintId = data.complaint;
     }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.userId = this.authService.getUserId();
+    this.licenseId = this.authService.getLicenseId();
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {
@@ -74,7 +93,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     this.uploading = true;
 
     // start the upload and save the progress map
-    this.progress = this.uploadService.upload(this.files, this.userId, this.patientId, this.complaintId);
+    this.progress = this.uploadService.upload(this.files, this.patientId);
 
     // convert the progress map into an array
     const allProgressObservables = [];

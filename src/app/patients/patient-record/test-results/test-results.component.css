@@ -14,3 +14,8 @@ div#test-result-detail {
 app-test-result-list {
   width: 100%;
 }
+.upload {
+  position: absolute;
+  right: 15px;
+  top: 1em;
+}

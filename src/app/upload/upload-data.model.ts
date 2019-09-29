@@ -4,7 +4,6 @@ export interface UploadData {
   name: string;
   type: string;
   patientId: string;
-  clientId: string;
-  complaintId: string;
+  licenseId: string;
   created: string;
 }

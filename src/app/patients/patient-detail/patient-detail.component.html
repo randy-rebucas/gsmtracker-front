@@ -186,16 +186,16 @@
                   </mat-card-header>
                   <div fxLayout='row wrap' fxLayoutGap="10px">
                       <div fxFlex="47.9%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord" >
-                          <mat-list dense>
+
                               <h3 matSubheader> Diagnosis </h3>
-                              <mat-list-item *ngFor="let diagnose of diagnosis"> {{diagnose.diagnose}} </mat-list-item>
-                          </mat-list>
+                              <div [innerHTML]="diagnosis"></div>
+
                       </div>
                       <div fxFlex="47.9%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord" >
-                          <mat-list dense>
+
                               <h3 matSubheader> Treatments </h3>
-                              <mat-list-item *ngFor="let treatment of treatments"> {{treatment.treatment}} </mat-list-item>
-                          </mat-list>
+                              <div [innerHTML]="treatments"></div>
+
                       </div>
                   </div>
                 </mat-card>

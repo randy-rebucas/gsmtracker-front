@@ -11,7 +11,7 @@ exports.getAll = async (req, res, next) => {
     if (pageSize && currentPage) {
       fileQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
     }
-    let file = await fileQuery.populate('complaintId');
+    let file = await fileQuery;
     if (!file) {
       throw new Error('Something went wrong.Cannot fetch all files!');
     }
@@ -23,7 +23,6 @@ exports.getAll = async (req, res, next) => {
         path: element.path,
         type: element.type,
         name: element.name,
-        complaints: element.complaintId.complaints,
         patientId: element.patientId,
       }
       newFiles.push(obj);
@@ -172,9 +171,7 @@ exports.upload = async (req, res, next) => {
         path: url + '/' + files.file.path,
         name: files.file.name,
         type: files.file.type,
-        patientId: fields.patientId,
-        clientId: fields.clientId,
-        complaintId: fields.complaintId
+        patientId: fields.patientId
       });
       upload.save();
 

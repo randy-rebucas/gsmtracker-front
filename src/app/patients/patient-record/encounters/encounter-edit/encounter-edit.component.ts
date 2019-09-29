@@ -128,13 +128,13 @@ implements OnInit, OnDestroy {
   }
 
   getAttachments(complaintId) {
-    this.uploadService.getByComplaintId(complaintId).subscribe(
-      recordData => {
-        if (Object.keys(recordData).length) {
-          this.attachments = recordData;
-        }
-      }
-    );
+    // this.uploadService.getByComplaintId(complaintId).subscribe(
+    //   recordData => {
+    //     if (Object.keys(recordData).length) {
+    //       this.attachments = recordData;
+    //     }
+    //   }
+    // );
   }
 
   getAssessement(complaintId) {

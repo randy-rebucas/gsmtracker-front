@@ -56,7 +56,7 @@ export class UploadService {
 
   getFile(fileId: string) {
     // tslint:disable-next-line:max-line-length
-    return this.http.get<{ _id: string, path: string, name: string, type: string, created: string, patientId: string, complaintId: string, clientId: string}>(
+    return this.http.get<{ _id: string, path: string, name: string, type: string, created: string, patientId: string, licenseId: string}>(
       BACKEND_URL + '/' + fileId
       );
   }
@@ -80,13 +80,7 @@ export class UploadService {
       );
   }
 
-  getByComplaintId(complaintId) {
-    return this.http.get<{ _id: string, path: string, name: string, type: string, created: string }>(
-      BACKEND_URL + '/complaint/' + complaintId
-      );
-  }
-
-  public upload(files: Set<File>, clientId: string, patientId: string, complaintId: string):
+  public upload(files: Set<File>, patientId: string):
     { [key: string]: { progress: Observable<number> } } {
 
     // this will be the our resulting map
@@ -97,8 +91,6 @@ export class UploadService {
       const formData: FormData = new FormData();
       formData.append('file', file, file.name);
       formData.append('patientId', patientId);
-      formData.append('clientId', clientId);
-      formData.append('complaintId', complaintId);
 
       // create a http-post request and pass the form
       // tell it to report the upload progress

@@ -3,8 +3,10 @@
   <mat-card-subtitle>
     This includes Imaging results, Pathology results, Specialized testing
   </mat-card-subtitle>
+  <div class="upload">
+      <app-upload></app-upload>
+  </div>
   <mat-card-content>
-      <mat-divider [vertical]="false"></mat-divider>
     <div class="test-result-area" id="test-result-list" style="position: relative;
     min-height: 300px;">
       <app-test-result-list></app-test-result-list>
