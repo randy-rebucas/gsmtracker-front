@@ -1,0 +1,13 @@
+<mat-card-content>
+  <mat-list>
+    <mat-list-item *ngFor="let allergy of allergies">
+      {{allergy.allergy}}
+      <button mat-icon-button color="warn" (click)="onDelete(allergy.id)" style="position: absolute; right: 0;"> <!--disabled-->
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </mat-list-item>
+    <ng-container *ngIf="allergies.length < 1">
+      <p class="mat-body">no allergy listed!</p>
+    </ng-container>
+  </mat-list>
+</mat-card-content>

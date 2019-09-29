@@ -45,6 +45,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { UploadModule } from 'src/app/upload/upload.module';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { HistoriesModule } from './histories/histories.module';
+import { AllergyEditComponent } from './allergies/allergy-edit/allergy-edit.component';
+import { AllergyListComponent } from './allergies/allergy-list/allergy-list.component';
+import { AllergiesComponent } from './allergies/allergies.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +81,10 @@ import { HistoriesModule } from './histories/histories.module';
     PatientChartComponent,
     OrdersComponent,
     OrderListComponent,
-    OrderEditComponent
+    OrderEditComponent,
+    AllergiesComponent,
+    AllergyEditComponent,
+    AllergyListComponent
   ],
   imports: [
     CommonModule,

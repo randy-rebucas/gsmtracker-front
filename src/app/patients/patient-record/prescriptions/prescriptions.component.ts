@@ -60,6 +60,7 @@ extends SecureComponent
 implements OnInit, OnDestroy {
   panelOpenState = true;
   listOpenState = true;
+  allergyFormOpenState = true;
 
   constructor(
     public authService: AuthService,
@@ -90,6 +91,10 @@ implements OnInit, OnDestroy {
 
   onOpenForm() {
     this.panelOpenState = ! this.panelOpenState;
+  }
+
+  onOpenAllergyForm() {
+    this.allergyFormOpenState = ! this.allergyFormOpenState;
   }
 
   onOpenList() {

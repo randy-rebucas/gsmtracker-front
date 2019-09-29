@@ -70,14 +70,21 @@
         <mat-card class="allergy-card">
           <mat-card-header>
             <mat-card-title>Allergies</mat-card-title>
-            <!-- <mat-card-subtitle>Created</mat-card-subtitle> -->
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="onOpenAllergyForm()">
+                    <mat-icon>input</mat-icon>
+                    <span>{{panelOpenState ? 'Close' : 'Open'}} Form</span>
+                </button>
+            </mat-menu>
           </mat-card-header>
-          form
-          <mat-card-content>
-              <mat-list dense>
-                <mat-list-item>Antebiotic</mat-list-item>
-              </mat-list>
-          </mat-card-content>
+          <ng-container *ngIf="allergyFormOpenState">
+            <app-allergy-edit></app-allergy-edit>
+          </ng-container>
+          <app-allergy-list></app-allergy-list>
+
         </mat-card>
     </div>
 </div>

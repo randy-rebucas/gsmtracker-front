@@ -28,6 +28,7 @@ var familyHistoryRouter = require('./routes/records/family_history');
 var presentIllnessRouter = require('./routes/records/present_illness');
 var pastMedicalRouter = require('./routes/records/past_medical');
 var socialRouter = require('./routes/records/social');
+var allergyRouter = require('./routes/records/allergy');
 
 var threadRouter = require('./routes/thread');
 var messagesRouter = require('./routes/message');
@@ -130,6 +131,7 @@ app.use('/api/family-histories', familyHistoryRouter);
 app.use('/api/present-illneses', presentIllnessRouter);
 app.use('/api/past-medicals', pastMedicalRouter);
 app.use('/api/socials', socialRouter);
+app.use('/api/allergies', allergyRouter);
 
 app.use('/api/thread', threadRouter);
 app.use('/api/messages', messagesRouter);
