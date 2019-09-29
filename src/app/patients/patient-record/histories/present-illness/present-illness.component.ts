@@ -39,7 +39,7 @@ export class PresentIllnessComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
   panelOpenState = true;
-  listOpenState = false;
+  listOpenState = true;
 
   constructor(
     public authService: AuthService,

@@ -25,6 +25,9 @@ var notesRouter = require('./routes/records/progress_note');
 var assessmentsRouter = require('./routes/records/assessment');
 var orderRouter = require('./routes/records/order');
 var familyHistoryRouter = require('./routes/records/family_history');
+var presentIllnessRouter = require('./routes/records/present_illness');
+var pastMedicalRouter = require('./routes/records/past_medical');
+var socialRouter = require('./routes/records/social');
 
 var threadRouter = require('./routes/thread');
 var messagesRouter = require('./routes/message');
@@ -124,6 +127,9 @@ app.use('/api/progress-notes', notesRouter);
 app.use('/api/assessments', assessmentsRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/family-histories', familyHistoryRouter);
+app.use('/api/present-illneses', presentIllnessRouter);
+app.use('/api/past-medicals', pastMedicalRouter);
+app.use('/api/socials', socialRouter);
 
 app.use('/api/thread', threadRouter);
 app.use('/api/messages', messagesRouter);

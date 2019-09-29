@@ -5,7 +5,9 @@ import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 import { NotificationService } from 'src/app/shared/notification.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FamilyHistoryService } from '../../../services/family-history.service';
+import { PastMedicalService } from '../../../services/past-medical.service';
 
 @Component({
   selector: 'app-past-medical-form',
@@ -29,6 +31,7 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
+    public pastMedicalService: PastMedicalService,
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute
   ) {
@@ -44,7 +47,7 @@ implements OnInit, OnDestroy {
     );
 
     this.form = new FormGroup({
-      complaint: new FormControl(null, {
+      pastMedical: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(500) ]
       }),
       record_date: new FormControl(new Date(), {
@@ -57,28 +60,17 @@ implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
-    // if (this.mode === 'create') {
-    //   this.complaintService.insert(
-    //     this.form.value.record_date,
-    //     this.patientId,
-    //     this.form.value.complaint
-    //   ).subscribe(() => {
-    //     this.form.reset();
-    //     this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
-    //     // this.router.navigate([])
-    //   });
-    // } else {
-    //   this.complaintService.update(
-    //     this.recordId,
-    //     this.form.value.record_date,
-    //     this.patientId,
-    //     this.form.value.complaint
-    //   ).subscribe(() => {
-    //     this.form.reset();
-    //     this.notificationService.success(':: Updated successfully');
-    //     this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
-    //   });
-    // }
+
+    this.pastMedicalService.insert(
+      this.form.value.record_date,
+      this.patientId,
+      this.form.value.pastMedical
+    ).subscribe(() => {
+      this.form.reset();
+      this.notificationService.success(':: Added successfully');
+      this.pastMedicalService.getAll(this.perPage, this.currentPage, this.patientId);
+    });
+
   }
 
   ngOnDestroy() {

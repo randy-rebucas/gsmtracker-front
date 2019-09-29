@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PresentIllnessService } from '../../../services/present-illness.service';
 
 @Component({
   selector: 'app-present-illness-form',
@@ -30,7 +31,8 @@ implements OnInit, OnDestroy {
     public appconfig: AppConfiguration,
 
     private notificationService: NotificationService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private presentIllnessService: PresentIllnessService
   ) {
     super(authService, router, dialog, appconfig);
   }
@@ -44,7 +46,7 @@ implements OnInit, OnDestroy {
     );
 
     this.form = new FormGroup({
-      complaint: new FormControl(null, {
+      presentIllness: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(500) ]
       }),
       record_date: new FormControl(new Date(), {
@@ -57,28 +59,17 @@ implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
-    // if (this.mode === 'create') {
-    //   this.complaintService.insert(
-    //     this.form.value.record_date,
-    //     this.patientId,
-    //     this.form.value.complaint
-    //   ).subscribe(() => {
-    //     this.form.reset();
-    //     this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
-    //     // this.router.navigate([])
-    //   });
-    // } else {
-    //   this.complaintService.update(
-    //     this.recordId,
-    //     this.form.value.record_date,
-    //     this.patientId,
-    //     this.form.value.complaint
-    //   ).subscribe(() => {
-    //     this.form.reset();
-    //     this.notificationService.success(':: Updated successfully');
-    //     this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
-    //   });
-    // }
+
+    this.presentIllnessService.insert(
+      this.form.value.record_date,
+      this.patientId,
+      this.form.value.presentIllness
+    ).subscribe(() => {
+      this.form.reset();
+      this.notificationService.success(':: Added successfully');
+      this.presentIllnessService.getAll(this.perPage, this.currentPage, this.patientId);
+    });
+
   }
 
   ngOnDestroy() {
