@@ -10,8 +10,8 @@ const Setting = require('../models/setting');
 exports.createUser = async(req, res, next) => {
     try {
         const newLicense = new License({
-          personId: req.auth.personId,
-          licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
+            personId: req.auth.personId,
+            licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
         });
         let license = await newLicense.save();
         if (!license) {
@@ -151,26 +151,26 @@ exports.update = async(req, res, next) => {
 };
 
 exports.search = async(req, res, next) => {
-  try {
-      const query = User.find({ 'licenseId': req.query.licenseId });
-      let users = await query.populate('personId').where('userType', 'patient');
-      const result = [];
-      users.forEach(element => {
-          let fullname = element.personId.firstname + ', ' + element.personId.lastname;
-          result.push({ id: element.personId._id, name: fullname });
-      });
+    try {
+        const query = User.find({ 'licenseId': req.query.licenseId });
+        let users = await query.populate('personId').where('userType', 'patient');
+        const result = [];
+        users.forEach(element => {
+            let fullname = element.personId.firstname + ', ' + element.personId.lastname;
+            result.push({ id: element.personId._id, name: fullname });
+        });
 
-      let count = await User.countDocuments({ 'licenseId': req.query.licenseId, 'userType': 'patient' });
+        let count = await User.countDocuments({ 'licenseId': req.query.licenseId, 'userType': 'patient' });
 
-      res.status(200).json({
-          total: count,
-          results: result
-      });
-  } catch (error) {
-      res.status(500).json({
-          message: error.message
-      });
-  }
+        res.status(200).json({
+            total: count,
+            results: result
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 }
 
 exports.getAll = async(req, res, next) => {
@@ -178,7 +178,7 @@ exports.getAll = async(req, res, next) => {
     try {
         const pageSize = +req.query.pagesize;
         const currentPage = +req.query.page;
-        const query = User.find({'licenseId': req.query.licenseId});
+        const query = User.find({ 'licenseId': req.query.licenseId });
 
         if (req.query.usertype != 'all') {
             query.where('userType', req.query.usertype);
@@ -213,17 +213,17 @@ exports.getAll = async(req, res, next) => {
 exports.get = async(req, res, next) => {
     try {
         var usersProjection = {
-          __v: false
+            __v: false
         };
-        let user = await User.findOne({_id: req.params.userId}, usersProjection)
-          .populate('personId')
-          .exec();
+        let user = await User.findOne({ _id: req.params.userId }, usersProjection)
+            .populate('personId')
+            .exec();
         if (!user) {
             throw new Error('Something went wrong. Cannot find user id: ' + req.params.userId);
         }
-        let auth = await Auth.findOne({personId: user.personId}).select('email -_id')
-          .exec();
-
+        let auth = await Auth.findOne({ personId: user.personId }).select('email -_id')
+            .exec();
+        console.log(user);
         res.status(200).json({
             userId: user._id,
             meta: user.metaData,
@@ -235,7 +235,8 @@ exports.get = async(req, res, next) => {
             birthdate: user.personId.birthdate,
             addresses: user.personId.address,
             created: user.personId.created,
-            email: auth.email
+            email: auth.email,
+            avatar: user.avatarPath
         });
     } catch (error) {
         res.status(500).json({
@@ -257,6 +258,24 @@ exports.delete = async(req, res, next) => {
         res.status(200).json({
             message: 'Deletion successfull!'
         });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+exports.uploadProfile = async(req, res, next) => {
+    try {
+        const url = req.protocol + '://' + req.get('host');
+        const newUser = new User({
+            _id: req.body.userId,
+            avatarPath: url + '/images/' + req.file.filename
+        });
+
+        let userProfile = await User.updateOne({ _id: req.params.userId }, newUser);
+
+        console.log(userProfile);
     } catch (error) {
         res.status(500).json({
             message: error.message

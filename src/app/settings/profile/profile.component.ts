@@ -6,8 +6,11 @@ import { MatDialog } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 import { UsersService } from 'src/app/users/users.service';
-import { FormArray, Validators, FormBuilder } from '@angular/forms';
+import { FormArray, Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/notification.service';
+import { HttpClient, HttpEventType } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
 
 @Component({
   selector: 'app-profile',
@@ -38,7 +41,6 @@ import { NotificationService } from 'src/app/shared/notification.service';
   }
   form.normal-form {
     width: 50%;
-    margin: 3em 0;
   }
   .form-field-block {
       display: flex;
@@ -46,12 +48,21 @@ import { NotificationService } from 'src/app/shared/notification.service';
       flex-direction: row;
       flex-basis: auto;
   }
+  .image-preview {
+    width: 70%;
+  }
+  .image-preview img {
+    width: 100%;
+  }
   `]
 })
 export class ProfileComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
   uId: string;
+  selectedFile: File = null;
+  imagePreview: string;
+  profileForm: FormGroup;
 
   constructor(
     public authService: AuthService,
@@ -62,7 +73,8 @@ implements OnInit, OnDestroy {
     public titleService: Title,
     public usersService: UsersService,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private http: HttpClient
   ) {
     super(authService, router, dialog, appconfig);
   }
@@ -70,6 +82,12 @@ implements OnInit, OnDestroy {
   async ngOnInit() {
     super.doInit();
     this.titleService.setTitle('Settings - Profile');
+    this.profileForm = new FormGroup({
+      profilePicture: new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [mimeType]
+      })
+    });
 
     this.form = this.fb.group({
       firstname: ['', [Validators.required]],
@@ -86,7 +104,9 @@ implements OnInit, OnDestroy {
 
     this.usersService.get(this.userId).subscribe(userData => {
       this.isLoading = false;
+      console.log(userData);
       this.uId = userData.userId;
+      this.imagePreview = userData.avatar;
       this.form.patchValue({
         firstname: userData.firstname,
         midlename: userData.midlename,
@@ -180,6 +200,24 @@ implements OnInit, OnDestroy {
       this.notificationService.success(':: Updated successfully');
     });
 
+  }
+
+  onFileChanged(event: Event) {
+    this.selectedFile = (event.target as HTMLInputElement).files[0];
+    this.profileForm.patchValue({ profilePicture: this.selectedFile });
+    this.profileForm.get('profilePicture').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(this.selectedFile);
+  }
+
+  onSavePicture() {
+    this.usersService.upload(
+      this.uId,
+      this.profileForm.value.profilePicture
+    );
   }
 
   ngOnDestroy() {

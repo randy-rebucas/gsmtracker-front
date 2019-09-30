@@ -22,7 +22,7 @@ import { HomeComponent } from './home/home.component';
 import { PatientsModule } from './patients/patients.module';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { SettingsComponent } from './settings/settings.component';
-import { ProfileComponent } from './settings/profile/profile.component';
+// import { ProfileComponent } from './settings/profile/profile.component';
 import { ClinicComponent } from './settings/clinic/clinic.component';
 import { NotificationComponent } from './settings/notification/notification.component';
 import { MatDialogConfirmComponent } from './mat-dialog-confirm/mat-dialog-confirm.component';
@@ -81,6 +81,7 @@ import { StatModule } from './shared/stat/stat.module';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { HistoriesModule } from './patients/patient-record/histories/histories.module';
+import { SettingsModule } from './settings/settings.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -114,7 +115,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     QrCodeScannerComponent,
     QrCodeGenerateComponent,
     SettingsComponent,
-    ProfileComponent,
+    // ProfileComponent,
     ClinicComponent,
     NotificationComponent,
     MessagesComponent,
@@ -147,6 +148,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     PatientsModule,
     UsersModule,
     PatientRecordsModule,
+    SettingsModule,
     StatModule,
     HistoriesModule,
     FormsModule,

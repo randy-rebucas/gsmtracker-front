@@ -5,6 +5,7 @@ const UserController = require('../controllers/user');
 const checkAuth = require('../middleware/check-auth');
 
 const preAuth = require('../middleware/auth');
+const extractFile = require('../middleware/file');
 
 const router = express.Router();
 
@@ -21,5 +22,7 @@ router.get('/:userId', UserController.get);
 router.put('/:userId', checkAuth, preAuth, UserController.update);
 
 router.delete('/:userId', checkAuth, UserController.delete);
+
+router.post('/upload-profile-pic/:userId', extractFile, UserController.uploadProfile);
 
 module.exports = router;
