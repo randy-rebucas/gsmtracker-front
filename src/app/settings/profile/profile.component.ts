@@ -49,7 +49,17 @@ import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
       flex-basis: auto;
   }
   .image-preview {
-    width: 70%;
+    position: relative;
+    border: 2px solid #dcdcdc;
+    padding: .5em;
+  }
+  .image-preview button {
+    position: absolute;
+    right: 8px;
+    visibility: hidden;
+  }
+  .image-preview:hover button {
+    visibility: visible;
   }
   .image-preview img {
     width: 100%;
@@ -62,6 +72,7 @@ implements OnInit, OnDestroy {
   uId: string;
   selectedFile: File = null;
   imagePreview: string;
+  userType: string;
   profileForm: FormGroup;
 
   constructor(
@@ -73,8 +84,7 @@ implements OnInit, OnDestroy {
     public titleService: Title,
     public usersService: UsersService,
     private notificationService: NotificationService,
-    private fb: FormBuilder,
-    private http: HttpClient
+    private fb: FormBuilder
   ) {
     super(authService, router, dialog, appconfig);
   }
@@ -104,9 +114,10 @@ implements OnInit, OnDestroy {
 
     this.usersService.get(this.userId).subscribe(userData => {
       this.isLoading = false;
-      console.log(userData);
       this.uId = userData.userId;
       this.imagePreview = userData.avatar;
+      this.userType = userData.userType;
+
       this.form.patchValue({
         firstname: userData.firstname,
         midlename: userData.midlename,
@@ -188,6 +199,7 @@ implements OnInit, OnDestroy {
 
     this.usersService.update(
       this.uId,
+      this.userType,
       this.form.value.firstname,
       this.form.value.midlename,
       this.form.value.lastname,
@@ -211,13 +223,22 @@ implements OnInit, OnDestroy {
       this.imagePreview = reader.result as string;
     };
     reader.readAsDataURL(this.selectedFile);
+    this.onSavePicture();
   }
 
   onSavePicture() {
     this.usersService.upload(
       this.uId,
+      this.userType,
       this.profileForm.value.profilePicture
-    );
+    ).subscribe((event) => {
+      if (event.type === HttpEventType.UploadProgress) {
+        console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
+      } else if (event.type === HttpEventType.Response) {
+        console.log(event); // handle event here
+      }
+      this.notificationService.success(':: profile picture updated successfully');
+    });
   }
 
   ngOnDestroy() {

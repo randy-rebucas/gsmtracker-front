@@ -129,7 +129,8 @@ exports.create = async(req, res, next) => {
 exports.update = async(req, res, next) => {
     try {
         const newUser = new User({
-            _id: req.body.id
+            _id: req.body.id,
+            userType: req.body.userType
         });
         metaData = req.body.meta;
         for (let index = 0; index < metaData.length; index++) {
@@ -223,7 +224,6 @@ exports.get = async(req, res, next) => {
         }
         let auth = await Auth.findOne({ personId: user.personId }).select('email -_id')
             .exec();
-        console.log(user);
         res.status(200).json({
             userId: user._id,
             meta: user.metaData,
@@ -236,7 +236,8 @@ exports.get = async(req, res, next) => {
             addresses: user.personId.address,
             created: user.personId.created,
             email: auth.email,
-            avatar: user.avatarPath
+            avatar: user.avatarPath,
+            userType: user.userType
         });
     } catch (error) {
         res.status(500).json({
@@ -270,12 +271,12 @@ exports.uploadProfile = async(req, res, next) => {
         const url = req.protocol + '://' + req.get('host');
         const newUser = new User({
             _id: req.body.userId,
+            userType: req.body.userType,
             avatarPath: url + '/images/' + req.file.filename
         });
 
         let userProfile = await User.updateOne({ _id: req.params.userId }, newUser);
 
-        console.log(userProfile);
     } catch (error) {
         res.status(500).json({
             message: error.message

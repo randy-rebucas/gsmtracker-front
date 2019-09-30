@@ -25,6 +25,7 @@ implements OnInit, OnDestroy {
   patient: PatientData;
   dialogTitle: string;
   btnLabel: string;
+  userType: string;
 
   constructor(
     public authService: AuthService,
@@ -66,6 +67,7 @@ implements OnInit, OnDestroy {
         this.isLoading = true;
         this.usersService.get(this.Id).subscribe(userData => {
           this.isLoading = false;
+          this.userType = userData.userType;
           this.form.patchValue({
             firstname: userData.firstname,
             midlename: userData.midlename,
@@ -98,7 +100,7 @@ implements OnInit, OnDestroy {
 
   addAddressGroup() {
     return this.fb.group({
-      current: [true],
+      current: [],
       address1: ['', [Validators.required]],
       address2: [''],
       city: ['', [Validators.required]],
@@ -168,6 +170,7 @@ implements OnInit, OnDestroy {
     } else {
       this.usersService.update(
         this.Id,
+        this.userType,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,

@@ -120,6 +120,12 @@ import { UserData } from 'src/app/users/user-data.model';
     right: 0;
     top: 0;
   }
+  td.mat-cell img {
+    border: 2px solid transparent;
+  }
+  td.mat-cell:hover img {
+    border: 2px solid #e0e0e0;
+  }
   `],
   templateUrl: './patient-list.component.html',
   animations: [

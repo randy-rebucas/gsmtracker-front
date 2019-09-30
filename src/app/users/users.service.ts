@@ -37,7 +37,8 @@ export class UsersService {
             birthdate: user.personId.birthdate,
             address: user.personId.address,
             created: user.personId.created,
-            meta: user.metaData
+            meta: user.metaData,
+            avatar: user.avatarPath
           };
         }), max: userData.counts};
       })
@@ -57,7 +58,7 @@ export class UsersService {
 
   get(userId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ userId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [], email: string, avatar: string }>(
+    return this.http.get<{ userId: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], meta: [], email: string, avatar: string, userType: string, created: Date }>(
         BACKEND_URL + '/' + userId
       );
   }
@@ -80,9 +81,10 @@ export class UsersService {
   }
 
   // tslint:disable-next-line:max-line-length
-  update(Id: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: []) {
+  update(Id: string, UserType: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: []) {
     const userData = {
       id: Id,
+      userType: UserType,
       firstname: Firstname,
       midlename: Midlename,
       lastname: Lastname,
@@ -99,22 +101,16 @@ export class UsersService {
     return this.http.delete(BACKEND_URL + '/' + userId);
   }
 
-  upload(uId: string, image: File | string) {
+  upload(uId: string, type: string, image: File | string) {
 
     const uploadData = new FormData();
     uploadData.append('userId', uId);
+    uploadData.append('userType', type);
     uploadData.append('profilePicture', image, uId);
 
-    this.http.post(BACKEND_URL + '/upload-profile-pic/' + uId, uploadData, {
+    return this.http.post(BACKEND_URL + '/upload-profile-pic/' + uId, uploadData, {
       reportProgress: true,
       observe: 'events'
-    })
-    .subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
-      } else if (event.type === HttpEventType.Response) {
-        console.log(event); // handle event here
-      }
     });
   }
 }

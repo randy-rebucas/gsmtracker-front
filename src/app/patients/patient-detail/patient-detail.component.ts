@@ -26,6 +26,10 @@ import { ProfileImageComponent } from 'src/app/upload/profile-image/profile-imag
 import { NetworksService } from 'src/app/networks/networks.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { QueService } from 'src/app/que/que.service';
+import { UsersService } from 'src/app/users/users.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { mimeType } from '../patient-edit/mime-type.validator';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-patient-detail',
@@ -76,6 +80,32 @@ import { QueService } from 'src/app/que/que.service';
   .hide {
     display: none;
   }
+  .image-preview {
+    position: relative;
+  }
+  .image-preview button {
+    position: absolute;
+    right: 8px;
+    visibility: hidden;
+  }
+  .image-preview:hover button {
+    visibility: visible;
+  }
+  .image-preview img {
+    width: 100%;
+  }
+  .icon-wrap {
+    position: relative;
+  }
+  .icon-wrap span {
+    position: absolute;
+    left: 2em;
+    top: 3px;
+    font-weight: 600;
+  }
+  .mat-h2, .mat-title, .mat-typography h2 {
+    margin: unset;
+}
 `]
 })
 export class PatientDetailComponent
@@ -109,7 +139,16 @@ implements OnInit, OnDestroy {
 
   files: UploadData[] = [];
 
+  created: Date;
+  email: string;
+  userType: string;
+  avatar: string;
+  metas: [];
   queNumber: number;
+
+  selectedFile: File = null;
+  imagePreview: string;
+  profileForm: FormGroup;
 
   public recordsSub: Subscription;
 
@@ -122,6 +161,7 @@ implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private titleService: Title,
     public patientsService: PatientsService,
+    private usersService: UsersService,
     public heightService: HeightService,
     public weightService: WeightService,
     public temperatureService: TemperatureService,
@@ -146,12 +186,17 @@ implements OnInit, OnDestroy {
       this.route.paramMap.subscribe((paramMap: ParamMap) => {
         this.patientId = paramMap.get('patientId');
       });
+      this.profileForm = new FormGroup({
+        profilePicture: new FormControl(null, {
+          validators: [Validators.required],
+          asyncValidators: [mimeType]
+        })
+      });
 
       this.getPatientData(this.patientId)
       .then((results) => {
         this.isLoading = false;
         this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
-
         this.personId = results.patientData.personId;
         this.firstname = results.patientData.firstname;
         this.midlename = results.patientData.midlename;
@@ -159,6 +204,12 @@ implements OnInit, OnDestroy {
         this.contact = results.patientData.contact;
         this.gender = results.patientData.gender;
         this.birthdate = results.patientData.birthdate;
+        this.addresses = results.patientData.addresses;
+        this.created = results.patientData.created;
+        this.email = results.patientData.email;
+        this.userType = results.patientData.userType;
+        this.metas = results.patientData.meta;
+        this.avatar = results.patientData.avatar;
 
         if (Object.keys(results.heightData).length) {
           this.height = results.heightData[0].height;
@@ -212,7 +263,7 @@ implements OnInit, OnDestroy {
     }
 
     async getPatientData(patientId) {
-      const patientResponse = await this.patientsService.get(patientId).toPromise();
+      const patientResponse = await this.usersService.get(patientId).toPromise();
       const heightResponse = await this.heightService.getLast(patientId).toPromise();
       const weightResponse = await this.weightService.getLast(patientId).toPromise();
       const temperatureResponse = await this.temperatureService.getLast(patientId).toPromise();
@@ -238,14 +289,31 @@ implements OnInit, OnDestroy {
       };
     }
 
-    onPictureChange() {
-      const args = {
-        width: '30%',
-        id: this.patientId,
-        dialogTitle: 'Edit photo',
-        dialogButton: 'Save'
+    onFileChanged(event: Event) {
+      this.selectedFile = (event.target as HTMLInputElement).files[0];
+      this.profileForm.patchValue({ profilePicture: this.selectedFile });
+      this.profileForm.get('profilePicture').updateValueAndValidity();
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.avatar = reader.result as string;
       };
-      super.onPopup(args, ProfileImageComponent);
+      reader.readAsDataURL(this.selectedFile);
+      this.onSavePicture();
+    }
+
+    onSavePicture() {
+      this.usersService.upload(
+        this.patientId,
+        this.userType,
+        this.profileForm.value.profilePicture
+      ).subscribe((event) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
+        } else if (event.type === HttpEventType.Response) {
+          console.log(event); // handle event here
+        }
+        this.notificationService.success(':: profile picture updated successfully');
+      });
     }
 
     onViewAll(targetComp: any) {

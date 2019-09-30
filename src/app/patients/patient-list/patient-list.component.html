@@ -12,12 +12,12 @@
             <div *ngIf="column === 'image'">
                 <th mat-header-cell *matHeaderCellDef> {{column | titlecase}} </th>
                 <td mat-cell *matCellDef="let element">
-                    <div *ngIf="element.imagePath; then thenBlock else elseBlock"></div>
+                    <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
                     <ng-template #thenBlock>
-                        <img [src]="element.imagePath" [alt]="element.firstname" style="width:40px; height:auto; vertical-align: middle;border-radius: 100%;" />
+                        <img [src]="element.avatar" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
                     </ng-template>
                     <ng-template #elseBlock>
-                        <img src="assets/images/blank.png" [alt]="element.firstname" style="width:40px; height:auto; vertical-align: middle;border-radius: 100%;" />
+                        <img src="assets/images/blank.png" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
                     </ng-template>
                 </td>
             </div>
