@@ -80,3 +80,59 @@ virtual consultation
 - Height
 - Exercise
 - Weight
+-----------------
+<select name="immunization" class="form-control" id="immunization" aria-required="true" aria-invalid="false">
+<option value="Hepatitis B1 (HepB)">Hepatitis B1 (HepB)</option>
+<option value="Rotavirus 2 (RV) (2-dose series)
+RV5 (3-dose series)">Rotavirus 2 (RV) (2-dose series)
+RV5 (3-dose series)</option>
+<option value="Diphtheria, tetanus, &amp; acellular
+pertussis 3 (CTap: <7 yrs)">Diphtheria, tetanus, &amp; acellular
+pertussis 3 (CTap: &lt;7 yrs)</option>
+<option value="Tetanus, diphtheria, &amp; acellular
+pertussis 4(Tdap: >7 yrs)">Tetanus, diphtheria, &amp; acellular
+pertussis 4(Tdap: &gt;7 yrs)</option>
+<option value="Haemophilus influenzae type b5
+(Hib)">Haemophilus influenzae type b5
+(Hib)</option>
+<option value="Pneumococcal conjugate6
+(PCV13)">Pneumococcal conjugate6
+(PCV13)</option>
+<option value="Pneumococcal polysaccharide6
+(PPSV23)">Pneumococcal polysaccharide6
+(PPSV23)</option>
+<option value="Inactivated poliovirus7
+(IPV: <18 yrs)">Inactivated poliovirus7
+(IPV: &lt;18 yrs)</option>
+<option value="Influenza8 (IIV; LAIV) 2 doses for some: ">Influenza8 (IIV; LAIV) 2 doses for some: </option>
+<option value="Measles, mumps, rubella9 (MMR) ">Measles, mumps, rubella9 (MMR) </option>
+<option value="Varicella10 (VAR) ">Varicella10 (VAR) </option>
+<option value="Hepatitis A11 (HepA) ">Hepatitis A11 (HepA) </option>
+<option value="Human papillomavirus12 (HPV2:
+females only; HPV4: males and
+females)">Human papillomavirus12 (HPV2:
+females only; HPV4: males and
+females)</option>
+<option value="Meningococcal13 (Hib-MenCY
+> 6 weeks; MenACWY-D >9 mos;
+MenACWY-CRM ? 2 mos)">Meningococcal13 (Hib-MenCY
+&gt; 6 weeks; MenACWY-D &gt;9 mos;
+MenACWY-CRM ? 2 mos)</option>
+</select>
+-------
+<select name="doses" class="form-control" id="doses" aria-required="true" aria-invalid="false">
+<option value="1st dose">1st dose</option>
+<option value="2nd dose">2nd dose</option>
+<option value="3rd dose">3rd dose</option>
+<option value="4th dose">4th dose</option>
+<option value="5th dose">5th dose</option>
+<option value="Tdap">Tdap</option>
+<option value="see footnote 5">see footnote 5</option>
+<option value="2 dose-series">2 dose-series</option>
+<option value="3 dose-series">3 dose-series</option>
+<option value="booster">booster</option>
+<option value="Annual vaccination (IIV only) 1 or 2 dose">Annual vaccination (IIV only) 1 or 2 dose</option>
+<option value="Annual vaccination (LAIV or IIV) 1 or 2 dose">Annual vaccination (LAIV or IIV) 1 or 2 dose</option>
+<option value="Annual vaccination (IIV only) 1 dose only">Annual vaccination (IIV only) 1 dose only</option>
+<option value="3rd or 4th dose">3rd or 4th dose</option>
+</select>

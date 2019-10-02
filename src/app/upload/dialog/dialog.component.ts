@@ -97,6 +97,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     // convert the progress map into an array
     const allProgressObservables = [];
+    // tslint:disable-next-line:forin
     for (const key in this.progress) {
       allProgressObservables.push(this.progress[key].progress);
     }

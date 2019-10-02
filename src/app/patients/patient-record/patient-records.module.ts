@@ -49,6 +49,10 @@ import { AllergyEditComponent } from './allergies/allergy-edit/allergy-edit.comp
 import { AllergyListComponent } from './allergies/allergy-list/allergy-list.component';
 import { AllergiesComponent } from './allergies/allergies.component';
 import { TestResultModule } from './test-results/test-result.module';
+import { TestResultGridComponent } from './test-results/test-result-grid/test-result-grid.component';
+import { EndrosementComponent } from './endorsement/endorsement.component';
+import { EndorsementListComponent } from './endorsement/endorsement-list/endorsement-list.component';
+import { EndorsementFormComponent } from './endorsement/endorsement-form/endorsement-form.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +65,9 @@ import { TestResultModule } from './test-results/test-result.module';
     ChiefComplaintListComponent,
     ChiefComplaintLatestComponent,
     ChiefComplaintDetailComponent,
+    EndrosementComponent,
+    EndorsementListComponent,
+    EndorsementFormComponent,
     PhysicalExamsComponent,
     AssessmentsComponent,
     AssessmentEditComponent,
@@ -75,6 +82,7 @@ import { TestResultModule } from './test-results/test-result.module';
     TestResultListComponent,
     TestResultDetailComponent,
     TestResultInitialComponent,
+    TestResultGridComponent,
     TestResultEditComponent,
     ProgressNoteEditComponent,
     ProgressNoteListComponent,

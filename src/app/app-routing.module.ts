@@ -117,7 +117,7 @@ const appRoutes: Routes = [
         ] },
         { path: 'prescriptions', component: PrescriptionsComponent },
         { path: 'test-results', component: TestResultsComponent, children: [
-          { path: '', component: TestResultInitialComponent },
+          { path: '', component: TestResultListComponent },
           { path: ':fileId', component: TestResultDetailComponent }
         ] },
         { path: 'progress-notes', component: ProgressNotesComponent },

@@ -1,30 +1,25 @@
-import { Component, OnInit, OnDestroy, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../auth/auth.service';
-import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UploadService } from 'src/app/upload/upload.service';
 import { UploadData } from 'src/app/upload/upload-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
-import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
-  selector: 'app-test-result-list',
-  templateUrl: './test-result-list.component.html',
-  styleUrls: ['./test-result-list.component.css']
+  selector: 'app-test-result-grid',
+  templateUrl: './test-result-grid.component.html',
+  styleUrls: ['./test-result-grid.component.css']
 })
-export class TestResultListComponent
+export class TestResultGridComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
   public recordsSub: Subscription;
 
   files: UploadData[] = [];
-
-  dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['name', 'created', 'action'];
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
     public authService: AuthService,
@@ -52,9 +47,7 @@ implements OnInit, OnDestroy {
       .subscribe((fileData: {files: UploadData[], count: number}) => {
         this.isLoading = false;
         this.total = fileData.count;
-        this.dataSource = new MatTableDataSource(fileData.files);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.files = fileData.files;
       });
   }
 

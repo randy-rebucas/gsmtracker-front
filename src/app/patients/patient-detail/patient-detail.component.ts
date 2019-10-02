@@ -61,6 +61,12 @@ import { HttpEventType } from '@angular/common/http';
     margin-left: 8px;
     text-align: right;
   }
+  .fxRecord {
+    margin-bottom: 1em;
+  }
+  .hide {
+    display: none;
+  }
   :host /deep/ .mat-card-header-text {
     /* CSS styles go here */
     margin: 0px;
@@ -71,14 +77,8 @@ import { HttpEventType } from '@angular/common/http';
   .mat-card {
     border-radius: 0;
   }
-  .fxRecord {
-    margin-bottom: 1em;
-  }
   .fxRecord.hasMinHeight mat-card {
     min-height: 142px;
-  }
-  .hide {
-    display: none;
   }
   .image-preview {
     position: relative;

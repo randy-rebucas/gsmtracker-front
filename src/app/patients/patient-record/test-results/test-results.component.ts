@@ -17,7 +17,7 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 export class TestResultsComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
-
+  onFileView: string;
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -29,6 +29,11 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
+    this.onFileView = 'grid';
+  }
+
+  onSwitchView($arg) {
+    this.onFileView = $arg;
   }
 
   ngOnDestroy() {

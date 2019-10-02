@@ -1,18 +1,23 @@
 <mat-card class="test-results">
-  <mat-card-title>Test Results</mat-card-title>
-  <mat-card-subtitle>
-    This includes Imaging results, Pathology results, Specialized testing
-  </mat-card-subtitle>
-  <div class="upload">
-      <app-upload></app-upload>
-  </div>
-  <mat-card-content>
-    <div class="test-result-area" id="test-result-list" style="position: relative;
-    min-height: 300px;">
-      <app-test-result-list></app-test-result-list>
-    </div>
-    <div  class="test-result-area" id="test-result-detail">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-card-content>
+    <mat-card-header>
+        <mat-card-title>Test Results</mat-card-title>
+        <div class="action-button">
+            <app-upload></app-upload>
+            <mat-button-toggle-group #group="matButtonToggleGroup">
+                <mat-button-toggle value="grid" (click)="onSwitchView('grid')" aria-label="Grid View">
+                  <mat-icon>grid_on</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle value="list" (click)="onSwitchView('list')" aria-label="List View">
+                  <mat-icon>list</mat-icon>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+        </div>
+
+      </mat-card-header>
+      <ng-container *ngIf="onFileView === 'grid'">
+          <app-test-result-grid></app-test-result-grid>
+      </ng-container>
+      <ng-container *ngIf="onFileView === 'list'">
+          <app-test-result-list></app-test-result-list>
+      </ng-container>
 </mat-card>
