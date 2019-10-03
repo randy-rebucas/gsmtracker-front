@@ -53,6 +53,9 @@ import { TestResultGridComponent } from './test-results/test-result-grid/test-re
 import { EndrosementComponent } from './endorsement/endorsement.component';
 import { EndorsementListComponent } from './endorsement/endorsement-list/endorsement-list.component';
 import { EndorsementFormComponent } from './endorsement/endorsement-form/endorsement-form.component';
+import { ImmunizationComponent } from './immunization/immunization.component';
+import { ImmunizationListComponent } from './immunization/immunization-list/immunization-list.component';
+import { ImmunizationEditComponent } from './immunization/immunization-edit/immunization-edit.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +96,10 @@ import { EndorsementFormComponent } from './endorsement/endorsement-form/endorse
     OrderEditComponent,
     AllergiesComponent,
     AllergyEditComponent,
-    AllergyListComponent
+    AllergyListComponent,
+    ImmunizationComponent,
+    ImmunizationListComponent,
+    ImmunizationEditComponent
   ],
   imports: [
     CommonModule,

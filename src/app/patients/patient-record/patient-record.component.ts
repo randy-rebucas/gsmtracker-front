@@ -94,12 +94,18 @@ import { NotificationService } from 'src/app/shared/notification.service';
 }
 span#current {
   position: absolute;
-  left: -12px;
+  right: 0;
   top: 3px;
   background: #3f51b5;
   width: 10px;
   height: 10px;
   border-radius: 100%;
+}
+a.more {
+  min-width: 75px;
+}
+.mat-tab-link {
+  min-width: 150px;
 }
   `]
 })

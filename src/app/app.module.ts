@@ -82,6 +82,7 @@ import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { HistoriesModule } from './patients/patient-record/histories/histories.module';
 import { SettingsModule } from './settings/settings.module';
+import { ImmunizationEditComponent } from './patients/patient-record/immunization/immunization-edit/immunization-edit.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -214,7 +215,8 @@ export const createTranslateLoader = (http: HttpClient) => {
     AppointmentDetailComponent,
     QrCodeScannerComponent,
     TestResultEditComponent,
-    ProfileImageComponent
+    ProfileImageComponent,
+    ImmunizationEditComponent
   ]
 })
 export class AppModule { }

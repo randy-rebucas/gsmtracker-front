@@ -68,6 +68,7 @@ import { MessageEditComponent } from './messages/message-edit/message-edit.compo
 import { UsersComponent } from './users/users.component';
 import { EncounterFormComponent } from './patients/patient-record/encounters/encounter-form/encounter-form.component';
 import { OrdersComponent } from './patients/patient-record/orders/orders.component';
+import { ImmunizationComponent } from './patients/patient-record/immunization/immunization.component';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -121,7 +122,8 @@ const appRoutes: Routes = [
           { path: ':fileId', component: TestResultDetailComponent }
         ] },
         { path: 'progress-notes', component: ProgressNotesComponent },
-        { path: 'assessments', component: AssessmentsComponent }
+        { path: 'assessments', component: AssessmentsComponent },
+        { path: 'immunizations', component: ImmunizationComponent }
       ] },
     ] },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], children: [
