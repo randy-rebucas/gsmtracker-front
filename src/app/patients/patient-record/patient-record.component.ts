@@ -92,15 +92,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 :host /deep/ .mat-list-item-content {
   position: relative;
 }
-span#current {
-  position: absolute;
-  right: 0;
-  top: 3px;
-  background: #3f51b5;
-  width: 10px;
-  height: 10px;
-  border-radius: 100%;
-}
+
 a.more {
   min-width: 75px;
 }

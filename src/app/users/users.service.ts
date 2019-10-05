@@ -25,7 +25,6 @@ export class UsersService {
     .pipe(
       map(userData => {
         return { users: userData.users.map(user => {
-          console.log(user);
           return {
             id: user._id,
             personId: user.personId._id,

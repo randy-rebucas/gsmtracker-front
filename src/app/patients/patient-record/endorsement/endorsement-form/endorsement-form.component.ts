@@ -13,7 +13,7 @@ import { EndorsementService } from '../../services/endorsement.service';
   templateUrl: './endorsement-form.component.html',
   styles: [`
   mat-form-field.record-date {
-    width: 30%;
+    width: 45%;
   }
   .mat-form-field {
     display: block;

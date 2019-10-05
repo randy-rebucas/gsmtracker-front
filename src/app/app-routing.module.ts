@@ -12,10 +12,8 @@ import { EncountersComponent } from './patients/patient-record/encounters/encoun
 import { EncounterListComponent } from './patients/patient-record/encounters/encounter-list/encounter-list.component';
 import { EncounterEditComponent } from './patients/patient-record/encounters/encounter-edit/encounter-edit.component';
 import { AppointmentsComponent } from './appointments/appointments.component';
-import { SettingsComponent } from './settings/settings.component';
-import { ProfileComponent } from './settings/profile/profile.component';
-import { ClinicComponent } from './settings/clinic/clinic.component';
-import { NotificationComponent } from './settings/notification/notification.component';
+import { AppointmentListComponent } from './appointments/appointment-list/appointment-list.component';
+import { AppointmentCalendarComponent } from './appointments/appointment-calendar/appointment-calendar.component';
 import { ChiefComplaintComponent } from './patients/patient-record/chief-complaint/chief-complaint.component';
 import { ChiefComplaintEditComponent } from './patients/patient-record/chief-complaint/chief-complaint-edit/chief-complaint-edit.component';
 import { ChiefComplaintListComponent } from './patients/patient-record/chief-complaint/chief-complaint-list/chief-complaint-list.component';
@@ -55,16 +53,9 @@ import { ChiefComplaintDetailComponent } from './patients/patient-record/chief-c
 import { PatientsComponent } from './patients/patients.component';
 import { PatientRecordComponent } from './patients/patient-record/patient-record.component';
 import { RxPadComponent } from './rx-pad/rx-pad.component';
-import { AppointmentListComponent } from './appointments/appointment-list/appointment-list.component';
-import { AppointmentCalendarComponent } from './appointments/appointment-calendar/appointment-calendar.component';
-import { MessagesComponent } from './messages/messages.component';
-import { MessageListComponent } from './messages/message-list/message-list.component';
-import { MessageInitialComponent } from './messages/message-initial/message-initial.component';
-import { MessageDetailComponent } from './messages/message-detail/message-detail.component';
+
 import { TestResultListComponent } from './patients/patient-record/test-results/test-result-list/test-result-list.component';
 import { TestResultDetailComponent } from './patients/patient-record/test-results/test-result-detail/test-result-detail.component';
-import { TestResultInitialComponent } from './patients/patient-record/test-results/test-result-initial/test-result-initial.component';
-import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { UsersComponent } from './users/users.component';
 import { EncounterFormComponent } from './patients/patient-record/encounters/encounter-form/encounter-form.component';
 import { OrdersComponent } from './patients/patient-record/orders/orders.component';
@@ -126,23 +117,12 @@ const appRoutes: Routes = [
         { path: 'immunizations', component: ImmunizationComponent }
       ] },
     ] },
-    { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], children: [
-      { path: '', redirectTo: '/settings/profile', pathMatch: 'full' },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'clinic', component: ClinicComponent },
-      { path: 'notifications', component: NotificationComponent }
-    ] },
-    { path: 'appointments', component: AppointmentsComponent, canActivate: [AuthGuard], children: [
-      { path: '', component: AppointmentListComponent },
-      { path: 'calendar', component: AppointmentCalendarComponent },
-    ]},
-    { path: 'messages', component: MessagesComponent, canActivate: [AuthGuard], children: [
-      { path: '', component: MessageInitialComponent },
-      { path: 'new', component: MessageEditComponent },
-      { path: ':messageId', component: MessageDetailComponent }
-    ]},
+
     { path: 'rxpad/:padIds', component: RxPadComponent },
 
+    { path: 'appointments', loadChildren: './appointments/appointment.module#AppointmentModule'},
+    { path: 'messages', loadChildren: './messages/messages.module#MessagesModule'},
+    { path: 'settings', loadChildren: './settings/settings.module#SettingsModule'},
     { path: 'auth', loadChildren: './auth/auth.module#AuthModule'},
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: '/not-found' }
@@ -152,7 +132,7 @@ const appRoutes: Routes = [
     imports: [
         RouterModule.forRoot(
             appRoutes,
-            { enableTracing: true }
+            { enableTracing: false }
         )
     ],
     exports: [RouterModule],

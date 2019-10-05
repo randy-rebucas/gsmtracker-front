@@ -2,7 +2,7 @@
   gdAreas="header header | side content | footer footer"
   gdGap="16px"
   gdRows="auto auto auto"
-  gdColumns="300px auto"
+  gdColumns="250px auto"
   gdAreas.lt-md="header | side | content | footer"
   gdRows.lt-md="auto auto auto auto"
   gdColumns.lt-md="auto">
@@ -39,65 +39,57 @@
             </div>
           </div>
           <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-            <div style="min-height: 158px;">
-                <div *ngIf="isLoading" class="loading">
-                    <mat-spinner [diameter]="25"></mat-spinner>
-                </div>
-                <div *ngIf="!isLoading">
-                    <h2 class="mat-h2">{{firstname + ' ' + midlename + ' ' + lastname}} </h2>
-                    <h4 class="mat-h4">Created: {{created | date:'medium'}}</h4>
-                    <mat-list-item dense *ngFor="let address of addresses; let i = index;">
-                        <div class="icon-wrap">
-                            <mat-icon matListIcon>map</mat-icon>
-                            <ng-container *ngIf="address.current">
-                                <span>Current</span>
-                            </ng-container>
-                        </div>
-                        <mat-list-item > {{address.address1}} </mat-list-item>
-                        <ng-container *ngIf="address.address2">
-                            <mat-list-item>{{address.address2}}</mat-list-item>
-                        </ng-container>
-                        <mat-list-item> {{address.postalCode}} {{address.province}}, {{address.city}} </mat-list-item>
-                        <mat-list-item> {{address.country}} </mat-list-item>
-                        <mat-divider></mat-divider>
-                    </mat-list-item>
-                    <mat-list-item dense>
-                        <mat-list-item>Contact: {{contact}} </mat-list-item>
-                        <mat-list-item>Email: <a href="mailto:{{email}}">{{email}}</a> </mat-list-item>
-                        <mat-list-item>Gender: {{gender}} </mat-list-item>
-                        <mat-list-item>Birthdate: {{birthdate | date}} </mat-list-item>
-                        <mat-divider></mat-divider>
-                    </mat-list-item>
-                    <mat-list dense>
-                      <p>Meta Data</p>
-                        <mat-list-item *ngFor="let meta of metas; let m = index;">{{meta.label}}: {{meta.value}}</mat-list-item>
-                        <mat-list-item *ngIf="metas.length == 0">--No Metadata</mat-list-item>
-                    </mat-list>
-                </div>
+              <div style="padding: 0 15px;">
+                  <h2 class="mat-h2">{{firstname + ' ' + midlename + ' ' + lastname}} </h2>
+                  <h4 class="mat-h4">Created: {{created | date }}</h4>
               </div>
+              <mat-list>
+                  <h3 mat-subheader>Address</h3>
+                  <ng-container *ngFor="let address of addresses; let i = index;" class="address">
+                      <!-- <ng-container *ngIf="address.current">
+                          <span id="current" title="current">&nbsp;</span>
+                      </ng-container> -->
+                      <mat-list-item> <p mat-line>{{address.address1}}</p> </mat-list-item>
+                      <ng-container *ngIf="address.address2">
+                          <mat-list-item><p mat-line>{{address.address2}}</p></mat-list-item>
+                      </ng-container>
+                      <mat-list-item> <p mat-line>{{address.postalCode}} {{address.province}}, {{address.city}} </p></mat-list-item>
+                      <mat-list-item> {{address.country}} </mat-list-item>
+                  </ng-container>
+                  <h3 mat-subheader>Personal Information</h3>
+                  <mat-list-item><i class="material-icons">phone</i> &nbsp;{{contact}} </mat-list-item>
+                  <mat-list-item><i class="material-icons">email</i> &nbsp;<a href="mailto:{{email}}" class="mat-line">{{email}}</a></mat-list-item>
+                  <mat-list-item><i class="material-icons">wc</i> &nbsp;{{gender}} </mat-list-item>
+                  <mat-list-item><i class="material-icons">calendar_today</i> &nbsp;{{birthdate | date}} </mat-list-item>
+
+                  <h3 mat-subheader>Metadata</h3>
+                  <ng-container *ngIf="metas.length != 0">
+                      <mat-list-item *ngFor="let meta of metas; let m = index;">
+                          <i class="material-icons">label</i> &nbsp;
+                          <abbr title="{{meta.label}}">{{meta.value}}</abbr>
+                      </mat-list-item>
+                  </ng-container>
+              </mat-list>
           </div>
           <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <div>
-                  Quick Actions
-                  <mat-list>
-                      <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
-                              message
-                              </i> &nbsp; Message </mat-list-item>
-                      <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
-                          calendar_today
-                          </i> &nbsp; Appointment </mat-list-item>
-                      <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
-                        remove_red_eye
-                              </i> &nbsp; View Chart </mat-list-item>
-                      <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
-                              fingerprint
-                              </i> &nbsp; Generate QR Code </mat-list-item>
-                      <!-- <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
-                              group
-                                      </i> &nbsp; Network Request </mat-list-item> -->
-                  </mat-list>
-
-              </div>
+              <mat-list>
+                  <h3 mat-subheader>Quick Actions</h3>
+                  <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
+                    message
+                    </i> &nbsp; Message </mat-list-item>
+                  <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
+                calendar_today
+                </i> &nbsp; Appointment </mat-list-item>
+                  <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
+              remove_red_eye
+                    </i> &nbsp; View Chart </mat-list-item>
+                  <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
+                    fingerprint
+                    </i> &nbsp; Generate QR Code </mat-list-item>
+                  <!-- <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
+                    group
+                            </i> &nbsp; Network Request </mat-list-item> -->
+              </mat-list>
           </div>
       </div>
 

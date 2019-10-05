@@ -4,7 +4,6 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
-// import { FlexLayoutModule } from '@angular/flex-layout/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 
@@ -20,11 +19,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 
 import { HomeComponent } from './home/home.component';
 import { PatientsModule } from './patients/patients.module';
-import { AppointmentsComponent } from './appointments/appointments.component';
-import { SettingsComponent } from './settings/settings.component';
-// import { ProfileComponent } from './settings/profile/profile.component';
-import { ClinicComponent } from './settings/clinic/clinic.component';
-import { NotificationComponent } from './settings/notification/notification.component';
 import { MatDialogConfirmComponent } from './mat-dialog-confirm/mat-dialog-confirm.component';
 import { PatientRecordsModule } from './patients/patient-record/patient-records.module';
 import { PatientEditComponent } from './patients/patient-edit/patient-edit.component';
@@ -42,15 +36,8 @@ import { RxPadComponent } from './rx-pad/rx-pad.component';
 import { QrCodeComponent } from './qr-code/qr-code.component';
 import { QrCodeGenerateComponent } from './qr-code/qr-code-generate/qr-code-generate.component';
 import { QrCodeScannerComponent } from './qr-code/qr-code-scanner/qr-code-scanner.component';
-import { AppointmentEditComponent } from './appointments/appointment-edit/appointment-edit.component';
-import { AppointmentListComponent } from './appointments/appointment-list/appointment-list.component';
-import { AppointmentCalendarComponent } from './appointments/appointment-calendar/appointment-calendar.component';
 import { PatientChartComponent } from './patients/patient-chart/patient-chart.component';
-import { MessagesComponent } from './messages/messages.component';
-import { MessageListComponent } from './messages/message-list/message-list.component';
-import { MessageEditComponent } from './messages/message-edit/message-edit.component';
-import { MessageInitialComponent } from './messages/message-initial/message-initial.component';
-import { MessageDetailComponent } from './messages/message-detail/message-detail.component';
+
 import { DialogComponent } from './upload/dialog/dialog.component';
 import { UploadService } from './upload/upload.service';
 import { UploadModule } from './upload/upload.module';
@@ -62,8 +49,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { NgxPrintModule } from 'ngx-print';
 import { LayoutModule } from '@angular/cdk/layout';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
-import { AppointmentDetailComponent } from './appointments/appointment-detail/appointment-detail.component';
+
 import { SecureComponent } from './secure/secure.component';
 import { TestResultEditComponent } from './patients/patient-record/test-results/test-result-edit/test-result-edit.component';
 import { ProfileImageComponent } from './upload/profile-image/profile-image.component';
@@ -75,8 +61,8 @@ import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { QueComponent } from './que/que.component';
 
 // import ngx-translate and the http loader
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { StatModule } from './shared/stat/stat.module';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
@@ -106,24 +92,10 @@ export const createTranslateLoader = (http: HttpClient) => {
     ErrorComponent,
     PageNotFoundComponent,
     HomeComponent,
-    AppointmentsComponent,
-    AppointmentEditComponent,
-    AppointmentListComponent,
-    AppointmentDetailComponent,
-    AppointmentCalendarComponent,
     RxPadComponent,
     QrCodeComponent,
     QrCodeScannerComponent,
     QrCodeGenerateComponent,
-    SettingsComponent,
-    // ProfileComponent,
-    ClinicComponent,
-    NotificationComponent,
-    MessagesComponent,
-    MessageListComponent,
-    MessageEditComponent,
-    MessageInitialComponent,
-    MessageDetailComponent,
     MatDialogConfirmComponent,
     DialogComponent,
     SecureComponent,
@@ -160,7 +132,6 @@ export const createTranslateLoader = (http: HttpClient) => {
     ZXingScannerModule,
     QRCodeModule,
     UploadModule,
-    FullCalendarModule,
     ChartsModule,
     WebcamModule,
     PerfectScrollbarModule,
@@ -207,12 +178,9 @@ export const createTranslateLoader = (http: HttpClient) => {
     ProgressNoteEditComponent,
     EncounterEditComponent,
     QrCodeGenerateComponent,
-    AppointmentEditComponent,
     PatientChartComponent,
-    MessageEditComponent,
     DialogComponent,
     RxPadComponent,
-    AppointmentDetailComponent,
     QrCodeScannerComponent,
     TestResultEditComponent,
     ProfileImageComponent,

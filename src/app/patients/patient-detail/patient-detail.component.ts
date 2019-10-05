@@ -106,6 +106,9 @@ import { HttpEventType } from '@angular/common/http';
   .mat-h2, .mat-title, .mat-typography h2 {
     margin: unset;
 }
+.mat-list-item {
+  height: 32px;
+}
 `]
 })
 export class PatientDetailComponent
