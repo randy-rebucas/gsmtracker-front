@@ -109,7 +109,7 @@ implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: OrderService,
     ) {
       super(authService, router, dialog, appconfig);
-      this.activatedRoute.parent.params.subscribe(
+      this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;
         }

@@ -45,7 +45,7 @@ implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: HeightService
     ) {
       super(authService, router, dialog, appconfig);
-      this.activatedRoute.parent.parent.params.subscribe(
+      this.activatedRoute.parent.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;
         }
@@ -54,7 +54,6 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-
     this.heightService.getAll(this.perPage, this.currentPage, this.patientId);
     this.recordsSub = this.heightService
     .getUpdateListener()

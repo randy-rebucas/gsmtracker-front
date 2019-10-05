@@ -1,9 +1,11 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { AngularMaterialModule } from '../../../angular-material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { PhysicalExamsComponent } from './physical-exams.component';
 import { HeightComponent } from './height/height.component';
 import { HeightListComponent } from './height/height-list/height-list.component';
 import { HeightEditComponent } from './height/height-edit/height-edit.component';
@@ -22,6 +24,7 @@ import { RespiratoryRateListComponent } from './respiratory-rate/respiratory-rat
 
 @NgModule({
   declarations: [
+    PhysicalExamsComponent,
     HeightComponent,
     HeightListComponent,
     HeightEditComponent,
@@ -42,7 +45,24 @@ import { RespiratoryRateListComponent } from './respiratory-rate/respiratory-rat
     CommonModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    RouterModule
+    FlexLayoutModule.withConfig({addFlexToParent: false}),
+    RouterModule.forChild([
+      { path: '', component: PhysicalExamsComponent, children: [
+        { path: '', redirectTo: 'height', pathMatch: 'full' },
+        { path: 'height', component: HeightListComponent },
+        { path: 'weight', component: WeightListComponent },
+        { path: 'temperature', component: TemperatureListComponent },
+        { path: 'blood-pressure', component: BloodPressureListComponent },
+        { path: 'respiratory-rate', component: RespiratoryRateListComponent }
+      ]}
+    ])
+  ],
+  entryComponents: [
+    HeightEditComponent,
+    WeightEditComponent,
+    TemperatureEditComponent,
+    BloodPressureEditComponent,
+    RespiratoryRateEditComponent
   ]
 })
 export class PhysicalExamsModule {}

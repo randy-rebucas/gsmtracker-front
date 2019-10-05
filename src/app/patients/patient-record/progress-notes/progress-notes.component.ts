@@ -53,7 +53,7 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    this.activatedRoute.parent.params.subscribe(
+    this.activatedRoute.parent.parent.params.subscribe(
       (param) => {
         this.patientId = param.patientId;
       }

@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -7,19 +7,31 @@ import { AngularMaterialModule } from '../../../angular-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UploadModule } from 'src/app/upload/upload.module';
 
+import { TestResultsComponent } from './test-results.component';
+import { TestResultListComponent } from './test-result-list/test-result-list.component';
+import { TestResultDetailComponent } from './test-result-detail/test-result-detail.component';
+import { TestResultGridComponent } from './test-result-grid/test-result-grid.component';
+
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    TestResultsComponent,
+    TestResultListComponent,
+    TestResultDetailComponent,
+    TestResultGridComponent
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    RouterModule,
     UploadModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false})
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
+    FlexLayoutModule.withConfig({addFlexToParent: false}),
+    RouterModule.forChild([
+      { path: '', component: TestResultsComponent, children: [
+        { path: '', component: TestResultListComponent },
+        { path: ':fileId', component: TestResultDetailComponent }
+      ] }
+   ])
   ]
 })
 export class TestResultModule {}

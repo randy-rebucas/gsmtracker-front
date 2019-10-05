@@ -18,25 +18,11 @@ import { ErrorComponent } from './error/error.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { HomeComponent } from './home/home.component';
-import { PatientsModule } from './patients/patients.module';
 import { MatDialogConfirmComponent } from './mat-dialog-confirm/mat-dialog-confirm.component';
-import { PatientRecordsModule } from './patients/patient-record/patient-records.module';
-import { PatientEditComponent } from './patients/patient-edit/patient-edit.component';
-import { HeightEditComponent } from './patients/patient-record/physical-exams/height/height-edit/height-edit.component';
-import { WeightEditComponent } from './patients/patient-record/physical-exams/weight/weight-edit/weight-edit.component';
-import { TemperatureEditComponent } from './patients/patient-record/physical-exams/temperature/temperature-edit/temperature-edit.component';
-import { BloodPressureEditComponent } from './patients/patient-record/physical-exams/blood-pressure/blood-pressure-edit/blood-pressure-edit.component';
-import { RespiratoryRateEditComponent } from './patients/patient-record/physical-exams/respiratory-rate/respiratory-rate-edit/respiratory-rate-edit.component';
-import { ChiefComplaintEditComponent } from './patients/patient-record/chief-complaint/chief-complaint-edit/chief-complaint-edit.component';
-import { AssessmentEditComponent } from './patients/patient-record/assessments/assessment-edit/assetment-edit.component';
-import { PrescriptionEditComponent } from './patients/patient-record/prescriptions/prescription-edit/prescription-edit.component';
-import { ProgressNoteEditComponent } from './patients/patient-record/progress-notes/progress-note-edit/progress-note-edit.component';
-import { EncounterEditComponent } from './patients/patient-record/encounters/encounter-edit/encounter-edit.component';
 import { RxPadComponent } from './rx-pad/rx-pad.component';
 import { QrCodeComponent } from './qr-code/qr-code.component';
 import { QrCodeGenerateComponent } from './qr-code/qr-code-generate/qr-code-generate.component';
 import { QrCodeScannerComponent } from './qr-code/qr-code-scanner/qr-code-scanner.component';
-import { PatientChartComponent } from './patients/patient-chart/patient-chart.component';
 
 import { DialogComponent } from './upload/dialog/dialog.component';
 import { UploadService } from './upload/upload.service';
@@ -51,9 +37,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 import { SecureComponent } from './secure/secure.component';
-import { TestResultEditComponent } from './patients/patient-record/test-results/test-result-edit/test-result-edit.component';
 import { ProfileImageComponent } from './upload/profile-image/profile-image.component';
-import { UsersModule } from './users/users.module';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -66,9 +50,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { StatModule } from './shared/stat/stat.module';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
-import { HistoriesModule } from './patients/patient-record/histories/histories.module';
-import { SettingsModule } from './settings/settings.module';
-import { ImmunizationEditComponent } from './patients/patient-record/immunization/immunization-edit/immunization-edit.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -118,12 +99,7 @@ export const createTranslateLoader = (http: HttpClient) => {
           deps: [HttpClient]
       }
     }),
-    PatientsModule,
-    UsersModule,
-    PatientRecordsModule,
-    SettingsModule,
     StatModule,
-    HistoriesModule,
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
@@ -166,25 +142,11 @@ export const createTranslateLoader = (http: HttpClient) => {
   entryComponents: [
     ErrorComponent,
     MatDialogConfirmComponent,
-    PatientEditComponent,
-    HeightEditComponent,
-    WeightEditComponent,
-    TemperatureEditComponent,
-    BloodPressureEditComponent,
-    RespiratoryRateEditComponent,
-    ChiefComplaintEditComponent,
-    AssessmentEditComponent,
-    PrescriptionEditComponent,
-    ProgressNoteEditComponent,
-    EncounterEditComponent,
     QrCodeGenerateComponent,
-    PatientChartComponent,
     DialogComponent,
     RxPadComponent,
     QrCodeScannerComponent,
-    TestResultEditComponent,
     ProfileImageComponent,
-    ImmunizationEditComponent
   ]
 })
 export class AppModule { }

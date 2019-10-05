@@ -115,7 +115,7 @@ implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute
     ) {
       super(authService, router, dialog, appconfig);
-      this.activatedRoute.parent.params.subscribe(
+      this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;
         }

@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -40,12 +40,11 @@ import { FamilyListComponent } from './family/family-list/family-list.component'
     CommonModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    RouterModule,
     EditorModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false})
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
+    FlexLayoutModule.withConfig({addFlexToParent: false}),
+    RouterModule.forChild([
+      { path: '', component: HistoriesComponent }
+    ])
   ]
 })
 export class HistoriesModule {}

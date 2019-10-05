@@ -44,7 +44,7 @@ implements OnInit, OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: BpService
     ) {
       super(authService, router, dialog, appconfig);
-      this.activatedRoute.parent.parent.params.subscribe(
+      this.activatedRoute.parent.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.patientId;
         }
