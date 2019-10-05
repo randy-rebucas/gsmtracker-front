@@ -25,4 +25,5 @@ body {
     margin-left: 0;
     top: 45%;
     margin-top: 0;
+    z-index: 9;
 }

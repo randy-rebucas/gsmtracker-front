@@ -32,6 +32,7 @@ import { OrderService } from '../services/order.service';
     right: 0;
     top: 5px;
   }
+
   `]
 })
 export class EndrosementComponent
@@ -61,7 +62,7 @@ implements OnInit, OnDestroy {
         this.patientId = param.patientId;
       }
     );
-
+    this.isLoading = false;
     this.form = new FormGroup({
       order: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(500) ]

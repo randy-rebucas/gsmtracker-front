@@ -75,7 +75,7 @@ implements OnInit, OnDestroy {
         this.patientId = param.patientId;
       }
     );
-
+    this.isLoading = false;
     this.form = new FormGroup({
       complaint: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(500) ]

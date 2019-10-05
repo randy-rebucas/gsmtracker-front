@@ -1,9 +1,12 @@
 <div fxLayout='row' fxLayoutGap="20px">
-    <div fxFlex="70%">
-        <mat-card class="example-card">
+    <div fxFlex="70%" style="position: relative; min-height: 300px;">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
+        <mat-card class="chief-complaint-card" *ngIf="!isLoading">
           <mat-card-header>
             <mat-card-title>Chief Complaint</mat-card-title>
-            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="action">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
@@ -39,9 +42,9 @@
     </div>
     <div fxFlex="30%">
         <mat-list dense>
-            <h3 matSubheader>Common Complaint list</h3>
-            <mat-list-item> updating... </mat-list-item>
-          </mat-list>
+          <h3 matSubheader>Common Complaint list</h3>
+          <mat-list-item> updating... </mat-list-item>
+        </mat-list>
     </div>
 </div>
 <!-- <router-outlet></router-outlet> -->
