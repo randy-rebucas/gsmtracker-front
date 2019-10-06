@@ -11,6 +11,8 @@ import { AppointmentService } from '../appointments/appointment.service';
 import { QueService } from '../que/que.service';
 import { NotificationService } from '../shared/notification.service';
 import { DialogService } from '../shared/dialog.service';
+import { EncountersService } from '../shared/encounters/encounters.service';
+import { EncountersData } from '../shared/encounters/encounters-data.model';
 
 @Component({
   selector: 'app-home',
@@ -53,12 +55,16 @@ implements OnInit, OnDestroy {
   canceledVisit: number;
   breakpoint: number;
 
-  private patientsChartSub: Subscription;
+  private encountersChartSub: Subscription;
   public barChartData: any;
   public barChartLabels: any;
   public barChartType: string;
   public barChartLegend: boolean;
 
+  public pieChartLabels: any;
+  public pieChartLegend: boolean;
+  public pieChartData: any;
+  public pieChartType: string;
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -70,7 +76,8 @@ implements OnInit, OnDestroy {
     private titleService: Title,
     private patientsService: PatientsService,
     private appointmentService: AppointmentService,
-    private queService: QueService
+    private queService: QueService,
+    private encountersService: EncountersService
 
   ) {
     super(authService, router, dialog, appconfig);
@@ -85,9 +92,9 @@ implements OnInit, OnDestroy {
   public doughnutChartData = [120, 150, 180, 90];
   public doughnutChartType = 'doughnut';
 
-  public pieChartLabels = ['Sales Q1', 'Sales Q2', 'Sales Q3', 'Sales Q4'];
-  public pieChartData = [120, 150, 180, 90];
-  public pieChartType = 'pie';
+  public pieChartOptions = {
+    responsive: true
+  };
 
   ngOnInit() {
     super.doInit();
@@ -107,24 +114,24 @@ implements OnInit, OnDestroy {
 
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
-    // this.patientsService.getAllPatientByYear(this.licenseId);
-    // this.patientsChartSub = this.patientsService
-    // .getUpdateListener()
-    // .subscribe((patientData: {patients: PatientData[], patientCount: number}) => {
-      //   this.isLoading = false;
-      //   this.total = patientData.patientCount;
-      //   this.dataSource = new MatTableDataSource(patientData.patients);
-      //   this.dataSource.paginator = this.paginator;
-      //   this.dataSource.sort = this.sort;
-      // });
-
-    this.barChartType = 'bar';
-    this.barChartLegend = true;
-    this.barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-    this.barChartData = [
-      {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-      {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-    ];
+    this.encountersService.getAll(this.licenseId);
+    this.encountersChartSub = this.encountersService
+    .getUpdateListener()
+    .subscribe((chartData: {encounters: EncountersData[], labels: []}) => {
+        this.isLoading = false;
+        console.log(chartData);
+      });
+    this.pieChartLabels = ['Success', 'Cancelled'];
+    this.pieChartLegend = true;
+    this.pieChartData = [120, 150];
+    this.pieChartType = 'pie';
+    // this.barChartType = 'bar';
+    // this.barChartLegend = true;
+    // this.barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+    // this.barChartData = [
+    //   {data: [65, 59, 80, 81, 56, 55, 40], label: 'Cancelled'},
+    //   {data: [28, 48, 40, 19, 86, 27, 90], label: 'Done'}
+    // ];
   }
 
   onResize(event) {

@@ -12,15 +12,15 @@ const BACKEND_URL = environment.apiUrl + '/encounter';
 
 export class EncountersService {
   private encounters: EncountersData[] = [];
-  private encountersUpdated = new Subject<{ encounters: EncountersData[], count: number }>();
+  private encountersUpdated = new Subject<{ encounters: EncountersData[], labels: [] }>();
 
   constructor(
     private http: HttpClient
     ) {}
 
-  getAll(perPage: number, currentPage: number, patientId: string) {
-    const queryParams = `?patientId=${patientId}&pagesize=${perPage}&page=${currentPage}`;
-    this.http.get<{message: string, encounters: any, max: number }>(
+  getAll(licenseId: string) {
+    const queryParams = `?licenseId=${licenseId}`;
+    this.http.get<{message: string, encounters: any, labels: [] }>(
       BACKEND_URL + queryParams
     )
     .pipe(
@@ -30,14 +30,14 @@ export class EncountersService {
             id: encounter._id,
             status: encounter.status
           };
-        }), max: encounterData.max};
+        }), label: encounterData.labels};
       })
     )
     .subscribe((transformData) => {
       this.encounters = transformData.encounters;
       this.encountersUpdated.next({
         encounters: [...this.encounters],
-        count: transformData.max
+        labels: transformData.label
       });
     });
   }

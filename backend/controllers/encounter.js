@@ -47,19 +47,20 @@ exports.getAll = async(req, res, next) => {
             })
             .exec();
 
-        newEncounters = [];
-        encounter.forEach(element => {
-            var myObj = {
-                id: element._id,
-                status: element.status,
-                fullname: element.userId.personId.firstname + ' ' + element.userId.personId.lastname,
-                userId: element.userId._id
-            };
-            newEncounters.push(myObj);
-        });
-
+        // newEncounters = [];
+        // encounter.forEach(element => {
+        //     var myObj = {
+        //         id: element._id,
+        //         status: element.status,
+        //         fullname: element.userId.personId.firstname + ' ' + element.userId.personId.lastname,
+        //         userId: element.userId._id
+        //     };
+        //     newEncounters.push(myObj);
+        // });
+        // let count = await Appointment.countDocuments({ 'licenseId': req.query.licenseId });
+        console.log(encounter);
         res.status(200).json({
-            encounters: newEncounters
+            encounters: encounter
         });
 
     } catch (e) {
@@ -69,21 +70,4 @@ exports.getAll = async(req, res, next) => {
     }
 };
 
-exports.get = async(req, res, next) => {
-  try {
-    let onQue = false;
-    let que = await Que.findOne({ userId: req.params.userId }).exec();
-    if (que) {
-      onQue = true;
-    }
-    res.status(200).json({
-      onQue: onQue
-    });
-
-  } catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-  }
-};
 
