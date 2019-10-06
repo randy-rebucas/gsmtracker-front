@@ -10,10 +10,14 @@ router.post('', checkAuth, QueController.create);
 
 router.get('', QueController.getAll);
 
+router.get('/:userId', QueController.get);
+
 router.delete('/:queId', checkAuth, QueController.delete);
 
 router.delete('/clear/:licenseId', checkAuth, QueController.deleteAll);
 
-router.delete('/smooth/:personId/:licenseId', checkAuth, QueController.deleteSmooth);
+router.delete('/smooth/:userId', checkAuth, QueController.deleteSmooth);
+
+router.delete('/cancel/:userId', checkAuth, QueController.deleteCanceled);
 
 module.exports = router;

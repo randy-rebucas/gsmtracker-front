@@ -3,6 +3,7 @@
     <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
 </h2>
 <mat-dialog-content class="mat-typography" style="min-height: 300px;">
+  <perfect-scrollbar style="max-height: 500px;">
     <div *ngIf="isLoading" class="loading">
         <mat-spinner [diameter]="25"></mat-spinner>
     </div>
@@ -125,7 +126,9 @@
         </table>
 
     </div>
+  </perfect-scrollbar>
 </mat-dialog-content>
+
 <mat-dialog-actions>
     <button class="mat-raised-button mat-primary" (click)="printrx()"><mat-icon>print</mat-icon> Print</button>
     <!-- <button class="mat-raised-button mat-primary" printTitle="PatientName" [useExistingCss]="true" printSectionId="content" ngxPrint><mat-icon>print</mat-icon> Print</button> -->

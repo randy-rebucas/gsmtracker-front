@@ -164,8 +164,6 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    // const img = this.toDataUrl('/assets/images/rx.png', this.makePDF);
-    // console.log(img);
     this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
     this.recordsSub = this.prescriptionService
       .getUpdateListener()
@@ -199,6 +197,7 @@ implements OnInit, OnDestroy {
   // }
 
   onPrintPreview(recordId) {
+
     const args = {
       width: '40%',
       id: recordId,

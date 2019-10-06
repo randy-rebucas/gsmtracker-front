@@ -13,6 +13,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { mimeType } from '../patient-edit/mime-type.validator';
 import { HttpEventType } from '@angular/common/http';
 import { NotificationService } from 'src/app/shared/notification.service';
+import { QueService } from 'src/app/que/que.service';
+import { EncountersService } from 'src/app/shared/encounters/encounters.service';
 
 @Component({
   selector: 'app-patient-record',
@@ -20,13 +22,16 @@ import { NotificationService } from 'src/app/shared/notification.service';
   styles: [`
   /* */
   .area {
-    /*border: 1px solid rgba(0, 0, 0, .12);
-    padding: 1em;*/
+    position: relative;
   }
   .header {
     text-align: right;
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     padding-bottom: 1em;
+  }
+  .area.side,
+  .area.content {
+    min-height: 700px;
   }
   .side {
     border-right: 1px solid rgba(0, 0, 0, .12);
@@ -88,17 +93,17 @@ import { NotificationService } from 'src/app/shared/notification.service';
   }
   .mat-h2, .mat-title, .mat-typography h2 {
     margin: unset;
-}
-:host /deep/ .mat-list-item-content {
-  position: relative;
-}
+  }
+  :host /deep/ .mat-list-item-content {
+    position: relative;
+  }
 
-a.more {
-  min-width: 75px;
-}
-.mat-tab-link {
-  min-width: 150px;
-}
+  a.more {
+    min-width: 75px;
+  }
+  .mat-tab-link {
+    min-width: 150px;
+  }
   `]
 })
 export class PatientRecordComponent
@@ -115,6 +120,8 @@ extends SecureComponent
   imagePreview: string;
   profileForm: FormGroup;
 
+  public isOnQue: boolean;
+
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -125,7 +132,9 @@ extends SecureComponent
     private usersService: UsersService,
     private route: ActivatedRoute,
     private titleService: Title,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private queService: QueService,
+    private encountersService: EncountersService
     ) {
       super(authService, router, dialog, appconfig);
     }
@@ -135,6 +144,10 @@ extends SecureComponent
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.patientId = paramMap.get('patientId');
+    });
+
+    this.queService.get(this.patientId).subscribe((res) => {
+      this.isOnQue = res.onQue;
     });
 
     this.profileForm = new FormGroup({
@@ -221,7 +234,21 @@ extends SecureComponent
   }
 
   onCancelVisit(patientId) {
-    console.log(patientId);
+    this.encountersService.update(1, patientId, this.licenseId).subscribe(() => {
+      this.queService.findCancel(patientId).subscribe((res) => {
+        this.notificationService.success(':: on que canceled.');
+        this.isOnQue = false;
+      });
+    });
+  }
+
+  moveToQue(patientId) {
+    this.encountersService.insert(patientId, this.licenseId).subscribe(() => {
+      this.queService.insert(patientId, this.licenseId).subscribe((queRes) => {
+        this.notificationService.success(':: on que done. #' + queRes.que.queNumber);
+        this.isOnQue = true;
+      });
+    });
   }
 
   ngOnDestroy() {

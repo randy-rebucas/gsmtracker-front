@@ -12,6 +12,7 @@ import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { DatePipe } from '@angular/common';
 import { QueService } from '../que/que.service';
+import { EncountersService } from '../shared/encounters/encounters.service';
 
 @Component({
   selector: 'app-rx-pad',
@@ -54,6 +55,7 @@ implements OnInit, OnDestroy {
     public patientsService: PatientsService,
     public settingsGeneralService: SettingsGeneralService,
     private queService: QueService,
+    private encountersService: EncountersService,
     public dialogRef: MatDialogRef < RxPadComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
@@ -66,9 +68,9 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-
     this.getPatientData(this.patientId)
       .then((results) => {
+        console.log(results);
         /**
          * disable loading state
          */
@@ -363,10 +365,13 @@ implements OnInit, OnDestroy {
       pdfDoc.autoPrint();
       pdfDoc.output('dataurlnewwindow');
 
-      this.queService.findDelete(this.personId).subscribe((res) => {
-        // redirect to encounter
-        console.log(res);
+      this.encountersService.update(2, this.patientId, this.licenseId).subscribe(() => {
+        this.queService.findDelete(this.patientId).subscribe((res) => {
+          // redirect to encounter
+          console.log(res);
+        });
       });
+
     });
 
   }

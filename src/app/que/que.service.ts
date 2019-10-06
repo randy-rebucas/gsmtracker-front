@@ -48,6 +48,12 @@ export class QueService {
     return this.quesUpdated.asObservable();
   }
 
+  get(userId: string) {
+    return this.http.get<{ onQue: boolean }>(
+        BACKEND_URL + '/' + userId
+      );
+  }
+
   insert(patientId: string, licenseId: string) {
     const queData = {
       patientId, licenseId
@@ -57,6 +63,10 @@ export class QueService {
 
   delete(queId: string) {
     return this.http.delete(BACKEND_URL + '/' + queId);
+  }
+
+  findCancel(personId) {
+    return this.http.delete(BACKEND_URL + '/cancel/' + personId);
   }
 
   findDelete(personId) {

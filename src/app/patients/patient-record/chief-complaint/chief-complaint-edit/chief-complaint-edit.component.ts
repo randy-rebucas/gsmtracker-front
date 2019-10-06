@@ -1,15 +1,12 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, NgControl, FormBuilder, FormArray } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogConfig, MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { Validators, FormBuilder, FormArray } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { ComplaintService } from '../../services/complaint.service';
 import { ComplaintData } from '../../models/complaint-data.model';
-import { EncounterEditComponent } from '../../encounters/encounter-edit/encounter-edit.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
@@ -111,18 +108,6 @@ implements OnInit, OnDestroy {
       ).subscribe((complaintData) => {
         this.onClose();
         this.complaintService.getAll(this.perPage, this.currentPage, this.patientId);
-
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.width = '90%';
-        dialogConfig.data = {
-          id: null,
-          title: 'New encounter',
-          patientIds: this.patientId,
-          complaintId: complaintData.complaint.id
-        };
-        this.dialog.open(EncounterEditComponent, dialogConfig);
       });
     } else {
       this.complaintService.update(

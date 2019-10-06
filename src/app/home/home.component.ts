@@ -145,7 +145,7 @@ implements OnInit, OnDestroy {
   }
 
   onOpen() {
-    window.open('/encounter', '_blank');
+    window.open('/que', '_blank');
   }
 
   ngOnDestroy() {

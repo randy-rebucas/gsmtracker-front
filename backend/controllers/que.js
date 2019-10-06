@@ -79,6 +79,24 @@ exports.getAll = async(req, res, next) => {
     }
 };
 
+exports.get = async(req, res, next) => {
+  try {
+    let onQue = false;
+    let que = await Que.findOne({ userId: req.params.userId }).exec();
+    if (que) {
+      onQue = true;
+    }
+    res.status(200).json({
+      onQue: onQue
+    });
+
+  } catch (error) {
+    res.status(500).json({
+        message: error.message
+    });
+  }
+};
+
 exports.delete = async(req, res, next) => {
     try {
         await Que.deleteOne({ _id: req.params.queId }).exec();
@@ -107,8 +125,7 @@ exports.deleteAll = async(req, res, next) => {
 
 exports.deleteSmooth = async(req, res, next) => {
     try {
-        let que = await Que.findOne({ 'personId': req.params.personId }).exec();
-        await Que.deleteOne({ _id: que._id }).exec();
+        await Que.deleteOne({ userId: req.params.userId }).exec();
         res.status(200).json({
             message: 'Deletion successfull!'
         });
@@ -117,6 +134,19 @@ exports.deleteSmooth = async(req, res, next) => {
             message: e.message
         });
     }
+};
+
+exports.deleteCanceled = async(req, res, next) => {
+  try {
+      await Que.deleteOne({ userId: req.params.userId }).exec();
+      res.status(200).json({
+          message: 'Deletion successfull!'
+      });
+  } catch (e) {
+      res.status(500).json({
+          message: e.message
+      });
+  }
 };
 
 exports.getNext = async(req, res, next) => {

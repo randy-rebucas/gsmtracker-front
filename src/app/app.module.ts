@@ -50,6 +50,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { StatModule } from './shared/stat/stat.module';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { EncountersComponent } from './shared/encounters/encounters.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -81,7 +82,8 @@ export const createTranslateLoader = (http: HttpClient) => {
     DialogComponent,
     SecureComponent,
     QueComponent,
-    ProfileImageComponent
+    ProfileImageComponent,
+    EncountersComponent
   ],
   imports: [
     CommonModule,

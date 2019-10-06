@@ -17,7 +17,7 @@ const appRoutes: Routes = [
     { path: 'appointments', loadChildren: './appointments/appointment.module#AppointmentModule'},
     { path: 'messages', loadChildren: './messages/messages.module#MessagesModule'},
     { path: 'settings', loadChildren: './settings/settings.module#SettingsModule'},
-    { path: 'encounter', loadChildren: './patients/patient-record/encounters/encounters.module#EncountersModule'},
+    { path: 'que', loadChildren: './que/que.module#QueModule'},
     { path: 'auth', loadChildren: './auth/auth.module#AuthModule'},
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: '/not-found' }

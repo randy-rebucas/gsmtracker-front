@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../../../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
@@ -12,8 +12,8 @@ import { QueService } from 'src/app/que/que.service';
 import { QueData } from 'src/app/que/que-data.model';
 
 @Component({
-  selector: 'app-encounter-list',
-  templateUrl: './encounter-list.component.html',
+  selector: 'app-que-list',
+  templateUrl: './que-list.component.html',
   styles: [`
   .hide {
     display: none;
@@ -28,7 +28,7 @@ import { QueData } from 'src/app/que/que-data.model';
   }
   `]
 })
-export class EncounterListComponent
+export class QueListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 

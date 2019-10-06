@@ -49,6 +49,9 @@ import { PatientRecordComponent } from './patient-record/patient-record.componen
         ] },
       ] }
     ])
+  ],
+  entryComponents: [
+    PatientEditComponent
   ]
 })
 export class PatientsModule {}

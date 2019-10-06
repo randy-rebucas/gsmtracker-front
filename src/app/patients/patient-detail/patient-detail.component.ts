@@ -22,7 +22,6 @@ import { UploadData } from 'src/app/upload/upload-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
-import { ProfileImageComponent } from 'src/app/upload/profile-image/profile-image.component';
 import { NetworksService } from 'src/app/networks/networks.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { QueService } from 'src/app/que/que.service';
@@ -30,6 +29,7 @@ import { UsersService } from 'src/app/users/users.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { mimeType } from '../patient-edit/mime-type.validator';
 import { HttpEventType } from '@angular/common/http';
+import { EncountersService } from 'src/app/shared/encounters/encounters.service';
 
 @Component({
   selector: 'app-patient-detail',
@@ -37,13 +37,16 @@ import { HttpEventType } from '@angular/common/http';
   styles: [`
   /* */
   .area {
-    /*border: 1px solid rgba(0, 0, 0, .12);
-    padding: 1em;*/
+    position: relative;
   }
   .header {
     text-align: right;
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     padding-bottom: 1em;
+  }
+  .area.side,
+  .area.content {
+    min-height: 700px;
   }
   .side {
     border-right: 1px solid rgba(0, 0, 0, .12);
@@ -105,10 +108,7 @@ import { HttpEventType } from '@angular/common/http';
   }
   .mat-h2, .mat-title, .mat-typography h2 {
     margin: unset;
-}
-.mat-list-item {
-  height: 32px;
-}
+  }
 `]
 })
 export class PatientDetailComponent
@@ -154,6 +154,7 @@ implements OnInit, OnDestroy {
   profileForm: FormGroup;
 
   public recordsSub: Subscription;
+  public isOnQue: boolean;
 
   constructor(
     public authService: AuthService,
@@ -178,7 +179,8 @@ implements OnInit, OnDestroy {
     public uploadService: UploadService,
     public networksService: NetworksService,
     private notificationService: NotificationService,
-    private queService: QueService
+    private queService: QueService,
+    private encountersService: EncountersService
     ) {
       super(authService, router, dialog, appconfig);
     }
@@ -189,6 +191,11 @@ implements OnInit, OnDestroy {
       this.route.paramMap.subscribe((paramMap: ParamMap) => {
         this.patientId = paramMap.get('patientId');
       });
+
+      this.queService.get(this.patientId).subscribe((res) => {
+        this.isOnQue = res.onQue;
+      });
+
       this.profileForm = new FormGroup({
         profilePicture: new FormControl(null, {
           validators: [Validators.required],
@@ -387,9 +394,21 @@ implements OnInit, OnDestroy {
       this.router.navigate(['./record/chief-complaints'], {relativeTo: this.route});
     }
 
+    onCancelVisit(patientId) {
+      this.encountersService.update(1, patientId, this.licenseId).subscribe(() => {
+        this.queService.findCancel(patientId).subscribe((res) => {
+          this.notificationService.success(':: on que canceled.');
+          this.isOnQue = false;
+        });
+      });
+    }
+
     moveToQue(patientId) {
-      this.queService.insert(patientId, this.licenseId).subscribe((res) => {
-        this.notificationService.success(':: on que done. #' + res.que.queNumber);
+      this.encountersService.insert(patientId, this.licenseId).subscribe(() => {
+        this.queService.insert(patientId, this.licenseId).subscribe((queRes) => {
+          this.notificationService.success(':: on que done. #' + queRes.que.queNumber);
+          this.isOnQue = true;
+        });
       });
     }
 
