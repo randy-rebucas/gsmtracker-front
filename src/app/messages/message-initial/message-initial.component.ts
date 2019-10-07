@@ -8,7 +8,13 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-message-initial',
   templateUrl: './message-initial.component.html',
-  styleUrls: ['./message-initial.component.css']
+  styles: [`
+  .md-48 {
+    font-size: 40px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  `]
 })
 export class MessageInitialComponent
 extends SecureComponent

@@ -12,7 +12,27 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-message-detail',
   templateUrl: './message-detail.component.html',
-  styleUrls: ['./message-detail.component.css']
+  styles: [`
+    mat-list {
+      min-height: 500px;
+    }
+    .mat-card-avatar {
+      height: unset;
+      width: unset;
+      border-radius: 50%;
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+    .thread-starter-user-detail {
+      padding: 1em 0 0 1em;
+    }
+    .mat-list-text.message-list {
+      margin-left: 1em;
+    }
+    .mat-list-base .mat-list-item.mat-2-line, .mat-list-base .mat-list-option.mat-2-line {
+      height: 55px;
+    }
+  `]
 })
 export class MessageDetailComponent
 extends SecureComponent

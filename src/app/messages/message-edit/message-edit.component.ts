@@ -18,7 +18,19 @@ export interface User {
 @Component({
   selector: 'app-message-edit',
   templateUrl: './message-edit.component.html',
-  styleUrls: ['./message-edit.component.css']
+  styles: [`
+  .example-full-width {
+    width: 100%;
+  }
+  .is-loading ::ng-deep .mat-option-text {
+    display: flex;
+    justify-content: center;
+  }
+  form.message-form {
+    padding: 1em;
+    border-top: 1px solid rgba(0,0,0,.14);
+  }
+  `]
 })
 export class MessageEditComponent
 extends SecureComponent

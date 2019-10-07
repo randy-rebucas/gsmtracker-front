@@ -48,6 +48,9 @@ p.mat-line.bold {
 .thread-starter-user p {
   margin: 0;
 }
+.mat-list-base .mat-list-item.mat-3-line, .mat-list-base .mat-list-option.mat-3-line {
+  height: 60px;
+}
 `]
 })
 export class MessageListComponent

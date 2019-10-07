@@ -1,6 +1,6 @@
-<mat-card class="example-card" style="min-height: 70px;" (click)="onProfile(personId)">
+<mat-card class="example-card" style="min-height: 70px; border-radius: 0;" (click)="onProfile(personId)">
   <div *ngIf="isLoading" class="loading">
-      <mat-spinner [diameter]="25"></mat-spinner>
+      <mat-spinner [diameter]="50"></mat-spinner>
   </div>
   <mat-card-header *ngIf="!isLoading">
     <div mat-card-avatar class="example-header-image">
@@ -19,12 +19,12 @@
 
   </mat-card-header>
 </mat-card>
-<div id="reply-area" style="min-height: 480px;">
+<div id="reply-area" style="min-height: 516px;">
   <div *ngIf="isLoading" class="loading">
-      <mat-spinner [diameter]="25"></mat-spinner>
+      <mat-spinner [diameter]="50"></mat-spinner>
   </div>
   <div *ngIf="!isLoading">
-    <perfect-scrollbar style="max-height: 356px;">
+    <perfect-scrollbar style="max-height: 516px;">
       <mat-list>
         <mat-list-item *ngFor="let message of messages">
           <div *ngIf="message.avatar; then thenBlock else elseBlock"></div>
