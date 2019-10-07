@@ -18,6 +18,13 @@ exports.createUser = async(req, res, next) => {
             throw new Error('Something went wrong.Cannot save license!');
         }
 
+        const newSetting = new Setting({
+          licenseId: license._id,
+          clinicName: req.body.clinicname,
+          clinicOwner: req.person.firstname + ', ' + req.person.lastname
+        });
+        let setting = await newSetting.save();
+
         const newUser = new User({
             userType: 'doctor',
             personId: req.auth.personId,
@@ -28,16 +35,8 @@ exports.createUser = async(req, res, next) => {
             throw new Error('Something went wrong.Cannot save user!');
         }
 
-        const newSetting = new Setting({
-            licenseId: license._id,
-            clinicName: req.body.clinicname,
-            clinicOwner: req.person.firstname + ', ' + req.person.lastname
-        });
-        let setting = await newSetting.save();
-
-        res.status(201).json({
-            message: 'User created!',
-            result: setting
+        res.status(200).json({
+            message: 'Registered successfully! Redirecting 3 sec.'
         });
 
     } catch (e) {

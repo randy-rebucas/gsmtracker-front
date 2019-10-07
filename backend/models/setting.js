@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const settingSchema = mongoose.Schema({
     licenseId: { type: mongoose.Schema.Types.ObjectId, ref: 'License', required: true },
+    logoPath: { type: String },
     clinicOwner: { type: String, required: true },
     clinicName: { type: String },
     clinicAddress: { type: String },

@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
-import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { SettingsGeneralService } from '../settings-general.service';
 import { Title } from '@angular/platform-browser';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-clinic',
@@ -39,7 +41,7 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     margin: 3em 0;
   }
   mat-form-field.time {
-    width: 49%;
+    width: 48%;
     flex-direction: row;
   }
   .form-field-block {
@@ -59,7 +61,24 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
     top: 0;
   }
   mat-form-field.contact {
-    width: 49%;
+    width: 48%;
+  }
+
+  .image-preview {
+    position: relative;
+    border: 2px solid #dcdcdc;
+    padding: .5em;
+  }
+  .image-preview button {
+    position: absolute;
+    right: 8px;
+    visibility: hidden;
+  }
+  .image-preview:hover button {
+    visibility: visible;
+  }
+  .image-preview img {
+    width: 100%;
   }
   `]
 })
@@ -69,6 +88,11 @@ implements OnInit, OnDestroy {
 
   form: FormGroup;
   settingId: string;
+
+  selectedFile: File = null;
+  imagePreview: string;
+  userType: string;
+  logoForm: FormGroup;
 
   constructor(
     public authService: AuthService,
@@ -100,12 +124,20 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
     this.titleService.setTitle('Settings - Clinic');
+    this.logoForm = new FormGroup({
+      logoPicture: new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [mimeType]
+      })
+    });
 
     this.populateForm();
   }
 
   populateForm() {
     this.settingsGeneralService.get(this.licenseId).subscribe(settingData => {
+      this.imagePreview = settingData.logoPath;
+
       this.form.patchValue({
         clinicName: settingData.clinicName,
         clinicOwner: settingData.clinicOwner,
@@ -192,6 +224,32 @@ implements OnInit, OnDestroy {
       this.form.value.clinicHours
     ).subscribe(() => {
       this.notificationService.success('::Updated successfully');
+    });
+  }
+
+  onFileChanged(event: Event) {
+    this.selectedFile = (event.target as HTMLInputElement).files[0];
+    this.logoForm.patchValue({ logoPicture: this.selectedFile });
+    this.logoForm.get('logoPicture').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(this.selectedFile);
+    this.onSavePicture();
+  }
+
+  onSavePicture() {
+    this.settingsGeneralService.upload(
+      this.settingId,
+      this.logoForm.value.logoPicture
+    ).subscribe((event) => {
+      if (event.type === HttpEventType.UploadProgress) {
+        console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
+      } else if (event.type === HttpEventType.Response) {
+        console.log(event); // handle event here
+      }
+      this.notificationService.success(':: settings logo updated successfully');
     });
   }
 

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthData } from './auth-data.model';
 import { AuthSignup } from './auth-signup.model';
+import { NotificationService } from '../shared/notification.service';
 
 const BACKEND_URL = environment.apiUrl + '/user';
 
@@ -19,7 +20,7 @@ export class AuthService {
   private licenseId: string;
   private authStatusListener = new Subject<boolean>();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private notificationService: NotificationService) {}
 
   getToken() {
     return this.token;
@@ -53,7 +54,8 @@ export class AuthService {
       email: reqEmail,
       password: reqPassword
     };
-    this.http.post(BACKEND_URL + '/signup', authSignup).subscribe(() => {
+    this.http.post(BACKEND_URL + '/signup', authSignup).subscribe((res) => {
+      this.notificationService.success(':: Registered successfully!');
       this.router.navigate(['/']);
     }, error => {
       this.authStatusListener.next(false);

@@ -41,7 +41,10 @@ import { EncountersData } from '../shared/encounters/encounters-data.model';
   mat-grid-tile-header.mat-grid-tile-header .action-button {
     position: absolute;
     right: 0;
-}
+  }
+  .action-button {
+    text-align: right;
+  }
   `]
 })
 export class HomeComponent

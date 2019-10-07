@@ -126,6 +126,10 @@ import { UserData } from 'src/app/users/user-data.model';
   td.mat-cell:hover img {
     border: 2px solid #e0e0e0;
   }
+
+  .mat-column-image {
+    width: 5%;
+}
   `],
   templateUrl: './patient-list.component.html',
   animations: [

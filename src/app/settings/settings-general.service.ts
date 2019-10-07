@@ -27,7 +27,8 @@ export class SettingsGeneralService {
 
     get(licenseId: string) {
       return this.http.get<{
-        _id: string;
+        _id: string,
+        logoPath: string,
         clinicName: string,
         clinicOwner: string,
         clinicAddress: string,
@@ -58,4 +59,15 @@ export class SettingsGeneralService {
       return this.http.put(BACKEND_URL + '/' + licenseId, settingData);
     }
 
+    upload(settingId: string, image: File | string) {
+
+      const uploadData = new FormData();
+      uploadData.append('settingId', settingId);
+      uploadData.append('profilePicture', image, settingId);
+
+      return this.http.post(BACKEND_URL + '/upload-logo/' + settingId, uploadData, {
+        reportProgress: true,
+        observe: 'events'
+      });
+    }
 }
