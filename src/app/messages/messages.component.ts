@@ -10,7 +10,36 @@ import { AppConfiguration } from '../app-configuration.service';
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css']
+  styles: [`
+  .message-list {
+    min-width: 25%;
+    flex: 1 1 auto;
+  }
+  .message-detail {
+    min-width: 45%;
+    flex: 1 1 auto;
+  }
+  .message-updates {
+    min-width: 25%;
+    flex: 1 1 auto;
+  }
+  :host /deep/ .mat-card-header-text {
+    /* CSS styles go here */
+    margin: 0px;
+  }
+  mat-card {
+    margin-bottom: 1em;
+    border-radius: 0;
+  }
+  .mat-card-header .mat-card-title {
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  mat-card.message-list-card.mat-card {
+    min-height: 800px;
+}
+  `]
 })
 export class MessagesComponent
 extends SecureComponent

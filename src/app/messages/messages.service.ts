@@ -33,7 +33,8 @@ export class MessagesService {
             created: message.created,
             message: message.message,
             fullname: message.fullname,
-            personId: message.personId
+            personId: message.personId,
+            avatar: message.avatar
           };
         })};
       })
@@ -69,9 +70,9 @@ export class MessagesService {
       );
   }
 
-  insert( message: string, threadId: string, personId: string) {
+  insert( message: string, threadId: string, userId: string) {
     const recordData = {
-      message, threadId, personId
+      message, threadId, userId
     };
     return this.http.post<{ message: string, record: MessagesData }>(BACKEND_URL, recordData);
   }

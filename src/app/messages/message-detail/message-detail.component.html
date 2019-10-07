@@ -1,13 +1,22 @@
-<mat-card class="example-card" style="min-height: 46px;" (click)="onProfile(personId)">
+<mat-card class="example-card" style="min-height: 70px;" (click)="onProfile(personId)">
   <div *ngIf="isLoading" class="loading">
       <mat-spinner [diameter]="25"></mat-spinner>
   </div>
   <mat-card-header *ngIf="!isLoading">
     <div mat-card-avatar class="example-header-image">
-        <mat-icon mat-list-icon class="md-48">face</mat-icon>
+        <div *ngIf="avatar; then thenBlock else elseBlock"></div>
+        <ng-template #thenBlock>
+            <img [src]="avatar" [alt]="fullname" style="width:70px; height:70px; vertical-align: middle;border-radius: 100%;" />
+        </ng-template>
+        <ng-template #elseBlock>
+            <img src="assets/images/blank.png" [alt]="fullname" style="width:70px; height:70px; vertical-align: middle;border-radius: 100%;" />
+        </ng-template>
     </div>
-    <mat-card-title>{{fullname}}</mat-card-title>
-    <mat-card-subtitle>Created : {{created}}</mat-card-subtitle>
+    <div class="thread-starter-user-detail">
+        <mat-card-title>{{fullname}}</mat-card-title>
+        <mat-card-subtitle>Created : {{created}}</mat-card-subtitle>
+    </div>
+
   </mat-card-header>
 </mat-card>
 <div id="reply-area" style="min-height: 480px;">
@@ -18,9 +27,17 @@
     <perfect-scrollbar style="max-height: 356px;">
       <mat-list>
         <mat-list-item *ngFor="let message of messages">
-          <mat-icon mat-list-icon class="md-24">face</mat-icon>
-          <h4 mat-line>{{message.fullname}} <small> {{message.created}} </small></h4>
-          <p mat-line> {{message.message}} </p>
+          <div *ngIf="message.avatar; then thenBlock else elseBlock"></div>
+          <ng-template #thenBlock>
+              <img [src]="message.avatar" [alt]="message.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+          </ng-template>
+          <ng-template #elseBlock>
+              <img src="assets/images/blank.png" [alt]="message.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+          </ng-template>
+          <div class="mat-list-text message-list">
+              <h4 mat-line>{{message.fullname}} <small> {{message.created}} </small></h4>
+              <p mat-line> {{message.message}} </p>
+          </div>
         </mat-list-item>
       </mat-list>
     </perfect-scrollbar>

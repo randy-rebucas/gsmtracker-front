@@ -7,4 +7,5 @@ export interface MessagesData {
   status: number;
 
   fullname: string;
+  avatar: string;
 }

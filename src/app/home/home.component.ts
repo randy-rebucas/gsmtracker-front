@@ -31,7 +31,7 @@ import { EncountersData } from '../shared/encounters/encounters-data.model';
     margin-bottom: 1em;
   }
   canvas.chartjs-render-monitor {
-    opacity: .2;
+    /*opacity: .2;*/
   }
   .grid-inner-content.grid-inner-content-list.chart h1 {
     position: absolute;
@@ -114,24 +114,25 @@ implements OnInit, OnDestroy {
 
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
-    this.encountersService.getAll(this.licenseId);
-    this.encountersChartSub = this.encountersService
-    .getUpdateListener()
-    .subscribe((chartData: {encounters: EncountersData[], labels: []}) => {
-        this.isLoading = false;
-        console.log(chartData);
-      });
+    // this.encountersService.getAll(this.licenseId);
+    // this.encountersChartSub = this.encountersService
+    // .getUpdateListener()
+    // .subscribe((chartData: {encounters: EncountersData[], labels: []}) => {
+    //     this.isLoading = false;
+    //     console.log(chartData);
+    //   });
     this.pieChartLabels = ['Success', 'Cancelled'];
     this.pieChartLegend = true;
     this.pieChartData = [120, 150];
     this.pieChartType = 'pie';
-    // this.barChartType = 'bar';
-    // this.barChartLegend = true;
-    // this.barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-    // this.barChartData = [
-    //   {data: [65, 59, 80, 81, 56, 55, 40], label: 'Cancelled'},
-    //   {data: [28, 48, 40, 19, 86, 27, 90], label: 'Done'}
-    // ];
+
+    this.barChartType = 'bar';
+    this.barChartLegend = true;
+    this.barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+    this.barChartData = [
+      {data: [65, 59, 80, 81, 56, 55, 40], label: 'Cancelled'},
+      {data: [28, 48, 40, 19, 86, 27, 90], label: 'Done'}
+    ];
   }
 
   onResize(event) {

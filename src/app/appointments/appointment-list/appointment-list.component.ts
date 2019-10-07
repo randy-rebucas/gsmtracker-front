@@ -14,7 +14,28 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-appointment-list',
   templateUrl: './appointment-list.component.html',
-  styleUrls: ['./appointment-list.component.css']
+  styles: [`
+    .hide {
+      display: none;
+    }
+    #no-data {
+      width: 100%;
+      text-align: center;
+    }
+    .mat-paginator {
+      background: transparent;
+    }
+    mat-footer-row mat-footer-cell {
+      justify-content: center;
+      font-style: italic;
+    }
+    .mat-column-img {
+      flex: 0 0 75px;
+    }
+    .mat-column-action {
+      flex: 0 0 15px;
+    }
+`]
 })
 export class AppointmentListComponent
 extends SecureComponent
@@ -24,7 +45,7 @@ implements OnInit, OnDestroy {
   public recordsSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['title', 'start', 'fullname', 'status', 'action'];
+  displayedColumns: string[] = ['img', 'fullname', 'title', 'start', 'status', 'action'];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -71,6 +92,7 @@ implements OnInit, OnDestroy {
   }
 
   viewEvent(eventId) {
+    console.log(eventId);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;

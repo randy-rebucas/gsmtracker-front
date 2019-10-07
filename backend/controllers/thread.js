@@ -1,5 +1,6 @@
 const Thread = require('../models/thread');
 const Message = require('../models/message');
+const Person = require('../models/person');
 const User = require('../models/user');
 const moment = require('moment');
 
@@ -16,7 +17,7 @@ exports.create = async (req, res, next) => {
       const messageData = new Message({
           message: req.body.message,
           threadId: thread._id,
-          personId: thread.ownerId
+          userId: thread.ownerId
       });
       let message = await messageData.save();
 
@@ -30,7 +31,7 @@ exports.create = async (req, res, next) => {
       const messageData = new Message({
           message: req.body.message,
           threadId: threadUserCheck._id,
-          personId: threadUserCheck.ownerId
+          userId: threadUserCheck.ownerId
       });
       let message = await messageData.save();
       res.status(201).json({
@@ -51,7 +52,13 @@ exports.create = async (req, res, next) => {
 exports.getAll = async (req, res, next) => {
     try {
       let threads = await Thread.find({ 'ownerId': req.query.ownerId })
-        .populate('userId')
+        .populate({
+          path: 'userId',
+          populate: {
+            path: 'personId',
+            model: Person
+          }
+        })
         .sort({ 'created': 'asc' })
         .exec();
       newThreads = [];
@@ -60,7 +67,8 @@ exports.getAll = async (req, res, next) => {
             id: element._id,
             created: moment(element.created, "YYYYMMDD").fromNow(),
             ownerId: element.ownerId,
-            fullname: element.userId.firstname + ' ' + element.userId.midlename + ', ' + element.userId.lastname
+            avatar: element.userId.avatarPath,
+            fullname: element.userId.personId.firstname + ' ' + element.userId.personId.midlename + ', ' + element.userId.personId.lastname
           };
           newThreads.push(myObj);
       });
@@ -89,14 +97,21 @@ exports.getLastMessage = async (req, res, next) => {
 
 exports.get = async (req, res, next) => {
   try {
-    let thread = await Thread.findById(req.params.threadId).populate('userId').exec();
+    let thread = await Thread.findById(req.params.threadId).populate({
+      path: 'userId',
+      populate: {
+        path: 'personId',
+        model: Person
+      }
+    }).exec();
     if (!thread) {
       throw new Error('Something went wrong.Cannot find thread id: '+req.params.threadId);
     }
     res.status(200).json({
       threadId: thread._id,
       ownerId: thread.ownerId,
-      fullname: thread.userId.firstname + ' ' + thread.userId.midlename + ', ' + thread.userId.lastname,
+      avatar: thread.userId.avatarPath,
+      fullname: thread.userId.personId.firstname + ' ' + thread.userId.personId.midlename + ', ' + thread.userId.personId.lastname,
       gender: thread.userId.gender,
       address: thread.userId.address,
       birthdate: thread.userId.birthdate,

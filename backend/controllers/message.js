@@ -1,6 +1,6 @@
 const Message = require('../models/message');
 const User = require('../models/user');
-
+const Person = require('../models/person');
 const moment = require('moment');
 
 exports.create = async (req, res, next) => {
@@ -8,7 +8,7 @@ exports.create = async (req, res, next) => {
     const messageData = new Message({
       message: req.body.message,
       threadId: req.body.threadId,
-      personId: req.body.personId
+      userId: req.body.userId
     });
     let message = await messageData.save();
     res.status(201).json({
@@ -38,15 +38,22 @@ exports.getAll = async (req, res, next) => {
       await Message.updateMany({ "_id": { "$in": ids } }, { "$set": { "status": 1 } } , {multi: true});
     }
 
-    const user = await Message.find({ 'threadId': req.query.threadId }).populate('personId');
+    const user = await Message.find({ 'threadId': req.query.threadId }).populate({
+      path: 'userId',
+      populate: {
+        path: 'personId',
+        model: Person
+      }
+    }).exec();
     newMessages = [];
     user.forEach(element => {
       var myObj = {
         id: element._id,
         created: moment(element.created, "YYYYMMDD").fromNow(),
         message: element.message,
-        fullname : element.personId.firstname + ' ' +element.personId.lastname,
-        personId : element.personId._id
+        avatar: element.userId.avatarPath,
+        fullname : element.userId.personId.firstname + ' ' +element.userId.personId.lastname,
+        personId : element.userId.personId._id
       };
       newMessages.push( myObj );
     });

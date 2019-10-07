@@ -31,6 +31,7 @@ implements OnInit, OnDestroy {
   personId: string;
   contact: string;
   created: string;
+  avatar: string;
   isNew: boolean;
 
   constructor(
@@ -62,6 +63,7 @@ implements OnInit, OnDestroy {
         this.contact = results.threadData.contact;
         this.personId = results.threadData.personId;
         this.created = results.threadData.created;
+        this.avatar = results.threadData.avatar;
 
         this.messageService.getAll(this.threadId);
         this.messageSub = this.messageService.getUpdateListener()

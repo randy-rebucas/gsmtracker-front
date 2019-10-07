@@ -19,7 +19,11 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-appointment-calendar',
   templateUrl: './appointment-calendar.component.html',
-  styleUrls: ['./appointment-calendar.component.css']
+  styles: [`
+  .fc-view-container {
+    z-index: -1 !important;
+  }
+`]
 })
 export class AppointmentCalendarComponent
 extends SecureComponent

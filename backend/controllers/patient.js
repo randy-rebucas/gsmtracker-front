@@ -87,10 +87,10 @@ exports.search = async(req, res, next) => {
         const result = [];
         patient.forEach(element => {
             let fullname = element.personId.firstname + ', ' + element.personId.lastname;
-            result.push({ id: element.personId._id, name: fullname });
+            result.push({ id: element._id, name: fullname });
         });
 
-        let count = await Patient.countDocuments({ 'licenseId': req.query.licenseId });
+        let count = await User.countDocuments({ 'licenseId': req.query.licenseId });
 
         res.status(200).json({
             total: count,

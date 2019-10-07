@@ -15,7 +15,60 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-appointment-detail',
   templateUrl: './appointment-detail.component.html',
-  styleUrls: ['./appointment-detail.component.css']
+  styles: [`
+  mat-form-field {
+    width: 100%;
+  }
+  table {
+    width: 100%;
+  }
+  .form-field-block {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    flex-basis: auto;
+  }
+
+  mat-spinner {
+    margin: auto;
+  }
+
+  .mat-dialog-title button {
+    float: right;
+    border: none;
+  }
+
+  .mat-dialog-title {
+    border-bottom: 1px solid rgb(169, 169, 169);
+    padding: 0 0 1em 0;
+  }
+  table.appointment-detail tr:nth-child(3) td {
+    font-size: 16px;
+      border-bottom: 1px solid #d0d0d0;
+    padding-top: 2em;
+  }
+  tr.address td {
+    vertical-align: text-bottom;
+  }
+  tr.address td div:first-child {
+    border-bottom: 1px solid #d0d0d0;
+  }
+  tr.address td span {
+    float: right;
+    font-weight: 500;
+    text-decoration: underline;
+    color: #f5584d;
+  }
+  table.appointment-detail tr:nth-child(4) td {
+    font-weight: 700;
+    font-size: 16px;
+    padding: .6em 0;
+  }
+  table.appointment-detail tr:first-child td {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  `]
 })
 export class AppointmentDetailComponent
 extends SecureComponent

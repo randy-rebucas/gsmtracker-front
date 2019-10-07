@@ -35,6 +35,7 @@ export class AppointmentService {
               textColor: appointment.textColor,
               borderColor: appointment.borderColor,
               fullname: appointment.fullname,
+              avatar: appointment.avatar,
               status: appointment.status
             };
           }), max: appointmentData.max};
@@ -56,7 +57,7 @@ export class AppointmentService {
 
   get(appointmentId: string) {
     // tslint:disable-next-line:max-line-length
-    return this.http.get<{ appointmentId: string, title: string, start: Date, end: Date, fullname: string, gender: string, address: string, birthdate: string, contact: string, type: number, status: number, detailId: string }>(
+    return this.http.get<{ appointmentId: string, title: string, start: Date, end: Date, avatar: string, fullname: string, gender: string, address: string, birthdate: string, contact: string, type: number, status: number, detailId: string }>(
       BACKEND_URL + '/' + appointmentId
       );
   }
@@ -67,7 +68,7 @@ export class AppointmentService {
         BACKEND_URL + '/new/' + licenseId
       );
   }
-  
+
   insert(users: string, title: string, start: string, licenseId: string) {
     const appointmentData = {
       users, title, start, licenseId

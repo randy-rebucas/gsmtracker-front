@@ -18,7 +18,41 @@ export interface User {
 @Component({
   selector: 'app-appointment-edit',
   templateUrl: './appointment-edit.component.html',
-  styleUrls: ['./appointment-edit.component.css']
+  styles: [`
+    table {
+      width: 100%;
+    }
+    mat-form-field {
+      width: 100%;
+    }
+    .mat-list-base[dense] {
+      display: flex !important;
+    }
+    span.pending {
+      background: #ff4081;
+      border: 2px solid #f91b66;
+      width: 20px;
+      height: 20px;
+      margin-right: 1em;
+    }
+    span.confirmed {
+      background: #3f51b5;
+      border: 2px solid #37469a;
+      width: 20px;
+      height: 20px;
+      margin-right: 1em;
+    }
+    span.canceled {
+      background: #f44336;
+      border: 2px solid #d83226;
+      width: 20px;
+      height: 20px;
+      margin-right: 1em;
+    }
+    .mat-form-field-infix {
+      width: auto !important;
+    }
+  `]
 })
 export class AppointmentEditComponent
 extends SecureComponent

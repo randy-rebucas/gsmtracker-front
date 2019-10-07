@@ -1,4 +1,6 @@
 const Appointment = require('../models/appointment');
+const Person = require('../models/person');
+
 const moment = require('moment');
 
 exports.create = async(req, res, next) => {
@@ -9,7 +11,7 @@ exports.create = async(req, res, next) => {
             backgroundColor: '#ff4081',
             borderColor: '#ff4081',
             textColor: '#fff',
-            patientId: req.body.users.id,
+            userId: req.body.users.id,
             licenseId: req.body.licenseId
         });
         let appointment = await appointmentData.save();
@@ -61,7 +63,13 @@ exports.getAll = async(req, res, next) => {
             query.skip(pageSize * (currentPage - 1)).limit(pageSize);
         }
 
-        let appointments = await query.populate('patientId').exec();
+        let appointments = await query.populate({
+          path: 'userId',
+          populate: {
+            path: 'personId',
+            model: Person
+          }
+        }).exec();
         newAppointments = [];
         appointments.forEach(element => {
             var myObj = {
@@ -72,7 +80,8 @@ exports.getAll = async(req, res, next) => {
                 backgroundColor: element.backgroundColor,
                 borderColor: element.borderColor,
                 textColor: element.textColor,
-                fullname: element.patientId.firstname + ' ' + element.patientId.midlename + ', ' + element.patientId.lastname,
+                avatar: element.userId.avatarPath,
+                fullname: element.userId.personId.firstname + ' ' + element.userId.personId.midlename + ', ' + element.userId.personId.lastname,
                 status: element.status
             };
             newAppointments.push(myObj);
@@ -94,19 +103,26 @@ exports.getAll = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
     try {
-        let appointment = await Appointment.findById(req.params.appointmentId).populate('patientId').exec();
+        let appointment = await Appointment.findById(req.params.appointmentId).populate({
+          path: 'userId',
+          populate: {
+            path: 'personId',
+            model: Person
+          }
+        }).exec();
         res.status(200).json({
             appointmentId: appointment._id,
             title: appointment.title,
             start: appointment.start,
             end: appointment.end,
             status: appointment.status,
-            fullname: appointment.patientId.firstname + ' ' + appointment.patientId.midlename + ', ' + appointment.patientId.lastname,
-            gender: appointment.patientId.gender,
-            address: appointment.patientId.address,
-            birthdate: appointment.patientId.birthdate,
-            contact: appointment.patientId.contact,
-            detailId: appointment.patientId._id
+            avatar: appointment.userId.avatarPath,
+            fullname: appointment.userId.personId.firstname + ' ' + appointment.userId.personId.midlename + ', ' + appointment.userId.personId.lastname,
+            gender: appointment.userId.personId.gender,
+            address: appointment.userId.personId.address,
+            birthdate: appointment.userId.personId.birthdate,
+            contact: appointment.userId.personId.contact,
+            detailId: appointment.userId._id
         });
     } catch (error) {
         res.status(500).json({

@@ -14,7 +14,41 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-message-list',
   templateUrl: './message-list.component.html',
-  styleUrls: ['./message-list.component.css']
+  styles: [`
+
+mat-icon.md-48 {
+  font-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+small.mat-line {
+  float: right;
+}
+mat-list-item {
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+mat-list-item.active {
+  border-left: 3px solid #3f51b5;
+}
+p.mat-line.bold {
+  font-weight: bold !important;
+}
+.thread-starter-user {
+  padding-left: 1em;
+  width: 100%;
+}
+.thread-starter-user h4 {
+  font-weight: 100;
+  margin: 0;
+}
+.thread-starter-user h4 small {
+  float: right;
+}
+.thread-starter-user p {
+  margin: 0;
+}
+`]
 })
 export class MessageListComponent
 extends SecureComponent
@@ -50,6 +84,7 @@ implements OnInit, OnDestroy {
             fullname: element.fullname,
             id: element.id,
             ownerId: element.ownerId,
+            avatar: element.avatar,
             message: results.message.message,
             status: results.message.status
           };

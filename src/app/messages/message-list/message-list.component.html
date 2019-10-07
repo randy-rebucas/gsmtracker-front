@@ -6,10 +6,20 @@
     <mat-list *ngIf="!isLoading">
         <!-- <mat-spinner *ngIf="isLoading"></mat-spinner> -->
         <mat-list-item *ngFor="let thread of threads" [routerLink]="['./', thread.id]" routerLinkActive="active" >
-          <mat-icon mat-list-icon class="md-48">face</mat-icon>
-          <h4 mat-line>{{thread.fullname}} <small mat-line> {{thread.created }} </small></h4>
-          <!-- <a (click)="onDelete(thread.id)">Delete</a> -->
-          <p mat-line [ngClass]="{'bold': thread.status==0}"> {{thread.message}} </p>
+          <!-- <mat-icon mat-list-icon class="md-48">face</mat-icon> -->
+          <div *ngIf="thread.avatar; then thenBlock else elseBlock"></div>
+          <ng-template #thenBlock>
+              <img [src]="thread.avatar" [alt]="thread.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+          </ng-template>
+          <ng-template #elseBlock>
+              <img src="assets/images/blank.png" [alt]="thread.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+          </ng-template>
+          <div class="thread-starter-user">
+              <h4 mat-line>{{thread.fullname}} <small mat-line> {{thread.created }} </small></h4>
+              <!-- <a (click)="onDelete(thread.id)">Delete</a> -->
+              <p mat-line [ngClass]="{'bold': thread.status==0}"> {{thread.message}} </p>
+          </div>
+
         </mat-list-item>
         <mat-list-item *ngIf="threads.length === 0">No message available.</mat-list-item>
       </mat-list>
