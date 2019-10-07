@@ -78,7 +78,7 @@ exports.update = async(req, res, next) => {
 exports.get = async(req, res, next) => {
   try {
     let setting = await Setting.findOne({ 'licenseId': req.params.licenseId }).exec();
-console.log(setting);
+// console.log(setting);
     res.status(200).json(setting);
 
   } catch (e) {
@@ -91,7 +91,7 @@ console.log(setting);
 
 exports.uploadLogo = async(req, res, next) => {
   try {
-    console.log(req.file );
+    // console.log(req.file );
       const url = req.protocol + '://' + req.get('host');
       const newSetting = new Setting({
           _id: req.body.settingId,

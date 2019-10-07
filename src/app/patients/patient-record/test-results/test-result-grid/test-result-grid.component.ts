@@ -33,14 +33,14 @@ implements OnInit, OnDestroy {
       super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.parent.params.subscribe(
         (param) => {
-          this.patientId = param.patientId;
+          this.patientId = param.userId;
         }
       );
     }
 
   ngOnInit() {
     super.doInit();
-
+    console.log(this.patientId);
     this.uploadService.getAll(this.perPage, this.currentPage, this.patientId);
     this.recordsSub = this.uploadService
       .getUpdateListener()

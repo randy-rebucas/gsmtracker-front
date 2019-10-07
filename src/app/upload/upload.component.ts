@@ -43,7 +43,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(
       (param) => {
-        this.patientId = param.patientId;
+        this.patientId = param.userId;
       }
     );
 

@@ -158,7 +158,7 @@ exports.upload = async (req, res, next) => {
     // });
 
     form.on('error', (err) => {
-      console.log(err);
+      // console.log(err);
     });
 
     form.on('end', () => {

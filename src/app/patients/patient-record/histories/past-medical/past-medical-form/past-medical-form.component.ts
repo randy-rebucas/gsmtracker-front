@@ -42,7 +42,7 @@ implements OnInit, OnDestroy {
     super.doInit();
     this.activatedRoute.parent.parent.params.subscribe(
       (param) => {
-        this.patientId = param.patientId;
+        this.patientId = param.userId;
       }
     );
 

@@ -9,14 +9,7 @@ exports.create = async(req, res, next) => {
         treatments: req.body.treatments,
         patientId: req.body.patientId
     });
-    // assessmentData = req.body.diagnosis;
-    // for (let index = 0; index < assessmentData.length; index++) {
-    //   newAssessment.diagnosis.push(assessmentData[index]);
-    // }
-    // treatmentData = req.body.treatments;
-    // for (let index = 0; index < treatmentData.length; index++) {
-    //   newAssessment.treatments.push(treatmentData[index]);
-    // }
+
     let assessment = await newAssessment.save();
     if (!assessment) {
       throw new Error('Something went wrong. Cannot create assessment!');
@@ -46,14 +39,7 @@ exports.update = async (req, res, next) => {
         treatments: req.body.treatments,
         patientId: req.body.patientId
     });
-    // assessmentData = req.body.diagnosis;
-    // for (let index = 0; index < assessmentData.length; index++) {
-    //   newAssessment.diagnosis.push(assessmentData[index]);
-    // }
-    // treatmentData = req.body.treatments;
-    // for (let index = 0; index < treatmentData.length; index++) {
-    //   newAssessment.treatments.push(treatmentData[index]);
-    // }
+
     let assessment = await Assessment.updateOne({ _id: req.params.assessmentId }, newAssessment).exec();
     if (!assessment) {
       throw new Error('Something went wrong. Cannot update assessment!');

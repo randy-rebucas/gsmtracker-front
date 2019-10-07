@@ -34,8 +34,8 @@ import { PatientRecordComponent } from './patient-record/patient-record.componen
     RouterModule.forChild([
       { path: '', component: PatientsComponent, canActivate: [AuthGuard], children: [
         { path: '', component: PatientListComponent },
-        { path: ':patientId', component: PatientDetailComponent },
-        { path: ':patientId/record', component: PatientRecordComponent, children: [
+        { path: ':userId', component: PatientDetailComponent },
+        { path: ':userId/record', component: PatientRecordComponent, children: [
           { path: '', redirectTo: 'chief-complaints', pathMatch: 'full' },
           { path: 'chief-complaints', loadChildren: './patient-record/chief-complaint/chief-complaint.module#ChiefComplaintModule'},
           { path: 'histories', loadChildren: './patient-record/histories/histories.module#HistoriesModule'},

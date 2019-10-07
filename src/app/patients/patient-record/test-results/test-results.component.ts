@@ -1,10 +1,6 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../../auth/auth.service';
-import { Router, RouterStateSnapshot } from '@angular/router';
-import { NotificationService } from 'src/app/shared/notification.service';
-import { UploadService } from 'src/app/upload/upload.service';
-import { UploadData } from 'src/app/upload/upload-data.model';
+import { Router } from '@angular/router';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';

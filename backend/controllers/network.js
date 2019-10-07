@@ -49,7 +49,7 @@ exports.update = async(req, res, next) => {
 
 exports.getMyNetwork = async(req, res, next) => {
     try {
-        console.log(req.query);
+        // console.log(req.query);
         // let network = await Network.find().exec(); // { 'requesteeId': req.query.requesteeId }
         let network = await Network.find({ 'requesteeId': req.query.requesterId })
             .populate({

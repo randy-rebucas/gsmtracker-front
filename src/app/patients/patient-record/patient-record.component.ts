@@ -143,7 +143,7 @@ extends SecureComponent
     super.doInit();
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      this.patientId = paramMap.get('patientId');
+      this.patientId = paramMap.get('userId');
     });
 
     this.queService.get(this.patientId).subscribe((res) => {

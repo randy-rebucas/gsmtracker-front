@@ -58,7 +58,7 @@ exports.getAll = async(req, res, next) => {
         //     newEncounters.push(myObj);
         // });
         // let count = await Appointment.countDocuments({ 'licenseId': req.query.licenseId });
-        console.log(encounter);
+        // console.log(encounter);
         res.status(200).json({
             encounters: encounter
         });

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const recordPrescriptionSchema = mongoose.Schema({
     created: { type: Date },
-    patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
+    patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     prescriptions: [{
       maintenableFlg: { type: Boolean },
       medicine: { type: String },
