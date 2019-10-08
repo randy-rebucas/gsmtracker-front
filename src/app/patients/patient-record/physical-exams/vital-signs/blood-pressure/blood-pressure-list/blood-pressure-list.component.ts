@@ -1,38 +1,42 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../../../../auth/auth.service';
-import { Router, RouterStateSnapshot, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../../../../auth/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
-import { WeightData } from '../../../models/weight-data.model';
-import { WeightService } from '../../../services/weight.service';
-import { WeightEditComponent } from '../weight-edit/weight-edit.component';
-
-import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent } from '@angular/material';
 import { DialogService } from 'src/app/shared/dialog.service';
+
+import { BpData } from '../../../../models/bp-data.model';
+import { BpService } from '../../../../services/bp.service';
+import { BloodPressureEditComponent } from '../blood-pressure-edit/blood-pressure-edit.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
-  selector: 'app-weight-list',
-  templateUrl: './weight-list.component.html',
+  selector: 'app-blood-pressure-list',
+  templateUrl: './blood-pressure-list.component.html',
   styles: [`
   .hide {
     display: none;
   }
   #no-data {
-    width: 100%;
-    text-align: center;
+      width: 100%;
+      text-align: center;
   }
   `]
 })
-export class WeightListComponent
+export class BloodPressureListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  records: WeightService[] = [];
-
+  records: BpService[] = [];
   public recordsSub: Subscription;
+
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['systolic', 'diastolic', 'created', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
     public authService: AuthService,
@@ -40,36 +44,31 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public weightService: WeightService,
+    public bpService: BpService,
     private dialogService: DialogService,
+    private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
 
-    private notificationService: NotificationService,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: WeightService
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: BpService
     ) {
       super(authService, router, dialog, appconfig);
-      this.activatedRoute.parent.parent.parent.params.subscribe(
+      this.activatedRoute.parent.parent.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.userId;
         }
       );
     }
 
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['weight', 'created', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
-
   ngOnInit() {
     super.doInit();
 
-    this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
-    this.recordsSub = this.weightService
+    this.bpService.getAll(this.perPage, this.currentPage, this.patientId);
+    this.recordsSub = this.bpService
       .getUpdateListener()
-      .subscribe((weightData: {weights: WeightData[], count: number}) => {
+      .subscribe((bpData: {bps: BpData[], count: number}) => {
         this.isLoading = false;
-        this.total = weightData.count;
-        this.dataSource = new MatTableDataSource(weightData.weights);
+        this.total = bpData.count;
+        this.dataSource = new MatTableDataSource(bpData.bps);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
@@ -86,7 +85,7 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
+    this.bpService.getAll(this.perPage, this.currentPage, this.patientId);
   }
 
   onCreate() {
@@ -97,27 +96,27 @@ implements OnInit, OnDestroy {
       dialogButton: 'Save',
       patient: this.patientId
     };
-    super.onPopup(args, WeightEditComponent);
+    super.onPopup(args, BloodPressureEditComponent);
   }
 
-  onEdit(weightId) {
+  onEdit(bloodPressureId) {
     const args = {
       width: '30%',
-      id: weightId,
+      id: bloodPressureId,
       dialogTitle: 'Update Record',
       dialogButton: 'Update',
       patient: this.patientId
     };
-    super.onPopup(args, WeightEditComponent);
+    super.onPopup(args, BloodPressureEditComponent);
   }
 
-  onDelete(weightId) {
+  onDelete(bloodPressureId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.weightService.delete(weightId).subscribe(() => {
+        this.bpService.delete(bloodPressureId).subscribe(() => {
+          this.bpService.getAll(this.perPage, this.currentPage, this.patientId);
           this.notificationService.warn('! Deleted successfully');
-          this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
         });
       }
     });

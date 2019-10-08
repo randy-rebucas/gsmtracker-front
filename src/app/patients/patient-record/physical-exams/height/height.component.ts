@@ -7,8 +7,7 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
   selector: 'app-height',
-  templateUrl: './height.component.html',
-  styleUrls: ['./height.component.css']
+  templateUrl: './height.component.html'
 })
 export class HeightComponent
 extends SecureComponent

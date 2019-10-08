@@ -17,7 +17,15 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-height-list',
   templateUrl: './height-list.component.html',
-  styleUrls: ['./height-list.component.css']
+  styles: [`
+  .hide {
+    display: none;
+  }
+  #no-data {
+      width: 100%;
+      text-align: center;
+  }
+`]
 })
 export class HeightListComponent
 extends SecureComponent

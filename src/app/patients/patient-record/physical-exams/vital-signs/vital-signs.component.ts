@@ -6,10 +6,18 @@ import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
-  selector: 'app-weight',
-  templateUrl: './weight.component.html'
+  selector: 'app-vital-signs',
+  templateUrl: './vital-signs.component.html',
+  styles: [`
+  .warn {
+    color: #ff4081;
+  }
+  .button-row a {
+    margin-right: 8px;
+  }
+  `]
 })
-export class WeightComponent
+export class VitalSignsComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 

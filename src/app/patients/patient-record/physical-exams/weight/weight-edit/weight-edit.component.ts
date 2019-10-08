@@ -15,7 +15,28 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 @Component({
   selector: 'app-weight-edit',
   templateUrl: './weight-edit.component.html',
-  styleUrls: ['./weight-edit.component.css']
+  styles: [`
+  mat-form-field {
+    width: 100%;
+  }
+  .form-field-block {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    flex-basis: auto;
+  }
+  mat-spinner {
+    margin: auto;
+  }
+  .mat-dialog-title button {
+    float: right;
+    border: none;
+  }
+  .mat-dialog-title {
+    border-bottom: 1px solid rgb(169, 169, 169);
+    padding: 0 0 1em 0;
+  }
+  `]
 })
 export class WeightEditComponent
 extends SecureComponent

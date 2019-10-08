@@ -1,18 +1,19 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, NgControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
-import { AuthService } from '../../../../../auth/auth.service';
+import { AuthService } from '../../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
-import { HeightService } from '../../../services/height.service';
-import { HeightData } from '../../../models/height-data.model';
+
+import { PrService } from '../../../../services/pr.service';
+import { PrData } from '../../../../models/pr.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
-  selector: 'app-height-edit',
-  templateUrl: './height-edit.component.html',
+  selector: 'app-pulse-rate-edit',
+  templateUrl: './pulse-rate-edit.component.html',
   styles: [`
   mat-form-field {
     width: 100%;
@@ -36,13 +37,13 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   }
   `]
 })
-export class HeightEditComponent
+export class PulseRateEditComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
+  prData: PrData;
 
   private mode = 'create';
 
-  heightData: HeightData;
   dialogTitle: string;
   btnLabel: string;
 
@@ -52,10 +53,9 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public heightService: HeightService,
-
+    public prService: PrService,
     private notificationService: NotificationService,
-    public dialogRef: MatDialogRef < HeightEditComponent >,
+    public dialogRef: MatDialogRef < PulseRateEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
       super(authService, router, dialog, appconfig);
@@ -69,7 +69,7 @@ implements OnInit, OnDestroy {
     super.doInit();
 
     this.form = new FormGroup({
-      height: new FormControl(null, {
+      pulserate: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(5) ]
       }),
       record_date: new FormControl(new Date(), {
@@ -80,17 +80,17 @@ implements OnInit, OnDestroy {
     if (this.recordId) {
           this.mode = 'edit';
           this.isLoading = true;
-          this.heightService.get(this.recordId).subscribe(recordData => {
+          this.prService.get(this.recordId).subscribe(recordData => {
             this.isLoading = false;
-            this.heightData = {
+            this.prData = {
               id: recordData._id,
-              height: recordData.height,
+              pulserate: recordData.pulserate,
               created: recordData.created,
               patientId: recordData.patientId
             };
             this.form.setValue({
-              height: this.heightData.height,
-              record_date: this.heightData.created
+              pulserate: this.prData.pulserate,
+              record_date: this.prData.created
             });
           });
         } else {
@@ -105,25 +105,25 @@ implements OnInit, OnDestroy {
       return;
     }
     if (this.mode === 'create') {
-      this.heightService.insert(
-        this.form.value.height,
+      this.prService.insert(
+        this.form.value.pulserate,
         this.form.value.record_date,
         this.patientId
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.heightService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.prService.getAll(this.perPage, this.currentPage, this.patientId);
       });
     } else {
-      this.heightService.update(
+      this.prService.update(
         this.recordId,
-        this.form.value.height,
+        this.form.value.pulserate,
         this.form.value.record_date,
         this.patientId
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.heightService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.prService.getAll(this.perPage, this.currentPage, this.patientId);
       });
     }
   }

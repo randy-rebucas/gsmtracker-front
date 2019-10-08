@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../../../../auth/auth.service';
-import { Router, RouterStateSnapshot, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../../../../auth/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
-import { WeightData } from '../../../models/weight-data.model';
-import { WeightService } from '../../../services/weight.service';
-import { WeightEditComponent } from '../weight-edit/weight-edit.component';
+import { TemperatureData } from '../../../../models/temperature-data.model';
+import { TemperatureService } from '../../../../services/temperature.service';
+import { TemperatureEditComponent } from '../temperature-edit/temperature-edit.component';
 
 import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
 import { DialogService } from 'src/app/shared/dialog.service';
@@ -14,25 +14,30 @@ import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
-  selector: 'app-weight-list',
-  templateUrl: './weight-list.component.html',
+  selector: 'app-temperature-list',
+  templateUrl: './temperature-list.component.html',
   styles: [`
   .hide {
     display: none;
   }
   #no-data {
-    width: 100%;
-    text-align: center;
+      width: 100%;
+      text-align: center;
   }
   `]
 })
-export class WeightListComponent
+export class TemperatureListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  records: WeightService[] = [];
+  records: TemperatureService[] = [];
 
   public recordsSub: Subscription;
+
+  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ['temperature', 'created', 'action'];
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
     public authService: AuthService,
@@ -40,36 +45,31 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public weightService: WeightService,
+    public temperatureService: TemperatureService,
     private dialogService: DialogService,
+    private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
 
-    private notificationService: NotificationService,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: WeightService
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: TemperatureService
     ) {
       super(authService, router, dialog, appconfig);
-      this.activatedRoute.parent.parent.parent.params.subscribe(
+      this.activatedRoute.parent.parent.parent.parent.params.subscribe(
         (param) => {
           this.patientId = param.userId;
         }
       );
     }
 
-    dataSource: MatTableDataSource<any>;
-    displayedColumns: string[] = ['weight', 'created', 'action'];
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
-
   ngOnInit() {
     super.doInit();
 
-    this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
-    this.recordsSub = this.weightService
+    this.temperatureService.getAll(this.perPage, this.currentPage, this.patientId);
+    this.recordsSub = this.temperatureService
       .getUpdateListener()
-      .subscribe((weightData: {weights: WeightData[], count: number}) => {
+      .subscribe((temperatureData: {temperatures: TemperatureData[], count: number}) => {
         this.isLoading = false;
-        this.total = weightData.count;
-        this.dataSource = new MatTableDataSource(weightData.weights);
+        this.total = temperatureData.count;
+        this.dataSource = new MatTableDataSource(temperatureData.temperatures);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
@@ -86,7 +86,7 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
+    this.temperatureService.getAll(this.perPage, this.currentPage, this.patientId);
   }
 
   onCreate() {
@@ -97,27 +97,27 @@ implements OnInit, OnDestroy {
       dialogButton: 'Save',
       patient: this.patientId
     };
-    super.onPopup(args, WeightEditComponent);
+    super.onPopup(args, TemperatureEditComponent);
   }
 
-  onEdit(weightId) {
+  onEdit(temperatureId) {
     const args = {
       width: '30%',
-      id: weightId,
+      id: temperatureId,
       dialogTitle: 'Update Record',
       dialogButton: 'Update',
       patient: this.patientId
     };
-    super.onPopup(args, WeightEditComponent);
+    super.onPopup(args, TemperatureEditComponent);
   }
 
-  onDelete(weightId) {
+  onDelete(temperatureId) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.weightService.delete(weightId).subscribe(() => {
+        this.temperatureService.delete(temperatureId).subscribe(() => {
           this.notificationService.warn('! Deleted successfully');
-          this.weightService.getAll(this.perPage, this.currentPage, this.patientId);
+          this.temperatureService.getAll(this.perPage, this.currentPage, this.patientId);
         });
       }
     });

@@ -3,16 +3,16 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
-import { AuthService } from '../../../../../auth/auth.service';
+import { AuthService } from '../../../../../../auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
-import { HeightService } from '../../../services/height.service';
-import { HeightData } from '../../../models/height-data.model';
+import { BpService } from '../../../../services/bp.service';
+import { BpData } from '../../../../models/bp-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
-  selector: 'app-height-edit',
-  templateUrl: './height-edit.component.html',
+  selector: 'app-blood-pressure-edit',
+  templateUrl: './blood-pressure-edit.component.html',
   styles: [`
   mat-form-field {
     width: 100%;
@@ -36,15 +36,16 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   }
   `]
 })
-export class HeightEditComponent
+export class BloodPressureEditComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
   private mode = 'create';
 
-  heightData: HeightData;
   dialogTitle: string;
   btnLabel: string;
+
+  bpData: BpData;
 
   constructor(
     public authService: AuthService,
@@ -52,10 +53,9 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public heightService: HeightService,
-
+    public bpService: BpService,
     private notificationService: NotificationService,
-    public dialogRef: MatDialogRef < HeightEditComponent >,
+    public dialogRef: MatDialogRef < BloodPressureEditComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
       super(authService, router, dialog, appconfig);
@@ -69,7 +69,10 @@ implements OnInit, OnDestroy {
     super.doInit();
 
     this.form = new FormGroup({
-      height: new FormControl(null, {
+        systolic: new FormControl(null, {
+        validators: [Validators.required, Validators.maxLength(5) ]
+      }),
+      diastolic: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(5) ]
       }),
       record_date: new FormControl(new Date(), {
@@ -80,17 +83,19 @@ implements OnInit, OnDestroy {
     if (this.recordId) {
           this.mode = 'edit';
           this.isLoading = true;
-          this.heightService.get(this.recordId).subscribe(recordData => {
+          this.bpService.get(this.recordId).subscribe(recordData => {
             this.isLoading = false;
-            this.heightData = {
+            this.bpData = {
               id: recordData._id,
-              height: recordData.height,
+              systolic: recordData.systolic,
+              diastolic: recordData.diastolic,
               created: recordData.created,
               patientId: recordData.patientId
             };
             this.form.setValue({
-              height: this.heightData.height,
-              record_date: this.heightData.created
+                systolic: this.bpData.systolic,
+                diastolic: this.bpData.diastolic,
+              record_date: this.bpData.created
             });
           });
         } else {
@@ -105,25 +110,27 @@ implements OnInit, OnDestroy {
       return;
     }
     if (this.mode === 'create') {
-      this.heightService.insert(
-        this.form.value.height,
+      this.bpService.insert(
+        this.form.value.systolic,
+        this.form.value.diastolic,
         this.form.value.record_date,
         this.patientId
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.heightService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.bpService.getAll(this.perPage, this.currentPage, this.patientId);
       });
     } else {
-      this.heightService.update(
+      this.bpService.update(
         this.recordId,
-        this.form.value.height,
+        this.form.value.systolic,
+        this.form.value.diastolic,
         this.form.value.record_date,
         this.patientId
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.heightService.getAll(this.perPage, this.currentPage, this.patientId);
+        this.bpService.getAll(this.perPage, this.currentPage, this.patientId);
       });
     }
   }
