@@ -8,6 +8,15 @@ import { SecureComponent } from 'src/app/secure/secure.component';
   .physical-exam-wrap {
     margin-top: 1em;
   }
+  :host /deep/ .mat-list-item-content {
+    color: #fff;
+    font-size: 14px;
+  }
+  h3.mat-subheader {
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 100 !important;
+  }
   `]
 })
 export class PhysicalExamsComponent

@@ -31,6 +31,15 @@ import { NotesService } from '../services/notes.service';
     right: 0;
     top: 5px;
   }
+  :host /deep/ .mat-list-item-content {
+    color: #fff;
+    font-size: 14px;
+  }
+  h3.mat-subheader {
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 100 !important;
+  }
   `]
 })
 export class ProgressNotesComponent
