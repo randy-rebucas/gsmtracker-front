@@ -271,11 +271,9 @@ exports.uploadProfile = async(req, res, next) => {
         if (!userPicture) {
             throw new Error('Error in updating profile picture!');
         }
-        const url = req.protocol + '://' + req.get('host');
         const newUser = new User({
             _id: req.body.userId,
             userType: req.body.userType,
-            // avatarPath: url + '/images/' + req.file.filename
             avatarPath: `data:${req.file.mimetype};base64,${userPicture.toString('base64')}`
         });
 
