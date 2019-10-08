@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const sharp = require('sharp');
 const Auth = require('../models/auth');
 const License = require('../models/license');
 const User = require('../models/user');
@@ -19,9 +19,9 @@ exports.createUser = async(req, res, next) => {
         }
 
         const newSetting = new Setting({
-          licenseId: license._id,
-          clinicName: req.body.clinicname,
-          clinicOwner: req.person.firstname + ', ' + req.person.lastname
+            licenseId: license._id,
+            clinicName: req.body.clinicname,
+            clinicOwner: req.person.firstname + ', ' + req.person.lastname
         });
         let setting = await newSetting.save();
 
@@ -267,15 +267,22 @@ exports.delete = async(req, res, next) => {
 
 exports.uploadProfile = async(req, res, next) => {
     try {
+        let userPicture = await sharp(req.file.path).resize(200, 200).toBuffer();
+        if (!userPicture) {
+            throw new Error('Error in updating profile picture!');
+        }
         const url = req.protocol + '://' + req.get('host');
         const newUser = new User({
             _id: req.body.userId,
             userType: req.body.userType,
-            avatarPath: url + '/images/' + req.file.filename
+            // avatarPath: url + '/images/' + req.file.filename
+            avatarPath: `data:${req.file.mimetype};base64,${userPicture.toString('base64')}`
         });
 
-        let userProfile = await User.updateOne({ _id: req.params.userId }, newUser);
-
+        await User.updateOne({ _id: req.params.userId }, newUser);
+        res.status(200).json({
+            message: 'Profile picture updated!'
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message

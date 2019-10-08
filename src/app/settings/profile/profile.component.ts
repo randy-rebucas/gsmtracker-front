@@ -11,6 +11,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
+import { ImageComponent } from 'src/app/upload/image/image.component';
 
 @Component({
   selector: 'app-profile',
@@ -212,6 +213,17 @@ implements OnInit, OnDestroy {
       this.notificationService.success(':: Updated successfully');
     });
 
+  }
+
+  onImageSelect() {
+    const args = {
+      width: '30%',
+      id: null,
+      dialogTitle: 'Upload Image',
+      dialogButton: 'Upload',
+      patient: this.patientId
+    };
+    super.onPopup(args, ImageComponent);
   }
 
   onFileChanged(event: Event) {

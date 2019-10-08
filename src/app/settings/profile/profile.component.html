@@ -6,6 +6,9 @@
                 <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Profile Picture">
                     <mat-icon>create</mat-icon>
                 </button>
+                <!-- <button mat-icon-button type="button" color="primary" (click)="onImageSelect()" aria-label="Change Profile Picture">
+                    <mat-icon>create</mat-icon>
+                </button> -->
                 <div *ngIf="imagePreview; then thenBlock else elseBlock"></div>
                 <ng-template #thenBlock>
                     <img [src]="imagePreview">
@@ -14,7 +17,7 @@
                     <img src="assets/images/blank.png" alt="" />
                 </ng-template>
             </div>
-            <p>Profile Picture</p>
+            <p>Profile Picture (200x200) pixels</p>
         </form>
     </div>
     <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="75%" fxFlex.md="100%" class="">

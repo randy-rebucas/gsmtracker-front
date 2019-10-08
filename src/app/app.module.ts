@@ -37,7 +37,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 import { SecureComponent } from './secure/secure.component';
-import { ProfileImageComponent } from './upload/profile-image/profile-image.component';
+import { ImageComponent } from './upload/image/image.component';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -51,6 +51,7 @@ import { StatModule } from './shared/stat/stat.module';
 import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { EncountersComponent } from './shared/encounters/encounters.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -82,7 +83,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     DialogComponent,
     SecureComponent,
     QueComponent,
-    ProfileImageComponent,
+    ImageComponent,
     EncountersComponent
   ],
   imports: [
@@ -113,7 +114,8 @@ export const createTranslateLoader = (http: HttpClient) => {
     ChartsModule,
     WebcamModule,
     PerfectScrollbarModule,
-    EditorModule
+    EditorModule,
+    ImageCropperModule
   ],
   providers: [
     AppConfiguration,
@@ -148,7 +150,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     DialogComponent,
     RxPadComponent,
     QrCodeScannerComponent,
-    ProfileImageComponent,
+    ImageComponent,
   ]
 })
 export class AppModule { }

@@ -6,6 +6,7 @@ const checkAuth = require('../middleware/check-auth');
 
 const preAuth = require('../middleware/auth');
 const extractFile = require('../middleware/file');
+const resizeFile = require('../middleware/resize');
 
 const router = express.Router();
 
