@@ -54,6 +54,7 @@ table#rxpad tr th {
     font-size: 14px;
     font-family: monospace;
     text-align: left;
+    vertical-align: bottom;
 }
 
 table#rxpad tbody tr:last-child td {
@@ -111,6 +112,7 @@ table#prescription-heading tr:last-child td {
     border-bottom: 1px solid #a9a9a9;
     font-weight: 600;
 }
+
 tr.address th {
-  vertical-align: top;
+    vertical-align: top;
 }

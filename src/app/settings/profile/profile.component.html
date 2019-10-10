@@ -1,5 +1,8 @@
 <div fxLayout='row wrap' fxLayoutGap="10px">
-    <div fxFlex="15%" fxFlex.xs="100%" fxFlex.sm="15%" fxFlex.md="100%" class="">
+    <div fxFlex="15%" fxFlex.xs="100%" fxFlex.sm="15%" fxFlex.md="100%" style="position: relative;">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <form [formGroup]="profileForm" (submit)="onSavePicture()" *ngIf="!isLoading">
             <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
             <div class="image-preview">
@@ -23,7 +26,10 @@
             <p>Profile Picture (200x200) pixels</p>
         </form>
     </div>
-    <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="75%" fxFlex.md="100%" class="">
+    <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="75%" fxFlex.md="100%" style="position: relative;">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
         <form [formGroup]="form" class="normal-form" (submit)="onUpdate()" *ngIf="!isLoading">
             <h4 subheading-1>Basic Information</h4>
             <div class="form-field-block">

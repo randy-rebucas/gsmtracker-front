@@ -31,12 +31,12 @@ export class SettingsGeneralService {
         logoPath: string,
         clinicName: string,
         clinicOwner: string,
-        clinicAddress: string,
         clinicEmail: string,
         prc: number,
         ptr: number,
         s2: string,
         nobreak: boolean,
+        address: []
         clinicPhone: [],
         clinicHours: []}>(
         BACKEND_URL + '/' + licenseId
@@ -50,7 +50,7 @@ export class SettingsGeneralService {
       return this.http.post<{ message: string, record: SettingsGeneralData }>(BACKEND_URL, recordData);
     }
 
-    update(id: string, licenseId: string, name: string, owner: string, address: string, email: string, prc: string, ptr: string, s2: string, nobreak: boolean, phones: [], hours: []) {
+    update(id: string, licenseId: string, name: string, owner: string, address: [], email: string, prc: string, ptr: string, s2: string, nobreak: boolean, phones: [], hours: []) {
 
       const settingData = {
           id: id, name: name, owner: owner, address: address, email: email, prc: prc, ptr: ptr, s2: s2, nobreak: nobreak, phones: phones, hours: hours

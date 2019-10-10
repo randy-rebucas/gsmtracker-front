@@ -6,13 +6,18 @@ exports.create = async(req, res, next) => {
             licenseId: req.body.licenseId,
             clinicName: req.body.name,
             clinicOwner: req.body.owner,
-            clinicAddress: req.body.address,
+            // clinicAddress: req.body.address,
             clinicUrl: req.body.url,
             clinicEmail: req.body.email,
             prc: req.body.prc,
             ptr: req.body.ptr,
             s2: req.body.s2
         });
+        addressData = req.body.address;
+        for (let index = 0; index < addressData.length; index++) {
+            setting.clinicAddress.push(addressData[index]);
+        }
+        pho
         phoneData = req.body.phones;
         for (let index = 0; index < phoneData.length; index++) {
             setting.clinicPhone.push(phoneData[index]);
@@ -46,13 +51,16 @@ exports.update = async(req, res, next) => {
             _id: req.body.id,
             clinicName: req.body.name,
             clinicOwner: req.body.owner,
-            clinicAddress: req.body.address,
             clinicEmail: req.body.email,
             prc: req.body.prc,
             ptr: req.body.ptr,
             s2: req.body.s2,
             nobreak: req.body.nobreak
         });
+        addressData = req.body.address;
+        for (let index = 0; index < addressData.length; index++) {
+            setting.address.push(addressData[index]);
+        }
         phoneData = req.body.phones;
         for (let index = 0; index < phoneData.length; index++) {
             setting.clinicPhone.push(phoneData[index]);

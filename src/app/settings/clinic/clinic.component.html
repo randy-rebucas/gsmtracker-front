@@ -1,6 +1,9 @@
 <div fxLayout='row wrap' fxLayoutGap="10px">
-    <div fxFlex="15%" fxFlex.xs="100%" fxFlex.sm="15%" fxFlex.md="100%" class="">
-        <form [formGroup]="logoForm" (submit)="onSavePicture()">
+    <div fxFlex="15%" fxFlex.xs="100%" fxFlex.sm="15%" fxFlex.md="100%" style="position: relative;">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
+        <form [formGroup]="logoForm" (submit)="onSavePicture()" *ngIf="!isLoading">
             <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
             <div class="image-preview">
                 <div *ngIf="isLoadingPic" class="loading">
@@ -20,8 +23,11 @@
             <p>Clinic Logo (200x200) pixels</p>
         </form>
     </div>
-    <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="75%" fxFlex.md="100%" class="">
-        <form [formGroup]="form" class="normal-form" (submit)="onSaveGenSetting()">
+    <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="75%" fxFlex.md="100%" style="position: relative;">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
+        <form [formGroup]="form" class="normal-form" (submit)="onSaveGenSetting()" *ngIf="!isLoading">
             <h4 subheading-1>Clinic Information</h4>
             <div class="form-field-block">
                 <mat-form-field>
@@ -31,11 +37,39 @@
                     <input matInput type="text" formControlName="clinicOwner" placeholder="Clinic Owner">
                 </mat-form-field>
             </div>
-            <div class="form-field-block">
-                <mat-form-field>
-                    <textarea matInput formControlName="clinicAddress" rows="4" placeholder="Clinic Address"></textarea>
-                </mat-form-field>
-            </div>
+
+            <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
+                <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address1" placeholder="Street Address">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="city" placeholder="City">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="province" placeholder="Province">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="postalCode" placeholder="Postal Code">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="country" placeholder="Country">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+
             <div class="form-field-block">
                 <mat-form-field>
                     <input matInput type="text" formControlName="clinicEmail" placeholder="Clinic Email">

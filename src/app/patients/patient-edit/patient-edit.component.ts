@@ -112,8 +112,8 @@ implements OnInit, OnDestroy {
 
   addMetaGroup() {
     return this.fb.group({
-      label: ['', [Validators.required]],
-      value: ['', [Validators.required]]
+      label: [''],
+      value: ['']
     });
   }
 

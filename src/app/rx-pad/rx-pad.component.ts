@@ -36,7 +36,7 @@ implements OnInit, OnDestroy {
 
   clinicOwner: string;
   clinicName: string;
-  clinicAddress: string;
+  clinicAddress: any[];
   clinicPhone: any[];
   clinicHours: any[];
   prc: number;
@@ -109,7 +109,7 @@ implements OnInit, OnDestroy {
          */
         this.clinicOwner = results.settingData.clinicOwner;
         this.clinicName = results.settingData.clinicName;
-        this.clinicAddress = results.settingData.clinicAddress;
+        this.clinicAddress = results.settingData.address;
         this.clinicPhone = results.settingData.clinicPhone;
         this.clinicHours = results.settingData.clinicHours;
         this.prc = results.settingData.prc;
@@ -162,7 +162,19 @@ implements OnInit, OnDestroy {
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
       pdfDoc.setFontType('regular');
-      pdfDoc.text(this.clinicAddress, 10, 35, null, null, 'left');
+      // pdfDoc.text(this.clinicAddress, 10, 35, null, null, 'left');
+      this.clinicAddress.forEach(element => {
+          pdfDoc.text(element.address1, 10, 35, null, null, 'left');
+          let gap = 0;
+          if (element.address2) {
+            gap = 4;
+            pdfDoc.text(element.address2, 10, 39, null, null, 'left');
+          }
+          pdfDoc.text('' + element.postalCode + '', 10, 39 + gap, null, null, 'left');
+          pdfDoc.text(element.province, 20, 39 + gap, null, null, 'left');
+          pdfDoc.text(element.city, 33, 39 + gap, null, null, 'left');
+          pdfDoc.text(element.country, 10, 43 + gap, null, null, 'left');
+      });
       // contact numbers
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
@@ -171,7 +183,7 @@ implements OnInit, OnDestroy {
       this.clinicPhone.forEach(element => {
         contacts.push(element.contact);
       });
-      pdfDoc.text('Tel no: ' + contacts.join('/'), 10, 44, null, null, 'left');
+      pdfDoc.text('Tel no: ' + contacts.join('/'), 95, 47, null, null, 'left');
       // clinic hour text
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
@@ -191,10 +203,10 @@ implements OnInit, OnDestroy {
         pdfDoc.setFontSize(10);
         pdfDoc.setFont('courier');
         pdfDoc.setFontType('regular');
-        pdfDoc.text('No Noon Break', 95, 44, null, null, 'left');
+        pdfDoc.text('No Noon Break', 95, 43, null, null, 'left');
       }
       // line
-      pdfDoc.line(10, 48, 135, 48);
+      pdfDoc.line(10, 50, 135, 50);
       // patient text
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
@@ -206,13 +218,11 @@ implements OnInit, OnDestroy {
       pdfDoc.setFontType('regular');
       pdfDoc.text(this.firstname + ' ' + this.midlename + ' ' + this.lastname, 35, 54, null, null, 'left');
       // birthdate text
-      pdfDoc.line(10, 48, 135, 48);
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
       pdfDoc.setFontType('regular');
       pdfDoc.text('Birthdate:', 95, 54, null, null, 'left');
       // birthdate
-      pdfDoc.line(10, 48, 135, 48);
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
       pdfDoc.setFontType('regular');

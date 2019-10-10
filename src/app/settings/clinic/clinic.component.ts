@@ -107,18 +107,6 @@ implements OnInit, OnDestroy {
     private fb: FormBuilder
     ) {
       super(authService, router, dialog, appconfig);
-      this.form = this.fb.group({
-        clinicName: ['', [Validators.required]],
-        clinicOwner: ['', [Validators.required]],
-        clinicAddress: [''],
-        clinicEmail: [''],
-        prc: [''],
-        ptr: [''],
-        s2: [''],
-        nobreak: [''],
-        clinicPhone: this.fb.array([this.addClinicContactGroup()]),
-        clinicHours: this.fb.array([this.addClinicHourGroup()])
-      });
 
   }
 
@@ -132,23 +120,44 @@ implements OnInit, OnDestroy {
       })
     });
 
+    this.form = this.fb.group({
+      clinicName: ['', [Validators.required]],
+      clinicOwner: ['', [Validators.required]],
+      clinicEmail: [''],
+      prc: [''],
+      ptr: [''],
+      s2: [''],
+      nobreak: [''],
+      addresses: this.fb.array([this.addAddressGroup()]),
+      clinicPhone: this.fb.array([this.addClinicContactGroup()]),
+      clinicHours: this.fb.array([this.addClinicHourGroup()])
+    });
+
+
     this.populateForm();
   }
 
   populateForm() {
     this.settingsGeneralService.get(this.licenseId).subscribe(settingData => {
+      console.log(settingData);
+      this.isLoading = false;
       this.imagePreview = settingData.logoPath;
-
       this.form.patchValue({
         clinicName: settingData.clinicName,
         clinicOwner: settingData.clinicOwner,
-        clinicAddress: settingData.clinicAddress,
         clinicEmail: settingData.clinicEmail,
         prc: settingData.prc,
         ptr: settingData.ptr,
         s2: settingData.s2,
         nobreak: settingData.nobreak
       });
+
+      const addressControl = this.form.controls.addresses as FormArray;
+      const address = settingData.address;
+      for (let i = 1; i < address.length; i++) {
+        addressControl.push(this.addAddressGroup());
+      }
+      this.form.patchValue({addresses: address});
 
       const contactControl = this.form.controls.clinicPhone as FormArray;
       const contacts = settingData.clinicPhone;
@@ -168,6 +177,17 @@ implements OnInit, OnDestroy {
     });
   }
 
+  addAddressGroup() {
+    return this.fb.group({
+      address1: ['', [Validators.required]],
+      address2: [''],
+      city: ['', [Validators.required]],
+      province: ['', [Validators.required]],
+      postalCode: ['', [Validators.required]],
+      country: ['', [Validators.required]]
+    });
+  }
+
   addClinicHourGroup() {
     return this.fb.group({
       morningOpen: [''],
@@ -179,6 +199,10 @@ implements OnInit, OnDestroy {
     return this.fb.group({
       contact: ['']
     });
+  }
+
+  get addressArray() {
+    return this.form.get('addresses') as FormArray;
   }
 
   get hourArray() {
@@ -215,7 +239,7 @@ implements OnInit, OnDestroy {
       this.licenseId,
       this.form.value.clinicName,
       this.form.value.clinicOwner,
-      this.form.value.clinicAddress,
+      this.form.value.addresses,
       this.form.value.clinicEmail,
       this.form.value.prc,
       this.form.value.ptr,
@@ -244,7 +268,7 @@ implements OnInit, OnDestroy {
         console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
       } else if (event.type === HttpEventType.Response) {
         console.log(event.body.imagePath); // handle event here
-        this.isLoadingPic = false;
+        // this.isLoadingPic = false;
         this.imagePreview = event.body.imagePath;
         this.notificationService.success(':: ' + event.body.message);
       }
