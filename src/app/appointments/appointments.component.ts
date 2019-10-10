@@ -47,7 +47,7 @@ export class AppointmentsComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  public isCalendarView = false;
+  public isCalendarView = true;
 
   constructor(
     public authService: AuthService,
