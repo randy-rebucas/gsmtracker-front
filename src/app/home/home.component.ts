@@ -99,6 +99,10 @@ implements OnInit, OnDestroy {
     responsive: true
   };
 
+  years = [];
+  canceled = [];
+  done = [];
+
   ngOnInit() {
     super.doInit();
 
@@ -117,25 +121,32 @@ implements OnInit, OnDestroy {
 
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
-    // this.encountersService.getAll(this.licenseId);
-    // this.encountersChartSub = this.encountersService
-    // .getUpdateListener()
-    // .subscribe((chartData: {encounters: EncountersData[], labels: []}) => {
-    //     this.isLoading = false;
-    //     console.log(chartData);
-    //   });
+    this.encountersService.getAll(this.licenseId);
+    this.encountersChartSub = this.encountersService
+    .getUpdateListener()
+    .subscribe((chartData: {encounters: EncountersData[]}) => {
+        this.isLoading = false;
+        for (const encounter of chartData.encounters) {
+          this.years.push(encounter.label);
+          this.canceled.push(encounter.canceled);
+          this.done.push(encounter.done);
+        }
+    });
+
+    this.barChartType = 'bar';
+    this.barChartLegend = true;
+    this.barChartLabels = this.years;
+    this.barChartData = [
+      {data: this.canceled, label: 'Cancelled'},
+      {data: this.done, label: 'Done'}
+    ];
+
     this.pieChartLabels = ['Success', 'Cancelled'];
     this.pieChartLegend = true;
     this.pieChartData = [120, 150];
     this.pieChartType = 'pie';
 
-    this.barChartType = 'bar';
-    this.barChartLegend = true;
-    this.barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-    this.barChartData = [
-      {data: [65, 59, 80, 81, 56, 55, 40], label: 'Cancelled'},
-      {data: [28, 48, 40, 19, 86, 27, 90], label: 'Done'}
-    ];
+
   }
 
   onResize(event) {

@@ -36,17 +36,55 @@ exports.update = async(req, res, next) => {
 
 exports.getAll = async(req, res, next) => {
     try {
-        const encounter = await Encounter.find({ 'licenseId': req.query.licenseId })
-            .sort({ 'created': 'asc' })
-            .populate({
-              path: 'userId',
-              populate: {
-                path: 'personId',
-                model: Person
-              }
-            })
-            .exec();
+      console.log(req.query.licenseId);
+      const encounter = await Encounter.aggregate([
+        // { "$lookup": {
+        //   "from": "connections",
+        //   "localField": "_id",
+        //   "foreignField": "user",
+        //   "as": "connections"
+        // }},
 
+        // { $match: { licenseId: req.query.licenseId } },
+        // { $redact: {
+        //     $cond: [{ $eq: ["$licenseId", req.query.licenseId ] }, "$$KEEP",
+        //     "$$PRUNE" ]
+        //   }
+        // },
+        { $group:
+            {
+              _id:
+                {
+                  //day: {$dayOfMonth: "$created"},
+                  //month: {$month: "$created"},
+                  year: {$year: "$created"}
+                },
+                canceled: {$sum: { $cond: [{ $eq: ["$status", 1 ] }, 1, 0] }},
+                done: {$sum: { $cond: [{ $eq: ["$status", 2 ] }, 1, 0] }},
+                count: {$sum: 1}
+            }
+          },
+          { $sort: {count: 1} }
+        ]);
+        console.log(encounter);
+        // const encounter = await Encounter.find({ 'licenseId': req.query.licenseId })
+        //     .sort({ 'created': 'asc' })
+        //     .populate({
+        //       path: 'userId',
+        //       populate: {
+        //         path: 'personId',
+        //         model: Person
+        //       }
+        //     })
+        //     .exec();
+        // const chart = {
+        //   type: 'bar',
+        //   series: [
+        //     {
+        //       values: employeeInfo
+        //     }
+        //   ]
+        // };
         // newEncounters = [];
         // encounter.forEach(element => {
         //     var myObj = {

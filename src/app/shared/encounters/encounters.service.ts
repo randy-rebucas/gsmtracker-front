@@ -12,7 +12,7 @@ const BACKEND_URL = environment.apiUrl + '/encounter';
 
 export class EncountersService {
   private encounters: EncountersData[] = [];
-  private encountersUpdated = new Subject<{ encounters: EncountersData[], labels: [] }>();
+  private encountersUpdated = new Subject<{ encounters: EncountersData[] }>();
 
   constructor(
     private http: HttpClient
@@ -20,24 +20,28 @@ export class EncountersService {
 
   getAll(licenseId: string) {
     const queryParams = `?licenseId=${licenseId}`;
-    this.http.get<{message: string, encounters: any, labels: [] }>(
+    this.http.get<{message: string, encounters: any }>(
       BACKEND_URL + queryParams
     )
     .pipe(
       map(encounterData => {
-        return { encounters: encounterData.encounters.map(encounter => {
-          return {
-            id: encounter._id,
-            status: encounter.status
-          };
-        }), label: encounterData.labels};
+        return { encounters: encounterData.encounters.map(
+          encounter => {
+            return {
+              id: encounter._id,
+              label: encounter._id.year,
+              canceled: encounter.canceled,
+              done: encounter.done,
+              count: encounter.count
+            };
+          })
+        };
       })
     )
     .subscribe((transformData) => {
       this.encounters = transformData.encounters;
       this.encountersUpdated.next({
-        encounters: [...this.encounters],
-        labels: transformData.label
+        encounters: [...this.encounters]
       });
     });
   }

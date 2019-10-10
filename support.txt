@@ -126,14 +126,60 @@ clinics
     city
     physicians [
         {
-            _id: 
+            _id:
             name:
             address: {...}
         },
         {
-            _id: 
+            _id:
             name:
             address: {...}
         }
     ]
 
+///////
+col.find({}).toArray()
+ // creates promise with returned data from previous promise
+        .then(data => {
+          // creates employees variable to store JSON data form /api/data
+          let employees = data;
+          // creates empty employeeInfo array
+          let employeeInfo = [];
+          // loops through data from employee variable
+          employees.forEach(employee => {
+            // pushes values from employees variable to empty employeeInfo array
+            employeeInfo.push([employee.name, parseInt(employee.age)]);
+          });
+          // creates chart const with employeeInfo array
+          const chart = {
+            type: 'bar',
+            series: [
+              {
+                values: employeeInfo
+              }
+            ]
+          };
+          // renders zingchart to the page
+          zingchart.render({
+            id: 'chart',
+            data: chart,
+            height: '100%',
+            width: '100%'
+          });
+        })
+
+ this.data = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+                {
+                    fillColor: "rgba(220,220,220,0.4)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    data: [65, 59, 80, 81, 56, 55, 40]
+                },
+                {
+                    fillColor: "rgba(151,187,205,0.4)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    data: [28, 48, 40, 19, 86, 27, 90]
+                }
+            ]
+        };
