@@ -99,10 +99,16 @@ exports.uploadLogo = async(req, res, next) => {
             logoPath: `data:${req.file.mimetype};base64,${clinicLogo.toString('base64')}`
         });
 
-        await Setting.updateOne({ _id: req.params.settingId }, newSetting);
+        let setting = await Setting.updateOne({ _id: req.params.settingId }, newSetting);
+        if (!setting) {
+            throw new Error('Error in updating settings!');
+        }
+
         res.status(200).json({
+            imagePath: newSetting.logoPath,
             message: 'Clinic logo updated!'
         });
+
     } catch (error) {
         res.status(500).json({
             message: error.message

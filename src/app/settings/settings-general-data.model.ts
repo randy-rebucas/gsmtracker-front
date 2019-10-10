@@ -12,6 +12,7 @@ export interface SettingsGeneralData {
   nobreak: boolean;
   clinicPhone: Contact[];
   clinicHours: Hour[];
+  imagePath: string;
 }
 
 export interface Contact {

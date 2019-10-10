@@ -65,7 +65,7 @@ export class SettingsGeneralService {
       uploadData.append('settingId', settingId);
       uploadData.append('profilePicture', image, settingId);
 
-      return this.http.post(BACKEND_URL + '/upload-logo/' + settingId, uploadData, {
+      return this.http.post<{ message: string, imagePath: string }>(BACKEND_URL + '/upload-logo/' + settingId, uploadData, {
         reportProgress: true,
         observe: 'events'
       });

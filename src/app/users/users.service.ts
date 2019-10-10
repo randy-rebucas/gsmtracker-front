@@ -107,9 +107,10 @@ export class UsersService {
     uploadData.append('userType', type);
     uploadData.append('profilePicture', image, uId);
 
-    return this.http.post(BACKEND_URL + '/upload-profile-pic/' + uId, uploadData, {
+    return this.http.post<{ message: string, imagePath: string }>(BACKEND_URL + '/upload-profile-pic/' + uId, uploadData, {
       reportProgress: true,
       observe: 'events'
     });
   }
+
 }

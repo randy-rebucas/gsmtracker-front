@@ -94,6 +94,7 @@ implements OnInit, OnDestroy {
   userType: string;
   logoForm: FormGroup;
 
+  isLoadingPic = false;
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -230,12 +231,7 @@ implements OnInit, OnDestroy {
   onFileChanged(event: Event) {
     this.selectedFile = (event.target as HTMLInputElement).files[0];
     this.logoForm.patchValue({ logoPicture: this.selectedFile });
-    this.logoForm.get('logoPicture').updateValueAndValidity();
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
-    reader.readAsDataURL(this.selectedFile);
+    this.isLoadingPic = true;
     this.onSavePicture();
   }
 
@@ -247,9 +243,11 @@ implements OnInit, OnDestroy {
       if (event.type === HttpEventType.UploadProgress) {
         console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
       } else if (event.type === HttpEventType.Response) {
-        console.log(event); // handle event here
+        console.log(event.body.imagePath); // handle event here
+        this.isLoadingPic = false;
+        this.imagePreview = event.body.imagePath;
+        this.notificationService.success(':: ' + event.body.message);
       }
-      this.notificationService.success(':: settings logo updated successfully');
     });
   }
 

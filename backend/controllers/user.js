@@ -277,10 +277,16 @@ exports.uploadProfile = async(req, res, next) => {
             avatarPath: `data:${req.file.mimetype};base64,${userPicture.toString('base64')}`
         });
 
-        await User.updateOne({ _id: req.params.userId }, newUser);
+        let user = await User.updateOne({ _id: req.params.userId }, newUser);
+        if (!user) {
+            throw new Error('Error in updating user!');
+        }
+
         res.status(200).json({
+            imagePath: newUser.avatarPath,
             message: 'Profile picture updated!'
         });
+
     } catch (error) {
         res.status(500).json({
             message: error.message
