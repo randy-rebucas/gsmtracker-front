@@ -66,8 +66,6 @@ import { HttpEventType } from '@angular/common/http';
 
   .image-preview {
     position: relative;
-    border: 2px solid #dcdcdc;
-    padding: .5em;
   }
   .image-preview button {
     position: absolute;
@@ -95,6 +93,10 @@ implements OnInit, OnDestroy {
   logoForm: FormGroup;
 
   isLoadingPic = false;
+  bufferValue: number;
+  color: string;
+  mode: string;
+
   constructor(
     public authService: AuthService,
     public router: Router,
@@ -265,10 +267,11 @@ implements OnInit, OnDestroy {
       this.logoForm.value.logoPicture
     ).subscribe((event) => {
       if (event.type === HttpEventType.UploadProgress) {
-        console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
+        this.bufferValue = Math.round(event.loaded / event.total * 100);
+        this.color = 'primary';
+        this.mode = 'determinate';
       } else if (event.type === HttpEventType.Response) {
-        console.log(event.body.imagePath); // handle event here
-        // this.isLoadingPic = false;
+        this.isLoadingPic = false;
         this.imagePreview = event.body.imagePath;
         this.notificationService.success(':: ' + event.body.message);
       }

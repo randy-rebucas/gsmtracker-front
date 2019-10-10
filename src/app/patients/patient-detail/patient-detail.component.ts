@@ -155,6 +155,10 @@ implements OnInit, OnDestroy {
 
   public recordsSub: Subscription;
   public isOnQue: boolean;
+  isLoadingPic = false;
+  bufferValue: number;
+  color: string;
+  mode: string;
 
   constructor(
     public authService: AuthService,
@@ -302,12 +306,7 @@ implements OnInit, OnDestroy {
     onFileChanged(event: Event) {
       this.selectedFile = (event.target as HTMLInputElement).files[0];
       this.profileForm.patchValue({ profilePicture: this.selectedFile });
-      this.profileForm.get('profilePicture').updateValueAndValidity();
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.avatar = reader.result as string;
-      };
-      reader.readAsDataURL(this.selectedFile);
+      this.isLoadingPic = true;
       this.onSavePicture();
     }
 
@@ -318,11 +317,14 @@ implements OnInit, OnDestroy {
         this.profileForm.value.profilePicture
       ).subscribe((event) => {
         if (event.type === HttpEventType.UploadProgress) {
-          console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
+          this.bufferValue = Math.round(event.loaded / event.total * 100);
+          this.color = 'primary';
+          this.mode = 'determinate';
         } else if (event.type === HttpEventType.Response) {
-          console.log(event); // handle event here
+          this.isLoadingPic = false;
+          this.avatar = event.body.imagePath;
+          this.notificationService.success(':: ' + event.body.message);
         }
-        this.notificationService.success(':: profile picture updated successfully');
       });
     }
 

@@ -6,9 +6,6 @@
         <form [formGroup]="profileForm" (submit)="onSavePicture()" *ngIf="!isLoading">
             <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
             <div class="image-preview">
-                <div *ngIf="isLoadingPic" class="loading">
-                    <mat-spinner [diameter]="25"></mat-spinner>
-                </div>
                 <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Profile Picture">
                     <mat-icon>create</mat-icon>
                 </button>
@@ -22,6 +19,9 @@
                 <ng-template #elseBlock>
                     <img src="assets/images/blank.png" alt="" />
                 </ng-template>
+            </div>
+            <div *ngIf="isLoadingPic">
+                <mat-progress-bar [color]="color" [mode]="mode" [value]="bufferValue"></mat-progress-bar>
             </div>
             <p>Profile Picture (200x200) pixels</p>
         </form>

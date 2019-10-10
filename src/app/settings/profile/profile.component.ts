@@ -51,8 +51,6 @@ import { ImageComponent } from 'src/app/upload/image/image.component';
   }
   .image-preview {
     position: relative;
-    border: 2px solid #dcdcdc;
-    padding: .5em;
   }
   .image-preview button {
     position: absolute;
@@ -76,6 +74,9 @@ implements OnInit, OnDestroy {
   userType: string;
   profileForm: FormGroup;
   isLoadingPic = false;
+  bufferValue: number;
+  color: string;
+  mode: string;
 
   constructor(
     public authService: AuthService,
@@ -241,13 +242,14 @@ implements OnInit, OnDestroy {
       this.profileForm.value.profilePicture
     ).subscribe((event) => {
       if (event.type === HttpEventType.UploadProgress) {
-        console.log('upload progress: ' + Math.round(event.loaded / event.total * 100) + '%');
+        this.bufferValue = Math.round(event.loaded / event.total * 100);
+        this.color = 'primary';
+        this.mode = 'determinate';
       } else if (event.type === HttpEventType.Response) {
         this.isLoadingPic = false;
         this.imagePreview = event.body.imagePath;
         this.notificationService.success(':: ' + event.body.message);
       }
-      this.notificationService.success(':: profile picture updated successfully');
     });
   }
 

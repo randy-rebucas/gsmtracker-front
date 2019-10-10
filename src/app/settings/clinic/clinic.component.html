@@ -6,9 +6,6 @@
         <form [formGroup]="logoForm" (submit)="onSavePicture()" *ngIf="!isLoading">
             <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
             <div class="image-preview">
-                <div *ngIf="isLoadingPic" class="loading">
-                    <mat-spinner [diameter]="25"></mat-spinner>
-                </div>
                 <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Logo">
                     <mat-icon>create</mat-icon>
                 </button>
@@ -19,6 +16,9 @@
                 <ng-template #elseBlock>
                     <img src="assets/images/dummy_hospital.png" alt="" />
                 </ng-template>
+            </div>
+            <div *ngIf="isLoadingPic">
+                <mat-progress-bar [color]="color" [mode]="mode" [value]="bufferValue"></mat-progress-bar>
             </div>
             <p>Clinic Logo (200x200) pixels</p>
         </form>
