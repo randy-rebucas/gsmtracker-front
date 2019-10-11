@@ -2,6 +2,7 @@ const Encounter = require('../models/encounter');
 const Person = require('../models/person');
 const moment = require('moment');
 const count = 0;
+var ObjectId = require('mongoose').Types.ObjectId;
 
 exports.create = async(req, res, next) => {
     try {
@@ -36,7 +37,7 @@ exports.update = async(req, res, next) => {
 
 exports.getAll = async(req, res, next) => {
     try {
-      console.log(req.query.licenseId);
+      const licId = req.query.licenseId;
       const encounter = await Encounter.aggregate([
         // { "$lookup": {
         //   "from": "connections",
@@ -44,13 +45,12 @@ exports.getAll = async(req, res, next) => {
         //   "foreignField": "user",
         //   "as": "connections"
         // }},
-
-        // { $match: { licenseId: req.query.licenseId } },
         // { $redact: {
         //     $cond: [{ $eq: ["$licenseId", req.query.licenseId ] }, "$$KEEP",
         //     "$$PRUNE" ]
         //   }
         // },
+        { $match: { licenseId : new ObjectId(req.query.licenseId) } }, // .toString()
         { $group:
             {
               _id:
@@ -64,39 +64,9 @@ exports.getAll = async(req, res, next) => {
                 count: {$sum: 1}
             }
           },
-          { $sort: {count: 1} }
+          { $sort: { "created": -1 } }
         ]);
-        console.log(encounter);
-        // const encounter = await Encounter.find({ 'licenseId': req.query.licenseId })
-        //     .sort({ 'created': 'asc' })
-        //     .populate({
-        //       path: 'userId',
-        //       populate: {
-        //         path: 'personId',
-        //         model: Person
-        //       }
-        //     })
-        //     .exec();
-        // const chart = {
-        //   type: 'bar',
-        //   series: [
-        //     {
-        //       values: employeeInfo
-        //     }
-        //   ]
-        // };
-        // newEncounters = [];
-        // encounter.forEach(element => {
-        //     var myObj = {
-        //         id: element._id,
-        //         status: element.status,
-        //         fullname: element.userId.personId.firstname + ' ' + element.userId.personId.lastname,
-        //         userId: element.userId._id
-        //     };
-        //     newEncounters.push(myObj);
-        // });
-        // let count = await Appointment.countDocuments({ 'licenseId': req.query.licenseId });
-        // console.log(encounter);
+
         res.status(200).json({
             encounters: encounter
         });
