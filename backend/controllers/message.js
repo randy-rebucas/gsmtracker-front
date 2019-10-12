@@ -2,6 +2,7 @@ const Message = require('../models/message');
 const User = require('../models/user');
 const Person = require('../models/person');
 const moment = require('moment');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 exports.create = async (req, res, next) => {
   try {
@@ -78,5 +79,52 @@ exports.delete = async(req, res, next) => {
     res.status(500).json({
       message: e.message
     });
+  }
+};
+
+exports.getAllUnread = async(req, res, next) => {
+  try {
+    const newMessages = await Message.aggregate([
+      { $unwind : "$messages" },
+      { $lookup: {
+          "from": "threads",
+          "localField": "messages.licenseId",
+          "foreignField": "_id",
+          "as": "threads"
+      }},
+      { $match: { licenseId : new ObjectId(req.params.licenseId) } }, // .toString()
+      { $group:
+          {
+            _id:
+              {
+                //day: {$dayOfMonth: "$created"},
+                //month: {$month: "$created"},
+                year: {$year: "$created"}
+              },
+              unread: {$sum: { $cond: [{ $eq: ["$status", 0 ] }, 1, 0] }},
+              count: {$sum: 1}
+          }
+        },
+        { $sort: { "created": -1 } }
+      ]);
+      console.log(newMessages);
+
+      res.status(200).json({
+        count: 0 // newMessages
+      });
+
+    // let unread = await Message.countDocuments({
+    //   'licenseId': req.params.licenseId,
+    //   'status': 0
+    // }).exec()
+
+    // res.status(200).json({
+    //     count: unread
+    // });
+
+  } catch (e) {
+      res.status(500).json({
+          message: e.message
+      });
   }
 };

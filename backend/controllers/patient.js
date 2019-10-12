@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Patient = require('../models/patient');
 const moment = require('moment');
 
+
 exports.create = async(req, res, next) => {
     try {
         const newPerson = new Person({
@@ -198,3 +199,4 @@ exports.delete = async(req, res, next) => {
         });
     }
 };
+

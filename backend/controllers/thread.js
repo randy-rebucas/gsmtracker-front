@@ -10,7 +10,8 @@ exports.create = async (req, res, next) => {
     if (threadUserCheck === null) {
       const threadData = new Thread({
           userId: req.body.users.id,
-          ownerId: req.body.ownerId
+          ownerId: req.body.ownerId,
+          licenseId: req.body.licenseId
       });
       let thread = await threadData.save();
 

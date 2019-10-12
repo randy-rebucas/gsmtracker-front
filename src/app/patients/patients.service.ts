@@ -160,4 +160,5 @@ export class PatientsService {
     return this.http.delete(BACKEND_URL + '/' + patientId);
   }
 
+
 }

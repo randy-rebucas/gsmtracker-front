@@ -10,6 +10,8 @@ router.post('', checkAuth, MessageController.create); //extractFile,
 
 router.get('', MessageController.getAll);
 
+router.get('/unread/:licenseId', MessageController.getAllUnread);
+
 router.delete('/:messageId', checkAuth, MessageController.delete);
 
 

@@ -13,6 +13,7 @@ import { NotificationService } from '../shared/notification.service';
 import { DialogService } from '../shared/dialog.service';
 import { EncountersService } from '../shared/encounters/encounters.service';
 import { EncountersData } from '../shared/encounters/encounters-data.model';
+import { MessagesService } from '../messages/messages.service';
 
 @Component({
   selector: 'app-home',
@@ -80,20 +81,22 @@ implements OnInit, OnDestroy {
     private patientsService: PatientsService,
     private appointmentService: AppointmentService,
     private queService: QueService,
-    private encountersService: EncountersService
+    private encountersService: EncountersService,
+    private messagesService: MessagesService
 
   ) {
     super(authService, router, dialog, appconfig);
+
+    this.newPatient = 0;
+    this.newAppointment = 0;
+    this.newMessage = 0;
+    this.canceledVisit = 0;
    }
 
   public barChartOptions = {
     scaleShowVerticalLines: false,
     responsive: true
   };
-
-  public doughnutChartLabels = ['Sales Q1', 'Sales Q2', 'Sales Q3', 'Sales Q4'];
-  public doughnutChartData = [120, 150, 180, 90];
-  public doughnutChartType = 'doughnut';
 
   public pieChartOptions = {
     responsive: true
@@ -116,8 +119,9 @@ implements OnInit, OnDestroy {
       this.newAppointment = res.count;
     });
 
-    this.newMessage = 3;
-    this.canceledVisit = 1;
+    this.messagesService.getAllUnread(this.licenseId).subscribe((res) => {
+      this.newMessage = res.count;
+    });
 
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
@@ -130,6 +134,7 @@ implements OnInit, OnDestroy {
           this.years.push(encounter.label);
           this.canceled.push(encounter.canceled);
           this.done.push(encounter.done);
+          this.canceledVisit = encounter.canceled;
         }
     });
 
@@ -140,13 +145,6 @@ implements OnInit, OnDestroy {
       {data: this.canceled, label: 'Cancelled'},
       {data: this.done, label: 'Done'}
     ];
-
-    this.pieChartLabels = ['Success', 'Cancelled'];
-    this.pieChartLegend = true;
-    this.pieChartData = [120, 150];
-    this.pieChartType = 'pie';
-
-
   }
 
   onResize(event) {

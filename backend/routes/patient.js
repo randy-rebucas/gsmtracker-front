@@ -23,4 +23,5 @@ router.put('/:patientId', checkAuth, preAuth, PatientController.update);
 router.delete('/:patientId', checkAuth, PatientController.delete);
 
 
+
 module.exports = router;

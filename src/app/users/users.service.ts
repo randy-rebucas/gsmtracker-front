@@ -100,6 +100,10 @@ export class UsersService {
     return this.http.delete(BACKEND_URL + '/' + userId);
   }
 
+  deleteAll(patientIds: []) {
+    return this.http.delete<{ message: string }>(BACKEND_URL + '/many/' + patientIds);
+  }
+
   upload(uId: string, type: string, image: File | string) {
 
     const uploadData = new FormData();

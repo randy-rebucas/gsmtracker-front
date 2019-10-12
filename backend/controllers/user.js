@@ -6,6 +6,7 @@ const License = require('../models/license');
 const User = require('../models/user');
 const Person = require('../models/person');
 const Setting = require('../models/setting');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createUser = async(req, res, next) => {
     try {
@@ -292,4 +293,40 @@ exports.uploadProfile = async(req, res, next) => {
             message: error.message
         });
     }
+};
+
+
+exports.deleteMany = async(req, res, next) => {
+  try {
+    Ids = req.params.userIds;
+    Id = Ids.split(',');
+    /**
+     * Find all users and retrive person ids
+     */
+    let users = await User.find({_id: {$in: Id}}).exec();
+    personIds = [];
+    users.forEach(user => {
+      personIds.push(new ObjectId(user.personId));
+    });
+
+    let auth = await Auth.deleteMany({ personId: {$in: personIds} });
+    if(!auth) {
+      throw new Error('Error in deleting auth!');
+    }
+    let person = await Person.deleteMany({ _id: {$in: personIds} });
+    if(!person) {
+      throw new Error('Error in deleting person!');
+    }
+    let user = await User.deleteMany({_id: {$in: Id}});
+    if(!user) {
+      throw new Error('Error in deleting user!');
+    }
+    res.status(200).json({
+        message: user.deletedCount + ' item deleted successfull!'
+    });
+  } catch (error) {
+      res.status(500).json({
+          message: error.message
+      });
+  }
 };

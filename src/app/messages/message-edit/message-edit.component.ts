@@ -106,7 +106,8 @@ implements OnInit, OnDestroy {
       this.threadService.insert(
         this.form.value.message,
         this.form.value.userInput,
-        this.userId
+        this.userId,
+        this.licenseId
       ).subscribe(() => {
         this.threadService.getAll(this.userId);
         this.form.reset();

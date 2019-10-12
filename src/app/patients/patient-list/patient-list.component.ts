@@ -18,117 +18,89 @@ import { QrCodeScannerComponent } from 'src/app/qr-code/qr-code-scanner/qr-code-
 import { AppConfiguration } from 'src/app/app-configuration.service';
 import { UsersService } from 'src/app/users/users.service';
 import { UserData } from 'src/app/users/user-data.model';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-patient-list',
   styles: [`
-  table {
-    width: 100%;
-  }
-  tr {
-    cursor: pointer;
-  }
-  tr.example-detail-row {
-      height: 0;
-  }
-  tr.example-element-row:not(.example-expanded-row):hover {
-      background: #efefef;
-  }
-  tr.example-element-row:not(.example-expanded-row):active {
-      background: #efefef;
-  }
-  .example-element-row td {
-      border-bottom-width: 0;
-  }
-  .example-element-detail {
-      overflow: hidden;
-      display: flex;
-  }
-  .example-element-diagram {
-      min-width: 80px;
-      border: 2px solid black;
-      padding: 8px;
-      font-weight: lighter;
-      margin: 8px 0;
-      height: 104px;
-  }
-  .example-element-symbol {
-      font-weight: bold;
-      font-size: 40px;
-      line-height: normal;
-      text-align: center;
-  }
-  .example-element-description {
-      padding: 16px 0;
-      position: relative;
-      margin-right: 2em;
-  }
-  .element-metadata {
-    padding: 16px 0;
-    position: relative;
-  }
-  .example-element-description .view {
-    position: absolute;
-    right: 0;
-    top: 0;
-    visibility: hidden;
-  }
-  .example-element-detail > div {
-    width: 40%;
-  }
-  dl {
-    margin: 0;
-  }
-  .example-element-description:hover .view {
-    visibility: visible;
-  }
-  td.mat-cell.cdk-column-action.mat-column-action {
-    text-align: right;
-  }
+
   .hide {
     display: none;
   }
-  .component-page-header {
-    padding: 2em 0 0;
+
+  .search-div {
+    position: relative;
+    width: 15%;
+  }
+  .mat-form-field {
+    width: 100%;
+}
+  .search-div > div {
+    position: absolute;
+    top: 1rem;
+    right: 0;
+  }
+  .search-div > div img {
+    cursor: pointer;
+  }
+  .action-button {
+    width: 62%;
+    text-align: right;
+    padding: 1em 0;
+  }
+  :host /deep/ .mat-card-header-text {
+    /* CSS styles go here */
+    margin: 0px;
+  }
+  mat-card {
+    margin-bottom: 1em;
+    border-radius: 0;
+  }
+  .mat-card-header .mat-card-title {
+    font-size: 16px;
+}
+  dl dd {
+    padding-left: 5em;
   }
   dl {
-    margin-top: 0;
+    padding: 1em 0;
+    margin: 0;
   }
   dt {
     float: left;
     width: 100px;
   }
-  .search-div {
-    position: relative;
+  .mat-column-image {
+      width: 5%;
   }
-  .search-div > div {
-    position: absolute;
-    top: 1rem;
-    left: 12%;
-  }
-  .search-div > div img {
-    cursor: pointer;
-  }
-  .example-element-description dl dd {
-    padding-left: 5em;
+  mat-row.example-detail-row {
+    min-height: 0;
   }
   .example-element-detail {
-    position: relative;
-  }
-  .example-element-detail button {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  td.mat-cell img {
-    border: 2px solid transparent;
-  }
-  td.mat-cell:hover img {
-    border: 2px solid #e0e0e0;
+    width: 100%;
   }
 
-  .mat-column-image {
-    width: 5%;
+  .area.header {
+    display: flex;
+    flex-direction: row;
+}
+.area.header > div:not(:first-child) {
+  margin-left: 1em;
+}
+
+mat-row.example-element-row mat-cell:first-child ,
+mat-header-row.mat-header-row mat-header-cell:first-child {
+  max-width: 30px;
+}
+.action-button button {
+  margin-left: 10px;
+}
+mat-cell:last-of-type, mat-footer-cell:last-of-type, mat-header-cell:last-of-type {
+  flex: 0 0 auto;
+}
+mat-header-row.mat-header-row mat-header-cell:last-child {
+  flex: 0 0 auto;
+  width: 80px;
 }
   `],
   templateUrl: './patient-list.component.html',
@@ -147,7 +119,11 @@ implements OnInit, OnDestroy {
   private usersSub: Subscription;
 
   dataSource: MatTableDataSource<any>;
-  columnsToDisplay: string[] = ['image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
+  columnsToDisplay: string[] = ['select', 'image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
+  selection = new SelectionModel<any>(true, []);
+
+  private Ids: any = [];
+
   expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -180,6 +156,43 @@ implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    return this.selection.selected.length;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  onDeleteAll() {
+    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+    .afterClosed().subscribe(res => {
+      if (res) {
+        const numSelected = this.selection.selected;
+        numSelected.forEach(element => {
+          this.Ids.push(element.id);
+        });
+
+        this.usersService.deleteAll(this.Ids).subscribe((data) => {
+          this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
+          this.notificationService.warn('::' + data.message);
+        });
+      }
+    });
   }
 
   applyFilter(filterValue: string) {

@@ -24,6 +24,8 @@ router.put('/:userId', checkAuth, preAuth, UserController.update);
 
 router.delete('/:userId', checkAuth, UserController.delete);
 
+router.delete('/many/:userIds', checkAuth, UserController.deleteMany);
+
 router.post('/upload-profile-pic/:userId', extractFile, UserController.uploadProfile);
 
 module.exports = router;

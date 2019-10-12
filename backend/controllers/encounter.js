@@ -21,7 +21,6 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
   try {
-    //  {email: {$not: /@domain.com/}}
     let encounter = await Encounter.findOneAndUpdate({ userId: req.params.userId, licenseId: req.params.licenseId, status: 0 }, {$set:{status: req.body.status}}).exec();
     if (!encounter) {
       throw new Error('Something went wrong.Cannot update encounter!');
@@ -37,7 +36,6 @@ exports.update = async(req, res, next) => {
 
 exports.getAll = async(req, res, next) => {
     try {
-      const licId = req.query.licenseId;
       const encounter = await Encounter.aggregate([
         // { "$lookup": {
         //   "from": "connections",
