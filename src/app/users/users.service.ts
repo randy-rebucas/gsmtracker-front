@@ -117,4 +117,7 @@ export class UsersService {
     });
   }
 
+  getBirthdays(licenseId: string) {
+    return this.http.get<{users: any}>(BACKEND_URL + '/birthdays/' + licenseId);
+  }
 }

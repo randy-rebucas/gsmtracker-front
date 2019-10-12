@@ -34,7 +34,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   }
   .mat-form-field {
     width: 100%;
-}
+  }
   .search-div > div {
     position: absolute;
     top: 1rem;
@@ -44,10 +44,14 @@ import { SelectionModel } from '@angular/cdk/collections';
     cursor: pointer;
   }
   .action-button {
-    width: 62%;
+    width: 70%;
     text-align: right;
     padding: 1em 0;
   }
+  .support-div {
+    text-align: right;
+    width: 23%;
+}
   :host /deep/ .mat-card-header-text {
     /* CSS styles go here */
     margin: 0px;
@@ -58,7 +62,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   }
   .mat-card-header .mat-card-title {
     font-size: 16px;
-}
+  }
   dl dd {
     padding-left: 5em;
   }
@@ -83,25 +87,50 @@ import { SelectionModel } from '@angular/cdk/collections';
   .area.header {
     display: flex;
     flex-direction: row;
-}
-.area.header > div:not(:first-child) {
-  margin-left: 1em;
-}
+  }
+  .area.header > div:not(:first-child) {
+    margin-left: 1em;
+  }
 
-mat-row.example-element-row mat-cell:first-child ,
-mat-header-row.mat-header-row mat-header-cell:first-child {
-  max-width: 30px;
-}
-.action-button button {
-  margin-left: 10px;
-}
-mat-cell:last-of-type, mat-footer-cell:last-of-type, mat-header-cell:last-of-type {
-  flex: 0 0 auto;
-}
-mat-header-row.mat-header-row mat-header-cell:last-child {
-  flex: 0 0 auto;
-  width: 80px;
-}
+  mat-row.example-element-row mat-cell:first-child ,
+  mat-header-row.mat-header-row mat-header-cell:first-child {
+    max-width: 30px;
+  }
+  .action-button button {
+    margin-left: 10px;
+  }
+  mat-cell:last-of-type, mat-footer-cell:last-of-type, mat-header-cell:last-of-type {
+    flex: 0 0 auto;
+  }
+  mat-header-row.mat-header-row mat-header-cell:last-child {
+    flex: 0 0 auto;
+    width: 80px;
+  }
+  :host /deep/ .mat-list-item-content {
+    /* CSS styles go here */
+    margin: 0px;
+    padding: 0 !important;
+    max-height: 42px;
+  }
+  mat-list-item {
+    max-height: 42px;
+  }
+  .birthday-user {
+    width: 100%;
+    padding-left: 1em;
+  }
+  .birthday-user p {
+    padding: 0;
+    margin: 0;
+  }
+  .birthday-user h4 {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+  }
+  .birthday-user p span {
+    float: right;
+  }
   `],
   templateUrl: './patient-list.component.html',
   animations: [
@@ -123,6 +152,8 @@ implements OnInit, OnDestroy {
   selection = new SelectionModel<any>(true, []);
 
   private Ids: any = [];
+  public birthdays: any = [];
+  users: any[] = [];
 
   expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -156,6 +187,29 @@ implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
+
+    this.usersService.getBirthdays(this.licenseId).subscribe((birthday) => {
+
+      birthday.users.forEach(user => {
+        const today = new Date();
+        const bDate = new Date(user.birthdate);
+        let myage = today.getFullYear() - bDate.getFullYear();
+        const m = today.getMonth() - bDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < bDate.getDate())) {
+          myage--;
+        }
+        const obj = {
+          useId: user.users._id,
+          birthdate: user.birthdate,
+          age: myage,
+          fullname: user.firstname + ', ' + user.lastname,
+          avatar: user.users.avatarPath,
+          contact: user.contact
+        };
+        this.users.push(obj);
+      });
+      this.birthdays = this.users;
+    });
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

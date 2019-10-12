@@ -295,6 +295,54 @@ exports.uploadProfile = async(req, res, next) => {
     }
 };
 
+exports.getTodaysBirthday = async(req, res, next) => {
+  try {
+
+    const birthdays = await Person.aggregate([
+        { $lookup:{
+            from: "users",       // other table name
+            localField: "_id",   // name of users table field
+            foreignField: "personId", // name of userinfo table field
+            as: "users"         // alias for userinfo table
+        }},
+        { $unwind:"$users" },
+        { $match: { "users.licenseId" : new ObjectId(req.params.licenseId) } },
+        // {
+        //   $project: {
+        //     // firstname: 1,
+        //     // ... as you need
+        //     users: {
+        //       $filter: {
+        //         input: "$users", // arrays
+        //         as: "item",
+        //         cond: {$eq: ["$$item.licenseId", new ObjectId(req.params.licenseId)]}
+        //       }
+        //     }
+        //   }
+        // },
+        { $redact: {
+            $cond: [
+              { $eq: [
+                { $month: "$birthdate" },
+                { $month: new Date() }
+              ] },
+              "$$KEEP",
+              "$$PRUNE"
+            ]
+          }
+        }
+    ]);
+
+    res.status(200).json({
+      users: birthdays
+    });
+
+  } catch (e) {
+    res.status(500).json({
+        message: e.message
+    });
+  }
+}
 
 exports.deleteMany = async(req, res, next) => {
   try {
@@ -330,3 +378,5 @@ exports.deleteMany = async(req, res, next) => {
       });
   }
 };
+
+

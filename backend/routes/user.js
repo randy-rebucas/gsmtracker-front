@@ -20,6 +20,8 @@ router.get('', UserController.getAll);
 
 router.get('/:userId', UserController.get);
 
+router.get('/birthdays/:licenseId', UserController.getTodaysBirthday);
+
 router.put('/:userId', checkAuth, preAuth, UserController.update);
 
 router.delete('/:userId', checkAuth, UserController.delete);
