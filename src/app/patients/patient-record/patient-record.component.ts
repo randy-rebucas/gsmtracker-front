@@ -5,7 +5,6 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { PatientsService } from '../patients.service';
 import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
 import { MatDialog } from '@angular/material';
-import { PatientChartComponent } from '../patient-chart/patient-chart.component';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 import { UsersService } from 'src/app/users/users.service';
@@ -223,16 +222,6 @@ extends SecureComponent
       dialogButton: null
     };
     super.onPopup(args, QrCodeGenerateComponent);
-  }
-
-  viewChart(patientId) {
-    const args = {
-      width: '50%',
-      id: patientId,
-      dialogTitle: 'Chart',
-      dialogButton: null
-    };
-    super.onPopup(args, PatientChartComponent);
   }
 
   onCancelVisit(patientId) {

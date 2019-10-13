@@ -1,3 +1,6 @@
+<div *ngIf="isLoading" class="loading">
+    <mat-spinner></mat-spinner>
+</div>
 <div
   gdAreas="header header | side content | footer footer"
   gdGap="16px"
@@ -5,98 +8,146 @@
   gdColumns="250px auto"
   gdAreas.lt-md="header | side | content | footer"
   gdRows.lt-md="auto auto auto auto"
-  gdColumns.lt-md="auto">
+  gdColumns.lt-md="auto"  *ngIf="!isLoading">
   <div class="area header" gdArea="header">
-      <div class="action-button">
-          <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(patientId)">Cancel Visit</button>
-          <button class="mat-raised-button mat-primary" *ngIf="isOnQue" (click)="gotoRecord()">Open Record</button>
-          <button class="mat-raised-button mat-primary" *ngIf="!isOnQue" (click)="moveToQue(patientId)">Move to Que</button>
+      <div class="patient-detail">
+        <div class="patient-picture">
+            <form [formGroup]="profileForm" (submit)="onSavePicture()">
+                <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
+                <div class="image-preview">
+                    <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Profile Picture">
+                      <mat-icon>create</mat-icon>
+                  </button>
+                    <div *ngIf="avatar; then thenBlock else elseBlock"></div>
+                    <ng-template #thenBlock>
+                        <img [src]="avatar" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" />
+                    </ng-template>
+                    <ng-template #elseBlock>
+                        <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 200px;" />
+                    </ng-template>
+                </div>
+            </form>
+            <div *ngIf="isLoadingPic">
+                <mat-progress-bar [color]="color" [mode]="mode" [value]="bufferValue"></mat-progress-bar>
+            </div>
+        </div>
+        <div class="patient-info">
+          <div>
+              <div>
+                <div>
+                    <h2 class="mat-h2">{{firstname + ' ' + midlename + ' ' + lastname}} </h2>
+                </div>
+
+                <div class="action-button">
+                    <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(patientId)">Cancel Visit</button>
+                    <button class="mat-raised-button mat-primary" *ngIf="isOnQue" (click)="gotoRecord()">Open Record</button>
+                    <button class="mat-raised-button mat-primary" *ngIf="!isOnQue" (click)="moveToQue(patientId)">Move to Que</button>
+                </div>
+              </div>
+              <div>
+                  <div *ngFor="let address of addresses; let i = index;" class="address">
+                    <address>
+                        {{address.address1}} <br/>
+                        <ng-container *ngIf="address.address2">
+                            {{address.address2}} <br/>
+                        </ng-container>
+                        {{address.postalCode}} {{address.province}}, {{address.city}} <br/>
+                        {{address.country}}
+                    </address>
+                  </div>
+                  <div>
+                    <dl>
+                      <dt>Contact</dt>
+                      <dd>
+                          {{contact}}
+                      </dd>
+                      <dt>Email</dt>
+                      <dd>
+                          <a href="mailto:{{email}}" class="mat-line">{{email}}</a>
+                      </dd>
+                      <dt>Gender</dt>
+                      <dd>
+                          {{gender}}
+                      </dd>
+                      <dt>Birthdate</dt>
+                      <dd>
+                          {{birthdate | date}}
+                      </dd>
+                    </dl>
+                  </div>
+                  <div *ngIf="metas.length != 0">
+                    <dl>
+                      <ng-container *ngFor="let meta of metas; let m = index;">
+                          <dt>{{meta.label}}</dt>
+                          <dd>{{meta.value}}</dd>
+                      </ng-container>
+                    </dl>
+                  </div>
+              </div>
+            </div>
+            <div>
+                <a mat-stroked-button [routerLink]="['/messages']"><i class="material-icons">
+                    message
+                </i> &nbsp; Message</a>
+                <a mat-stroked-button [routerLink]="['/appointments']"><i class="material-icons">
+                    calendar_today
+                </i> &nbsp; Appointment</a>
+                <a mat-stroked-button (click)="downloadChart()"><i class="material-icons">
+                    remove_red_eye
+                </i> &nbsp; Print Chart</a>
+                <a mat-stroked-button (click)="generateQrCode(patientId)"><i class="material-icons">
+                    fingerprint
+                </i> &nbsp; Generate QR Code</a>
+
+            </div>
+        </div>
       </div>
+
   </div>
   <div class="area side" gdArea="side">
-      <div *ngIf="isLoading" class="loading">
-          <mat-spinner [diameter]="25"></mat-spinner>
-      </div>
-      <div fxLayout='row wrap' fxLayoutGap="10px"  *ngIf="!isLoading">
-          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <form [formGroup]="profileForm" (submit)="onSavePicture()" *ngIf="!isLoading">
-                  <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
-                  <div class="image-preview">
-                      <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Profile Picture">
-                        <mat-icon>create</mat-icon>
-                    </button>
-                      <div *ngIf="avatar; then thenBlock else elseBlock"></div>
-                      <ng-template #thenBlock>
-                          <img [src]="avatar" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" />
-                      </ng-template>
-                      <ng-template #elseBlock>
-                          <img src="assets/images/blank.png" alt="{{firstname + ' ' + midlename + ' ' + lastname}}" style="width: 200px;" />
-                      </ng-template>
-                  </div>
-              </form>
-              <div *ngIf="isLoadingPic">
-                  <mat-progress-bar [color]="color" [mode]="mode" [value]="bufferValue"></mat-progress-bar>
-              </div>
-
-          </div>
-          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <div style="padding: 0 15px;">
-                  <h2 class="mat-h2">{{firstname + ' ' + midlename + ' ' + lastname}} </h2>
-                  <h4 class="mat-h4">Created: {{created | date }}</h4>
-              </div>
-              <!-- <mat-list>
-                  <h3 mat-subheader>Address</h3>
-                  <ng-container *ngFor="let address of addresses; let i = index;" class="address">
-                      <mat-list-item> <p mat-line>{{address.address1}}</p> </mat-list-item>
-                      <ng-container *ngIf="address.address2">
-                          <mat-list-item><p mat-line>{{address.address2}}</p></mat-list-item>
-                      </ng-container>
-                      <mat-list-item> <p mat-line>{{address.postalCode}} {{address.province}}, {{address.city}} </p></mat-list-item>
-                      <mat-list-item> {{address.country}} </mat-list-item>
-                  </ng-container>
-                  <h3 mat-subheader>Personal Information</h3>
-                  <mat-list-item><i class="material-icons">phone</i> &nbsp;{{contact}} </mat-list-item>
-                  <mat-list-item><i class="material-icons">email</i> &nbsp;<a href="mailto:{{email}}" class="mat-line">{{email}}</a></mat-list-item>
-                  <mat-list-item><i class="material-icons">wc</i> &nbsp;{{gender}} </mat-list-item>
-                  <mat-list-item><i class="material-icons">calendar_today</i> &nbsp;{{birthdate | date}} </mat-list-item>
-
-                  <h3 mat-subheader>Metadata</h3>
-                  <ng-container *ngIf="metas.length != 0">
-                      <mat-list-item *ngFor="let meta of metas; let m = index;">
-                          <i class="material-icons">label</i> &nbsp;
-                          <abbr title="{{meta.label}}">{{meta.value}}</abbr>
-                      </mat-list-item>
-                  </ng-container>
-              </mat-list> -->
-          </div>
-          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-list>
-                  <h3 mat-subheader>Quick Actions</h3>
-                  <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
-                    message
-                    </i> &nbsp; Message </mat-list-item>
-                  <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
-                calendar_today
-                </i> &nbsp; Appointment </mat-list-item>
-                  <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
-              remove_red_eye
-                    </i> &nbsp; View Chart </mat-list-item>
-                  <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
-                    fingerprint
-                    </i> &nbsp; Generate QR Code </mat-list-item>
-                  <!-- <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
-                    group
-                            </i> &nbsp; Network Request </mat-list-item> -->
-              </mat-list>
-          </div>
-      </div>
-
+      <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Height</mat-card-title>
+            <mat-card-subtitle>{{heightCreated | date}}</mat-card-subtitle>
+          </mat-card-header>
+          <h1>{{height}}<span *ngIf="height == null">--</span> cm</h1>
+          <mat-card-content>
+            <p>Previous record: 45cm</p>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="example-card">
+            <mat-card-header>
+              <mat-card-title>Weight</mat-card-title>
+              <mat-card-subtitle>{{weightCreated | date}}</mat-card-subtitle>
+            </mat-card-header>
+            <h1>{{weight}}<span *ngIf="weight == null">--</span> kg</h1>
+            <mat-card-content>
+              <p>Previous record: 45cm</p>
+            </mat-card-content>
+          </mat-card>
+      <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Oxygen Saturation%</mat-card-title>
+            <mat-card-subtitle>Current record</mat-card-subtitle>
+          </mat-card-header>
+          <h1>--%</h1>
+          <mat-card-content>
+            <p>Previous record: 45cm</p>
+          </mat-card-content>
+      </mat-card>
+      <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Pain Score (out 10)</mat-card-title>
+            <mat-card-subtitle>Current record</mat-card-subtitle>
+          </mat-card-header>
+          <h1>--/--</h1>
+          <mat-card-content>
+            <p>Previous record: 45cm</p>
+          </mat-card-content>
+        </mat-card>
   </div>
   <div class="area content" gdArea="content">
-      <div *ngIf="isLoading" class="loading">
-          <mat-spinner [diameter]="25"></mat-spinner>
-      </div>
-      <div fxLayout='row wrap' fxLayoutGap="10px" *ngIf="!isLoading">
+      <div fxLayout='row wrap' fxLayoutGap="10px">
           <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord" >
               <mat-card class="example-card">
                 <mat-card-header>
@@ -145,54 +196,6 @@
                   </mat-card-content>
                 </mat-card>
           </div>
-          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Oxygen Saturation%</mat-card-title>
-                    <mat-card-subtitle>Current record</mat-card-subtitle>
-                  </mat-card-header>
-                  <h1>--%</h1>
-                  <mat-card-content>
-                    <p>Previous record: 45cm</p>
-                  </mat-card-content>
-                </mat-card>
-          </div>
-          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Pain Score (out 10)</mat-card-title>
-                    <mat-card-subtitle>Current record</mat-card-subtitle>
-                  </mat-card-header>
-                  <h1>--/--</h1>
-                  <mat-card-content>
-                    <p>Previous record: 45cm</p>
-                  </mat-card-content>
-                </mat-card>
-          </div>
-          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Height</mat-card-title>
-                    <mat-card-subtitle>{{heightCreated | date}}</mat-card-subtitle>
-                  </mat-card-header>
-                  <h1>{{height}}<span *ngIf="height == null">--</span> cm</h1>
-                  <mat-card-content>
-                    <p>Previous record: 45cm</p>
-                  </mat-card-content>
-                </mat-card>
-          </div>
-          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Weight</mat-card-title>
-                    <mat-card-subtitle>{{weightCreated | date}}</mat-card-subtitle>
-                  </mat-card-header>
-                  <h1>{{weight}}<span *ngIf="weight == null">--</span> kg</h1>
-                  <mat-card-content>
-                    <p>Previous record: 45cm</p>
-                  </mat-card-content>
-                </mat-card>
-          </div>
           <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
               <mat-card class="example-card">
                   <mat-card-header>
@@ -224,36 +227,36 @@
                 </mat-card>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <mat-card class="example-card">
+              <!-- <mat-card class="example-card">
                   <mat-card-header>
                     <mat-card-title>Prescriptions</mat-card-title>
                   </mat-card-header>
                   <mat-table [dataSource]="prescriptions">
-                      <!-- isMaintenable Column -->
+
                       <ng-container matColumnDef="maintenable">
                         <mat-header-cell *matHeaderCellDef> isMaintenable </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.maintenableFlg ? 'Yes' : 'No'}} </mat-cell>
                       </ng-container>
 
-                      <!-- Medicine Column -->
+
                       <ng-container matColumnDef="medicine">
                         <mat-header-cell *matHeaderCellDef> Medicine </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.medicine}} </mat-cell>
                       </ng-container>
 
-                      <!-- Preparation Column -->
+
                       <ng-container matColumnDef="preparation">
                         <mat-header-cell *matHeaderCellDef> Preparation </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.preparation}} </mat-cell>
                       </ng-container>
 
-                      <!-- Sig Column -->
+
                       <ng-container matColumnDef="sig">
                         <mat-header-cell *matHeaderCellDef> Sig </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.sig}} </mat-cell>
                       </ng-container>
 
-                      <!-- Quantity Column -->
+
                       <ng-container matColumnDef="qty">
                           <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
                           <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
@@ -269,7 +272,7 @@
                       <mat-row *matRowDef="let row; columns: perscriptionColumns;"></mat-row>
                       <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': (prescriptions.length != 0)}"></mat-footer-row>
                     </mat-table>
-                </mat-card>
+                </mat-card> -->
           </div>
           <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
               <mat-card class="example-card">

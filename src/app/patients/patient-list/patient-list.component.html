@@ -16,6 +16,9 @@
           </div>
       </div>
       <div class="action-button">
+          <button mat-flat-button color="accent" (click)="onPrint()" *ngIf="isAllSelected()">
+              <mat-icon>print</mat-icon> Print
+         </button>
           <button mat-flat-button color="warn" (click)="onDeleteAll()" *ngIf="isAllSelected()">
               <mat-icon>delete_outline</mat-icon> Delete
          </button>
@@ -73,24 +76,6 @@
                       <button mat-icon-button [routerLink]="['./', element.id, 'record']" aria-label="Record">
                         <mat-icon>assignment</mat-icon>
                       </button>
-
-                      <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                          <mat-icon>more_vert</mat-icon>
-                      </button>
-                      <mat-menu #menu="matMenu">
-                          <button mat-menu-item (click)="onEdit(element.id)">
-                              <mat-icon>launch</mat-icon>
-                              <span>Edit</span>
-                          </button>
-                          <button mat-menu-item (click)="onDelete(element.id)">
-                              <mat-icon>delete_outline</mat-icon>
-                              <span>Delete</span>
-                          </button>
-                          <button mat-menu-item [routerLink]="['./', element.id, 'record']">
-                              <mat-icon>assignment</mat-icon>
-                              <span>View Record</span>
-                          </button>
-                      </mat-menu> -->
                   </mat-cell>
               </ng-template>
               <ng-template #elseBlockRow>
@@ -164,11 +149,11 @@
         <mat-card-header>
           <mat-card-title>Birthdays</mat-card-title>
         </mat-card-header>
-
-        <mat-list>
-            <!-- <mat-spinner *ngIf="isLoading"></mat-spinner> -->
+        <div *ngIf="isLoading">
+          <mat-spinner [diameter]="25"></mat-spinner>
+        </div>
+        <mat-list *ngIf="!isLoading">
             <mat-list-item *ngFor="let birthday of birthdays" class="birthday-list">
-              <!-- <mat-icon mat-list-icon class="md-48">face</mat-icon> -->
               <div *ngIf="birthday.avatar; then thenBlock else elseBlock"></div>
               <ng-template #thenBlock>
                   <img [src]="birthday.avatar" [alt]="birthday.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />

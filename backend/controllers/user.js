@@ -198,6 +198,7 @@ exports.getAll = async(req, res, next) => {
         // console.log(persons);
         // var children = users.concat(persons);
         // console.log(children);
+
         res.status(200).json({
             message: 'Users fetched successfully!',
             users: users,

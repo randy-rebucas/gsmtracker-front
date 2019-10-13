@@ -1,4 +1,7 @@
-<div gdAreas="header header | side content | footer footer" gdGap="16px" gdRows="auto auto auto" gdColumns="250px auto" gdAreas.lt-md="header | side | content | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
+<div *ngIf="isLoading" class="loading">
+    <mat-spinner></mat-spinner>
+</div>
+<div gdAreas="header header | side content | footer footer" gdGap="16px" gdRows="auto auto auto" gdColumns="250px auto" gdAreas.lt-md="header | side | content | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto" *ngIf="!isLoading">
     <div class="area header" gdArea="header">
         <div class="action-button">
             <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(patientId)">Cancel Visit</button>
@@ -6,12 +9,9 @@
         </div>
     </div>
     <div class="area side" gdArea="side">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <div fxLayout='row wrap' fxLayoutGap="10px" *ngIf="!isLoading">
+        <div fxLayout='row wrap' fxLayoutGap="10px">
             <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <form [formGroup]="profileForm" (submit)="onSavePicture()" *ngIf="!isLoading">
+              <form [formGroup]="profileForm" (submit)="onSavePicture()">
                   <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
                   <div class="image-preview">
                       <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Profile Picture">
@@ -35,31 +35,6 @@
                     <h2 class="mat-h2">{{firstname + ' ' + midlename + ' ' + lastname}} </h2>
                     <h4 class="mat-h4">Created: {{created | date }}</h4>
                 </div>
-                <!-- <mat-list>
-                    <h3 mat-subheader>Address</h3>
-                    <ng-container *ngFor="let address of addresses; let i = index;" class="address">
-                        <mat-list-item> <p mat-line>{{address.address1}}</p> </mat-list-item>
-                        <ng-container *ngIf="address.address2">
-                            <mat-list-item><p mat-line>{{address.address2}}</p></mat-list-item>
-                        </ng-container>
-                        <mat-list-item> <p mat-line>{{address.postalCode}} {{address.province}}, {{address.city}} </p></mat-list-item>
-                        <mat-list-item> {{address.country}} </mat-list-item>
-                    </ng-container>
-                    <h3 mat-subheader>Personal Information</h3>
-                    <mat-list-item><i class="material-icons">phone</i> &nbsp;{{contact}} </mat-list-item>
-                    <mat-list-item><i class="material-icons">email</i> &nbsp;<a href="mailto:{{email}}" class="mat-line">{{email}}</a></mat-list-item>
-                    <mat-list-item><i class="material-icons">wc</i> &nbsp;{{gender}} </mat-list-item>
-                    <mat-list-item><i class="material-icons">calendar_today</i> &nbsp;{{birthdate | date}} </mat-list-item>
-
-                    <h3 mat-subheader>Metadata</h3>
-                    <ng-container *ngIf="metas.length != 0">
-                        <mat-list-item *ngFor="let meta of metas; let m = index;">
-                            <i class="material-icons">label</i> &nbsp;
-                            <abbr title="{{meta.label}}">{{meta.value}}</abbr>
-                        </mat-list-item>
-                    </ng-container>
-                </mat-list> -->
-
             </div>
             <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
                 <mat-list>
@@ -84,10 +59,7 @@
         </div>
     </div>
     <div class="area content" gdArea="content">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <nav mat-tab-nav-bar *ngIf="!isLoading">
+        <nav mat-tab-nav-bar>
             <a mat-tab-link routerLink="./chief-complaints" routerLinkActive #rlaChiefComplaint="routerLinkActive" [active]="rlaChiefComplaint.isActive">Chief complaints</a>
             <a mat-tab-link routerLink="./histories" routerLinkActive #rlaHistories="routerLinkActive" [active]="rlaHistories.isActive">Histories</a>
             <a mat-tab-link routerLink="./physical-exams" routerLinkActive #rlaPhysicalExams="routerLinkActive" [active]="rlaPhysicalExams.isActive">Physical exams</a>
@@ -105,12 +77,9 @@
               </button>
             </mat-menu>
         </nav>
-        <div style="margin-top: 1em;" *ngIf="!isLoading">
-
-                  <router-outlet></router-outlet>
-
+        <div style="margin-top: 1em;">
+          <router-outlet></router-outlet>
         </div>
-
     </div>
     <div class="area footer" gdArea="footer">
         <!-- Footer -->

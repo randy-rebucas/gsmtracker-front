@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { PatientsService } from '../patients.service';
@@ -16,7 +16,6 @@ import { PrescriptionService } from '../patient-record/services/prescription.ser
 import { NotesService } from '../patient-record/services/notes.service';
 import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
 import { MatDialogConfig, MatDialog } from '@angular/material';
-import { PatientChartComponent } from '../patient-chart/patient-chart.component';
 import { UploadService } from 'src/app/upload/upload.service';
 import { UploadData } from 'src/app/upload/upload-data.model';
 import { SecureComponent } from 'src/app/secure/secure.component';
@@ -31,6 +30,8 @@ import { mimeType } from '../patient-edit/mime-type.validator';
 import { HttpEventType } from '@angular/common/http';
 import { EncountersService } from 'src/app/shared/encounters/encounters.service';
 
+import * as jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-patient-detail',
   templateUrl: './patient-detail.component.html',
@@ -40,9 +41,7 @@ import { EncountersService } from 'src/app/shared/encounters/encounters.service'
     position: relative;
   }
   .header {
-    text-align: right;
-    border-bottom: 1px solid rgba(0, 0, 0, .12);
-    padding-bottom: 1em;
+
   }
   .area.side,
   .area.content {
@@ -109,11 +108,64 @@ import { EncountersService } from 'src/app/shared/encounters/encounters.service'
   .mat-h2, .mat-title, .mat-typography h2 {
     margin: unset;
   }
+  /** */
+  .patient-detail {
+    display: flex;
+    flex-direction: row;
+    /*border: 1px solid;*/
+  }
+  .patient-detail > div {
+    flex: 0 1 auto;
+    /*border: 1px solid red;*/
+    margin: .1em;
+  }
+  .patient-detail > div:last-child {
+    width: 100%;
+    margin-left: 1em;
+  }
+  .patient-detail > div > div {
+    /*border: 1px solid blue;*/
+  }
+  .patient-detail > div > div:first-child {
+    align-self: flex-start;
+  }
+  .patient-detail > div > div:last-child {
+    align-self: flex-end;
+    margin-top: 1em;
+  }
+  .patient-detail > div > div:last-child a {
+    margin-right: 10px;
+  }
+  .patient-detail > div > div > div {
+    display: flex;
+  }
+  .patient-detail > div > div > div:last-child {
+    display: flex;
+  }
+  .patient-detail > div > div > div > div:last-child {
+    flex-grow: 1;
+    text-align: right;
+  }
+  .patient-detail > div > div > div > div dl {
+    margin: 0;
+    padding-left: 1em;
+  }
+  .patient-detail > div > div > div > div dt {
+      float: left;
+  }
+  .patient-detail > div > div > div > div dd {
+    padding-left: 3em;
+  }
+
+
 `]
 })
 export class PatientDetailComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
+
+  @ViewChild('content', {static: false}) content: ElementRef;
+
   perscriptionColumns: string[] = ['maintenable', 'medicine', 'preparation', 'sig', 'qty'];
 
   height: number;
@@ -380,16 +432,53 @@ implements OnInit, OnDestroy {
         this.dialog.open(QrCodeGenerateComponent, dialogConfig);
     }
 
-    viewChart(patientId) {
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.disableClose = true;
-      dialogConfig.autoFocus = true;
-      dialogConfig.width = '50%';
-      dialogConfig.data = {
-          id: patientId,
-          title: 'Chart'
+    public downloadChart() {
+
+      const content = this.content.nativeElement;
+
+      html2canvas(content).then(canvas => {
+
+        // Few necessary setting options
+        const imgWidth = 208;
+        const pageHeight = 295;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        const heightLeft = imgHeight;
+
+        const contentDataURL = canvas.toDataURL('image/jpg');
+
+        const pdfDoc = new jsPDF();
+
+        const margins = {
+          top: 15,
+          bottom: 15,
+          left: 15,
+          width: 190
         };
-      this.dialog.open(PatientChartComponent, dialogConfig);
+
+        const position = 0;
+
+        const specialElementHandlers = {
+          '#editor': (element: any, renderer: any) => {
+            return true;
+          }
+        };
+
+        pdfDoc.fromHTML(content.innerHTML, margins.left, margins.top, {
+          width: margins.width,
+          elementHandlers: specialElementHandlers
+        });
+
+        pdfDoc.setProperties({
+          title: 'Record Chart',
+          subject: 'Randy Rebucas Record Chart',
+          author: 'Clinic+',
+          keywords: 'patient chart',
+          creator: 'Clinic+'
+        });
+
+        pdfDoc.addImage(contentDataURL, 'JPEG', 0, position, imgWidth, imgHeight);
+        pdfDoc.save('record.pdf');
+      });
     }
 
     gotoRecord() {
