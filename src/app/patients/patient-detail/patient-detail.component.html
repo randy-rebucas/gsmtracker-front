@@ -105,193 +105,63 @@
 
   </div>
   <div class="area side" gdArea="side">
-      <mat-card class="example-card">
-          <mat-card-header>
-            <mat-card-title>Height</mat-card-title>
-            <mat-card-subtitle>{{heightCreated | date}}</mat-card-subtitle>
-          </mat-card-header>
-          <h1>{{height}}<span *ngIf="height == null">--</span> cm</h1>
-          <mat-card-content>
-            <p>Previous record: 45cm</p>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="example-card">
-            <mat-card-header>
-              <mat-card-title>Weight</mat-card-title>
-              <mat-card-subtitle>{{weightCreated | date}}</mat-card-subtitle>
-            </mat-card-header>
-            <h1>{{weight}}<span *ngIf="weight == null">--</span> kg</h1>
-            <mat-card-content>
-              <p>Previous record: 45cm</p>
-            </mat-card-content>
-          </mat-card>
-      <mat-card class="example-card">
-          <mat-card-header>
-            <mat-card-title>Oxygen Saturation%</mat-card-title>
-            <mat-card-subtitle>Current record</mat-card-subtitle>
-          </mat-card-header>
-          <h1>--%</h1>
-          <mat-card-content>
-            <p>Previous record: 45cm</p>
-          </mat-card-content>
-      </mat-card>
-      <mat-card class="example-card">
-          <mat-card-header>
-            <mat-card-title>Pain Score (out 10)</mat-card-title>
-            <mat-card-subtitle>Current record</mat-card-subtitle>
-          </mat-card-header>
-          <h1>--/--</h1>
-          <mat-card-content>
-            <p>Previous record: 45cm</p>
-          </mat-card-content>
-        </mat-card>
+      <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'cm'" [type]="'height'" [showPrevious]="true" [showDate]="true"></app-record>
+      <br/>
+      <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'kg'" [type]="'weight'" [showPrevious]="true" [showDate]="true"></app-record>
+      <br/>
+      <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'%'" [type]="'oxygen-saturation'" [showPrevious]="true" [showDate]="true"></app-record>
+      <br/>
+      <app-record [widget]="'blocks'" [hasPrefix]="false" [prefix]="" [type]="'pain-score'" [showPrevious]="true" [showDate]="true"></app-record>
   </div>
   <div class="area content" gdArea="content">
       <div fxLayout='row wrap' fxLayoutGap="10px">
-          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord" >
-              <mat-card class="example-card">
-                <mat-card-header>
-                  <mat-card-title>Temperature</mat-card-title>
-                  <mat-card-subtitle>{{temperatureCreated | date}}</mat-card-subtitle>
-                </mat-card-header>
-                <h1>{{temperature}}<span *ngIf="temperature == null">--</span> &#8451;</h1>
-                <mat-card-content>
-                  <p>Previous record: 45cm</p>
-                </mat-card-content>
-              </mat-card>
+          <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'&#8451;'" [type]="'temperature'" [showPrevious]="true" [showDate]="true"></app-record>
           </div>
           <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Blood Pressure</mat-card-title>
-                    <mat-card-subtitle>{{tempCreated | date}}</mat-card-subtitle>
-                  </mat-card-header>
-                  <h1>{{tempSystolic}}/{{tempDiastolic}} <span *ngIf="tempSystolic == null && tempDiastolic == null">--/--</span></h1>
-                  <mat-card-content>
-                    <p>Previous record: 45cm</p>
-                  </mat-card-content>
-                </mat-card>
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'mmHg'" [type]="'blood-pressure'" [showPrevious]="true" [showDate]="true"></app-record>
           </div>
           <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Respiratory Rate</mat-card-title>
-                    <mat-card-subtitle>{{respiratoryRateCreated | date}}</mat-card-subtitle>
-                  </mat-card-header>
-                  <h1>{{respiratoryRate}}<span *ngIf="respiratoryRate == null">--</span> bpm</h1>
-                  <mat-card-content>
-                    <p>Previous record: 45cm</p>
-                  </mat-card-content>
-                </mat-card>
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'bpm'" [type]="'respiratory-rate'" [showPrevious]="true" [showDate]="true"></app-record>
           </div>
           <div fxFlex="24.2%" fxFlex.xs="100%"  fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Pulse</mat-card-title>
-                    <mat-card-subtitle>Current record</mat-card-subtitle>
-                  </mat-card-header>
-                  <h1>--</h1>
-                  <mat-card-content>
-                    <p>Previous record: 45cm</p>
-                  </mat-card-content>
-                </mat-card>
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'bpm'" [type]="'pulse-rate'" [showPrevious]="true" [showDate]="true"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Complaints</mat-card-title>
-                  </mat-card-header>
-                  <div [innerHTML]="complaints"></div>
-                  <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span>
-                </mat-card>
+            <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'chief-complaint'" [showPrevious]="false" [showDate]="false"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Assessments</mat-card-title>
-                  </mat-card-header>
-                  <div fxLayout='row wrap' fxLayoutGap="10px">
-                      <div fxFlex="47.9%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord" >
-
-                              <h3 matSubheader> Diagnosis </h3>
-                              <div [innerHTML]="diagnosis"></div>
-
-                      </div>
-                      <div fxFlex="47.9%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord" >
-
-                              <h3 matSubheader> Treatments </h3>
-                              <div [innerHTML]="treatments"></div>
-
-                      </div>
-                  </div>
-                </mat-card>
+            <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'endorsements'" [showPrevious]="false" [showDate]="false"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <!-- <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Prescriptions</mat-card-title>
-                  </mat-card-header>
-                  <mat-table [dataSource]="prescriptions">
-
-                      <ng-container matColumnDef="maintenable">
-                        <mat-header-cell *matHeaderCellDef> isMaintenable </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.maintenableFlg ? 'Yes' : 'No'}} </mat-cell>
-                      </ng-container>
-
-
-                      <ng-container matColumnDef="medicine">
-                        <mat-header-cell *matHeaderCellDef> Medicine </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.medicine}} </mat-cell>
-                      </ng-container>
-
-
-                      <ng-container matColumnDef="preparation">
-                        <mat-header-cell *matHeaderCellDef> Preparation </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.preparation}} </mat-cell>
-                      </ng-container>
-
-
-                      <ng-container matColumnDef="sig">
-                        <mat-header-cell *matHeaderCellDef> Sig </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.sig}} </mat-cell>
-                      </ng-container>
-
-
-                      <ng-container matColumnDef="qty">
-                          <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
-                          <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="noData">
-                            <mat-footer-cell *matFooterCellDef colspan="3" id="no-data">
-                                <p class="mat-body">No prescription data.</p>
-                            </mat-footer-cell>
-                        </ng-container>
-
-                      <mat-header-row *matHeaderRowDef="perscriptionColumns"></mat-header-row>
-                      <mat-row *matRowDef="let row; columns: perscriptionColumns;"></mat-row>
-                      <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': (prescriptions.length != 0)}"></mat-footer-row>
-                    </mat-table>
-                </mat-card> -->
+                <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'present-illness-history'" [showPrevious]="false" [showDate]="false"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Progress notes</mat-card-title>
-                  </mat-card-header>
-                  <div [innerHTML]="progressNotes"></div>
-                  <span *ngIf="progressNotes == null"><p class="mat-body-1">No notes record!</p></span>
-
-                </mat-card>
+                <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'past-medical-history'" [showPrevious]="false" [showDate]="false"></app-record>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+                <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'social-history'" [showPrevious]="false" [showDate]="false"></app-record>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+                <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'family-history'" [showPrevious]="false" [showDate]="false"></app-record>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'order'" [showPrevious]="false" [showDate]="false"></app-record>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <app-record [widget]="'table'" [hasPrefix]="false" [prefix]="" [type]="'prescription'" [showPrevious]="false" [showDate]="false"></app-record>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'progress-notes'" [showPrevious]="false" [showDate]="false"></app-record>
+          </div>
+          <div fxFlex="49%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <app-record [widget]="'grid'" [hasPrefix]="false" [prefix]="" [type]="'assessments'" [showPrevious]="false" [showDate]="false"></app-record>
           </div>
           <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <mat-card class="example-card">
-                  <mat-card-header>
-                    <mat-card-title>Test Results</mat-card-title>
-                  </mat-card-header>
-                  <p class="mat-body-1">No notes record!</p>
-
-                </mat-card>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'immunizations'" [showPrevious]="false" [showDate]="false"></app-record>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%"  fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
+              <app-record [widget]="'file'" [hasPrefix]="false" [prefix]="" [type]="'immunizations'" [showPrevious]="false" [showDate]="false"></app-record>
           </div>
       </div>
   </div>

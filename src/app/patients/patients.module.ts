@@ -14,6 +14,8 @@ import { PatientEditComponent } from './patient-edit/patient-edit.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 import { PatientRecordComponent } from './patient-record/patient-record.component';
+import { RecordModule } from '../shared/record/record.module';
+
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { PatientRecordComponent } from './patient-record/patient-record.componen
     PerfectScrollbarModule,
     FormsModule,
     EditorModule,
+    RecordModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: PatientsComponent, canActivate: [AuthGuard], children: [

@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, Optional, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../../auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/notification.service';
 
-import { MAT_DIALOG_DATA, MatDialog, MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { DialogService } from 'src/app/shared/dialog.service';
 
 import { SecureComponent } from 'src/app/secure/secure.component';

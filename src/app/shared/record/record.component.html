@@ -1,0 +1,74 @@
+<mat-card class="record-card" id="{{type}}">
+  <mat-card-header>
+    <mat-card-title>{{ type | replace : '-' : ' ' | titlecase }}</mat-card-title>
+    <mat-card-subtitle *ngIf="showDate">Oct 13, 2019</mat-card-subtitle> <!-- {{respiratoryRateCreated | date}} -->
+  </mat-card-header>
+  <ng-container *ngIf="widget === 'blocks'">
+      <!-- <h1>{{respiratoryRate}}<span *ngIf="respiratoryRate == null">--</span> bpm</h1> -->
+      <h1>--<ng-container *ngIf="hasPrefix">{{prefix}}</ng-container></h1>
+  </ng-container>
+  <ng-container *ngIf="widget === 'list'">
+    <p>list</p>
+      <!-- <div [innerHTML]="complaints"></div>
+    <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
+  </ng-container>
+  <ng-container *ngIf="widget === 'grid'">
+      <p>grid</p>
+        <!-- <div [innerHTML]="complaints"></div>
+      <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
+  </ng-container>
+  <ng-container *ngIf="widget === 'file'">
+      <p>file</p>
+        <!-- <div [innerHTML]="complaints"></div>
+      <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
+  </ng-container>
+  <ng-container *ngIf="widget === 'table'">
+      <p>table</p>
+     <!--
+      <mat-table [dataSource]="prescriptions">
+          <ng-container matColumnDef="maintenable">
+            <mat-header-cell *matHeaderCellDef> isMaintenable </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.maintenableFlg ? 'Yes' : 'No'}} </mat-cell>
+          </ng-container>
+
+
+          <ng-container matColumnDef="medicine">
+            <mat-header-cell *matHeaderCellDef> Medicine </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.medicine}} </mat-cell>
+          </ng-container>
+
+
+          <ng-container matColumnDef="preparation">
+            <mat-header-cell *matHeaderCellDef> Preparation </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.preparation}} </mat-cell>
+          </ng-container>
+
+
+          <ng-container matColumnDef="sig">
+            <mat-header-cell *matHeaderCellDef> Sig </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.sig}} </mat-cell>
+          </ng-container>
+
+
+          <ng-container matColumnDef="qty">
+              <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef colspan="3" id="no-data">
+                    <p class="mat-body">No prescription data.</p>
+                </mat-footer-cell>
+            </ng-container>
+
+          <mat-header-row *matHeaderRowDef="perscriptionColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: perscriptionColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': (prescriptions.length != 0)}"></mat-footer-row>
+        </mat-table>
+    -->
+  </ng-container>
+
+  <mat-card-content *ngIf="showPrevious">
+    <p>Previous record: --</p>
+  </mat-card-content>
+</mat-card>
