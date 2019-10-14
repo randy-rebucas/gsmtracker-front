@@ -49,7 +49,7 @@ import { EncountersService } from 'src/app/shared/encounters/encounters.service'
 
   }
   .side > div > div:first-child {
-    text-align: center;
+
   }
   .content {
 
@@ -221,17 +221,6 @@ implements OnInit, OnDestroy {
     private titleService: Title,
     public patientsService: PatientsService,
     private usersService: UsersService,
-    // public heightService: HeightService,
-    // public weightService: WeightService,
-    // public temperatureService: TemperatureService,
-    // public bpService: BpService,
-    // public rprService: RprService,
-    // public historyService: HistoryService,
-    // public complaintService: ComplaintService,
-    // public assessmentService: AssessmentService,
-    // public prescriptionService: PrescriptionService,
-    // public notesService: NotesService,
-    // public uploadService: UploadService,
     public networksService: NetworksService,
     private notificationService: NotificationService,
     private queService: QueService,
@@ -275,53 +264,6 @@ implements OnInit, OnDestroy {
         this.userType = results.patientData.userType;
         this.metas = results.patientData.meta;
         this.avatar = results.patientData.avatar;
-
-        // if (Object.keys(results.heightData).length) {
-        //   this.height = results.heightData[0].height;
-        //   this.heightCreated = results.heightData[0].created;
-        // }
-
-        // if (Object.keys(results.weightData).length) {
-        //   this.weight = results.weightData[0].weight;
-        //   this.weightCreated = results.weightData[0].created;
-        // }
-
-        // if (Object.keys(results.temperatureData).length) {
-        //   this.temperature = results.temperatureData[0].temperature;
-        //   this.temperatureCreated = results.temperatureData[0].created;
-        // }
-
-        // if (Object.keys(results.bloodPressureData).length) {
-        //   this.tempSystolic = results.bloodPressureData[0].systolic;
-        //   this.tempDiastolic = results.bloodPressureData[0].diastolic;
-        //   this.tempCreated = results.bloodPressureData[0].created;
-        // }
-
-        // if (Object.keys(results.respiratoryRateData).length) {
-        //   this.respiratoryRate = results.respiratoryRateData[0].respiratoryrate;
-        //   this.respiratoryRateCreated = results.respiratoryRateData[0].created;
-        // }
-
-        // if (Object.keys(results.historyData).length) {
-        //   this.histories = results.historyData;
-        // }
-
-        // if (Object.keys(results.complaintData).length) {
-        //   this.complaints = results.complaintData[0].complaints;
-        // }
-
-        // if (Object.keys(results.assessmentData).length) {
-        //   this.diagnosis = results.assessmentData[0].diagnosis;
-        //   this.treatments = results.assessmentData[0].treatments;
-        // }
-
-        // if (Object.keys(results.prescriptionData).length) {
-        //   this.prescriptions = results.prescriptionData[0].prescriptions;
-        // }
-
-        // if (Object.keys(results.progressNotesData).length) {
-        //   this.progressNotes = results.progressNotesData[0].note;
-        // }
       })
       .catch(err => console.log(err));
 
@@ -329,28 +271,8 @@ implements OnInit, OnDestroy {
 
     async getPatientData(patientId) {
       const patientResponse = await this.usersService.get(patientId).toPromise();
-      // const heightResponse = await this.heightService.getLast(patientId).toPromise();
-      // const weightResponse = await this.weightService.getLast(patientId).toPromise();
-      // const temperatureResponse = await this.temperatureService.getLast(patientId).toPromise();
-      // const bloodPressureResponse = await this.bpService.getLast(patientId).toPromise();
-      // const respiratoryRateResponse = await this.rprService.getLast(patientId).toPromise();
-      // const historyResponse = await this.historyService.getLast(patientId).toPromise();
-      // const complaintResponse = await this.complaintService.getLast(patientId).toPromise();
-      // const assessmentResponse = await this.assessmentService.getLast(patientId).toPromise();
-      // const prescriptionResponse = await this.prescriptionService.getLast(patientId).toPromise();
-      // const progressNotesResponse = await this.notesService.getLast(patientId).toPromise();
       return {
         patientData: patientResponse,
-        // heightData: heightResponse,
-        // weightData: weightResponse,
-        // temperatureData: temperatureResponse,
-        // bloodPressureData: bloodPressureResponse,
-        // respiratoryRateData: respiratoryRateResponse,
-        // historyData: historyResponse,
-        // complaintData: complaintResponse,
-        // assessmentData: assessmentResponse,
-        // prescriptionData: prescriptionResponse,
-        // progressNotesData: progressNotesResponse
       };
     }
 

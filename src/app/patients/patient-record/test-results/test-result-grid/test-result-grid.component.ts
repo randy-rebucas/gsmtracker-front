@@ -40,7 +40,6 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    console.log(this.patientId);
     this.uploadService.getAll(this.perPage, this.currentPage, this.patientId);
     this.recordsSub = this.uploadService
       .getUpdateListener()

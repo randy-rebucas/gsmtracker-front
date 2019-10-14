@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HeightService } from 'src/app/patients/patient-record/services/height.service';
 import { WeightService } from 'src/app/patients/patient-record/services/weight.service';
@@ -25,11 +25,100 @@ import { NotesService } from 'src/app/patients/patient-record/services/notes.ser
 import { NoteData } from 'src/app/patients/patient-record/models/note.model';
 import { ImmunizationService } from 'src/app/patients/patient-record/services/immunization.service';
 import { ImmunizationData } from 'src/app/patients/patient-record/models/immunization-data.model';
+import { PrescriptionService } from 'src/app/patients/patient-record/services/prescription.service';
+import { PrescriptionData } from 'src/app/patients/patient-record/models/prescription-data.model';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { AssessmentService } from 'src/app/patients/patient-record/services/assessment.service';
+import { AssessmentData } from 'src/app/patients/patient-record/models/assessment-data.model';
+import { UploadService } from 'src/app/upload/upload.service';
+import { UploadData } from 'src/app/upload/upload-data.model';
+import { AllergyService } from 'src/app/patients/patient-record/services/allergy.service';
+import { AllergyData } from 'src/app/patients/patient-record/models/allergy-data.model';
 
 @Component({
     selector: 'app-record',
     templateUrl: './record.component.html',
-    styleUrls: ['./record.component.css']
+    styles: [`
+    .hide {
+      display: none;
+    }
+    mat-row.example-detail-row {
+      min-height: 0;
+    }
+    .example-element-detail {
+      width: 100%;
+    }
+    .mat-card-title {
+      font-size: 14px;
+    }
+    .mat-list-inner-data {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .mat-list-inner-data > div {
+      min-width: 200px;
+      align-items: stretch;
+      align-self: center;
+      justify-content: space-between;
+    }
+    .mat-list-inner-data > div:last-child {
+      flex-grow: 1;
+    }
+    .mat-list-inner-data > div:first-child {
+      flex-grow: 1;
+    }
+    mat-card.hasMinHeight {
+      min-height: 228px;
+    }
+    mat-card-title.mat-card-title > button {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    table#prescriptions {
+      width: 100%;
+      margin: 1em 0;
+    }
+
+    table#prescriptions tr td {
+      color: rgb(51, 122, 183);
+      font-weight: bold;
+      font-size: 16px;
+      font-family: monospace;
+    }
+
+    table#prescriptions tr td span {
+      font-weight: 100;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    table#prescriptions tr td {
+      height: unset !important;
+      vertical-align: text-bottom;
+    }
+    table#prescriptions tr td {
+      color: rgba(0,0,0,.87) !important;
+    }
+
+    table#prescriptions tr td span {
+        color: rgb(51, 122, 183);
+    }
+
+    td.mat-cell button {
+      float: right;
+    }
+    `],
+    animations: [
+      trigger('detailExpand', [
+        state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+        state('expanded', style({ height: '*', visibility: 'visible' })),
+        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      ]),
+    ],
 })
 export class RecordComponent implements OnInit {
     @Input() widget: string; // list, blocks, table, grid
@@ -47,9 +136,18 @@ export class RecordComponent implements OnInit {
 
     isLoading = false;
     total = 0;
+    perPage = 10;
+    currentPage = 1;
+    pageSizeOptions = [5, 10, 25, 100];
     recordData: any[] = [];
 
     private recordSub: Subscription;
+
+    dataSource: MatTableDataSource<any>;
+    columnsToDisplay: string[];
+    expandedElement: any;
+    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+    @ViewChild(MatSort, {static: true}) sort: MatSort;
 
     constructor(
       public router: Router,
@@ -68,11 +166,11 @@ export class RecordComponent implements OnInit {
       public familyHistoryService: FamilyHistoryService,
       public orderService: OrderService,
       public notesService: NotesService,
-      public immunizationService: ImmunizationService
-    // public historyService: HistoryService,
-    // public assessmentService: AssessmentService,
-    // public prescriptionService: PrescriptionService,
-    // public uploadService: UploadService
+      public immunizationService: ImmunizationService,
+      public prescriptionService: PrescriptionService,
+      public assessmentService: AssessmentService,
+      public uploadService: UploadService,
+      public allergyService: AllergyService
     ) {}
 
     async ngOnInit() {
@@ -249,15 +347,53 @@ export class RecordComponent implements OnInit {
             this.recordData = immunizationData.immunizations;
           });
           break;
-        // case 'prescription':
-        // break;
-        // case 'assessments':
-        // break;
-        // case 'test-results':
-        // break;
+        case 'prescription':
+          this.columnsToDisplay = ['created'];
+          this.prescriptionService.getAll(this.perPage, this.currentPage, this.patientId);
+          this.recordSub = this.prescriptionService
+            .getUpdateListener()
+            .subscribe((prescriptionData: {prescriptions: PrescriptionData[], count: number}) => {
+              this.isLoading = false;
+              this.total = prescriptionData.count;
+              this.dataSource = new MatTableDataSource(prescriptionData.prescriptions);
+              this.dataSource.paginator = this.paginator;
+              this.dataSource.sort = this.sort;
+            });
+          break;
+        case 'assessments':
+          this.columnsToDisplay = ['created'];
+          this.assessmentService.getAll(this.perPage, this.currentPage, this.patientId);
+          this.recordSub = this.assessmentService
+          .getUpdateListener()
+          .subscribe((assessmentData: {assessments: AssessmentData[], count: number}) => {
+            this.isLoading = false;
+            this.total = assessmentData.count;
+            this.dataSource = new MatTableDataSource(assessmentData.assessments);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          });
+          break;
+        case 'test-results':
+          this.uploadService.getAll(this.perPage, this.currentPage, this.patientId);
+          this.recordSub = this.uploadService
+            .getUpdateListener()
+            .subscribe((fileData: {files: UploadData[], count: number}) => {
+              this.isLoading = false;
+              this.total = fileData.count;
+              this.recordData = fileData.files;
+            });
+          break;
         default: // allergies
-
-        break;
+          this.allergyService.getAll(this.perPage, this.currentPage, this.patientId);
+          this.recordSub = this.allergyService
+          .getUpdateListener()
+          .subscribe((allergyData: {allergies: AllergyData[], count: number}) => {
+            this.isLoading = false;
+            this.total = allergyData.count;
+            this.recordData = allergyData.allergies;
+            console.log(this.recordData.length);
+          });
+          break;
       }
     }
 

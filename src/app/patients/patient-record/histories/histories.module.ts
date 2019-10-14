@@ -43,7 +43,13 @@ import { FamilyListComponent } from './family/family-list/family-list.component'
     EditorModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
-      { path: '', component: HistoriesComponent }
+      { path: '', component: HistoriesComponent, children: [
+        { path: '', redirectTo: 'present-illness', pathMatch: 'full' },
+        { path: 'present-illness', component: PresentIllnessComponent },
+        { path: 'past-medical', component: PastMedicalComponent },
+        { path: 'social', component: SocialComponent },
+        { path: 'family', component: FamilyComponent }
+      ]}
     ])
   ]
 })

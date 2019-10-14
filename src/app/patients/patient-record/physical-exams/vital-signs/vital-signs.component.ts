@@ -12,6 +12,9 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   .warn {
     color: #ff4081;
   }
+  .button-row {
+    margin-bottom: 1em;
+  }
   .button-row a {
     margin-right: 8px;
   }

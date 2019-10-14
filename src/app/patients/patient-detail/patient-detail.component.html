@@ -98,13 +98,23 @@
 
     </div>
     <div class="area side" gdArea="side">
-        <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'cm'" [type]="'height'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
-        <br/>
-        <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'kg'" [type]="'weight'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
-        <br/>
-        <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'%'" [type]="'oxygen-saturation'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
-        <br/>
-        <app-record [widget]="'blocks'" [hasPrefix]="false" [prefix]="" [type]="'pain-score'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
+        <div fxLayout='row wrap' fxLayoutGap="10px">
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'cm'" [type]="'height'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'kg'" [type]="'weight'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'%'" [type]="'oxygen-saturation'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <app-record [widget]="'blocks'" [hasPrefix]="false" [prefix]="" [type]="'pain-score'" [showPrevious]="true" [showDate]="true" [patientId]="patientId"></app-record>
+          </div>
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
+              <app-record [widget]="'default'" [hasPrefix]="false" [prefix]="" [type]="'allergies'" [showPrevious]="false" [showDate]="false" [patientId]="patientId"></app-record>
+          </div>
+        </div>
     </div>
     <div class="area content" gdArea="content">
         <div fxLayout='row wrap' fxLayoutGap="10px">
@@ -148,7 +158,7 @@
                 <app-record [widget]="'table'" [hasPrefix]="false" [prefix]="" [type]="'prescription'" [showPrevious]="false" [showDate]="false" [patientId]="patientId"></app-record>
             </div>
             <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-                <app-record [widget]="'grid'" [hasPrefix]="false" [prefix]="" [type]="'assessments'" [showPrevious]="false" [showDate]="false" [patientId]="patientId"></app-record>
+                <app-record [widget]="'table'" [hasPrefix]="false" [prefix]="" [type]="'assessments'" [showPrevious]="false" [showDate]="false" [patientId]="patientId"></app-record>
             </div>
             <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
                 <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'immunizations'" [showPrevious]="false" [showDate]="true" [patientId]="patientId"></app-record>

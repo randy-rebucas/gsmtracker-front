@@ -38,8 +38,8 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
 export class PastMedicalComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
-  panelOpenState = false;
-  listOpenState = false;
+  panelOpenState = true;
+  listOpenState = true;
 
   constructor(
     public authService: AuthService,

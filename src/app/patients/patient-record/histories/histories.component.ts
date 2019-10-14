@@ -15,6 +15,15 @@ import { AppConfiguration } from 'src/app/app-configuration.service';
   .mat-form-field {
     display: block;
   }
+  .warn {
+    color: #ff4081;
+  }
+  .button-row {
+    margin-bottom: 1em;
+  }
+  .button-row a {
+    margin-right: 8px;
+  }
   `]
 })
 export class HistoriesComponent

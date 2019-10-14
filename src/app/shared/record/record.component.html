@@ -33,7 +33,7 @@
                           <div *ngIf="showDate">{{record.created | date}}</div>
                       </div>
                   </mat-list-item>
-                  <mat-list-item *ngIf="recordData == null">
+                  <mat-list-item *ngIf="recordData.length === 0">
                       No complaints record!
                   </mat-list-item>
                 </mat-list>
@@ -46,7 +46,7 @@
                             <div *ngIf="showDate">{{record.created | date}}</div>
                         </div>
                     </mat-list-item>
-                    <mat-list-item *ngIf="recordData == null">
+                    <mat-list-item *ngIf="recordData.length === 0">
                         No endorsements record!
                     </mat-list-item>
                   </mat-list>
@@ -59,7 +59,7 @@
                             <div *ngIf="showDate">{{record.created | date}}</div>
                         </div>
                     </mat-list-item>
-                    <mat-list-item *ngIf="recordData == null">
+                    <mat-list-item *ngIf="recordData.length === 0">
                         No present illness record!
                     </mat-list-item>
                   </mat-list>
@@ -72,7 +72,7 @@
                             <div *ngIf="showDate">{{record.created | date}}</div>
                         </div>
                     </mat-list-item>
-                    <mat-list-item *ngIf="recordData == null">
+                    <mat-list-item *ngIf="recordData.length === 0">
                         No past medical record!
                     </mat-list-item>
                   </mat-list>
@@ -85,7 +85,7 @@
                             <div *ngIf="showDate">{{record.created | date}}</div>
                         </div>
                     </mat-list-item>
-                    <mat-list-item *ngIf="recordData == null">
+                    <mat-list-item *ngIf="recordData.length === 0">
                         No social record!
                     </mat-list-item>
                   </mat-list>
@@ -98,7 +98,7 @@
                             <div *ngIf="showDate">{{record.created | date}}</div>
                         </div>
                     </mat-list-item>
-                    <mat-list-item *ngIf="recordData == null">
+                    <mat-list-item *ngIf="recordData.length === 0">
                         No family history record!
                     </mat-list-item>
                   </mat-list>
@@ -111,7 +111,7 @@
                           <div *ngIf="showDate">{{record.created | date}}</div>
                       </div>
                   </mat-list-item>
-                  <mat-list-item *ngIf="recordData == null">
+                  <mat-list-item *ngIf="recordData.length === 0">
                       No order record!
                   </mat-list-item>
                 </mat-list>
@@ -124,7 +124,7 @@
                           <div *ngIf="showDate">{{record.created | date}}</div>
                       </div>
                   </mat-list-item>
-                  <mat-list-item *ngIf="recordData == null">
+                  <mat-list-item *ngIf="recordData.length === 0">
                       No note record!
                   </mat-list-item>
                 </mat-list>
@@ -138,67 +138,100 @@
                           <div *ngIf="showDate">{{record.created | date}}</div>
                       </div>
                   </mat-list-item>
-                  <mat-list-item *ngIf="recordData == null">
+                  <mat-list-item *ngIf="recordData.length === 0">
                       No immunization record!
                   </mat-list-item>
                 </mat-list>
             </ng-container>
         </ng-container>
     </ng-container>
-    <ng-container *ngIf="widget === 'grid'">
-        <p>grid</p>
-        <!-- <div [innerHTML]="complaints"></div>
-      <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
+    <ng-container *ngIf="widget === 'default'">
+        <mat-list>
+            <mat-list-item matRipple *ngFor="let record of recordData">
+              {{record.allergy}}
+            </mat-list-item>
+            <ng-container *ngIf="recordData.length === 0">
+              <p class="mat-body">no allergy listed!</p>
+            </ng-container>
+          </mat-list>
     </ng-container>
     <ng-container *ngIf="widget === 'file'">
-        <p>file</p>
-        <!-- <div [innerHTML]="complaints"></div>
-      <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
+        <mat-card class="attachment-card" fxFlex="15%" fxFlex.xs="100%"  fxFlex.sm="25%" fxFlex.md="100%" *ngFor="let record of recordData">
+            <img mat-card-image [src]="record.path" [alt]="record.name">
+            <mat-card-content>
+              <p>{{ record.name.length > 20 ? record.name.substring(0, 20)+"..." : record.name }}</p>
+            </mat-card-content>
+        </mat-card>
+        <ng-container *ngIf="recordData.length === 0">
+          <p>No test result data!</p>
+        </ng-container>
     </ng-container>
     <ng-container *ngIf="widget === 'table'">
-        <p>table</p>
-        <!--
-      <mat-table [dataSource]="prescriptions">
-          <ng-container matColumnDef="maintenable">
-            <mat-header-cell *matHeaderCellDef> isMaintenable </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.maintenableFlg ? 'Yes' : 'No'}} </mat-cell>
-          </ng-container>
+        <mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
 
-
-          <ng-container matColumnDef="medicine">
-            <mat-header-cell *matHeaderCellDef> Medicine </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.medicine}} </mat-cell>
-          </ng-container>
-
-
-          <ng-container matColumnDef="preparation">
-            <mat-header-cell *matHeaderCellDef> Preparation </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.preparation}} </mat-cell>
-          </ng-container>
-
-
-          <ng-container matColumnDef="sig">
-            <mat-header-cell *matHeaderCellDef> Sig </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.sig}} </mat-cell>
-          </ng-container>
-
-
-          <ng-container matColumnDef="qty">
-              <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
+            <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
+                <div *ngIf="column === 'created'; then thenBlockDate else elseBlockDate"></div>
+                <ng-template #thenBlockDate>
+                    <mat-cell *matCellDef="let element"> {{element[column] | date}}</mat-cell>
+                </ng-template>
+                <ng-template #elseBlockDate>
+                    <mat-cell *matCellDef="let element"> {{element[column]}}</mat-cell>
+                </ng-template>
             </ng-container>
 
-            <ng-container matColumnDef="noData">
-                <mat-footer-cell *matFooterCellDef colspan="3" id="no-data">
-                    <p class="mat-body">No prescription data.</p>
+            <!-- Expanded Content Column - The detail element is made up of this one column -->
+            <ng-container matColumnDef="expandedDetail">
+                <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                    <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div class="example-element-description">
+                            <ng-container [ngSwitch]="type">
+                                <ng-container *ngSwitchCase="'prescription'">
+                                    <table id="prescriptions">
+                                      <tr *ngFor="let prescription of element.prescriptions; let i = index;">
+                                          <td>{{i+1}}</td>
+                                          <td> {{prescription.medicine}} {{prescription.preparation}} <br/>
+                                              <span>sig: {{prescription.sig}} {{prescription.maintenableFlg ? '- [maintainable]' : ''}}</span></td>
+                                          <td> # {{prescription.quantity}}</td>
+                                      </tr>
+                                    </table>
+                                </ng-container>
+                                <ng-container *ngSwitchDefault>
+                                    <h4 subheading-1>Diagnoses</h4>
+                                    <div [innerHTML]="element.diagnosis"></div>
+                                    <h4 subheading-1>Treatments</h4>
+                                    <div [innerHTML]="element.treatments"></div>
+                              </ng-container>
+                            </ng-container>
+
+                        </div>
+                    </div>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+            <mat-row matRipple
+            *matRowDef="let element; columns: columnsToDisplay;"
+            class="example-element-row"
+            [class.example-expanded-row]="expandedElement === element"
+            (click)="expandedElement = expandedElement === element ? null : element">
+            </mat-row>
+            <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></mat-row>
+
+            <ng-container matColumnDef="loading">
+                <mat-footer-cell *matFooterCellDef colspan="8">
+                    <p class="mat-body">Loading data...</p>
                 </mat-footer-cell>
             </ng-container>
-
-          <mat-header-row *matHeaderRowDef="perscriptionColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: perscriptionColumns;"></mat-row>
-          <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': (prescriptions.length != 0)}"></mat-footer-row>
+            <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef colspan="8">
+                    <p class="mat-body">No record data.</p>
+                </mat-footer-cell>
+            </ng-container>
+            <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
         </mat-table>
-    -->
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" showFirstLastButtons></mat-paginator>
     </ng-container>
 
     <mat-card-content *ngIf="showPrevious">
