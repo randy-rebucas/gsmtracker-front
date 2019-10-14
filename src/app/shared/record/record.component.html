@@ -1,30 +1,31 @@
 <mat-card class="record-card" id="{{type}}">
-  <mat-card-header>
-    <mat-card-title>{{ type | replace : '-' : ' ' | titlecase }}</mat-card-title>
-    <mat-card-subtitle *ngIf="showDate">Oct 13, 2019</mat-card-subtitle> <!-- {{respiratoryRateCreated | date}} -->
-  </mat-card-header>
-  <ng-container *ngIf="widget === 'blocks'">
-      <!-- <h1>{{respiratoryRate}}<span *ngIf="respiratoryRate == null">--</span> bpm</h1> -->
-      <h1>--<ng-container *ngIf="hasPrefix">{{prefix}}</ng-container></h1>
-  </ng-container>
-  <ng-container *ngIf="widget === 'list'">
-    <p>list</p>
-      <!-- <div [innerHTML]="complaints"></div>
+    <mat-card-header>
+        <mat-card-title>{{ type | replace : '-' : ' ' | titlecase }}</mat-card-title>
+        <mat-card-subtitle *ngIf="showDate">{{ latestRecordDate | date}}</mat-card-subtitle>
+    </mat-card-header>
+    <ng-container *ngIf="widget === 'blocks'">
+        <h1>{{ latestRecord ? latestRecord : '--' }}
+            <ng-container *ngIf="hasPrefix">{{prefix}}</ng-container>
+        </h1>
+    </ng-container>
+    <ng-container *ngIf="widget === 'list'">
+        <p>list</p>
+        <!-- <div [innerHTML]="complaints"></div>
     <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
-  </ng-container>
-  <ng-container *ngIf="widget === 'grid'">
-      <p>grid</p>
+    </ng-container>
+    <ng-container *ngIf="widget === 'grid'">
+        <p>grid</p>
         <!-- <div [innerHTML]="complaints"></div>
       <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
-  </ng-container>
-  <ng-container *ngIf="widget === 'file'">
-      <p>file</p>
+    </ng-container>
+    <ng-container *ngIf="widget === 'file'">
+        <p>file</p>
         <!-- <div [innerHTML]="complaints"></div>
       <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
-  </ng-container>
-  <ng-container *ngIf="widget === 'table'">
-      <p>table</p>
-     <!--
+    </ng-container>
+    <ng-container *ngIf="widget === 'table'">
+        <p>table</p>
+        <!--
       <mat-table [dataSource]="prescriptions">
           <ng-container matColumnDef="maintenable">
             <mat-header-cell *matHeaderCellDef> isMaintenable </mat-header-cell>
@@ -66,9 +67,11 @@
           <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': (prescriptions.length != 0)}"></mat-footer-row>
         </mat-table>
     -->
-  </ng-container>
+    </ng-container>
 
-  <mat-card-content *ngIf="showPrevious">
-    <p>Previous record: --</p>
-  </mat-card-content>
+    <mat-card-content *ngIf="showPrevious">
+        <p>Previous record: {{ lastRecord ? lastRecord : '--' }}
+            <ng-container *ngIf="hasPrefix">{{prefix}}</ng-container>
+        </p>
+    </mat-card-content>
 </mat-card>

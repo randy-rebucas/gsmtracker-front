@@ -121,6 +121,7 @@ implements OnInit, OnDestroy {
 
     this.messagesService.getAllUnread(this.licenseId).subscribe((res) => {
       this.newMessage = res.count;
+      console.log(res);
     });
 
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
