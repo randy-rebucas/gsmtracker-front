@@ -117,6 +117,9 @@ import { SettingsGeneralService } from 'src/app/settings/settings-general.servic
   }
   mat-list-item {
     max-height: 42px;
+    margin-bottom: 1em;
+    border-top: 1px solid #bdbdbd;
+    padding-top: 10px !important;
   }
   .birthday-user {
     width: 100%;

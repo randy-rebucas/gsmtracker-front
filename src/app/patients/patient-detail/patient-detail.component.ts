@@ -70,6 +70,7 @@ import { EncountersService } from 'src/app/shared/encounters/encounters.service'
   :host /deep/ .mat-card-header-text {
     /* CSS styles go here */
     margin: 0px;
+    width: 100%;
   }
   .mat-card-subtitle {
     margin-bottom: unset;
@@ -376,46 +377,6 @@ implements OnInit, OnDestroy {
           this.notificationService.success(':: ' + event.body.message);
         }
       });
-    }
-
-    onViewAll(targetComp: any) {
-      switch (targetComp) {
-        case 'height':
-          this.router.navigate(['./record/physical-exams/height'], {relativeTo: this.route});
-          break;
-        case 'weight':
-          this.router.navigate(['./record/physical-exams/weight'], {relativeTo: this.route});
-          break;
-        case 'temperature':
-          this.router.navigate(['./record/physical-exams/temperature'], {relativeTo: this.route});
-          break;
-        case 'blood-pressure':
-          this.router.navigate(['./record/physical-exams/blood-pressure'], {relativeTo: this.route});
-          break;
-        case 'respiratory-rate':
-          this.router.navigate(['./record/physical-exams/respiratory-rate'], {relativeTo: this.route});
-          break;
-        case 'histories':
-          this.router.navigate(['./record/histories'], {relativeTo: this.route});
-          break;
-        case 'chief-complaints':
-          this.router.navigate(['./record/chief-complaints'], {relativeTo: this.route});
-          break;
-        case 'assessments':
-          this.router.navigate(['./record/assessments'], {relativeTo: this.route});
-          break;
-        case 'prescriptions':
-          this.router.navigate(['./record/prescriptions'], {relativeTo: this.route});
-          break;
-        case 'progress-notes':
-          this.router.navigate(['./record/progress-notes'], {relativeTo: this.route});
-          break;
-        case 'test-results':
-          this.router.navigate(['./record/test-results'], {relativeTo: this.route});
-          break;
-        default:
-          this.router.navigate(['./'], {relativeTo: this.route});
-      }
     }
 
     generateQrCode(patientId) {

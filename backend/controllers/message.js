@@ -85,7 +85,8 @@ exports.delete = async(req, res, next) => {
 
 exports.getAllUnread = async(req, res, next) => {
     try {
-        const unreadMessages = await Thread.aggregate([{
+        const unreadMessages = await Thread.aggregate([
+            {
                 $lookup: {
                     from: "messages", // other table name
                     localField: "threadId", // name of users table field
@@ -94,21 +95,21 @@ exports.getAllUnread = async(req, res, next) => {
                 }
             },
             { $unwind: "$messages" },
-            { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
+            // { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
             {
                 $project: {
                     // ... as you need
-                    // count: 1,
+                    count: 1,
                     messages: {
                         $filter: {
                             input: "$messages", // arrays
-                            as: "message",
-                            cond: { $eq: ["$$message.status", 0] }
+                            as: "item",
+                            cond: { $eq: ["$$item.status", 0] }
                         }
                     }
                 }
             },
-            { $sort: { "created": -1 } }
+            { $sort: { "created": 1 } }
         ]);
         console.log(unreadMessages);
 

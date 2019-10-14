@@ -1,6 +1,21 @@
-<mat-card class="record-card" id="{{type}}">
+<mat-card [ngClass]="{'hasMinHeight': widget != 'blocks'}" id="{{type}}">
     <mat-card-header>
-        <mat-card-title>{{ type | replace : '-' : ' ' | titlecase }}</mat-card-title>
+        <mat-card-title>
+          {{ type | replace : '-' : ' ' | titlecase }}
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="menu">
+              <mat-icon>keyboard_arrow_down</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="onViewAll(type)">
+                  <mat-icon>input</mat-icon>
+                  <span>View All</span>
+              </button>
+              <!-- <button mat-menu-item (click)="onOpenList()">
+                  <mat-icon>list</mat-icon>
+                  <span>{{listOpenState ? 'Close' : 'Open'}} List</span>
+              </button> -->
+            </mat-menu>
+        </mat-card-title>
         <mat-card-subtitle *ngIf="showDate">{{ latestRecordDate | date}}</mat-card-subtitle>
     </mat-card-header>
     <ng-container *ngIf="widget === 'blocks'">
@@ -9,9 +24,126 @@
         </h1>
     </ng-container>
     <ng-container *ngIf="widget === 'list'">
-        <p>list</p>
-        <!-- <div [innerHTML]="complaints"></div>
-    <span *ngIf="complaints == null"><p class="mat-body-1">No complaints record!</p></span> -->
+        <ng-container [ngSwitch]="type">
+            <ng-container *ngSwitchCase="'chief-complaint'">
+                <mat-list dense>
+                  <mat-list-item matRipple *ngFor="let record of recordData;">
+                      <div class="mat-list-inner-data">
+                          <div [innerHTML]="record.complaints"></div>
+                          <div *ngIf="showDate">{{record.created | date}}</div>
+                      </div>
+                  </mat-list-item>
+                  <mat-list-item *ngIf="recordData == null">
+                      No complaints record!
+                  </mat-list-item>
+                </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchCase="'endorsements'">
+                <mat-list dense>
+                    <mat-list-item matRipple *ngFor="let record of recordData;">
+                        <div class="mat-list-inner-data">
+                            <div [innerHTML]="record.endorsement"></div>
+                            <div *ngIf="showDate">{{record.created | date}}</div>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="recordData == null">
+                        No endorsements record!
+                    </mat-list-item>
+                  </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchCase="'present-illness-history'">
+                <mat-list dense>
+                    <mat-list-item matRipple *ngFor="let record of recordData;">
+                        <div class="mat-list-inner-data">
+                            <div [innerHTML]="record.presentIllnesses"></div>
+                            <div *ngIf="showDate">{{record.created | date}}</div>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="recordData == null">
+                        No present illness record!
+                    </mat-list-item>
+                  </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchCase="'past-medical-history'">
+                <mat-list dense>
+                    <mat-list-item matRipple *ngFor="let record of recordData;">
+                        <div class="mat-list-inner-data">
+                            <div [innerHTML]="record.pastMedicals"></div>
+                            <div *ngIf="showDate">{{record.created | date}}</div>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="recordData == null">
+                        No past medical record!
+                    </mat-list-item>
+                  </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchCase="'social-history'">
+                <mat-list dense>
+                    <mat-list-item matRipple *ngFor="let record of recordData;">
+                        <div class="mat-list-inner-data">
+                            <div [innerHTML]="record.socials"></div>
+                            <div *ngIf="showDate">{{record.created | date}}</div>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="recordData == null">
+                        No social record!
+                    </mat-list-item>
+                  </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchCase="'family-history'">
+                <mat-list dense>
+                    <mat-list-item matRipple *ngFor="let record of recordData;">
+                        <div class="mat-list-inner-data">
+                            <div [innerHTML]="record.familyHistories"></div>
+                            <div *ngIf="showDate">{{record.created | date}}</div>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="recordData == null">
+                        No family history record!
+                    </mat-list-item>
+                  </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchCase="'order'">
+              <mat-list dense>
+                  <mat-list-item matRipple *ngFor="let record of recordData;">
+                      <div class="mat-list-inner-data">
+                          <div [innerHTML]="record.order"></div>
+                          <div *ngIf="showDate">{{record.created | date}}</div>
+                      </div>
+                  </mat-list-item>
+                  <mat-list-item *ngIf="recordData == null">
+                      No order record!
+                  </mat-list-item>
+                </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchCase="'progress-notes'">
+                <mat-list dense>
+                  <mat-list-item matRipple *ngFor="let record of recordData;">
+                      <div class="mat-list-inner-data">
+                          <div [innerHTML]="record.note"></div>
+                          <div *ngIf="showDate">{{record.created | date}}</div>
+                      </div>
+                  </mat-list-item>
+                  <mat-list-item *ngIf="recordData == null">
+                      No note record!
+                  </mat-list-item>
+                </mat-list>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <mat-list dense>
+                  <mat-list-item matRipple *ngFor="let record of recordData;">
+                      <div class="mat-list-inner-data">
+                          <div>{{record.vaccines}}</div>
+                          <div>{{record.doses}}</div>
+                          <div *ngIf="showDate">{{record.created | date}}</div>
+                      </div>
+                  </mat-list-item>
+                  <mat-list-item *ngIf="recordData == null">
+                      No immunization record!
+                  </mat-list-item>
+                </mat-list>
+            </ng-container>
+        </ng-container>
     </ng-container>
     <ng-container *ngIf="widget === 'grid'">
         <p>grid</p>

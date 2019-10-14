@@ -166,7 +166,12 @@ exports.getNewPatient = async(req, res, next) => {
             })
             .populate({
                 path: 'personId',
-                match: { created: { $gte: today.toDate(), $lte: moment(today).endOf('day').toDate() } },
+                match: {
+                  created: {
+                    $gte: today.toDate(),
+                    $lte: moment(today).endOf('day').toDate()
+                  }
+                },
             }).exec()
 
         res.status(200).json({

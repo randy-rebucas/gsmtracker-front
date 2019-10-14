@@ -120,4 +120,11 @@ export class UsersService {
   getBirthdays(licenseId: string) {
     return this.http.get<{users: any}>(BACKEND_URL + '/birthdays/' + licenseId);
   }
+
+  getAllNew(licenseId: string) {
+    // tslint:disable-next-line: max-line-length
+    return this.http.get<{ count: number }>(
+        BACKEND_URL + '/new/' + licenseId
+      );
+  }
 }

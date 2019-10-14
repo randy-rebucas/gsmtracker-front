@@ -7,6 +7,7 @@ const User = require('../models/user');
 const Person = require('../models/person');
 const Setting = require('../models/setting');
 const ObjectId = require('mongoose').Types.ObjectId;
+const moment = require('moment');
 
 exports.createUser = async(req, res, next) => {
     try {
@@ -294,6 +295,35 @@ exports.uploadProfile = async(req, res, next) => {
             message: error.message
         });
     }
+};
+
+exports.getNewPatient = async(req, res, next) => {
+  try {
+      const today = moment().startOf('day');
+
+      let newPatientCount = await User.countDocuments({
+              'licenseId': req.params.licenseId,
+              'userType': 'patient'
+          })
+          .populate({
+              path: 'personId',
+              match: {
+                created: {
+                  $gte: today.toDate(),
+                  $lte: moment(today).endOf('day').toDate()
+                }
+              },
+          }).exec()
+
+      res.status(200).json({
+          count: newPatientCount
+      });
+
+  } catch (error) {
+      res.status(500).json({
+          message: error.message
+      });
+  }
 };
 
 exports.getTodaysBirthday = async(req, res, next) => {

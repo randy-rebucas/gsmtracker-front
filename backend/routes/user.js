@@ -20,6 +20,8 @@ router.get('', UserController.getAll);
 
 router.get('/:userId', UserController.get);
 
+router.get('/new/:licenseId', UserController.getNewPatient);
+
 router.get('/birthdays/:licenseId', UserController.getTodaysBirthday);
 
 router.put('/:userId', checkAuth, preAuth, UserController.update);

@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { SecureComponent } from '../secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from '../app-configuration.service';
-import { PatientsService } from '../patients/patients.service';
 import { Subscription } from 'rxjs';
 import { AppointmentService } from '../appointments/appointment.service';
 import { QueService } from '../que/que.service';
@@ -14,6 +13,7 @@ import { DialogService } from '../shared/dialog.service';
 import { EncountersService } from '../shared/encounters/encounters.service';
 import { EncountersData } from '../shared/encounters/encounters-data.model';
 import { MessagesService } from '../messages/messages.service';
+import { UsersService } from '../users/users.service';
 
 @Component({
   selector: 'app-home',
@@ -78,7 +78,7 @@ implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private dialogService: DialogService,
     private titleService: Title,
-    private patientsService: PatientsService,
+    private usersService: UsersService,
     private appointmentService: AppointmentService,
     private queService: QueService,
     private encountersService: EncountersService,
@@ -111,7 +111,7 @@ implements OnInit, OnDestroy {
 
     this.titleService.setTitle('Home');
 
-    this.patientsService.getAllNew(this.licenseId).subscribe((res) => {
+    this.usersService.getAllNew(this.licenseId).subscribe((res) => {
       this.newPatient = res.count;
     });
 
