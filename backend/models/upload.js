@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const attachmentSchema = mongoose.Schema({
-  path: { type: String },
+  src: { type: String },
+  thumb: { type: String },
   name: { type: String },
   type: { type: String },
   patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

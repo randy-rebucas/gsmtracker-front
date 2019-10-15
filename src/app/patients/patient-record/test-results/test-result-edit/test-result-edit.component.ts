@@ -63,7 +63,8 @@ implements OnInit, OnDestroy {
       this.isLoading = false;
       this.uploadData = {
         id: recordData._id,
-        path: recordData.path,
+        src: recordData.src,
+        thumb: recordData.thumb,
         name: recordData.name,
         type: recordData.type,
         patientId: recordData.patientId,

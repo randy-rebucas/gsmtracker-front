@@ -92,6 +92,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/attachments', express.static(path.join(__dirname, 'attachments')));
+app.use('/attachments/thumb', express.static(path.join(__dirname, 'attachments/thumb')));
 //app.use('/', express.static(path.join(__dirname, 'angular')));
 
 app.use((req, res, next) => {

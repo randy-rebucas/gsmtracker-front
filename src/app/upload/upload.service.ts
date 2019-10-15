@@ -32,7 +32,8 @@ export class UploadService {
         return { files: fileData.files.map(file => {
           return {
             id: file._id,
-            path: file.path,
+            src: file.src,
+            thumb: file.thumb,
             name: file.name,
             type: file.type,
             created: file.created,
@@ -56,7 +57,7 @@ export class UploadService {
 
   getFile(fileId: string) {
     // tslint:disable-next-line:max-line-length
-    return this.http.get<{ _id: string, path: string, name: string, type: string, created: string, patientId: string, licenseId: string}>(
+    return this.http.get<{ _id: string, src: string, thumb: string, name: string, type: string, created: string, patientId: string, licenseId: string}>(
       BACKEND_URL + '/' + fileId
       );
   }

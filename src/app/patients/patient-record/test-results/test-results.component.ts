@@ -32,6 +32,47 @@ implements OnInit, OnDestroy {
     this.onFileView = $arg;
   }
 
+  onUploadHandler(info) {
+    console.log('fired Event "onUpload"');
+    console.log(info);
+  }
+
+  onChangeHandler(file) {
+    if (!file) {
+      return;
+    }
+    console.log('fired Event "onChange"');
+  // input file parameter depends on "multiple-files" widget attribute
+    // if(this.multipleFiles) {
+  //  file contains 2 methods:
+  //  .promise() - returns the general promise for all uploaded files which resolves into an uploaded file group info
+  //  .files() - returns an array of promises: one per each uploaded file. Each promise resolves into an uploaded file info
+    console.log(file);
+    if (file.promise) {
+        file.promise().then((groupInfo) => {
+          console.log('resolved general promise from "onChange" with data:');
+          console.log(groupInfo);
+        });
+      }
+    if (file.files) {
+        file.files().forEach((promise) => {
+          promise.then((fileInfo) => {
+            console.log('resolves file promise with file info:');
+            console.log(fileInfo);
+          });
+        });
+      } else {
+  // file contains uploaded file info
+        console.log(file);
+      }
+    // }
+  }
+
+  onProgressHandler(progress) {
+    console.log('fired Event "onProgress with data:"');
+    console.log(progress);
+  }
+
   ngOnDestroy() {
     super.doDestroy();
   }

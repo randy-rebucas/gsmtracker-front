@@ -2,7 +2,14 @@
     <mat-card-header>
         <mat-card-title>Test Results</mat-card-title>
         <div class="action-button">
-            <app-upload></app-upload>
+            <ngx-uploadcare-widget
+              images-only="true"
+              public-key="51c78576512bc8211591"
+              (on-upload-complete)="onUploadHandler($event)"
+              (on-change)="onChangeHandler($event)"
+              (on-progress)="onProgressHandler($event)"
+              >
+            </ngx-uploadcare-widget>
             <mat-button-toggle-group #group="matButtonToggleGroup">
                 <mat-button-toggle value="grid" (click)="onSwitchView('grid')" aria-label="Grid View">
                   <mat-icon>grid_on</mat-icon>

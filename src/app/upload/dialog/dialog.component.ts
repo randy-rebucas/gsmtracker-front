@@ -77,7 +77,7 @@ export class DialogComponent implements OnInit, OnDestroy {
   onFilesAdded() {
     const files: { [key: string]: File } = this.file.nativeElement.files;
     for (const key in files) {
-      if (!isNaN(parseInt(key))) {
+      if (!isNaN(parseInt(key, 2))) {
         this.files.add(files[key]);
       }
     }

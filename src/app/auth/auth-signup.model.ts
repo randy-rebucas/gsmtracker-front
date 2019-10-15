@@ -1,8 +1,7 @@
 export interface AuthSignup {
-    firstname: string;
-    lastname: string;
-    clinicname: string;
-    email: string;
-    password: string;
-  }
-  
+  firstname: string;
+  lastname: string;
+  clinicname: string;
+  email: string;
+  password: string;
+}

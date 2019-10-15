@@ -24,7 +24,7 @@ implements OnInit, OnDestroy {
 
   id: string;
   created: string;
-  path: string;
+  src: string;
   name: string;
   type: string;
 
@@ -56,7 +56,7 @@ implements OnInit, OnDestroy {
         this.isLoading = false;
         this.id = fileData._id;
         this.created = fileData.created;
-        this.path = fileData.path;
+        this.src = fileData.src;
         this.name = fileData.name;
         this.type = fileData.type;
       });

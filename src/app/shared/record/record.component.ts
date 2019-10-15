@@ -36,6 +36,7 @@ import { UploadData } from 'src/app/upload/upload-data.model';
 import { AllergyService } from 'src/app/patients/patient-record/services/allergy.service';
 import { AllergyData } from 'src/app/patients/patient-record/models/allergy-data.model';
 
+import { Lightbox } from 'ngx-lightbox';
 @Component({
     selector: 'app-record',
     templateUrl: './record.component.html',
@@ -170,7 +171,10 @@ export class RecordComponent implements OnInit {
       public prescriptionService: PrescriptionService,
       public assessmentService: AssessmentService,
       public uploadService: UploadService,
-      public allergyService: AllergyService
+      public allergyService: AllergyService,
+
+
+      private lightbox: Lightbox
     ) {}
 
     async ngOnInit() {
@@ -380,8 +384,21 @@ export class RecordComponent implements OnInit {
             .subscribe((fileData: {files: UploadData[], count: number}) => {
               this.isLoading = false;
               this.total = fileData.count;
-              this.recordData = fileData.files;
+              // this.recordData = fileData.files;
+              // tslint:disable-next-line:prefer-for-of
+              for (let index = 0; index < fileData.files.length; index++) {
+                const element = fileData.files[index];
+                const album = {
+                 src: element.src,
+                 caption: element.name,
+                 thumb: element.thumb
+                };
+
+                this.recordData.push(album);
+              }
+
             });
+
           break;
         default: // allergies
           this.allergyService.getAll(this.perPage, this.currentPage, this.patientId);
@@ -391,7 +408,6 @@ export class RecordComponent implements OnInit {
             this.isLoading = false;
             this.total = allergyData.count;
             this.recordData = allergyData.allergies;
-            console.log(this.recordData.length);
           });
           break;
       }
@@ -456,4 +472,13 @@ export class RecordComponent implements OnInit {
       }
     }
 
+    open(index: number): void {
+      // open lightbox
+      this.lightbox.open(this.recordData, index);
+    }
+
+    close(): void {
+      // close lightbox programmatically
+      this.lightbox.close();
+    }
 }

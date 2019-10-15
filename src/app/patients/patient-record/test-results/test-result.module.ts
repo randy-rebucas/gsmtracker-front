@@ -11,6 +11,7 @@ import { TestResultsComponent } from './test-results.component';
 import { TestResultListComponent } from './test-result-list/test-result-list.component';
 import { TestResultDetailComponent } from './test-result-detail/test-result-detail.component';
 import { TestResultGridComponent } from './test-result-grid/test-result-grid.component';
+import { UcWidgetModule } from 'ngx-uploadcare-widget';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { TestResultGridComponent } from './test-result-grid/test-result-grid.com
     ReactiveFormsModule,
     AngularMaterialModule,
     UploadModule,
+    UcWidgetModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: TestResultsComponent, children: [

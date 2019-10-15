@@ -43,6 +43,7 @@ export class SettingsGeneralService {
         );
     }
 
+    // tslint:disable-next-line:max-line-length
     insert(name: string, owner: string, address: string, email: string, url: string, prc: string, ptr: string, s2: string, phones: [], hours: []) {
       const recordData = {
         name, owner, address, email, url, prc, ptr, s2, phones, hours
@@ -50,10 +51,12 @@ export class SettingsGeneralService {
       return this.http.post<{ message: string, record: SettingsGeneralData }>(BACKEND_URL, recordData);
     }
 
-    update(id: string, licenseId: string, name: string, owner: string, address: [], email: string, prc: string, ptr: string, s2: string, nobreak: boolean, phones: [], hours: []) {
+    // tslint:disable-next-line:max-line-length
+    update(Id: string, licenseId: string, Name: string, Owner: string, Address: [], Email: string, Prc: string, Ptr: string, S2: string, Nobreak: boolean, Phones: [], Hours: []) {
 
       const settingData = {
-          id: id, name: name, owner: owner, address: address, email: email, prc: prc, ptr: ptr, s2: s2, nobreak: nobreak, phones: phones, hours: hours
+          // tslint:disable-next-line:max-line-length
+          id: Id, name: Name, owner: Owner, address: Address, email: Email, prc: Prc, ptr: Ptr, s2: S2, nobreak: Nobreak, phones: Phones, hours: Hours
         };
 
       return this.http.put(BACKEND_URL + '/' + licenseId, settingData);

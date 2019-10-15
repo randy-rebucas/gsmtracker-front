@@ -6,7 +6,7 @@
     <tr>
       <td>Name: {{name}}</td>
       <td>Type: {{type}}</td>
-      <td>Link: <a [href]="path" target="_blank">link</a></td>
+      <td>Link: <a [href]="src" target="_blank">link</a></td>
       <td>
         <div class="button-action">
             <button mat-icon-button (click)="onEdit(id)"><mat-icon>launch</mat-icon></button>
@@ -17,7 +17,7 @@
     </tr>
   </table>
   <div id="image-preview">
-      <img [src]="path" style="width: 100%;"/>
+      <img [src]="src" style="width: 100%;"/>
   </div>
 </div>
 

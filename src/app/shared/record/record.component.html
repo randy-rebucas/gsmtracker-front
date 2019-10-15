@@ -156,12 +156,15 @@
           </mat-list>
     </ng-container>
     <ng-container *ngIf="widget === 'file'">
-        <mat-card class="attachment-card" fxFlex="15%" fxFlex.xs="100%"  fxFlex.sm="25%" fxFlex.md="100%" *ngFor="let record of recordData">
+        <!-- <mat-card class="attachment-card" fxFlex="15%" fxFlex.xs="100%"  fxFlex.sm="25%" fxFlex.md="100%" *ngFor="let record of recordData">
             <img mat-card-image [src]="record.path" [alt]="record.name">
             <mat-card-content>
               <p>{{ record.name.length > 20 ? record.name.substring(0, 20)+"..." : record.name }}</p>
             </mat-card-content>
-        </mat-card>
+        </mat-card> -->
+        <div *ngFor="let record of recordData; let i=index" fxFlex="15%" fxFlex.xs="100%"  fxFlex.sm="25%" fxFlex.md="100%">
+            <img [src]="record.src" [alt]="record.name" (click)="open(i)" />
+        </div>
         <ng-container *ngIf="recordData.length === 0">
           <p>No test result data!</p>
         </ng-container>

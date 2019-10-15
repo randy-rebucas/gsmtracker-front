@@ -1,6 +1,8 @@
 const IncomingForm = require('formidable').IncomingForm
 const Upload = require('../models/upload');
 const moment = require('moment');
+const sharp = require('sharp');
+const mkdirp = require('mkdirp-promise');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -20,7 +22,8 @@ exports.getAll = async (req, res, next) => {
       var obj = {
         _id: element._id,
         created: element.created,
-        path: element.path,
+        src: element.src,
+        thumb: element.thumb,
         type: element.type,
         name: element.name,
         patientId: element.patientId,
@@ -165,16 +168,39 @@ exports.upload = async (req, res, next) => {
       res.json()
     });
 
-    form.parse(req, function(err, fields, files) {
+
+    form.parse(req, async function(err, fields, files) {
+
+      const MIME_TYPE_MAP = {
+        'image/png': 'png',
+        'image/jpeg': 'jpg',
+        'image/jpg': 'jpg'
+      };
+      const ext = MIME_TYPE_MAP[files.file.type];
+      const path = files.file.name;
+      const pathAr = path.split(".");
       const url = req.protocol + '://' + req.get('host');
+
+      await mkdirp('attachments/thumb');
+
+      const thumbPath = './attachments/thumb/' + pathAr[0] + '-' + Date.now() + '-thumb.' + ext;
+      let resized = await sharp(files.file.path).resize(200, 200, {
+        kernel: sharp.kernel.nearest,
+        fit: sharp.fit.cover,
+        position: sharp.strategy.entropy
+      }).toFile(thumbPath);
+
       const upload = new Upload({
-        path: url + '/' + files.file.path,
+        src: url + '/' + files.file.path,
+        thumb: thumbPath,
         name: files.file.name,
         type: files.file.type,
         patientId: fields.patientId
       });
-      upload.save();
-
+      let uploads = await upload.save();
+      if (!uploads) {
+        throw new Error('Error in uploading file!');
+      }
     });
   } catch (e) {
     res.status(500).json({

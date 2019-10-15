@@ -165,34 +165,6 @@ export class PatientDetailComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
 
-  // perscriptionColumns: string[] = ['maintenable', 'medicine', 'preparation', 'sig', 'qty'];
-
-  // height: number;
-  // heightCreated = new Date();
-
-  // weight: number;
-  // weightCreated = new Date();
-
-  // temperature: number;
-  // temperatureCreated = new Date();
-
-  // tempSystolic: number;
-  // tempDiastolic: number;
-  // tempCreated = new Date();
-
-  // respiratoryRate: number;
-  // respiratoryRateCreated = new Date();
-
-  // histories: any;
-  // complaints: any;
-  // assessments: any;
-  // diagnosis: any;
-  // treatments: any;
-  // prescriptions: any;
-  // progressNotes: string;
-
-  // files: UploadData[] = [];
-
   created: Date;
   email: string;
   userType: string;

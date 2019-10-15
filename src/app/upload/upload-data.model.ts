@@ -1,6 +1,7 @@
 export interface UploadData {
   id: string;
-  path: string;
+  thumb: string;
+  src: string;
   name: string;
   type: string;
   patientId: string;

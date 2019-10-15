@@ -1,6 +1,6 @@
 <div fxLayout='row wrap' fxLayoutGap="10px">
     <mat-card class="attachment-card" fxFlex="15%" fxFlex.xs="100%"  fxFlex.sm="25%" fxFlex.md="100%" *ngFor="let file of files">
-        <img mat-card-image [src]="file.path" [alt]="file.name">
+        <img mat-card-image [src]="file.src" [alt]="file.name">
         <mat-card-content>
           <p>{{ file.name.length > 20 ? file.name.substring(0, 20)+"..." : file.name }}</p>
         </mat-card-content>
