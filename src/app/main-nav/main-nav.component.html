@@ -1,6 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
 
-    <mat-sidenav #drawer class="sidenav" fixedInViewport="false" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="'side'" [opened]="(isHandset$ | async) === false"  *ngIf="userIsAuthenticated">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport="false" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="'side'" [opened]="(isHandset$ | async) === false" *ngIf="userIsAuthenticated">
         <!-- <mat-toolbar color="primary">{{ appName }}</mat-toolbar> -->
         <mat-nav-list>
             <a mat-list-item routerLink="/" routerLinkActive="active">

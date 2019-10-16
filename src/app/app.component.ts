@@ -7,20 +7,14 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styles: [`
-  body {
-      margin: 0;
-  }
   main {
-    padding: 15px;
-    height: 95%;
-    margin-top: 4em;
-  }
-  app-main-nav {
-      height: 100%;
+    margin: 5em 0;
+    padding: 0 15px;
   }
   `]
 })
 export class AppComponent implements OnInit {
+  title: string;
 
   constructor(
     private authService: AuthService,
@@ -36,5 +30,7 @@ export class AppComponent implements OnInit {
     this.meta.addTag({name: 'author', content: 'Randy Rebucas'});
     this.meta.addTag({name: 'robots', content: 'index, follow'});
     this.authService.autoAuthUser();
+
+    this.title = 'clinic-plus';
   }
 }

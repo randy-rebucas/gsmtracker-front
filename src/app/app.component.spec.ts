@@ -1,16 +1,42 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { MainNavComponent } from './main-nav/main-nav.component';
+import {
+  MatSidenavModule,
+  MatIconModule,
+  MatMenuModule,
+  MatListModule,
+  MatToolbarModule,
+  MatSnackBarModule,
+  MatDialogModule
+} from '@angular/material';
+import { TranslateModule } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
+import { AppConfiguration } from './app-configuration.service';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        MatMenuModule,
+        MatListModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatSnackBarModule,
+        MatDialogModule,
+        TranslateModule.forRoot(),
+        HttpClientModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        MainNavComponent
       ],
+      providers: [AppConfiguration],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     }).compileComponents();
   }));
 

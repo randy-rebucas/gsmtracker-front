@@ -26,7 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 1;
+    z-index: 2;
     left: 0;
   }
 
@@ -103,6 +103,12 @@ import { TranslateService } from '@ngx-translate/core';
     bottom: 0;
     padding: 1em;
   }
+  :host {
+    height: 100%;
+  }
+  .mat-drawer.mat-drawer-side {
+    z-index: 0;
+}
   `]
 })
 export class MainNavComponent

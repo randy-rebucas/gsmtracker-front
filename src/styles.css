@@ -10,8 +10,6 @@
 @import '@fullcalendar/list/main.css';
 html,
 body {
-    height: 100%;
-    margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -25,21 +23,20 @@ body {
     z-index: 9;
 }
 
-.mat-drawer.mat-drawer-side {
-  z-index: 0;
+.tips {
+    background: #ff4081;
+    padding: 1em;
+    color: #fff;
 }
 
-.tips {
-  background: #ff4081;
-  padding: 1em;
-  color: #fff;
-}
 .tips h3 {
-  margin: 0;
-  padding: 0;
-  font-size: 16px;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
     font-weight: 300;
 }
-.tips ol li, .tips ul li {
-  font-size: 14px;
+
+.tips ol li,
+.tips ul li {
+    font-size: 14px;
 }
