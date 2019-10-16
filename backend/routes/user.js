@@ -1,20 +1,23 @@
 const express = require('express');
-
-const UserController = require('../controllers/user');
-
+const router = express.Router();
+/**
+ * loads middlewares
+ */
 const checkAuth = require('../middleware/check-auth');
-
 const preAuth = require('../middleware/auth');
 const extractFile = require('../middleware/file');
-const resizeFile = require('../middleware/resize');
-
-const router = express.Router();
+/**
+ * load controller
+ */
+const UserController = require('../controllers/user');
 
 router.post('/signup', preAuth, UserController.createUser);
 
 router.post('/login', UserController.userLogin);
 
 router.post('', checkAuth, preAuth, UserController.create);
+
+router.post('/upload-profile-pic/:userId', extractFile, UserController.uploadProfile);
 
 router.get('', UserController.getAll);
 
@@ -29,7 +32,5 @@ router.put('/:userId', checkAuth, preAuth, UserController.update);
 router.delete('/:userId', checkAuth, UserController.delete);
 
 router.delete('/many/:userIds', checkAuth, UserController.deleteMany);
-
-router.post('/upload-profile-pic/:userId', extractFile, UserController.uploadProfile);
 
 module.exports = router;

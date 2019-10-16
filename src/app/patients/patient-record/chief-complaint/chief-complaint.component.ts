@@ -46,6 +46,9 @@ export interface Complaint {
     right: 0;
     top: 5px;
   }
+  .button-row {
+    margin-bottom: 1em;
+  }
   `]
 })
 export class ChiefComplaintComponent
@@ -53,6 +56,7 @@ extends SecureComponent
 implements OnInit, OnDestroy {
   panelOpenState = true;
   listOpenState = true;
+  endorseOpenState = false;
 
   constructor(
     public authService: AuthService,
@@ -93,6 +97,10 @@ implements OnInit, OnDestroy {
 
   onOpenList() {
     this.listOpenState = ! this.listOpenState;
+  }
+
+  onEndorse() {
+    this.endorseOpenState = ! this.endorseOpenState;
   }
 
   onSave() {

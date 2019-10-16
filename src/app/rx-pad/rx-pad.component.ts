@@ -1,19 +1,19 @@
 import { Component, OnInit, OnDestroy, Inject, ViewChild, ElementRef } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
+import { AuthService } from '../auth/auth.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { PrescriptionService } from '../patients/patient-record/services/prescription.service';
-import { PatientsService } from '../patients/patients.service';
 import { SecureComponent } from '../secure/secure.component';
-import { Title } from '@angular/platform-browser';
 import { AppConfiguration } from '../app-configuration.service';
 import { SettingsGeneralService } from '../settings/settings-general.service';
-import * as jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import { DatePipe } from '@angular/common';
 import { QueService } from '../que/que.service';
 import { EncountersService } from '../shared/encounters/encounters.service';
+import { UsersService } from '../users/users.service';
 
+import * as jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-rx-pad',
   templateUrl: './rx-pad.component.html',
@@ -52,7 +52,7 @@ implements OnInit, OnDestroy {
 
     public titleService: Title,
     public prescriptionService: PrescriptionService,
-    public patientsService: PatientsService,
+    public usersService: UsersService,
     public settingsGeneralService: SettingsGeneralService,
     private queService: QueService,
     private encountersService: EncountersService,
@@ -78,19 +78,19 @@ implements OnInit, OnDestroy {
         /**
          * set the page title
          */
-        this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Record');
+        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname + ' Record');
         /**
          * person data
          */
-        this.personId = results.patientData.personId;
-        this.id = results.patientData.userId;
-        this.firstname = results.patientData.firstname;
-        this.midlename = results.patientData.midlename;
-        this.lastname = results.patientData.lastname;
-        this.contact = results.patientData.contact;
-        this.gender = results.patientData.gender;
-        this.birthdate = results.patientData.birthdate;
-        this.addresses = results.patientData.addresses;
+        this.personId = results.userData.personId;
+        this.id = results.userData.userId;
+        this.firstname = results.userData.firstname;
+        this.midlename = results.userData.midlename;
+        this.lastname = results.userData.lastname;
+        this.contact = results.userData.contact;
+        this.gender = results.userData.gender;
+        this.birthdate = results.userData.birthdate;
+        this.addresses = results.userData.addresses;
         const today = new Date();
         const bDate = new Date(this.birthdate);
         let age = today.getFullYear() - bDate.getFullYear();
@@ -122,11 +122,11 @@ implements OnInit, OnDestroy {
   }
 
   async getPatientData(patientId) {
-    const patientResponse = await this.patientsService.get(patientId).toPromise();
+    const userResponse = await this.usersService.get(patientId).toPromise();
     const prescriptionResponse = await this.prescriptionService.get(this.recordId).toPromise();
     const settingResponse = await this.settingsGeneralService.get(this.licenseId).toPromise();
     return {
-      patientData: patientResponse,
+      userData: userResponse,
       prescriptionData: prescriptionResponse,
       settingData: settingResponse
     };

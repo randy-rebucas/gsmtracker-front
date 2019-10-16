@@ -29,15 +29,24 @@ exports.create = async(req, res, next) => {
 exports.getAll = async(req, res, next) => {
     try {
         /**
-         * find all unread message and update them to read
+         * find all unread message from recipient and update them to read
          */
-        let unreadMessage = await Message.find({ 'threadId': req.query.threadId }).where({ status: 0 });
+        let unreadMessage = await Message.find(
+          { 'threadId': req.query.threadId }
+        ).where({ status: 0 });
+        // console.log(unreadMessage);
         if (unreadMessage.length > 0) {
             ids = [];
             unreadMessage.forEach(element => {
                 ids.push(element._id);
             });
-            await Message.updateMany({ "_id": { "$in": ids } }, { "$set": { "status": 1 } }, { multi: true });
+            await Message.updateMany(
+              {
+                '_id': { '$in': ids }
+              },
+              { '$set': { 'status': 1 } },
+              { multi: true }
+            );
         }
 
         const user = await Message.find({ 'threadId': req.query.threadId }).populate({
@@ -88,33 +97,22 @@ exports.getAllUnread = async(req, res, next) => {
         const unreadMessages = await Thread.aggregate([
             {
                 $lookup: {
-                    from: "messages", // other table name
-                    localField: "threadId", // name of users table field
-                    foreignField: "_id", // name of userinfo table field
-                    as: "messages" // alias for userinfo table
+                    from: 'messages', // other table name
+                    localField: '_id', // name of users table field
+                    foreignField: 'threadId', // name of userinfo table field
+                    as: 'messages' // alias for userinfo table
                 }
             },
-            { $unwind: "$messages" },
-            // { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
+            { $unwind: '$messages' },
+            { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
+            { $match: { 'messages.status': 0 } },
             {
-                $project: {
-                    // ... as you need
-                    count: 1,
-                    messages: {
-                        $filter: {
-                            input: "$messages", // arrays
-                            as: "item",
-                            cond: { $eq: ["$$item.status", 0] }
-                        }
-                    }
-                }
-            },
-            { $sort: { "created": 1 } }
+              $count: "unread"
+            }
         ]);
-        console.log(unreadMessages);
 
         res.status(200).json({
-            count: 0 // unreadMessages ? unreadMessages : 0
+            count: (unreadMessages.length) ? unreadMessages[0].unread : 0
         });
 
     } catch (e) {

@@ -11,7 +11,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { AuthService } from 'src/app/auth/auth.service';
 
 import { NotificationService } from 'src/app/shared/notification.service';
-import { PatientEditComponent } from '../patient-edit/patient-edit.component';
+// import { PatientEditComponent } from '../patient-edit/patient-edit.component';
 import { DialogService } from 'src/app/shared/dialog.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { QrCodeScannerComponent } from 'src/app/qr-code/qr-code-scanner/qr-code-scanner.component';
@@ -23,6 +23,7 @@ import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { DatePipe } from '@angular/common';
 import { SettingsGeneralService } from 'src/app/settings/settings-general.service';
+
 @Component({
   selector: 'app-patient-list',
   styles: [`
@@ -138,7 +139,7 @@ import { SettingsGeneralService } from 'src/app/settings/settings-general.servic
     float: right;
   }
   `],
-  templateUrl: './patient-list.component.html',
+  templateUrl: './user-list.component.html',
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
@@ -147,32 +148,32 @@ import { SettingsGeneralService } from 'src/app/settings/settings-general.servic
     ]),
   ],
 })
-export class PatientListComponent
+export class UserListComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
-
-  private usersSub: Subscription;
-
-  dataSource: MatTableDataSource<any>;
-  columnsToDisplay: string[] = ['select', 'image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
-  selection = new SelectionModel<any>(true, []);
-
-  private Ids: any = [];
+  public userType: string;
   public birthdays: any = [];
-  users: any[] = [];
-  addresses: any[];
-  contacts: any[] = [];
-  hours: any[] = [];
+  public addresses: any[];
 
-  expandedElement: any;
+  public dataSource: MatTableDataSource<any>;
+  public columnsToDisplay: string[] = ['select', 'image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
+  public selection = new SelectionModel<any>(true, []);
+  public expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  private usersSub: Subscription;
+  private users: any[] = [];
+  private ids: any = [];
+  private contacts: any[] = [];
+  private hours: any[] = [];
 
   constructor(
     public authService: AuthService,
     public router: Router,
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
+    private activatedRoute: ActivatedRoute,
 
     private titleService: Title,
     private dialogService: DialogService,
@@ -182,21 +183,27 @@ implements OnInit, OnDestroy {
     public settingsGeneralService: SettingsGeneralService
   ) {
     super(authService, router, dialog, appconfig);
+
   }
 
   ngOnInit() {
     super.doInit();
-    this.titleService.setTitle('Patients');
-    this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
-    this.usersSub = this.usersService
-      .getUpdateListener()
-      .subscribe((userData: {users: UserData[], counts: number}) => {
-        this.isLoading = false;
-        this.total = userData.counts;
-        this.dataSource = new MatTableDataSource(userData.users);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+    this.activatedRoute.params.subscribe(
+      (param) => {
+        this.userType = param.userType;
+        this.titleService.setTitle('Users: ' + param.userType);
+        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
+        this.usersSub = this.usersService
+        .getUpdateListener()
+        .subscribe((userData: {users: UserData[], counts: number}) => {
+          this.isLoading = false;
+          this.total = userData.counts;
+          this.dataSource = new MatTableDataSource(userData.users);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        });
+      }
+    );
 
     this.usersService.getBirthdays(this.licenseId).subscribe((birthday) => {
 
@@ -243,16 +250,19 @@ implements OnInit, OnDestroy {
   }
 
   onDeleteAll() {
-    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
+    const numSelected = this.selection.selected;
+    const plural = (numSelected.length > 1) ? '(s)' : '';
+    this.dialogService.openConfirmDialog('Are you sure to delete ' + numSelected.length +
+    ' item' + plural + ' of ' + this.userType +
+    ' record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        const numSelected = this.selection.selected;
         numSelected.forEach(element => {
-          this.Ids.push(element.id);
+          this.ids.push(element.id);
         });
 
-        this.usersService.deleteAll(this.Ids).subscribe((data) => {
-          this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
+        this.usersService.deleteAll(this.ids).subscribe((data) => {
+          this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
           this.notificationService.warn('::' + data.message);
         });
       }
@@ -355,7 +365,7 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.usersService.getAll('patient', this.userId, this.perPage, this.currentPage);
+    this.usersService.getAll(this.userType, this.userId, this.perPage, this.currentPage);
   }
 
   onCreate() {
@@ -365,7 +375,7 @@ implements OnInit, OnDestroy {
       dialogTitle: 'Create New',
       dialogButton: 'Save'
     };
-    super.onPopup(args, PatientEditComponent);
+    // super.onPopup(args, PatientEditComponent);
   }
 
   onEdit(patientId) {
@@ -375,7 +385,7 @@ implements OnInit, OnDestroy {
       dialogTitle: 'Update Patient',
       dialogButton: 'Update'
     };
-    super.onPopup(args, PatientEditComponent);
+    // super.onPopup(args, PatientEditComponent);
   }
 
   onScan() {
@@ -393,7 +403,7 @@ implements OnInit, OnDestroy {
     .afterClosed().subscribe(res => {
       if (res) {
         this.usersService.delete(Id).subscribe(() => {
-          this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
+          this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
           this.notificationService.warn('! Deleted successfully');
         });
       }

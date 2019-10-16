@@ -178,6 +178,7 @@ exports.search = async(req, res, next) => {
 exports.getAll = async(req, res, next) => {
 
     try {
+      console.log(req.query.usertype);
         const pageSize = +req.query.pagesize;
         const currentPage = +req.query.page;
         const query = User.find({ 'licenseId': req.query.licenseId });
@@ -185,20 +186,13 @@ exports.getAll = async(req, res, next) => {
         if (req.query.usertype != 'all') {
             query.where('userType', req.query.usertype);
         }
+
         if (pageSize && currentPage) {
             query.skip(pageSize * (currentPage - 1)).limit(pageSize);
         }
 
         let users = await query.populate('personId').exec();
         let count = await User.countDocuments({ 'userType': 'patient' });
-        // const persons = [];
-        // users.forEach(async (element) => {
-        //     let auth = await Auth.findOne({'personId': element.personId._id}).exec();
-        //     await persons.push({ email: auth.email });
-        // });
-        // console.log(persons);
-        // var children = users.concat(persons);
-        // console.log(children);
 
         res.status(200).json({
             message: 'Users fetched successfully!',
@@ -300,7 +294,6 @@ exports.uploadProfile = async(req, res, next) => {
 exports.getNewPatient = async(req, res, next) => {
   try {
       const today = moment().startOf('day');
-
       let newPatientCount = await User.countDocuments({
               'licenseId': req.params.licenseId,
               'userType': 'patient'
@@ -328,7 +321,6 @@ exports.getNewPatient = async(req, res, next) => {
 
 exports.getTodaysBirthday = async(req, res, next) => {
   try {
-
     const birthdays = await Person.aggregate([
         { $lookup:{
             from: "users",       // other table name
@@ -338,19 +330,6 @@ exports.getTodaysBirthday = async(req, res, next) => {
         }},
         { $unwind:"$users" },
         { $match: { "users.licenseId" : new ObjectId(req.params.licenseId) } },
-        // {
-        //   $project: {
-        //     // firstname: 1,
-        //     // ... as you need
-        //     users: {
-        //       $filter: {
-        //         input: "$users", // arrays
-        //         as: "item",
-        //         cond: {$eq: ["$$item.licenseId", new ObjectId(req.params.licenseId)]}
-        //       }
-        //     }
-        //   }
-        // },
         { $redact: {
             $cond: [
               { $eq: [

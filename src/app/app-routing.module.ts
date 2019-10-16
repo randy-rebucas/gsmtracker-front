@@ -13,7 +13,8 @@ const appRoutes: Routes = [
     // { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
     // { path: 'rxpad/:padIds', component: RxPadComponent },
 
-    { path: 'patients', loadChildren: './patients/patients.module#PatientsModule'},
+    { path: 'users', loadChildren: './users/users.module#UsersModule'},
+    // { path: 'patients', loadChildren: './patients/patients.module#PatientsModule'},
     { path: 'appointments', loadChildren: './appointments/appointment.module#AppointmentModule'},
     { path: 'messages', loadChildren: './messages/messages.module#MessagesModule'},
     { path: 'settings', loadChildren: './settings/settings.module#SettingsModule'},

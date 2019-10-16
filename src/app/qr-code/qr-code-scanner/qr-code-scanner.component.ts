@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { BarcodeFormat } from '@zxing/library';
 // import { Result } from '@zxing/library';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
-import { PatientsService } from 'src/app/patients/patients.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
+import { UsersService } from 'src/app/users/users.service';
 
 @Component({
   selector: 'app-qr-code-scanner',
@@ -30,7 +30,7 @@ implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public patientsService: PatientsService,
+    public usersService: UsersService,
     public dialogRef: MatDialogRef < QrCodeScannerComponent >,
     @Inject(MAT_DIALOG_DATA) data
     ) {
@@ -52,10 +52,10 @@ implements OnInit, OnDestroy {
 
   handleQrCodeResult(resultString: string) {
     if  (resultString != null) {
-      this.patientsService.get(resultString).subscribe((response) => {
+      this.usersService.get(resultString).subscribe((response) => {
         if (response.userId) {
           this.onClose();
-          this.router.navigateByUrl('/patients/' + response.userId + '/record/physical-exams/height');
+          this.router.navigateByUrl('/patients/' + response.userId + '/record/chief-complaints');
         }
       });
     }

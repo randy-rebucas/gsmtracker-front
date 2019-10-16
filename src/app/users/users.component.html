@@ -1,1 +1,6 @@
+<nav mat-tab-nav-bar>
+  <a mat-tab-link routerLink="./all" routerLinkActive #rlaAll="routerLinkActive" [active]="rlaAll.isActive">All</a>
+  <a mat-tab-link routerLink="./physician" routerLinkActive #rlaPhysicians="routerLinkActive" [active]="rlaPhysicians.isActive">Physicians</a>
+  <a mat-tab-link routerLink="./patient" routerLinkActive #rlaPatients="routerLinkActive" [active]="rlaPatients.isActive">Patients</a>
+</nav>
 <router-outlet></router-outlet>

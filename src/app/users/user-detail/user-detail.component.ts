@@ -1,33 +1,30 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { PatientsService } from '../patients.service';
-import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
-import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { SecureComponent } from 'src/app/secure/secure.component';
+import { AuthService } from 'src/app/auth/auth.service';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
-import { MatDialogConfig, MatDialog } from '@angular/material';
-
-import { NetworksService } from 'src/app/networks/networks.service';
-import { NotificationService } from 'src/app/shared/notification.service';
 import { QueService } from 'src/app/que/que.service';
-import { UsersService } from 'src/app/users/users.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { mimeType } from '../patient-edit/mime-type.validator';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
+import { Title } from '@angular/platform-browser';
+import { UsersService } from '../users.service';
 import { HttpEventType } from '@angular/common/http';
+import { NotificationService } from 'src/app/shared/notification.service';
+import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
 import { EncountersService } from 'src/app/shared/encounters/encounters.service';
+import { NetworksService } from 'src/app/networks/networks.service';
 
 @Component({
-  selector: 'app-patient-detail',
-  templateUrl: './patient-detail.component.html',
+  selector: 'app-user-detail',
+  templateUrl: './user-detail.component.html',
   styles: [`
   /* */
   .area {
     position: relative;
   }
   .header {
-
+    margin-top: 1em;
   }
   .area.side,
   .area.content {
@@ -149,9 +146,13 @@ import { EncountersService } from 'src/app/shared/encounters/encounters.service'
   }
 `]
 })
-export class PatientDetailComponent
+export class UserDetailComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
+  public isOnQue: boolean;
+  public selectedFile: File = null;
+  public imagePreview: string;
+  public profileForm: FormGroup;
 
   created: Date;
   email: string;
@@ -160,12 +161,6 @@ implements OnInit, OnDestroy {
   metas: [];
   queNumber: number;
 
-  selectedFile: File = null;
-  imagePreview: string;
-  profileForm: FormGroup;
-
-  public recordsSub: Subscription;
-  public isOnQue: boolean;
   isLoadingPic = false;
   bufferValue: number;
   color: string;
@@ -176,10 +171,8 @@ implements OnInit, OnDestroy {
     public router: Router,
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
-
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private titleService: Title,
-    public patientsService: PatientsService,
     private usersService: UsersService,
     public networksService: NetworksService,
     private notificationService: NotificationService,
@@ -191,12 +184,13 @@ implements OnInit, OnDestroy {
 
     ngOnInit() {
       super.doInit();
+      this.activatedRoute.parent.params.subscribe(
+        (param) => {
+          this.userId = param.userId;
+        }
+      );
 
-      this.route.paramMap.subscribe((paramMap: ParamMap) => {
-        this.patientId = paramMap.get('userId');
-      });
-
-      this.queService.get(this.patientId).subscribe((res) => {
+      this.queService.get(this.userId).subscribe((res) => {
         this.isOnQue = res.onQue;
       });
 
@@ -207,32 +201,31 @@ implements OnInit, OnDestroy {
         })
       });
 
-      this.getPatientData(this.patientId)
+      this.getPatientData(this.userId)
       .then((results) => {
         this.isLoading = false;
-        this.titleService.setTitle(results.patientData.firstname + ' ' + results.patientData.lastname + ' Detail');
-        this.personId = results.patientData.personId;
-        this.firstname = results.patientData.firstname;
-        this.midlename = results.patientData.midlename;
-        this.lastname = results.patientData.lastname;
-        this.contact = results.patientData.contact;
-        this.gender = results.patientData.gender;
-        this.birthdate = results.patientData.birthdate;
-        this.addresses = results.patientData.addresses;
-        this.created = results.patientData.created;
-        this.email = results.patientData.email;
-        this.userType = results.patientData.userType;
-        this.metas = results.patientData.meta;
-        this.avatar = results.patientData.avatar;
+        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname + ' Detail');
+        this.personId = results.userData.personId;
+        this.firstname = results.userData.firstname;
+        this.midlename = results.userData.midlename;
+        this.lastname = results.userData.lastname;
+        this.contact = results.userData.contact;
+        this.gender = results.userData.gender;
+        this.birthdate = results.userData.birthdate;
+        this.addresses = results.userData.addresses;
+        this.created = results.userData.created;
+        this.email = results.userData.email;
+        this.userType = results.userData.userType;
+        this.metas = results.userData.meta;
+        this.avatar = results.userData.avatar;
       })
       .catch(err => console.log(err));
-
     }
 
-    async getPatientData(patientId) {
-      const patientResponse = await this.usersService.get(patientId).toPromise();
+    async getPatientData(userId) {
+      const userResponse = await this.usersService.get(userId).toPromise();
       return {
-        patientData: patientResponse,
+        userData: userResponse,
       };
     }
 
@@ -279,7 +272,7 @@ implements OnInit, OnDestroy {
     }
 
     gotoRecord() {
-      this.router.navigate(['./record/chief-complaints'], {relativeTo: this.route});
+      this.router.navigate(['./record/chief-complaints'], {relativeTo: this.activatedRoute});
     }
 
     onCancelVisit(patientId) {

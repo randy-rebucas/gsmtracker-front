@@ -34,7 +34,6 @@ implements OnInit, OnDestroy {
     public appconfig: AppConfiguration,
 
     private notificationService: NotificationService,
-    private patientsService: PatientsService,
     private usersService: UsersService,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef < PatientEditComponent >,

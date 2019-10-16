@@ -110,6 +110,7 @@ implements OnInit, OnDestroy {
     super.doInit();
 
     this.titleService.setTitle('Home');
+    this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
     this.usersService.getAllNew(this.licenseId).subscribe((res) => {
       this.newPatient = res.count;
@@ -120,11 +121,9 @@ implements OnInit, OnDestroy {
     });
 
     this.messagesService.getAllUnread(this.licenseId).subscribe((res) => {
-      this.newMessage = res.count;
       console.log(res);
+      this.newMessage = res.count;
     });
-
-    this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
     this.encountersService.getAll(this.licenseId);
     this.encountersChartSub = this.encountersService

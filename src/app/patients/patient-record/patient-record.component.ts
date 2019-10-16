@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { PatientsService } from '../patients.service';
 import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
 import { MatDialog } from '@angular/material';
 import { SecureComponent } from 'src/app/secure/secure.component';
@@ -131,7 +130,6 @@ extends SecureComponent
     public dialog: MatDialog,
     public appconfig: AppConfiguration,
 
-    public patientsService: PatientsService,
     private usersService: UsersService,
     private route: ActivatedRoute,
     private titleService: Title,

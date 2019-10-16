@@ -62,25 +62,48 @@ export class UsersService {
       );
   }
   // tslint:disable-next-line:max-line-length
-  insert(Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: [], reqEmail: string, resPass: string, reqLicenseId: string) {
-      const userData = {
-        firstname: Firstname,
-        midlename: Midlename,
-        lastname: Lastname,
-        contact: Contact,
-        gender: Gender,
-        birthdate: Birthdate,
-        address: Addresses,
-        meta: Meta,
-        email: reqEmail,
-        password: resPass,
-        licenseId: reqLicenseId
-      };
-      return this.http.post<{ message: string, user: UserData }>(BACKEND_URL, userData);
+  insert(
+    Firstname: string,
+    Midlename: string,
+    Lastname: string,
+    Contact: string,
+    Gender: string,
+    Birthdate: string,
+    Addresses: [],
+    Meta: [],
+    Email: string,
+    Pass: string,
+    LicenseId: string
+  ) {
+    const userData = {
+      firstname: Firstname,
+      midlename: Midlename,
+      lastname: Lastname,
+      contact: Contact,
+      gender: Gender,
+      birthdate: Birthdate,
+      address: Addresses,
+      meta: Meta,
+      email: Email,
+      password: Pass,
+      licenseId: LicenseId
+    };
+    return this.http.post<{ message: string, user: UserData }>(BACKEND_URL, userData);
   }
 
   // tslint:disable-next-line:max-line-length
-  update(Id: string, UserType: string, Firstname: string, Midlename: string, Lastname: string, Contact: string, Gender: string, Birthdate: string, Addresses: [], Meta: []) {
+  update(
+    Id: string,
+    UserType: string,
+    Firstname: string,
+    Midlename: string,
+    Lastname: string,
+    Contact: string,
+    Gender: string,
+    Birthdate: string,
+    Addresses: [],
+    Meta: []
+  ) {
     const userData = {
       id: Id,
       userType: UserType,
