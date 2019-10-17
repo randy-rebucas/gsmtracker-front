@@ -8,7 +8,7 @@ import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
-import { PatientsService } from 'src/app/patients/patients.service';
+import { UsersService } from 'src/app/users/users.service';
 
 export interface User {
   id: string;
@@ -68,7 +68,7 @@ implements OnInit, OnDestroy {
     public appconfig: AppConfiguration,
 
     private appointmentService: AppointmentService,
-    private patientsService: PatientsService,
+    private usersService: UsersService,
     private notificationService: NotificationService
     ) {
       super(authService, router, dialog, appconfig);
@@ -93,7 +93,7 @@ implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.patientsService.search({name: value}, this.currentPage, this.licenseId)
+        switchMap(value => this.usersService.search({name: value}, this.currentPage, this.licenseId)
         .pipe(
           finalize(() => this.isLoading = false),
           )

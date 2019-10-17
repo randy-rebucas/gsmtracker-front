@@ -175,10 +175,34 @@ exports.search = async(req, res, next) => {
     }
 }
 
-exports.getAll = async(req, res, next) => {
+exports.getAllGlobal = async(req, res, next) => {
+  try {
+      const pageSize = +req.query.pagesize;
+      const currentPage = +req.query.page;
+      const query = User.find().where('userType', 'patient');
 
+      if (pageSize && currentPage) {
+          query.skip(pageSize * (currentPage - 1)).limit(pageSize);
+      }
+
+      let users = await query.populate('personId').exec();
+      let count = await User.countDocuments();
+
+      res.status(200).json({
+          message: 'Users fetched successfully!',
+          users: users,
+          counts: count
+      });
+
+  } catch (error) {
+      res.status(500).json({
+          message: error.message
+      });
+  }
+};
+
+exports.getAll = async(req, res, next) => {
     try {
-      console.log(req.query.usertype);
         const pageSize = +req.query.pagesize;
         const currentPage = +req.query.page;
         const query = User.find({ 'licenseId': req.query.licenseId });

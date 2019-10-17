@@ -1,0 +1,39 @@
+<form [formGroup]="form" class="normal-form" (submit)="onSave()">
+  <mat-form-field class="record-date">
+      <input matInput readonly [matDatepicker]="picker" formControlName="record_date" [max]="currentDate" placeholder="Date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker color="primary"></mat-datepicker>
+  </mat-form-field>
+  <ng-container formArrayName="prescriptions">
+    <div *ngFor="let group of prescriptionArray.controls; let i = index;" [formGroupName]="i">
+        <div class="form-field-block">
+            <mat-checkbox formControlName="maintenableFlg">Maintenable</mat-checkbox>
+            <div class="action-btn">
+                <button mat-icon-button (click)="addPrescription()" type="button"><mat-icon>add</mat-icon></button>
+                <button mat-icon-button color="warn" *ngIf="prescriptionArray.controls.length > 1" (click)="removePrescription(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+            </div>
+        </div>
+        <div class="form-field-block">
+            <mat-form-field>
+                <input matInput type="text" formControlName="medicine" placeholder="Medicine">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput type="text" formControlName="preparation" placeholder="Preparation">
+            </mat-form-field>
+        </div>
+        <div class="form-field-block">
+            <mat-form-field>
+                <input matInput type="text" formControlName="sig" placeholder="Sig">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput type="number" formControlName="quantity" placeholder="Quantity">
+            </mat-form-field>
+        </div>
+
+
+    </div>
+
+  </ng-container>
+
+  <button mat-raised-button color="primary" type="submit">Submit</button>
+</form>

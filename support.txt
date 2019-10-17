@@ -139,3 +139,18 @@ clinics
 
 ///////
 AIzaSyAG6XBWVT7fFU1newS7FUz9S8LsSb1h9bs
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+  UPLOADCARE_TABS = 'file camera url facebook gdrive gphotos dropbox instagram onedrive box';
+  UPLOADCARE_EFFECTS = 'crop';
+  UPLOADCARE_IMAGE_SHRINK = '1024x1024';
+  UPLOADCARE_PREVIEW_STEP = true;
+  UPLOADCARE_CLEARABLE = true;
+</script>
+
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+<script src="https://ucarecdn.com/libs/widget-tab-effects/1.x/uploadcare.tab-effects.js"></script>
+
+<script>
+  uploadcare.registerTab('preview', uploadcareTabEffects)
+</script>

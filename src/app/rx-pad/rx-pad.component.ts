@@ -4,7 +4,6 @@ import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../auth/auth.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
-import { PrescriptionService } from '../patients/patient-record/services/prescription.service';
 import { SecureComponent } from '../secure/secure.component';
 import { AppConfiguration } from '../app-configuration.service';
 import { SettingsGeneralService } from '../settings/settings-general.service';
@@ -14,6 +13,7 @@ import { UsersService } from '../users/users.service';
 
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { PrescriptionService } from '../users/record/services/prescription.service';
 @Component({
   selector: 'app-rx-pad',
   templateUrl: './rx-pad.component.html',

@@ -6,7 +6,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 import { QueService } from 'src/app/que/que.service';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
 import { Title } from '@angular/platform-browser';
 import { UsersService } from '../users.service';
 import { HttpEventType } from '@angular/common/http';
@@ -14,6 +13,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
 import { EncountersService } from 'src/app/shared/encounters/encounters.service';
 import { NetworksService } from 'src/app/networks/networks.service';
+import { mimeType } from '../user-form/mime-type.validator';
 
 @Component({
   selector: 'app-user-detail',
@@ -272,7 +272,7 @@ implements OnInit, OnDestroy {
     }
 
     gotoRecord() {
-      this.router.navigate(['./record/chief-complaints'], {relativeTo: this.activatedRoute});
+      this.router.navigate(['../record'], {relativeTo: this.activatedRoute});
     }
 
     onCancelVisit(patientId) {

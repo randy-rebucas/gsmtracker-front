@@ -10,8 +10,8 @@ import { FormArray, Validators, FormBuilder, FormGroup, FormControl } from '@ang
 import { NotificationService } from 'src/app/shared/notification.service';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
 import { ImageComponent } from 'src/app/upload/image/image.component';
+import { mimeType } from 'src/app/users/user-form/mime-type.validator';
 
 @Component({
   selector: 'app-profile',

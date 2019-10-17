@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Subject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { UserData } from './user-data.model';
+import {User, IUserResponse} from '../users/user.class';
 
 const BACKEND_URL = environment.apiUrl + '/user';
 
@@ -16,6 +17,19 @@ export class UsersService {
   constructor(
     private http: HttpClient
     ) {}
+
+  search(filter: {name: string} = {name: ''}, page: number, licenseId: string): Observable<IUserResponse> {
+    const queryParams = `?licenseId=${licenseId}&page=${page}`;
+    return this.http.get<IUserResponse>(BACKEND_URL + '/search' + queryParams)
+    .pipe(
+      tap((response: IUserResponse) => {
+        response.results = response.results
+          .map(user => new User(user.id, user.name))
+          .filter(user => user.name.includes(filter.name));
+        return response;
+      })
+    );
+  }
 
   getAll(userType: string, licenseId: string, perPage: number, currentPage: number) {
     const queryParams = `?usertype=${userType}&licenseId=${licenseId}&pagesize=${perPage}&page=${currentPage}`;

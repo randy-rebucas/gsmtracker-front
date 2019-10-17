@@ -7,7 +7,6 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
-import { mimeType } from '../../patients/patient-edit/mime-type.validator';
 import { WebcamImage, WebcamInitError, WebcamUtil } from 'ngx-webcam';
 import { Subject, Observable } from 'rxjs';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';

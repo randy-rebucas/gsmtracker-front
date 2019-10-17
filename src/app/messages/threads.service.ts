@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
-import { MessagesData } from './messages-data.model';
-
-import {User, IUserResponse} from '../users/user.class';
-import { PatientData } from '../patients/patient-data.model';
 import { ThreadData } from './thread-data.model';
 
 const BACKEND_URL = environment.apiUrl + '/thread';

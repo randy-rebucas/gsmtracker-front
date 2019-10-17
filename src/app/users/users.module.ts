@@ -10,25 +10,23 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { RecordModule } from '../shared/record/record.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AuthGuard } from '../auth/auth-guard';
-import { PatientListComponent } from '../patients/patient-list/patient-list.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { ListComponent } from './list/list.component';
 import { RecordComponent } from './record/record.component';
 import { DetailComponent } from './detail/detail.component';
-import { SampleComponent } from './record/sample/sample.component';
+import { UserFormComponent } from './user-form/user-form.component';
 
 
 @NgModule({
   declarations: [
     UsersComponent,
     UserListComponent,
-    PatientListComponent,
     UserDetailComponent,
     ListComponent,
     DetailComponent,
     RecordComponent,
-    SampleComponent
+    UserFormComponent
   ],
   imports: [
     CommonModule,
@@ -48,16 +46,24 @@ import { SampleComponent } from './record/sample/sample.component';
             { path: '', redirectTo: 'detail', pathMatch: 'full' },
             { path: 'detail', component: UserDetailComponent },
             { path: 'record', component: RecordComponent, children: [
-              { path: '', redirectTo: 'sample', pathMatch: 'full' },
-              { path: 'sample', component: SampleComponent }
+              { path: '', redirectTo: 'chief-complaints', pathMatch: 'full' },
+              { path: 'chief-complaints', loadChildren: './record/chief-complaint/chief-complaint.module#ChiefComplaintModule'},
+              { path: 'histories', loadChildren: './record/histories/histories.module#HistoriesModule'},
+              { path: 'physical-exams', loadChildren: './record/physical-exams/physical-exams.module#PhysicalExamsModule'},
+              { path: 'orders', loadChildren: './record/orders/orders.module#OrdersModule'},
+              { path: 'prescriptions', loadChildren: './record/prescriptions/prescriptions.module#PrescriptionsModule'},
+              { path: 'test-results', loadChildren: './record/test-results/test-result.module#TestResultModule'},
+              { path: 'progress-notes', loadChildren: './record/progress-notes/progress-notes.module#ProgressNotesModule'},
+              { path: 'assessments', loadChildren: './record/assessments/assessments.module#AssessmentsModule'},
+              { path: 'immunizations', loadChildren: './record/immunization/immunization.module#ImmunizationModule'},
             ] },
           ] }
         ] }
       ] }
     ])
   ],
-  // entryComponents: [
-  //   PatientEditComponent
-  // ]
+  entryComponents: [
+    UserFormComponent
+  ]
 })
 export class UsersModule {}

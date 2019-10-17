@@ -8,8 +8,8 @@ import { Title } from '@angular/platform-browser';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
-import { mimeType } from 'src/app/patients/patient-edit/mime-type.validator';
 import { HttpEventType } from '@angular/common/http';
+import { mimeType } from 'src/app/users/user-form/mime-type.validator';
 
 @Component({
   selector: 'app-clinic',
@@ -141,7 +141,6 @@ implements OnInit, OnDestroy {
 
   populateForm() {
     this.settingsGeneralService.get(this.licenseId).subscribe(settingData => {
-      console.log(settingData);
       this.isLoading = false;
       this.imagePreview = settingData.logoPath;
       this.form.patchValue({

@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { startWith, map, debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { MessagesService } from '../messages.service';
 import { ThreadsService } from '../threads.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog } from '@angular/material';
 import { AppConfiguration } from 'src/app/app-configuration.service';
-import { PatientsService } from 'src/app/patients/patients.service';
+import { UsersService } from 'src/app/users/users.service';
+
 export interface User {
   id: string;
   name: string;
@@ -49,7 +49,7 @@ implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private messageService: MessagesService,
     private threadService: ThreadsService,
-    private patientsService: PatientsService,
+    private usersService: UsersService,
     private notificationService: NotificationService,
     ) {
       super(authService, router, dialog, appconfig);
@@ -69,7 +69,7 @@ implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.patientsService.search({name: value}, this.currentPage, this.licenseId)
+        switchMap(value => this.usersService.search({name: value}, this.currentPage, this.licenseId)
         .pipe(
           finalize(() => this.isLoading = false),
           )

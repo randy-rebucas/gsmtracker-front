@@ -27,6 +27,8 @@ router.get('/new/:licenseId', UserController.getNewPatient);
 
 router.get('/birthdays/:licenseId', UserController.getTodaysBirthday);
 
+router.get('/search', UserController.search);
+
 router.put('/:userId', checkAuth, preAuth, UserController.update);
 
 router.delete('/:userId', checkAuth, UserController.delete);
