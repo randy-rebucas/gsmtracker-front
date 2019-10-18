@@ -87,9 +87,6 @@ implements OnInit, OnDestroy {
   ) {
     super(authService, router, dialog, appconfig);
 
-    this.newPatient = 0;
-    this.newAppointment = 0;
-    this.newMessage = 0;
     this.canceledVisit = 0;
    }
 
@@ -113,16 +110,15 @@ implements OnInit, OnDestroy {
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
     this.usersService.getAllNew(this.licenseId).subscribe((res) => {
-      this.newPatient = res.count;
+      this.newPatient = (res.count) ? res.count : 0;
     });
 
     this.appointmentService.getAllNew(this.licenseId).subscribe((res) => {
-      this.newAppointment = res.count;
+      this.newAppointment = (res.count) ? res.count : 0;
     });
 
     this.messagesService.getAllUnread(this.licenseId).subscribe((res) => {
-      console.log(res);
-      this.newMessage = res.count;
+      this.newMessage = (res.count) ? res.count : 0;
     });
 
     this.encountersService.getAll(this.licenseId);

@@ -80,7 +80,6 @@ export class AppointmentService {
     const detailData = {
       appointmentId, status
     };
-    console.log(detailData);
     return this.http.put(BACKEND_URL + '/' + appointmentId, detailData);
   }
 

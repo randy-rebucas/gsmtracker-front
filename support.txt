@@ -89,53 +89,6 @@ Selling physical products
 Affiliate Links
 Selling information products
 
-----------
-    firstname
-    lastname
-    adddress {...}
-    record: {
-        heights: [
-            {
-                _id:
-                height:
-                created
-            },
-            {
-                _id:
-                height:
-                created
-            }
-        ]
-    }
-    procedures: [
-        {
-            _id
-            date
-            type: ct scan
-        },
-        {
-            _id
-            date
-            type: blood test
-        }
-    ]
-
-clinics
-    _id
-    name
-    city
-    physicians [
-        {
-            _id:
-            name:
-            address: {...}
-        },
-        {
-            _id:
-            name:
-            address: {...}
-        }
-    ]
 
 ///////
 AIzaSyAG6XBWVT7fFU1newS7FUz9S8LsSb1h9bs

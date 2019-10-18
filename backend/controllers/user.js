@@ -1,56 +1,123 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const ip = require("ip");
 const sharp = require('sharp');
+const moment = require('moment');
+const ObjectId = require('mongoose').Types.ObjectId;
+
 const Auth = require('../models/auth');
 const License = require('../models/license');
 const User = require('../models/user');
+const MyUser = require('../models/myuser');
 const Person = require('../models/person');
 const Setting = require('../models/setting');
 const Type = require('../models/type');
-const ObjectId = require('mongoose').Types.ObjectId;
-const moment = require('moment');
 
 exports.createUser = async(req, res, next) => {
     try {
+
+        /**
+         * check for existing email
+         */
+        let authCheck = await Auth.findOne({ email: req.body.email });
+        if (authCheck) {
+            throw new Error('Something went wrong. Email is in used!');
+        }
+
+        /**
+         * Set common entities on people collection
+         */
+        const newPerson = new Person({
+            firstname: req.body.firstname,
+            lastname: req.body.lastname
+        });
+        let person = await newPerson.save();
+        if (!person) {
+          throw new Error('Something went wrong. Cannot save people collection!');
+        }
+
+        /**
+         * Set extended entities from poeple to users collection
+         */
+        const newUser = new User({
+          personId: person._id
+        });
+        let user = await newUser.save();
+        if (!user) {
+            throw new Error('Something went wrong.Cannot save user collection!');
+        }
+
+        /**
+         * Set login credentials in auth collection
+         */
+        let hash = await bcrypt.hash(req.body.password, 10);
+        const authCredentials = new Auth({
+            email: req.body.email,
+            password: hash,
+            userId: user._id
+        });
+        let auth = await authCredentials.save();
+        if (!auth) {
+          throw new Error('Something went wrong.Cannot save auth collection!');
+        }
+
+        /**
+         * Set new license in license collection
+         */
         const newLicense = new License({
-            personId: req.auth.personId,
-            licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
+          userId: user._id,
+          licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
         });
         let license = await newLicense.save();
         if (!license) {
-            throw new Error('Something went wrong.Cannot save license!');
+            throw new Error('Something went wrong.Cannot save license collection!');
         }
 
-        const newSetting = new Setting({
-            licenseId: license._id,
-            clinicName: req.body.clinicname,
-            clinicOwner: req.person.firstname + ', ' + req.person.lastname
-        });
-        await newSetting.save();
-
+        /**
+         * Set physicians doc in type collection
+         */
         const newType = new Type({
             name: 'Physicians',
             description: 'a person qualified to practice medicine',
             licenseId: license._id,
         });
         let type = await newType.save();
-
-        const newUser = new User({
-            userType: type._id,
-            personId: req.auth.personId,
-            licenseId: license._id
-        });
-        let user = await newUser.save();
-        if (!user) {
-            throw new Error('Something went wrong.Cannot save user!');
+        if (!type) {
+          throw new Error('Something went wrong.Cannot save user type collection!');
         }
 
+        /**
+         * Set owned user in myusers collection
+         */
+        const myUser = new MyUser({
+          userType: type._id,
+          userId: user._id,
+          licenseId: license._id
+        });
+        let myuser = await myUser.save();
+        if (!myuser) {
+            throw new Error('Something went wrong.Cannot save my user collection!');
+        }
+
+        /**
+         * Set new patients type doc in Type Collection
+         */
         const otherType = new Type({
             name: 'Patients',
             description: 'a person receiving or registered to receive medical treatment.',
             licenseId: license._id,
         });
         await otherType.save();
+
+        /**
+         * Set new setting doc in Setting Collection
+         */
+        const newSetting = new Setting({
+          licenseId: license._id,
+          clinicName: req.body.clinicname,
+          clinicOwner: person.firstname + ', ' + person.lastname
+        });
+        await newSetting.save();
 
         res.status(200).json({
             message: 'Registered successfully! Redirecting 3 sec.'
@@ -65,7 +132,7 @@ exports.createUser = async(req, res, next) => {
 
 exports.userLogin = async(req, res, next) => {
     try {
-        let auth = await Auth.findOne({ email: req.body.email }).populate('personId');
+        let auth = await Auth.findOne({ email: req.body.email }).populate('userId');
         if (!auth) {
             throw new Error('Something went wrong. Your email is not listed!');
         }
@@ -74,8 +141,8 @@ exports.userLogin = async(req, res, next) => {
             throw new Error('Something went wrong. Incorrect password!');
         }
 
-        let user = await User.findOne({ personId: auth.personId });
-        let license = await License.findOne({ personId: user.personId });
+        let user = await User.findOne({ _id: auth.userId });
+        let license = await License.findOne({ userId: auth.userId });
 
         let token = await jwt.sign({
                 email: auth.email,
@@ -330,7 +397,7 @@ exports.uploadProfile = async(req, res, next) => {
     }
 };
 
-exports.getNewPatient = async(req, res, next) => {
+exports.getNewUser = async(req, res, next) => {
     try {
         const today = moment().startOf('day');
         let newPatientCount = await User.countDocuments({
