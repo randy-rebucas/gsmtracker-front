@@ -37,6 +37,7 @@ var threadRouter = require('./routes/thread');
 var messagesRouter = require('./routes/message');
 var networkRouter = require('./routes/network');
 var appointmentsRouter = require('./routes/appointment');
+var typeRouter = require('./routes/type');
 var uploadRouter = require('./routes/upload');
 
 var queRouter = require('./routes/que');
@@ -149,6 +150,8 @@ app.use('/api/drive', driveRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/que', queRouter);
 app.use('/api/encounter', encounterRouter);
+
+app.use('/api/type', typeRouter);
 //app.use((req, res, next) => {
 //    res.sendFile(path.join(__dirname, 'angular', 'index.html'));
 //});

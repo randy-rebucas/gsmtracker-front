@@ -14,8 +14,6 @@ router.get('', AppointmentController.getAll);
 
 router.get('/:appointmentId', AppointmentController.get);
 
-router.get('/new/:licenseId', AppointmentController.getNewAppointment);
-
 router.delete('/:appointmentId', checkAuth, AppointmentController.delete);
 
 

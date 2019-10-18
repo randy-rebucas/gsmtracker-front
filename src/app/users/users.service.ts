@@ -77,6 +77,7 @@ export class UsersService {
   }
   // tslint:disable-next-line:max-line-length
   insert(
+    UserType: string,
     Firstname: string,
     Midlename: string,
     Lastname: string,
@@ -90,6 +91,7 @@ export class UsersService {
     LicenseId: string
   ) {
     const userData = {
+      userType: UserType,
       firstname: Firstname,
       midlename: Midlename,
       lastname: Lastname,

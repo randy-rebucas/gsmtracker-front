@@ -6,6 +6,7 @@ const License = require('../models/license');
 const User = require('../models/user');
 const Person = require('../models/person');
 const Setting = require('../models/setting');
+const Type = require('../models/type');
 const ObjectId = require('mongoose').Types.ObjectId;
 const moment = require('moment');
 
@@ -25,10 +26,17 @@ exports.createUser = async(req, res, next) => {
             clinicName: req.body.clinicname,
             clinicOwner: req.person.firstname + ', ' + req.person.lastname
         });
-        let setting = await newSetting.save();
+        await newSetting.save();
+
+        const newType = new Type({
+            name: 'Physicians',
+            description: 'a person qualified to practice medicine',
+            licenseId: license._id,
+        });
+        let type = await newType.save();
 
         const newUser = new User({
-            userType: 'doctor',
+            userType: type._id,
             personId: req.auth.personId,
             licenseId: license._id
         });
@@ -36,6 +44,13 @@ exports.createUser = async(req, res, next) => {
         if (!user) {
             throw new Error('Something went wrong.Cannot save user!');
         }
+
+        const otherType = new Type({
+            name: 'Patients',
+            description: 'a person receiving or registered to receive medical treatment.',
+            licenseId: license._id,
+        });
+        await otherType.save();
 
         res.status(200).json({
             message: 'Registered successfully! Redirecting 3 sec.'
@@ -176,29 +191,29 @@ exports.search = async(req, res, next) => {
 }
 
 exports.getAllGlobal = async(req, res, next) => {
-  try {
-      const pageSize = +req.query.pagesize;
-      const currentPage = +req.query.page;
-      const query = User.find().where('userType', 'patient');
+    try {
+        const pageSize = +req.query.pagesize;
+        const currentPage = +req.query.page;
+        const query = User.find().where('userType', 'patient');
 
-      if (pageSize && currentPage) {
-          query.skip(pageSize * (currentPage - 1)).limit(pageSize);
-      }
+        if (pageSize && currentPage) {
+            query.skip(pageSize * (currentPage - 1)).limit(pageSize);
+        }
 
-      let users = await query.populate('personId').exec();
-      let count = await User.countDocuments();
+        let users = await query.populate('personId').exec();
+        let count = await User.countDocuments();
 
-      res.status(200).json({
-          message: 'Users fetched successfully!',
-          users: users,
-          counts: count
-      });
+        res.status(200).json({
+            message: 'Users fetched successfully!',
+            users: users,
+            counts: count
+        });
 
-  } catch (error) {
-      res.status(500).json({
-          message: error.message
-      });
-  }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 };
 
 exports.getAll = async(req, res, next) => {
@@ -316,101 +331,102 @@ exports.uploadProfile = async(req, res, next) => {
 };
 
 exports.getNewPatient = async(req, res, next) => {
-  try {
-      const today = moment().startOf('day');
-      let newPatientCount = await User.countDocuments({
-              'licenseId': req.params.licenseId,
-              'userType': 'patient'
-          })
-          .populate({
-              path: 'personId',
-              match: {
-                created: {
-                  $gte: today.toDate(),
-                  $lte: moment(today).endOf('day').toDate()
-                }
-              },
-          }).exec()
+    try {
+        const today = moment().startOf('day');
+        let newPatientCount = await User.countDocuments({
+                'licenseId': req.params.licenseId,
+                'userType': 'patient'
+            })
+            .populate({
+                path: 'personId',
+                match: {
+                    created: {
+                        $gte: today.toDate(),
+                        $lte: moment(today).endOf('day').toDate()
+                    }
+                },
+            }).exec()
 
-      res.status(200).json({
-          count: newPatientCount
-      });
+        res.status(200).json({
+            count: newPatientCount
+        });
 
-  } catch (error) {
-      res.status(500).json({
-          message: error.message
-      });
-  }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 };
 
 exports.getTodaysBirthday = async(req, res, next) => {
-  try {
-    const birthdays = await Person.aggregate([
-        { $lookup:{
-            from: "users",       // other table name
-            localField: "_id",   // name of users table field
-            foreignField: "personId", // name of userinfo table field
-            as: "users"         // alias for userinfo table
-        }},
-        { $unwind:"$users" },
-        { $match: { "users.licenseId" : new ObjectId(req.params.licenseId) } },
-        { $redact: {
-            $cond: [
-              { $eq: [
-                { $month: "$birthdate" },
-                { $month: new Date() }
-              ] },
-              "$$KEEP",
-              "$$PRUNE"
-            ]
-          }
-        }
-    ]);
+    try {
+        const birthdays = await Person.aggregate([{
+                $lookup: {
+                    from: "users", // other table name
+                    localField: "_id", // name of users table field
+                    foreignField: "personId", // name of userinfo table field
+                    as: "users" // alias for userinfo table
+                }
+            },
+            { $unwind: "$users" },
+            { $match: { "users.licenseId": new ObjectId(req.params.licenseId) } },
+            {
+                $redact: {
+                    $cond: [{
+                            $eq: [
+                                { $month: "$birthdate" },
+                                { $month: new Date() }
+                            ]
+                        },
+                        "$$KEEP",
+                        "$$PRUNE"
+                    ]
+                }
+            }
+        ]);
 
-    res.status(200).json({
-      users: birthdays
-    });
+        res.status(200).json({
+            users: birthdays
+        });
 
-  } catch (e) {
-    res.status(500).json({
-        message: e.message
-    });
-  }
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
 }
 
 exports.deleteMany = async(req, res, next) => {
-  try {
-    Ids = req.params.userIds;
-    Id = Ids.split(',');
-    /**
-     * Find all users and retrive person ids
-     */
-    let users = await User.find({_id: {$in: Id}}).exec();
-    personIds = [];
-    users.forEach(user => {
-      personIds.push(new ObjectId(user.personId));
-    });
+    try {
+        Ids = req.params.userIds;
+        Id = Ids.split(',');
+        /**
+         * Find all users and retrive person ids
+         */
+        let users = await User.find({ _id: { $in: Id } }).exec();
+        personIds = [];
+        users.forEach(user => {
+            personIds.push(new ObjectId(user.personId));
+        });
 
-    let auth = await Auth.deleteMany({ personId: {$in: personIds} });
-    if(!auth) {
-      throw new Error('Error in deleting auth!');
+        let auth = await Auth.deleteMany({ personId: { $in: personIds } });
+        if (!auth) {
+            throw new Error('Error in deleting auth!');
+        }
+        let person = await Person.deleteMany({ _id: { $in: personIds } });
+        if (!person) {
+            throw new Error('Error in deleting person!');
+        }
+        let user = await User.deleteMany({ _id: { $in: Id } });
+        if (!user) {
+            throw new Error('Error in deleting user!');
+        }
+        res.status(200).json({
+            message: user.deletedCount + ' item deleted successfull!'
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
     }
-    let person = await Person.deleteMany({ _id: {$in: personIds} });
-    if(!person) {
-      throw new Error('Error in deleting person!');
-    }
-    let user = await User.deleteMany({_id: {$in: Id}});
-    if(!user) {
-      throw new Error('Error in deleting user!');
-    }
-    res.status(200).json({
-        message: user.deletedCount + ' item deleted successfull!'
-    });
-  } catch (error) {
-      res.status(500).json({
-          message: error.message
-      });
-  }
 };
-
-

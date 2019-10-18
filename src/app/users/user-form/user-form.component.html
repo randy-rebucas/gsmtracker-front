@@ -1,110 +1,116 @@
-<h2 mat-dialog-title>{{ dialogTitle }}
+<h2 mat-dialog-title>{{ dialogTitle | titlecase }}
     <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
 </h2>
 <mat-dialog-content class="mat-typography" style="min-height: 300px;">
-  <perfect-scrollbar style="max-height: 536px;">
-  <div *ngIf="isLoading" class="loading">
-      <mat-spinner [diameter]="25"></mat-spinner>
-  </div>
-    <form [formGroup]="form" class="normal-form" (submit)="onSavePatient()" *ngIf="!isLoading">
-      <h4 subheading-1>Basic Information</h4>
-        <div class="form-field-block">
-            <mat-form-field>
-                <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput type="text" formControlName="midlename" placeholder="Midlename">
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput type="text" formControlName="lastname" placeholder="Lastname">
-            </mat-form-field>
+    <perfect-scrollbar style="max-height: 536px;">
+        <div *ngIf="isLoading" class="loading">
+            <mat-spinner [diameter]="25"></mat-spinner>
         </div>
-        <div class="form-field-block">
-            <mat-form-field>
-                <input matInput type="number" formControlName="contact" placeholder="Contact">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-select formControlName="gender" placeholder="Gender">
-                    <mat-option value="Male">Male</mat-option>
-                    <mat-option value="Female">Female</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput readonly [matDatepicker]="picker" formControlName="birthdate" placeholder="Birthdate">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
-            <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
-              <h4 subheading-1>Address {{i+1}}</h4>
-              <ng-container *ngIf="i < 1">
-                  <div class="form-field-block">
-                      <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
-                    </div>
-              </ng-container>
-
-              <div class="form-field-block">
+        <form [formGroup]="form" class="normal-form" (submit)="onSavePatient()" *ngIf="!isLoading">
+            <h4 subheading-1>Basic Information</h4>
+            <div class="form-field-block user-type" *ngIf="userType === 'all'">
                 <mat-form-field>
-                    <input matInput type="text" formControlName="address1" placeholder="Street Address">
+                    <mat-select formControlName="type" placeholder="User Type">
+                        <mat-option *ngFor="let type of types" [value]="type._id">{{ type.name }}</mat-option>
+                    </mat-select>
                 </mat-form-field>
-              </div>
-              <div class="form-field-block">
-                <mat-form-field>
-                    <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
-                </mat-form-field>
-              </div>
-              <div class="form-field-block">
-                <mat-form-field>
-                    <input matInput type="text" formControlName="city" placeholder="City">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput type="text" formControlName="province" placeholder="Province">
-                </mat-form-field>
-              </div>
-              <div class="form-field-block">
-                <mat-form-field>
-                    <input matInput type="text" formControlName="postalCode" placeholder="Postal Code">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput type="text" formControlName="country" placeholder="Country">
-                  </mat-form-field>
-              </div>
-
-              <div class="action">
-                  <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
-                  <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-              </div>
             </div>
-        </ng-container>
-        <h4 subheading-1 *ngIf="!Id">Login Access</h4>
-        <div class="form-field-block"  *ngIf="!Id">
-          <mat-form-field>
-            <input matInput type="email" formControlName="email" placeholder="Email">
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput type="password" formControlName="password" placeholder="password">
-          </mat-form-field>
-        </div>
-        <h4 subheading-1>Meta Data</h4>
-        <ng-container formArrayName="metas" *ngIf="metaArray.length > 0">
-          <div *ngFor="let meta of metaArray.controls; let i = index;" [formGroupName]="i" class="metaGroup">
             <div class="form-field-block">
-              <mat-form-field>
-                  <input matInput type="text" formControlName="label" placeholder="Label">
-              </mat-form-field>
-              <mat-form-field>
-                  <input matInput type="text" formControlName="value" placeholder="Value">
-              </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="midlename" placeholder="Midlename">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="lastname" placeholder="Lastname">
+                </mat-form-field>
             </div>
-            <div class="action">
-              <button mat-icon-button *ngIf="metaArray.controls.length < 10" (click)="addMeta()" type="button"><mat-icon>add</mat-icon></button>
-              <button mat-icon-button color="warn" *ngIf="metaArray.controls.length > 1" (click)="removeMeta(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+            <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="number" formControlName="contact" placeholder="Contact">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select formControlName="gender" placeholder="Gender">
+                        <mat-option value="Male">Male</mat-option>
+                        <mat-option value="Female">Female</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput readonly [matDatepicker]="picker" formControlName="birthdate" placeholder="Birthdate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
+                </mat-form-field>
             </div>
-          </div>
-        </ng-container>
-        <button mat-raised-button color="primary" type="submit">{{btnLabel}}</button>
-    </form>
-  </perfect-scrollbar>
-</mat-dialog-content>
+            <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
+                <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+                    <h4 subheading-1>Address {{i+1}}</h4>
+                    <ng-container *ngIf="i < 1">
+                        <div class="form-field-block">
+                            <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
+                        </div>
+                    </ng-container>
 
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address1" placeholder="Street Address">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="city" placeholder="City">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="province" placeholder="Province">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="postalCode" placeholder="Postal Code">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="country" placeholder="Country">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="action">
+                        <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                        <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                    </div>
+                </div>
+            </ng-container>
+            <h4 subheading-1 *ngIf="!Id">Login Access</h4>
+            <div class="form-field-block" *ngIf="!Id">
+                <mat-form-field>
+                    <input matInput type="email" formControlName="email" placeholder="Email">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="password" formControlName="password" placeholder="password">
+                </mat-form-field>
+            </div>
+            <h4 subheading-1>Meta Data</h4>
+            <ng-container formArrayName="metas" *ngIf="metaArray.length > 0">
+                <div *ngFor="let meta of metaArray.controls; let i = index;" [formGroupName]="i" class="metaGroup">
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="label" placeholder="Label">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="value" placeholder="Value">
+                        </mat-form-field>
+                    </div>
+                    <div class="action">
+                        <button mat-icon-button *ngIf="metaArray.controls.length < 10" (click)="addMeta()" type="button"><mat-icon>add</mat-icon></button>
+                        <button mat-icon-button color="warn" *ngIf="metaArray.controls.length > 1" (click)="removeMeta(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                    </div>
+                </div>
+            </ng-container>
+            <button mat-raised-button color="primary" type="submit">{{btnLabel}}</button>
+        </form>
+    </perfect-scrollbar>
+</mat-dialog-content>

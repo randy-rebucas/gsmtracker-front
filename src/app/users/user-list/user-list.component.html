@@ -1,177 +1,160 @@
-<div
-  gdAreas="header header | content side | footer footer"
-  gdGap="10px"
-  gdRows="auto auto auto"
-  gdColumns="auto 350px"
-  gdAreas.lt-md="header | content | side | footer"
-  gdRows.lt-md="auto auto auto auto"
-  gdColumns.lt-md="auto">
-  <div class="area header" gdArea="header">
-      <div class="search-div">
-          <mat-form-field>
-              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
-          </mat-form-field>
-          <div (click)="onScan()">
-              <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
-          </div>
-      </div>
-      <div class="action-button">
-          <button mat-flat-button color="accent" (click)="onPrint()" *ngIf="isAllSelected()">
+<div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 350px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
+    <div class="area header" gdArea="header">
+        <div class="search-div">
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+            </mat-form-field>
+            <div (click)="onScan()">
+                <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
+            </div>
+        </div>
+        <div class="action-button">
+            <button mat-flat-button color="accent" (click)="onPrint()" *ngIf="isAllSelected()">
               <mat-icon>print</mat-icon> Print
          </button>
-          <button mat-flat-button color="warn" (click)="onDeleteAll()" *ngIf="isAllSelected()">
+            <button mat-flat-button color="warn" (click)="onDeleteAll()" *ngIf="isAllSelected()">
               <mat-icon>delete_sweep</mat-icon> Delete
          </button>
-          <button mat-flat-button color="primary" (click)="onCreate()">
+            <button mat-flat-button color="primary" (click)="onCreate()">
               <mat-icon>add</mat-icon> Add New
           </button>
 
-      </div>
-      <div class="support-div">
-          <p>For contact support<br/>
-            09179157515</p>
-      </div>
-  </div>
+        </div>
+        <div class="support-div">
+            <p>For contact support<br/> 09179157515
+            </p>
+        </div>
+    </div>
 
-  <div class="area content" gdArea="content">
-      <mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
+    <div class="area content" gdArea="content">
+        <mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
 
-          <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-              <div *ngIf="column === 'select'">
-                  <mat-header-cell *matHeaderCellDef>
-                      <mat-checkbox (change)="$event ? masterToggle() : null"
-                                    [checked]="selection.hasValue() && isAllSelected()"
-                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                    [aria-label]="checkboxLabel()">
-                      </mat-checkbox>
+            <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                <div *ngIf="column === 'select'">
+                    <mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                        </mat-checkbox>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let row">
-                      <mat-checkbox (click)="$event.stopPropagation()"
-                                    (change)="$event ? selection.toggle(row) : null"
-                                    [checked]="selection.isSelected(row)"
-                                    [aria-label]="checkboxLabel(row)">
-                      </mat-checkbox>
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                        </mat-checkbox>
                     </mat-cell>
-              </div>
-              <div *ngIf="column === 'image'">
-                  <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                      <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
-                      <ng-template #thenBlock>
-                          <img [src]="element.avatar" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
-                      </ng-template>
-                      <ng-template #elseBlock>
-                          <img src="assets/images/blank.png" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
-                      </ng-template>
-                  </mat-cell>
-              </div>
-              <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
-              <ng-template #thenBlockRow>
-                  <mat-header-cell *matHeaderCellDef style="text-align: right;">
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                      <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit">
+                </div>
+                <div *ngIf="column === 'image'">
+                    <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
+                        <ng-template #thenBlock>
+                            <img [src]="element.avatar" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+                        </ng-template>
+                        <ng-template #elseBlock>
+                            <img src="assets/images/blank.png" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+                        </ng-template>
+                    </mat-cell>
+                </div>
+                <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
+                <ng-template #thenBlockRow>
+                    <mat-header-cell *matHeaderCellDef style="text-align: right;">
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit">
                           <mat-icon>launch</mat-icon>
                       </button>
-                      <button mat-icon-button [routerLink]="['./', element.id, 'record']" aria-label="Record">
+                        <button mat-icon-button [routerLink]="['./', element.id, 'record']" aria-label="Record">
                         <mat-icon>assignment</mat-icon>
                       </button>
-                  </mat-cell>
-              </ng-template>
-              <ng-template #elseBlockRow>
-                  <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
-                  <div *ngIf="column === 'birthdate'; then thenBlockDate else elseBlockDate"></div>
-                  <ng-template #thenBlockDate>
-                      <mat-cell *matCellDef="let element"> {{element[column] | date}}</mat-cell>
-                  </ng-template>
-                  <ng-template #elseBlockDate>
-                      <mat-cell *matCellDef="let element"> {{element[column]}}</mat-cell>
-                  </ng-template>
-              </ng-template>
-          </ng-container>
+                    </mat-cell>
+                </ng-template>
+                <ng-template #elseBlockRow>
+                    <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
+                    <div *ngIf="column === 'birthdate'; then thenBlockDate else elseBlockDate"></div>
+                    <ng-template #thenBlockDate>
+                        <mat-cell *matCellDef="let element"> {{element[column] | date}}</mat-cell>
+                    </ng-template>
+                    <ng-template #elseBlockDate>
+                        <mat-cell *matCellDef="let element"> {{element[column]}}</mat-cell>
+                    </ng-template>
+                </ng-template>
+            </ng-container>
 
-          <!-- Expanded Content Column - The detail element is made up of this one column -->
-          <ng-container matColumnDef="expandedDetail">
-              <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-                  <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                      <div class="example-element-description">
-                          <dl *ngFor="let address of element.address; let i = index;">
-                              <dt>Address {{i+1}}:<br/>
+            <!-- Expanded Content Column - The detail element is made up of this one column -->
+            <ng-container matColumnDef="expandedDetail">
+                <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                    <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div class="example-element-description">
+                            <dl *ngFor="let address of element.address; let i = index;">
+                                <dt>Address {{i+1}}:<br/>
                                   <ng-container *ngIf="address.current">
                                       Current
                                   </ng-container>
                               </dt>
-                              <dd>
-                                  {{address.address1}}<br/>
-                                  <ng-container *ngIf="address.address2">
-                                      {{address.address2}} <br/>
-                                  </ng-container>
-                                  {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
-                              </dd>
-                          </dl>
-                      </div>
-                      <div class="element-metadata">
-                          <dl *ngFor="let meta of element.meta; let m = index;">
-                              <dt>{{meta.label}}:</dt>
-                              <dd>{{meta.value}}</dd>
-                          </dl>
-                      </div>
-                  </div>
-              </mat-cell>
-          </ng-container>
+                                <dd>
+                                    {{address.address1}}<br/>
+                                    <ng-container *ngIf="address.address2">
+                                        {{address.address2}} <br/>
+                                    </ng-container>
+                                    {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="element-metadata">
+                            <dl *ngFor="let meta of element.meta; let m = index;">
+                                <dt>{{meta.label}}:</dt>
+                                <dd>{{meta.value}}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </mat-cell>
+            </ng-container>
 
-          <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
-          <mat-row matRipple
-          *matRowDef="let element; columns: columnsToDisplay;"
-          class="example-element-row"
-          [class.example-expanded-row]="expandedElement === element"
-          (click)="expandedElement = expandedElement === element ? null : element">
-          </mat-row>
-          <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row" (click)="onDetail(row.id)" ></mat-row>
+            <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+            <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
+            </mat-row>
+            <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row" (click)="onDetail(row.id)"></mat-row>
 
-          <ng-container matColumnDef="loading">
-              <mat-footer-cell *matFooterCellDef colspan="8">
-                  <p class="mat-body">Loading data...</p>
-              </mat-footer-cell>
-          </ng-container>
-          <ng-container matColumnDef="noData">
-              <mat-footer-cell *matFooterCellDef colspan="8">
-                  <p class="mat-body">No {{userType}} data.</p>
-              </mat-footer-cell>
-          </ng-container>
-          <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
-          <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
-      </mat-table>
-      <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" showFirstLastButtons></mat-paginator>
-  </div>
-  <div class="area side" gdArea="side">
-      <mat-card class="birthday-card">
-        <mat-card-header>
-          <mat-card-title>Birthdays</mat-card-title>
-        </mat-card-header>
-        <div *ngIf="isLoading">
-          <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <mat-list *ngIf="!isLoading">
-            <mat-list-item *ngFor="let birthday of birthdays" class="birthday-list">
-              <div *ngIf="birthday.avatar; then thenBlock else elseBlock"></div>
-              <ng-template #thenBlock>
-                  <img [src]="birthday.avatar" [alt]="birthday.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
-              </ng-template>
-              <ng-template #elseBlock>
-                  <img src="assets/images/blank.png" [alt]="birthday.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
-              </ng-template>
-              <div class="birthday-user">
-                  <h4 mat-line>{{ birthday.fullname }} <small mat-line> {{ birthday.birthdate | date}} </small></h4>
-                  <p mat-line> {{ birthday.contact }} <span>Age: {{ birthday.age }}</span></p>
-              </div>
+            <ng-container matColumnDef="loading">
+                <mat-footer-cell *matFooterCellDef colspan="8">
+                    <p class="mat-body">Loading data...</p>
+                </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef colspan="8">
+                    <p class="mat-body">No {{userType}} data.</p>
+                </mat-footer-cell>
+            </ng-container>
+            <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="area side" gdArea="side">
+        <mat-card class="birthday-card">
+            <mat-card-header>
+                <mat-card-title>Birthdays</mat-card-title>
+            </mat-card-header>
+            <div *ngIf="isLoading">
+                <mat-spinner [diameter]="25"></mat-spinner>
+            </div>
+            <mat-list *ngIf="!isLoading">
+                <mat-list-item *ngFor="let birthday of birthdays" class="birthday-list">
+                    <div *ngIf="birthday.avatar; then thenBlock else elseBlock"></div>
+                    <ng-template #thenBlock>
+                        <img [src]="birthday.avatar" [alt]="birthday.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+                    </ng-template>
+                    <ng-template #elseBlock>
+                        <img src="assets/images/blank.png" [alt]="birthday.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+                    </ng-template>
+                    <div class="birthday-user">
+                        <h4 mat-line>{{ birthday.fullname }} <small mat-line> {{ birthday.birthdate | date}} </small></h4>
+                        <p mat-line> {{ birthday.contact }} <span>Age: {{ birthday.age }}</span></p>
+                    </div>
 
-            </mat-list-item>
-            <mat-list-item *ngIf="birthdays.length === 0">No birthday's available.</mat-list-item>
-          </mat-list>
-      </mat-card>
-  </div>
-  <div class="area footer" gdArea="footer">
+                </mat-list-item>
+                <mat-list-item *ngIf="birthdays.length === 0">No birthday's available.</mat-list-item>
+            </mat-list>
+        </mat-card>
+    </div>
+    <div class="area footer" gdArea="footer">
 
-  </div>
+    </div>
 </div>

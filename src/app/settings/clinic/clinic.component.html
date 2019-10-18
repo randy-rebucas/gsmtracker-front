@@ -1,9 +1,9 @@
-<div fxLayout='row wrap' fxLayoutGap="10px">
+<div *ngIf="isLoading" class="loading">
+    <mat-spinner></mat-spinner>
+</div>
+<div fxLayout='row wrap' fxLayoutGap="10px" *ngIf="!isLoading">
     <div fxFlex="15%" fxFlex.xs="100%" fxFlex.sm="15%" fxFlex.md="100%" style="position: relative;">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <form [formGroup]="logoForm" (submit)="onSavePicture()" *ngIf="!isLoading">
+        <form [formGroup]="logoForm" (submit)="onSavePicture()">
             <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
             <div class="image-preview">
                 <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Logo">
@@ -24,10 +24,7 @@
         </form>
     </div>
     <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="75%" fxFlex.md="100%" style="position: relative;">
-        <div *ngIf="isLoading" class="loading">
-            <mat-spinner [diameter]="25"></mat-spinner>
-        </div>
-        <form [formGroup]="form" class="normal-form" (submit)="onSaveGenSetting()" *ngIf="!isLoading">
+        <form [formGroup]="form" class="normal-form" (submit)="onSaveGenSetting()">
             <h4 subheading-1>Clinic Information</h4>
             <div class="form-field-block">
                 <mat-form-field>

@@ -49,19 +49,24 @@ input[type="file"] {
     padding: 0 0 1em 0;
 }
 
-.addressGroup, .metaGroup {
-  position: relative;
+.addressGroup,
+.metaGroup {
+    position: relative;
 }
 
 .addressGroup .action,
 .metaGroup .action {
-  position: absolute;
-  top: 0;
-  right: 0;
-  visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
 }
 
 .addressGroup:hover .action,
 .metaGroup:hover .action {
-  visibility: visible;
+    visibility: visible;
+}
+
+.form-field-block.user-type {
+    width: 32%;
 }

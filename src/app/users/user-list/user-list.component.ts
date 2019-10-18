@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PageEvent, MatDialog } from '@angular/material';
+import { PageEvent, MatDialog, MatDialogConfig } from '@angular/material';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,6 +23,7 @@ import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { DatePipe } from '@angular/common';
 import { SettingsGeneralService } from 'src/app/settings/settings-general.service';
+import { UserFormComponent } from '../user-form/user-form.component';
 
 @Component({
   selector: 'app-patient-list',
@@ -369,23 +370,27 @@ implements OnInit, OnDestroy {
   }
 
   onCreate() {
-    const args = {
-      width: '50%',
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
       id: null,
-      dialogTitle: 'Create New',
-      dialogButton: 'Save'
+      title: 'Create New ' + this.userType,
+      button: 'Save',
+      userType: this.userType
     };
-    // super.onPopup(args, PatientEditComponent);
+    this.dialog.open(UserFormComponent, dialogConfig);
   }
 
   onEdit(patientId) {
     const args = {
       width: '50%',
       id: patientId,
-      dialogTitle: 'Update Patient',
+      dialogTitle: 'Update ' + this.userType,
       dialogButton: 'Update'
     };
-    // super.onPopup(args, PatientEditComponent);
+    super.onPopup(args, UserFormComponent);
   }
 
   onScan() {

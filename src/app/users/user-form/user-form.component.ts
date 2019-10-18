@@ -25,6 +25,7 @@ implements OnInit, OnDestroy {
   dialogTitle: string;
   btnLabel: string;
   userType: string;
+  types: any[];
 
   constructor(
     public authService: AuthService,
@@ -43,11 +44,24 @@ implements OnInit, OnDestroy {
     this.Id = data.id;
     this.dialogTitle = data.title;
     this.btnLabel = data.button;
+    this.userType = data.userType;
   }
 
   ngOnInit() {
     super.doInit();
+    this.types = [{
+      id: '8f8c6e98',
+      name: 'Physician',
+      description: 'USD'
+     },
+     {
+      id: '169fee1a',
+      name: 'Patient',
+      description: 'CAD'
+     }];
+
     this.form = this.fb.group({
+      usertype: [this.userType ? this.userType : '', [Validators.required]],
       firstname: ['', [Validators.required]],
       midlename: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
@@ -65,8 +79,8 @@ implements OnInit, OnDestroy {
         this.isLoading = true;
         this.usersService.get(this.Id).subscribe(userData => {
           this.isLoading = false;
-          this.userType = userData.userType;
           this.form.patchValue({
+            usertype: userData.userType,
             firstname: userData.firstname,
             midlename: userData.midlename,
             lastname: userData.lastname,
@@ -149,6 +163,7 @@ implements OnInit, OnDestroy {
     }
     if (!this.Id) {
       this.usersService.insert(
+        (this.userType) ? this.userType : this.form.value.usertype,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -163,12 +178,12 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
       });
     } else {
       this.usersService.update(
         this.Id,
-        this.userType,
+        (this.userType) ? this.userType : this.form.value.usertype,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -180,7 +195,7 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.usersService.getAll('patient', this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
       });
     }
   }
