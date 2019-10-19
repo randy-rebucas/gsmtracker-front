@@ -120,7 +120,7 @@ exports.createUser = async(req, res, next) => {
         await newSetting.save();
 
         res.status(200).json({
-            message: 'Registered successfully! Redirecting 3 sec.'
+            message: 'Registered successfully!'
         });
 
     } catch (e) {
@@ -132,31 +132,37 @@ exports.createUser = async(req, res, next) => {
 
 exports.userLogin = async(req, res, next) => {
     try {
+      /**
+       * Find email on auth collection
+       */
         let auth = await Auth.findOne({ email: req.body.email }).populate('userId');
         if (!auth) {
             throw new Error('Something went wrong. Your email is not listed!');
         }
+        /**
+         * compare password
+         */
         let decrypted = await bcrypt.compare(req.body.password, auth.password);
         if (!decrypted) {
             throw new Error('Something went wrong. Incorrect password!');
         }
 
-        let user = await User.findOne({ _id: auth.userId });
-        let license = await License.findOne({ userId: auth.userId });
+        let myUser = await MyUser.findOne({ userId: auth.userId });
 
         let token = await jwt.sign({
                 email: auth.email,
-                userId: user._id,
-                licenseId: license._id
+                userId: myUser._id,
+                licenseId: myUser.licenseId
             },
-            process.env.JWT_KEY, { expiresIn: '12h' }
+            process.env.JWT_KEY, {}
         );
+
         res.status(200).json({
             token: token,
-            expiresIn: 43200, // 3600,
-            userId: user._id, // fetchedUser._id,
+            userId:  myUser._id,
             userEmail: auth.email,
-            licenseId: license._id
+            userType: myUser.userType,
+            licenseId: myUser.licenseId
         });
     } catch (error) {
         res.status(500).json({

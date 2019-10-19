@@ -52,6 +52,7 @@ import { ChartsModule } from 'ng2-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { EncountersComponent } from './shared/encounters/encounters.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { CookieService } from 'ngx-cookie-service';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -120,6 +121,7 @@ export const createTranslateLoader = (http: HttpClient) => {
   providers: [
     AppConfiguration,
     UploadService,
+    CookieService,
     {
         provide: PERFECT_SCROLLBAR_CONFIG,
         useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG

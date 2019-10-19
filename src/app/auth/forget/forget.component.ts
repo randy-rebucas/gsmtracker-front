@@ -1,68 +1,63 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth.service';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  templateUrl: './signup.component.html',
+  templateUrl: './forget.component.html',
   styles: [`
-  .signup-page {
+  .forget-page {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
     position: relative;
   }
-  .signup-page .content {
+  .forget-page .content {
     z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+
   }
-  .signup-page .content .app-name {
+  .forget-page .content .app-name {
     margin-top: 0px;
-      padding-bottom: 0px;
-      margin-bottom: 0;
-      font-size: 26px;
-      font-weight: 100;
-      text-align: left;
+    padding-bottom: 0px;
+    margin-bottom: 0;
+    font-size: 26px;
+    font-weight: 100;
+    text-align: left;
   }
-  .signup-page .content p.subheading {
+  .forget-page .content p.subheading {
     text-align: left;
     padding: 0;
     margin: 0 0 10px 0;
     font-size: 12px;
   }
-  .signup-page .content .signup-form {
+  .forget-page .content .forget-form {
     padding: 40px;
     background: #fff;
     width: 500px;
     box-shadow: 0 0 10px #b7b7b7;
 
   }
-  .signup-page .content .signup-form input:-webkit-autofill {
+  .forget-page .content .forget-form input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px white inset;
   }
+
   .text-center {
     text-align: center;
   }
   .w-100 {
     width: 100%;
   }
-  .footer {
-    text-align: left;
-    width: 100%;
-  }
-  .footer p {
-    padding: 0 15px;
-  }
+
   `]
 })
-export class SignupComponent implements OnInit, OnDestroy {
+export class ForgetComponent implements OnInit, OnDestroy {
   isLoading = false;
   private authStatusSub: Subscription;
 
@@ -70,10 +65,10 @@ export class SignupComponent implements OnInit, OnDestroy {
     public router: Router,
     public authService: AuthService,
     public titleService: Title
-    ) {}
+  ) {}
 
   ngOnInit() {
-    this.titleService.setTitle('Auth - Signup');
+    this.titleService.setTitle('Auth - Recover Password');
     this.authStatusSub = this.authService.getAuthStatusListener().subscribe(
       authStatus => {
         this.isLoading = false;
@@ -81,12 +76,16 @@ export class SignupComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSignup(form: NgForm) {
+  onForget( form: NgForm ) {
     if (form.invalid) {
       return;
     }
     this.isLoading = true;
-    this.authService.createUser(form.value.firstname, form.value.lastname, form.value.clinicname, form.value.email, form.value.password);
+    // this.authService.login(form.value.email, form.value.password);
+  }
+
+  onSignup() {
+    this.router.navigate(['/auth/signup']);
   }
 
   onLogin() {

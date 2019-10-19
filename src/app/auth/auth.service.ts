@@ -7,27 +7,33 @@ import { environment } from '../../environments/environment';
 import { AuthData } from './auth-data.model';
 import { AuthSignup } from './auth-signup.model';
 import { NotificationService } from '../shared/notification.service';
+import { CookieService } from 'ngx-cookie-service';
 
 const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private isAuthenticated = false;
+  private isAuthenticated: boolean;
   private token: string;
-  private tokenTimer: any;
   private userId: string;
   private userEmail: string;
+  private userType: string;
   private licenseId: string;
   private authStatusListener = new Subject<boolean>();
 
-  constructor(private http: HttpClient, private router: Router, private notificationService: NotificationService) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private notificationService: NotificationService,
+    private cookieService: CookieService
+  ) {}
 
   getToken() {
     return this.token;
   }
 
   getIsAuth() {
-    return this.isAuthenticated;
+    return (localStorage.hasOwnProperty('token')) ? true : false;
   }
 
   getUserId() {
@@ -38,6 +44,10 @@ export class AuthService {
     return this.userEmail;
   }
 
+  getUserType() {
+    return this.userType;
+  }
+
   getLicenseId() {
     return this.licenseId;
   }
@@ -46,25 +56,25 @@ export class AuthService {
     return this.authStatusListener.asObservable();
   }
 
-  createUser(reqFirstName: string, reqLastName: string, reqClinicName: string, reqEmail: string, reqPassword: string) {
+  createUser(FirstName: string, LastName: string, ClinicName: string, Email: string, Password: string) {
     const authSignup: AuthSignup = {
-      firstname: reqFirstName,
-      lastname: reqLastName,
-      clinicname: reqClinicName,
-      email: reqEmail,
-      password: reqPassword
+      firstname: FirstName,
+      lastname: LastName,
+      clinicname: ClinicName,
+      email: Email,
+      password: Password
     };
-    this.http.post(BACKEND_URL + '/signup', authSignup).subscribe((res) => {
-      this.notificationService.success(':: Registered successfully!');
+    this.http.post<{message: string}>(BACKEND_URL + '/signup', authSignup).subscribe((res) => {
+      this.notificationService.success(res.message);
       this.router.navigate(['/']);
     }, error => {
       this.authStatusListener.next(false);
     });
   }
 
-  login(reqEmail: string, reqPassword: string) {
-    const authData: AuthData = {email: reqEmail, password: reqPassword};
-    this.http.post<{token: string, expiresIn: number, userEmail: string, userId: string, licenseId: string}>(
+  login(Email: string, Password: string, Remember: boolean) {
+    const authData: AuthData = {email: Email, password: Password, remember: Remember};
+    this.http.post<{token: string, userEmail: string, userId: string, userType: string, licenseId: string}>(
       BACKEND_URL + '/login',
       authData
     )
@@ -72,18 +82,21 @@ export class AuthService {
       const token = response.token;
       this.token = token;
       if (token) {
-        const expiresInDuration = response.expiresIn;
-        this.setAuthTimer(expiresInDuration);
-        this.isAuthenticated = true;
 
         this.userId = response.userId;
         this.userEmail = response.userEmail;
+        this.userType = response.userType;
         this.licenseId = response.licenseId;
 
         this.authStatusListener.next(true);
-        const now = new Date();
-        const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-        this.saveAuthData(token, expirationDate, this.userId, this.userEmail, this.licenseId);
+
+        if (Remember) {
+          this.cookieService.set('remember', (Remember) ? 'yes' : 'no' );
+          this.cookieService.set('email', Email );
+          this.cookieService.set('pass', Password );
+        }
+
+        this.saveAuthData(token, this.userId, this.userEmail, this.userType, this.licenseId);
         this.router.navigate(['/']);
       }
     }, error => {
@@ -96,67 +109,53 @@ export class AuthService {
     if (!authInformation) {
       return;
     }
-    const now = new Date();
-    const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
-    if (expiresIn > 0) {
-      this.token = authInformation.token;
-      this.isAuthenticated = true;
+    this.token = authInformation.token;
 
-      this.userId = authInformation.userId;
-      this.userEmail = authInformation.userEmail;
-      this.licenseId = authInformation.licenseId;
-
-      this.setAuthTimer(expiresIn / 1000);
-      this.authStatusListener.next(true);
-    }
+    this.userId = authInformation.userId;
+    this.userEmail = authInformation.userEmail;
+    this.userType = authInformation.userType;
+    this.licenseId = authInformation.licenseId;
+    this.authStatusListener.next(true);
   }
 
   logout() {
     this.token = null;
-    this.isAuthenticated = false;
-    this.authStatusListener.next(false);
     this.userId = null;
-    clearTimeout(this.tokenTimer);
+    this.userType = null;
+    this.licenseId = null;
+    this.userEmail = null;
+    this.authStatusListener.next(false);
     this.clearAuthData();
     this.router.navigate(['/auth/login']);
   }
 
-  private setAuthTimer(duration: number) {
-    this.tokenTimer = setTimeout(() => {
-      this.logout();
-    }, duration * 1000);
-  }
-
-  private saveAuthData(token: string, expirationDate: Date, userId: string, userEmail: string, licenseId: string) {
+  private saveAuthData(token: string, userId: string, userEmail: string, userType: string, licenseId: string) {
     localStorage.setItem('token', token);
-    localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('userEmail', userEmail);
+    localStorage.setItem('userType', userType);
     localStorage.setItem('licenseId', licenseId);
   }
 
   private clearAuthData() {
     localStorage.removeItem('token');
-    localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('userType');
     localStorage.removeItem('licenseId');
   }
 
   private getAuthData() {
     const authToken = localStorage.getItem('token');
-    const expirationDate = localStorage.getItem('expiration');
     const authUserId = localStorage.getItem('userId');
     const authUserEmail = localStorage.getItem('userEmail');
+    const authUserType = localStorage.getItem('userType');
     const authLicenseId = localStorage.getItem('licenseId');
-    if (!authToken || !expirationDate) {
-      return;
-    }
     return {
       token: authToken,
-      expirationDate: new Date(expirationDate),
       userId: authUserId,
       userEmail: authUserEmail,
+      userType: authUserType,
       licenseId: authLicenseId
     };
   }

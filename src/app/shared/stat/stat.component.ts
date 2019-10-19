@@ -17,7 +17,7 @@ export class StatComponent implements OnInit {
     constructor(public router: Router) {}
 
     ngOnInit() {
-      console.log(this.link);
+      // console.log(this.link);
     }
 
     onDetails(arg) {

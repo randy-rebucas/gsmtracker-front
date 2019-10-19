@@ -1,30 +1,48 @@
 <div class="login-page">
-  <div class="content">
-      <mat-spinner *ngIf="isLoading"></mat-spinner>
-      <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading" class="login-form" fxFlex>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <div class="content" *ngIf="!isLoading">
+
+      <form [formGroup]="loginForm" (submit)="onLogin()" class="login-form" fxFlex>
           <div class="text-center">
-              <h2 class="app-name">Clinic+</h2>
+              <h2 class="app-name">Login</h2>
+              <p class="subheading">Please input your email and password to gain access.</p>
           </div>
           <div fxFlex  fxlayout="row" fxlayout.lt-md="column">
               <div fxFlexFill>
                   <mat-form-field class="w-100">
-                      <input matInput name="email" type="email" ngModel placeholder="Email" #emailInput="ngModel" required email>
-                      <mat-error *ngIf="emailInput.invalid">Please enter valid email</mat-error>
+                      <input matInput formControlName="email" id="email" placeholder="Email">
+                      <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+                        <div *ngIf="email.errors">
+                          Email is required.
+                        </div>
+                        <!-- <div *ngIf="email.errors.minlength">
+                            Email must be at least 20 characters long.
+                        </div>
+                        <div *ngIf="email.errors.email">
+                            Email not valid.
+                        </div> -->
+                      </mat-error>
                   </mat-form-field>
               </div>
           </div>
           <div fxFlex  fxLayout="row" fxLayout.lt-md="column">
               <div fxFlexFill>
                   <mat-form-field class="w-100">
-                      <input matInput type="password" name="password" ngModel placeholder="Password" #passwordInput="ngModel" required>
-                      <mat-error *ngIf="passwordInput.invalid">Please enter valid password</mat-error>
+                      <input matInput type="password" name="password" formControlName="password" placeholder="Password">
+                      <!-- <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+                          <div *ngIf="password.errors.required">
+                            Password is required.
+                          </div>
+                          <div *ngIf="password.errors.minlength">
+                              Email must be at least 8 characters long.
+                          </div>
+                        </mat-error> -->
                   </mat-form-field>
               </div>
           </div>
           <div fxFlex  fxLayout="row" fxLayout.lt-md="column" style="margin: 20px 0 30px 0">
               <div fxFlex>
-                  <!-- <mat-checkbox color="primary">Remember Me</mat-checkbox> -->
-                  <a (click)="onSignup()" style="cursor: pointer;">Register</a>
+                  <mat-checkbox color="primary" name="remember" formControlName="remember">Remember Me</mat-checkbox>
               </div>
               <div fxFlex  fxLayoutAlign="end">
                   <a (click)="onForgot()" style="cursor: pointer;">Forget Password</a>
@@ -37,5 +55,8 @@
           </div>
 
       </form>
+      <div class="footer">
+        <p> No account yet? <a (click)="onSignup()" style="cursor: pointer;">Signup here</a> </p>
+      </div>
   </div>
 </div>

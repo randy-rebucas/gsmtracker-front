@@ -4,7 +4,8 @@
         <mat-spinner *ngIf="isLoading"></mat-spinner>
         <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading" class="signup-form" fxFlex>
             <div class="text-center">
-                <h2 class="app-name">Clinic+</h2>
+                <h2 class="app-name">Signup</h2>
+                <p class="subheading">Please fill out all input.</p>
             </div>
             <div fxFlex  fxlayout="row" fxlayout.lt-md="column">
                 <div fxFlexFill>
@@ -46,17 +47,16 @@
                     </mat-form-field>
                 </div>
             </div>
-
             <div fxFlex  fxLayout="row" fxLayout.lt-md="column">
-                <div fxFlexFill>
-                    <button mat-raised-button color="primary" class="w-100" type="submit">Signup</button>
-                </div>
-            </div>
-            <div fxFlex  fxLayout="row" fxLayout.lt-md="column" style="margin: 20px 0 30px 0">
-                <div fxFlex>
-                    <a (click)="onLogin()" style="cursor: pointer;">Login</a>
-                </div>
+              <div fxFlexFill>
+                  <button mat-raised-button color="primary" class="w-100" type="submit">Signup</button>
+              </div>
             </div>
         </form>
+
+        <div class="footer">
+            <p>Already have an account? <a (click)="onLogin()" style="cursor: pointer;">Login</a> </p>
+        </div>
     </div>
+
   </div>

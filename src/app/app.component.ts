@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
     this.meta.addTag({name: 'description', content: 'Clinical Web Application'});
     this.meta.addTag({name: 'author', content: 'Randy Rebucas'});
     this.meta.addTag({name: 'robots', content: 'index, follow'});
+
     this.authService.autoAuthUser();
 
     this.title = 'clinic-plus';

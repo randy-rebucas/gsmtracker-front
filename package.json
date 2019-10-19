@@ -44,6 +44,7 @@
     "jspdf-autotable": "^3.2.5",
     "lodash": "^4.17.15",
     "ng2-charts": "^2.3.0",
+    "ngx-cookie-service": "^2.2.0",
     "ngx-image-cropper": "^2.0.2",
     "ngx-lightbox": "^2.1.1",
     "ngx-material-timepicker": "^4.0.2",
