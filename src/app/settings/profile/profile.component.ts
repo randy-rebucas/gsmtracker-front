@@ -138,7 +138,7 @@ implements OnInit, OnDestroy {
       this.form.patchValue({addresses: address});
 
       const metaControl = this.form.controls.metas as FormArray;
-      const meta = userData.meta;
+      const meta = userData.metas;
       for (let i = 1; i < meta.length; i++) {
         metaControl.push(this.addMetaGroup());
       }

@@ -151,7 +151,7 @@ exports.userLogin = async(req, res, next) => {
 
         let token = await jwt.sign({
                 email: auth.email,
-                userId: myUser._id,
+                userId: myUser.userId,
                 licenseId: myUser.licenseId
             },
             process.env.JWT_KEY, {}
@@ -159,7 +159,7 @@ exports.userLogin = async(req, res, next) => {
 
         res.status(200).json({
             token: token,
-            userId:  myUser._id,
+            userId:  myUser.userId,
             userEmail: auth.email,
             userType: myUser.userType,
             licenseId: myUser.licenseId
@@ -321,31 +321,61 @@ exports.getAll = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
     try {
-        var usersProjection = {
-            __v: false
-        };
-        let user = await User.findOne({ _id: req.params.userId }, usersProjection)
-            .populate('personId')
-            .exec();
-        if (!user) {
-            throw new Error('Something went wrong. Cannot find user id: ' + req.params.userId);
-        }
-        let auth = await Auth.findOne({ personId: user.personId }).select('email -_id')
-            .exec();
+
+        const _u = await MyUser.aggregate([
+          {
+            $lookup: {
+                from: 'users', // other table name
+                localField: 'userId', // name of users table field
+                foreignField: '_id', // name of userinfo table field
+                as: 'users' // alias for userinfo table
+            }
+          },
+          { $unwind: '$users' },
+          {
+            $lookup: {
+                from: 'people', // other table name
+                localField: 'users.personId', // name of users table field
+                foreignField: '_id', // name of userinfo table field
+                as: 'people' // alias for userinfo table
+            }
+          },
+          { $unwind: '$people' },
+          {
+            $lookup: {
+                from: 'auths', // other table name
+                localField: 'userId', // name of users table field
+                foreignField: 'userId', // name of userinfo table field
+                as: 'auths' // alias for userinfo table
+            }
+          },
+          { $unwind: '$auths' },
+          { $match: { 'users._id': new ObjectId(req.params.userId) } },
+          {
+            $project : {
+              userType : 1,
+              users : 1,
+              people : 1,
+              'auths.email': 1
+            }
+          },
+          { $sort: { 'people.created': -1 } }
+        ]);
+
         res.status(200).json({
-            userId: user._id,
-            meta: user.metaData,
-            firstname: user.personId.firstname,
-            lastname: user.personId.lastname,
-            midlename: user.personId.midlename,
-            contact: user.personId.contact,
-            gender: user.personId.gender,
-            birthdate: user.personId.birthdate,
-            addresses: user.personId.address,
-            created: user.personId.created,
-            email: auth.email,
-            avatar: user.avatarPath,
-            userType: user.userType
+          userId:     _u[0]._id,
+          metas:      _u[0].users.metaData,
+          firstname:  _u[0].people.firstname,
+          lastname:   _u[0].people.lastname,
+          midlename:  _u[0].people.midlename,
+          contact:    _u[0].people.contact,
+          gender:     _u[0].people.gender,
+          birthdate:  _u[0].people.birthdate,
+          addresses:  _u[0].people.address,
+          created:    _u[0].people.created,
+          email:      _u[0].auths.email,
+          avatar:     _u[0].users.avatarPath,
+          userType:   _u[0].userType
         });
     } catch (error) {
         res.status(500).json({
