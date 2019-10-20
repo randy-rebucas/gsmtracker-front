@@ -40,9 +40,6 @@ import { mimeType } from 'src/app/users/user-form/mime-type.validator';
   mat-form-field:not(:first-child) {
       margin-left: 1em;
   }
-  form.normal-form {
-    width: 50%;
-  }
   .form-field-block {
       display: flex;
       flex-grow: 1;
@@ -51,10 +48,14 @@ import { mimeType } from 'src/app/users/user-form/mime-type.validator';
   }
   .image-preview {
     position: relative;
+    border: 2px solid transparent;
+  }
+  .image-preview:hover {
+    border: 2px solid #dcdcdc;
   }
   .image-preview button {
     position: absolute;
-    right: 8px;
+    right: 0;
     visibility: hidden;
   }
   .image-preview:hover button {
@@ -63,6 +64,10 @@ import { mimeType } from 'src/app/users/user-form/mime-type.validator';
   .image-preview img {
     width: 100%;
   }
+  .restricted {
+    border-top: 3px dotted #f44336;
+    margin: 1em 0;
+}
   `]
 })
 export class ProfileComponent
@@ -72,6 +77,7 @@ implements OnInit, OnDestroy {
   selectedFile: File = null;
   imagePreview: string;
   userType: string;
+  email: string;
   profileForm: FormGroup;
   isLoadingPic = false;
   bufferValue: number;
@@ -109,7 +115,6 @@ implements OnInit, OnDestroy {
       contact: ['', [Validators.required]],
       gender: ['', [Validators.required]],
       birthdate: ['', [Validators.required]],
-      email: [''],
       password: [''],
       addresses: this.fb.array([this.addAddressGroup()]),
       metas: this.fb.array([this.addMetaGroup()])
@@ -120,6 +125,7 @@ implements OnInit, OnDestroy {
       this.uId = userData.userId;
       this.imagePreview = userData.avatar;
       this.userType = userData.userType;
+      this.email = userData.email;
 
       this.form.patchValue({
         firstname: userData.firstname,
@@ -127,8 +133,7 @@ implements OnInit, OnDestroy {
         lastname: userData.lastname,
         contact: userData.contact,
         gender: userData.gender,
-        birthdate: userData.birthdate,
-        email: userData.email
+        birthdate: userData.birthdate
       });
       const addressControl = this.form.controls.addresses as FormArray;
       const address = userData.addresses;

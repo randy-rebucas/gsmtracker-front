@@ -5,3 +5,25 @@ person
         type
         myuser
         config
+
+accounts
+  accountId
+  planId
+  current_period_ends
+  max_checks
+
+
+  memberships
+    membershipId
+    accountId
+    userId
+    access
+
+users
+  userId
+
+plans
+  planId
+  name
+  max_checks
+  features

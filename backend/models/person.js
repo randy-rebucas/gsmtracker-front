@@ -20,3 +20,14 @@ const personSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('Person', personSchema);
+
+// personSchema.virtual('fullName').get(function() {
+//   return this.firstName + ' ' + this.lastName
+// })
+
+// personSchema.virtual('fullName').set(function(name) {
+//   let str = name.split(' ')
+
+//   this.firstName = str[0]
+//   this.lastName = str[1]
+// })

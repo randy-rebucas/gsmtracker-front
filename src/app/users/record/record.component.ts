@@ -181,7 +181,7 @@ implements OnInit, OnDestroy {
         this.created = results.userData.created;
         this.email = results.userData.email;
         this.userType = results.userData.userType;
-        this.metas = results.userData.meta;
+        this.metas = results.userData.metas;
         this.avatar = results.userData.avatar;
       })
       .catch(err => console.log(err));

@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
+var helmet = require('helmet');
 var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
@@ -46,22 +47,26 @@ var driveRouter = require('./routes/drive');
 var cors = require('cors');
 
 var app = express();
-
+// helmet for security purpose
+app.use(helmet());
 // admin@myclinicsoft.com
 const options = {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
-    useUnifiedTopology: true,
-    autoIndex: false, // Don't build indexes
-    reconnectTries: 30, // Number.MAX_VALUE, // Never stop trying to reconnect
+    autoReconnect: true,
+    reconnectTries: Number.MAX_VALUE, // Number.MAX_VALUE, // Never stop trying to reconnect
     reconnectInterval: 500, // Reconnect every 500ms
+    useUnifiedTopology: true,
     poolSize: 10, // Maintain up to 10 socket connections
+    autoIndex: false, // Don't build indexes
+    keepAlive: true,
+    keepAliveInitialDelay: 300000,
     // If not connected, return errors immediately rather than waiting for reconnect
     bufferMaxEntries: 0,
     connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
     socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-    family: 4 // Use IPv4, skip trying IPv6
+    family: null // Use IPv4, skip trying IPv6
 };
 mongoose.connect(
         'mongodb+srv://myclinicsoft:' +
@@ -91,23 +96,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/attachments', express.static(path.join(__dirname, 'attachments')));
-app.use('/attachments/thumb', express.static(path.join(__dirname, 'attachments/thumb')));
-//app.use('/', express.static(path.join(__dirname, 'angular')));
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    );
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-    );
-    next();
-});
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader(
+//         'Access-Control-Allow-Headers',
+//         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//     );
+//     res.setHeader(
+//         'Access-Control-Allow-Methods',
+//         'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+//     );
+//     next();
+// });
 
 var corsOptions = {
     origin: '*',

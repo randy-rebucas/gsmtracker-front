@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const ip = require("ip");
 const sharp = require('sharp');
 const moment = require('moment');
+const slugify = require('slugify');
+
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const Auth = require('../models/auth');
@@ -31,6 +33,7 @@ exports.createUser = async(req, res, next) => {
             firstname: req.body.firstname,
             lastname: req.body.lastname
         });
+
         let person = await newPerson.save();
         if (!person) {
           throw new Error('Something went wrong. Cannot save people collection!');
@@ -50,7 +53,8 @@ exports.createUser = async(req, res, next) => {
         /**
          * Set login credentials in auth collection
          */
-        let hash = await bcrypt.hash(req.body.password, 10);
+        const salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(req.body.password, salt);
         const authCredentials = new Auth({
             email: req.body.email,
             password: hash,
@@ -78,6 +82,11 @@ exports.createUser = async(req, res, next) => {
          */
         const newType = new Type({
             name: 'Physicians',
+            slug: slugify('Physicians',{
+              replacement: '-',    // replace spaces with replacement
+              remove: null,        // regex to remove characters
+              lower: true,         // result in lower case
+            }),
             description: 'a person qualified to practice medicine',
             licenseId: license._id,
         });
@@ -104,6 +113,11 @@ exports.createUser = async(req, res, next) => {
          */
         const otherType = new Type({
             name: 'Patients',
+            slug: slugify('Patients',{
+              replacement: '-',    // replace spaces with replacement
+              remove: null,        // regex to remove characters
+              lower: true,         // result in lower case
+            }),
             description: 'a person receiving or registered to receive medical treatment.',
             licenseId: license._id,
         });

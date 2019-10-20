@@ -36,10 +36,6 @@ import { mimeType } from 'src/app/users/user-form/mime-type.validator';
   mat-form-field:not(:first-child) {
       margin-left: 1em;
   }
-  form.normal-form {
-    width: 50%;
-    margin: 3em 0;
-  }
   mat-form-field.time {
     width: 48%;
     flex-direction: row;
@@ -66,10 +62,14 @@ import { mimeType } from 'src/app/users/user-form/mime-type.validator';
 
   .image-preview {
     position: relative;
+    border: 2px solid transparent;
+  }
+  .image-preview:hover {
+    border: 2px solid #dcdcdc;
   }
   .image-preview button {
     position: absolute;
-    right: 8px;
+    right: 0;
     visibility: hidden;
   }
   .image-preview:hover button {
@@ -78,6 +78,14 @@ import { mimeType } from 'src/app/users/user-form/mime-type.validator';
   .image-preview img {
     width: 100%;
   }
+
+  .rxpad-output {
+    border: 1px solid #dcdcdc;
+    min-height: 745px;
+    -webkit-box-shadow: -10px 10px 54px 0px rgba(224,224,224,0.95);
+    -moz-box-shadow: -10px 10px 54px 0px rgba(224,224,224,0.95);
+    box-shadow: -10px 10px 54px 0px rgba(224,224,224,0.95);
+}
   `]
 })
 export class ClinicComponent

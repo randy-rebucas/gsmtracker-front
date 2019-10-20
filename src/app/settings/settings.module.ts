@@ -13,13 +13,17 @@ import { ClinicComponent } from './clinic/clinic.component';
 import { NotificationComponent } from './notification/notification.component';
 import { AuthGuard } from '../auth/auth-guard';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { PaymentComponent } from './payment/payment.component';
+import { PlanComponent } from './plan/plan.component';
 
 @NgModule({
   declarations: [
     SettingsComponent,
     ProfileComponent,
     ClinicComponent,
-    NotificationComponent
+    NotificationComponent,
+    PaymentComponent,
+    PlanComponent
   ],
   imports: [
     CommonModule,
@@ -31,9 +35,11 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: SettingsComponent, canActivate: [AuthGuard], children: [
-        { path: '', redirectTo: '/settings/profile', pathMatch: 'full' },
-        { path: 'profile', component: ProfileComponent },
+        { path: '', redirectTo: '/settings/clinic', pathMatch: 'full' },
         { path: 'clinic', component: ClinicComponent },
+        { path: 'account', component: ProfileComponent },
+        { path: 'payment', component: PaymentComponent },
+        { path: 'plan', component: PlanComponent },
         { path: 'notifications', component: NotificationComponent }
       ] }
     ])

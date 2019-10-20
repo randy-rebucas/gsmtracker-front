@@ -30,6 +30,9 @@ implements OnInit, OnDestroy {
     this.titleService.setTitle('Settings - Notification');
   }
 
+  onSubmit() {
+    console.log('submited');
+  }
   ngOnDestroy() {
     super.doDestroy();
   }
