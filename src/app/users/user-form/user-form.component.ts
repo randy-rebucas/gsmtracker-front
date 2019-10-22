@@ -161,9 +161,10 @@ implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
+    const uType = (this.userType) ? this.userType : this.form.value.usertype;
     if (!this.Id) {
       this.usersService.insert(
-        (this.userType) ? this.userType : this.form.value.usertype,
+        uType,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -178,12 +179,12 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(uType, this.licenseId, this.perPage, this.currentPage);
       });
     } else {
       this.usersService.update(
         this.Id,
-        (this.userType) ? this.userType : this.form.value.usertype,
+        uType,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -194,8 +195,9 @@ implements OnInit, OnDestroy {
         this.form.value.metas
       ).subscribe(() => {
         this.onClose();
+        console.log(uType);
         this.notificationService.success(':: Updated successfully');
-        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(uType, this.licenseId, this.perPage, this.currentPage);
       });
     }
   }

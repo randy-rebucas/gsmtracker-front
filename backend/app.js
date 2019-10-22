@@ -68,6 +68,7 @@ const options = {
     socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
     family: null // Use IPv4, skip trying IPv6
 };
+
 mongoose.connect(
         'mongodb+srv://myclinicsoft:' +
         process.env.MONGO_ATLAS_PW +
@@ -78,8 +79,8 @@ mongoose.connect(
         console.log('connecting...');
     })
     .then((connected) => {
-        mongoose.set('dbkey', 'secret');
-        console.log(mongoose.get('dbkey'));
+        // mongoose.set('dbkey', 'secret');
+        // console.log(mongoose.get('dbkey'));
         console.log('connected!');
     })
     .catch((error) => {

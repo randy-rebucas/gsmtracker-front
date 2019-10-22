@@ -187,32 +187,73 @@ exports.userLogin = async(req, res, next) => {
 
 exports.create = async(req, res, next) => {
     try {
+        /**
+         * check for existing email
+         */
+        let authCheck = await Auth.findOne({ email: req.body.email });
+        if (authCheck) {
+            throw new Error('Something went wrong. Email is in used!');
+        }
+        /**
+         * Set common entities on people collection
+         */
         const newPerson = new Person({
-            _id: req.auth.personId,
-            midlename: req.body.midlename,
-            contact: req.body.contact,
-            gender: req.body.gender,
-            birthdate: req.body.birthdate
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          midlename: req.body.midlename,
+          contact: req.body.contact,
+          gender: req.body.gender,
+          birthdate: req.body.birthdate
         });
         addressData = req.body.address;
         for (let index = 0; index < addressData.length; index++) {
             newPerson.address.push(addressData[index]);
         }
-        let updatedPerson = await Person.updateOne({ _id: req.person._id }, newPerson);
-        if (!updatedPerson) {
-            throw new Error('Something went wrong.Cannot update person!');
+        let person = await newPerson.save();
+        if (!person) {
+            throw new Error('Something went wrong.Cannot save person data!');
         }
-
+        /**
+         * Set extended entities from poeple to users collection
+         */
         const newUser = new User({
-            userType: 'patient',
-            personId: req.auth.personId,
-            licenseId: req.body.licenseId,
-            metaData: req.body.meta
+          personId: person._id,
+          metaData: req.body.meta
         });
         let user = await newUser.save();
 
         if (!user) {
-            throw new Error('Something went wrong.Cannot save user!');
+            throw new Error('Something went wrong.Cannot save user data!');
+        }
+        /**
+         * Set login credentials in auth collection
+         */
+        const salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(req.body.password, salt);
+        const authCredentials = new Auth({
+            email: req.body.email,
+            password: hash,
+            userId: user._id
+        });
+        let auth = await authCredentials.save();
+        if (!auth) {
+            throw new Error('Something went wrong.Cannot save auth collection!');
+        }
+        /**
+         * Get user type id in types collection
+         */
+        let userType = await Type.findOne({ slug: req.body.userType }).exec();
+        /**
+         * Set owned user in myusers collection
+         */
+        const myUser = new MyUser({
+            userType: userType._id,
+            userId: user._id,
+            licenseId: req.body.licenseId
+        });
+        let myuser = await myUser.save();
+        if (!myuser) {
+            throw new Error('Something went wrong.Cannot save my user collection!');
         }
 
         res.status(200).json({
@@ -231,20 +272,64 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
     try {
-        let userType = await Type.findOne({ slug: req.body.usertype }).exec();
-        const newUser = new User({
-            _id: req.body.id,
-            userType: userType._id
+        // console.log(req.body);
+        /**
+         * get myuser data
+         */
+        let filteredUser = await MyUser.findOne({ _id: req.params.myUserId }).populate({
+          path: 'userId',
+          populate: {
+              path: 'personId',
+              model: Person
+          }
+        }).exec();
+      /**
+         * Set common entities on people collection
+         */
+        const newPerson = new Person({
+          _id: filteredUser.userId.personId,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          midlename: req.body.midlename,
+          contact: req.body.contact,
+          gender: req.body.gender,
+          birthdate: req.body.birthdate
+        });
+        addressData = req.body.address;
+        for (let index = 0; index < addressData.length; index++) {
+            newPerson.address.push(addressData[index]);
+        }
+
+        let person = await Person.updateOne({ _id: filteredUser.userId.personId }, newPerson);
+        if (!person) {
+            throw new Error('Something went wrong.Cannot update person data!');
+        }
+      /**
+         * Set extended entities from poeple to users collection
+         */
+        const updatedUser = new User({
+          _id: filteredUser.userId._id
         });
         metaData = req.body.meta;
         for (let index = 0; index < metaData.length; index++) {
-            newUser.metaData.push(metaData[index]);
+          updatedUser.metaData.push(metaData[index]);
         }
-        let updatedUser = await User.updateOne({ _id: req.body.id }, newUser);
-        if (!updatedUser) {
-            throw new Error('Something went wrong.Cannot update user!');
+        let user = await User.updateOne({ _id: filteredUser.userId._id }, updatedUser);
+        if (!user) {
+            throw new Error('Something went wrong.Cannot update user data!');
         }
 
+        const updateMyUser = new MyUser({
+          _id: filteredUser._id,
+          userType: req.body.userType,
+          userId: req.params.userId,
+          licenseId: req.body.licenseId
+        });
+        let myuser = await MyUser.updateOne({ _id: filteredUser._id }, updateMyUser, {new: true});
+        if (!myuser) {
+            throw new Error('Something went wrong.Cannot save my user collection!');
+        }
+        console.log(myuser);
         res.status(200).json({ message: 'Update successful!' });
 
     } catch (error) {
@@ -346,7 +431,6 @@ exports.getAll = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
     try {
-
         const _u = await MyUser.aggregate([{
                 $lookup: {
                     from: 'users', // other table name
@@ -374,7 +458,8 @@ exports.get = async(req, res, next) => {
                 }
             },
             { $unwind: '$auths' },
-            { $match: { 'users._id': new ObjectId(req.params.userId) } },
+            // { $match: { 'users._id': new ObjectId(req.params.userId) } },
+            { $match: { _id: new ObjectId(req.params.myUserId) } },
             {
                 $project: {
                     userType: 1,

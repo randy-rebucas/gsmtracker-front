@@ -21,7 +21,7 @@ router.post('/upload-profile-pic/:userId', extractFile, UserController.uploadPro
 
 router.get('', UserController.getAll);
 
-router.get('/:userId', UserController.get);
+router.get('/:myUserId', UserController.get);
 
 router.get('/new/:licenseId', UserController.getNewUser);
 
@@ -29,9 +29,9 @@ router.get('/birthdays/:licenseId', UserController.getTodaysBirthday);
 
 router.get('/search', UserController.search);
 
-router.put('/:userId', checkAuth, UserController.update); // preAuth,
+router.put('/:myUserId', checkAuth, UserController.update); // preAuth,
 
-router.delete('/:userId', checkAuth, UserController.delete);
+router.delete('/:myUserId', checkAuth, UserController.delete);
 
 router.delete('/many/:userIds', checkAuth, UserController.deleteMany);
 
