@@ -36,14 +36,14 @@ exports.createUser = async(req, res, next) => {
 
         let person = await newPerson.save();
         if (!person) {
-          throw new Error('Something went wrong. Cannot save people collection!');
+            throw new Error('Something went wrong. Cannot save people collection!');
         }
 
         /**
          * Set extended entities from poeple to users collection
          */
         const newUser = new User({
-          personId: person._id
+            personId: person._id
         });
         let user = await newUser.save();
         if (!user) {
@@ -62,15 +62,15 @@ exports.createUser = async(req, res, next) => {
         });
         let auth = await authCredentials.save();
         if (!auth) {
-          throw new Error('Something went wrong.Cannot save auth collection!');
+            throw new Error('Something went wrong.Cannot save auth collection!');
         }
 
         /**
          * Set new license in license collection
          */
         const newLicense = new License({
-          userId: user._id,
-          licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
+            userId: user._id,
+            licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
         });
         let license = await newLicense.save();
         if (!license) {
@@ -82,26 +82,26 @@ exports.createUser = async(req, res, next) => {
          */
         const newType = new Type({
             name: 'Physicians',
-            slug: slugify('Physicians',{
-              replacement: '-',    // replace spaces with replacement
-              remove: null,        // regex to remove characters
-              lower: true,         // result in lower case
+            slug: slugify('Physicians', {
+                replacement: '-', // replace spaces with replacement
+                remove: null, // regex to remove characters
+                lower: true, // result in lower case
             }),
             description: 'a person qualified to practice medicine',
             licenseId: license._id,
         });
         let type = await newType.save();
         if (!type) {
-          throw new Error('Something went wrong.Cannot save user type collection!');
+            throw new Error('Something went wrong.Cannot save user type collection!');
         }
 
         /**
          * Set owned user in myusers collection
          */
         const myUser = new MyUser({
-          userType: type._id,
-          userId: user._id,
-          licenseId: license._id
+            userType: type._id,
+            userId: user._id,
+            licenseId: license._id
         });
         let myuser = await myUser.save();
         if (!myuser) {
@@ -113,10 +113,10 @@ exports.createUser = async(req, res, next) => {
          */
         const otherType = new Type({
             name: 'Patients',
-            slug: slugify('Patients',{
-              replacement: '-',    // replace spaces with replacement
-              remove: null,        // regex to remove characters
-              lower: true,         // result in lower case
+            slug: slugify('Patients', {
+                replacement: '-', // replace spaces with replacement
+                remove: null, // regex to remove characters
+                lower: true, // result in lower case
             }),
             description: 'a person receiving or registered to receive medical treatment.',
             licenseId: license._id,
@@ -127,9 +127,9 @@ exports.createUser = async(req, res, next) => {
          * Set new setting doc in Setting Collection
          */
         const newSetting = new Setting({
-          licenseId: license._id,
-          clinicName: req.body.clinicname,
-          clinicOwner: person.firstname + ', ' + person.lastname
+            licenseId: license._id,
+            clinicName: req.body.clinicname,
+            clinicOwner: person.firstname + ', ' + person.lastname
         });
         await newSetting.save();
 
@@ -146,9 +146,9 @@ exports.createUser = async(req, res, next) => {
 
 exports.userLogin = async(req, res, next) => {
     try {
-      /**
-       * Find email on auth collection
-       */
+        /**
+         * Find email on auth collection
+         */
         let auth = await Auth.findOne({ email: req.body.email }).populate('userId');
         if (!auth) {
             throw new Error('Something went wrong. Your email is not listed!');
@@ -173,7 +173,7 @@ exports.userLogin = async(req, res, next) => {
 
         res.status(200).json({
             token: token,
-            userId:  myUser.userId,
+            userId: myUser.userId,
             userEmail: auth.email,
             userType: myUser.userType,
             licenseId: myUser.licenseId
@@ -307,23 +307,33 @@ exports.getAll = async(req, res, next) => {
     try {
         const pageSize = +req.query.pagesize;
         const currentPage = +req.query.page;
-        const query = User.find({ 'licenseId': req.query.licenseId });
+        const query = MyUser.find({ 'licenseId': req.query.licenseId });
 
+        let userCount = 0;
         if (req.query.usertype != 'all') {
-            query.where('userType', req.query.usertype);
+            let userType = await Type.findOne({ slug: req.query.usertype }).exec();
+            userCount = await MyUser.countDocuments({ 'userType': userType._id });
+            query.where('userType', userType._id);
         }
 
         if (pageSize && currentPage) {
             query.skip(pageSize * (currentPage - 1)).limit(pageSize);
         }
 
-        let users = await query.populate('personId').exec();
-        let count = await User.countDocuments({ 'userType': 'patient' });
+        let users = await query
+            .populate({
+                path: 'userId',
+                populate: {
+                    path: 'personId',
+                    model: Person
+                }
+            })
+            .exec();
 
         res.status(200).json({
             message: 'Users fetched successfully!',
             users: users,
-            counts: count
+            counts: userCount
         });
 
     } catch (error) {
@@ -336,60 +346,59 @@ exports.getAll = async(req, res, next) => {
 exports.get = async(req, res, next) => {
     try {
 
-        const _u = await MyUser.aggregate([
-          {
-            $lookup: {
-                from: 'users', // other table name
-                localField: 'userId', // name of users table field
-                foreignField: '_id', // name of userinfo table field
-                as: 'users' // alias for userinfo table
-            }
-          },
-          { $unwind: '$users' },
-          {
-            $lookup: {
-                from: 'people', // other table name
-                localField: 'users.personId', // name of users table field
-                foreignField: '_id', // name of userinfo table field
-                as: 'people' // alias for userinfo table
-            }
-          },
-          { $unwind: '$people' },
-          {
-            $lookup: {
-                from: 'auths', // other table name
-                localField: 'userId', // name of users table field
-                foreignField: 'userId', // name of userinfo table field
-                as: 'auths' // alias for userinfo table
-            }
-          },
-          { $unwind: '$auths' },
-          { $match: { 'users._id': new ObjectId(req.params.userId) } },
-          {
-            $project : {
-              userType : 1,
-              users : 1,
-              people : 1,
-              'auths.email': 1
-            }
-          },
-          { $sort: { 'people.created': -1 } }
+        const _u = await MyUser.aggregate([{
+                $lookup: {
+                    from: 'users', // other table name
+                    localField: 'userId', // name of users table field
+                    foreignField: '_id', // name of userinfo table field
+                    as: 'users' // alias for userinfo table
+                }
+            },
+            { $unwind: '$users' },
+            {
+                $lookup: {
+                    from: 'people', // other table name
+                    localField: 'users.personId', // name of users table field
+                    foreignField: '_id', // name of userinfo table field
+                    as: 'people' // alias for userinfo table
+                }
+            },
+            { $unwind: '$people' },
+            {
+                $lookup: {
+                    from: 'auths', // other table name
+                    localField: 'userId', // name of users table field
+                    foreignField: 'userId', // name of userinfo table field
+                    as: 'auths' // alias for userinfo table
+                }
+            },
+            { $unwind: '$auths' },
+            { $match: { 'users._id': new ObjectId(req.params.userId) } },
+            {
+                $project: {
+                    userType: 1,
+                    users: 1,
+                    people: 1,
+                    'auths.email': 1
+                }
+            },
+            { $sort: { 'people.created': -1 } }
         ]);
 
         res.status(200).json({
-          userId:     _u[0]._id,
-          metas:      _u[0].users.metaData,
-          firstname:  _u[0].people.firstname,
-          lastname:   _u[0].people.lastname,
-          midlename:  _u[0].people.midlename,
-          contact:    _u[0].people.contact,
-          gender:     _u[0].people.gender,
-          birthdate:  _u[0].people.birthdate,
-          addresses:  _u[0].people.address,
-          created:    _u[0].people.created,
-          email:      _u[0].auths.email,
-          avatar:     _u[0].users.avatarPath,
-          userType:   _u[0].userType
+            userId: _u[0]._id,
+            metas: _u[0].users.metaData,
+            firstname: _u[0].people.firstname,
+            lastname: _u[0].people.lastname,
+            midlename: _u[0].people.midlename,
+            contact: _u[0].people.contact,
+            gender: _u[0].people.gender,
+            birthdate: _u[0].people.birthdate,
+            addresses: _u[0].people.address,
+            created: _u[0].people.created,
+            email: _u[0].auths.email,
+            avatar: _u[0].users.avatarPath,
+            userType: _u[0].userType
         });
     } catch (error) {
         res.status(500).json({

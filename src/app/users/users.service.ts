@@ -40,18 +40,18 @@ export class UsersService {
       map(userData => {
         return { users: userData.users.map(user => {
           return {
-            id: user._id,
-            personId: user.personId._id,
-            firstname: user.personId.firstname,
-            midlename: user.personId.midlename,
-            lastname: user.personId.lastname,
-            contact: user.personId.contact,
-            gender: user.personId.gender,
-            birthdate: user.personId.birthdate,
-            address: user.personId.address,
-            created: user.personId.created,
-            meta: user.metaData,
-            avatar: user.avatarPath
+            id: user.userId,
+            personId: user.userId.personId._id,
+            firstname: user.userId.personId.firstname,
+            midlename: user.userId.personId.midlename,
+            lastname: user.userId.personId.lastname,
+            contact: user.userId.personId.contact,
+            gender: user.userId.personId.gender,
+            birthdate: user.userId.personId.birthdate,
+            address: user.userId.personId.address,
+            created: user.userId.personId.created,
+            meta: user.userId.metaData,
+            avatar: user.userId.avatarPath
           };
         }), max: userData.counts};
       })

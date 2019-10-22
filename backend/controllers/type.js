@@ -48,10 +48,12 @@ exports.update = async(req, res, next) => {
 exports.getAll = async(req, res, next) => {
     try {
         let type = await Type.find({ 'licenseId': req.query.licenseId })
-            .sort({ 'name': 'asc' })
+            .sort({ '_id': 'asc' })
             .exec();
 
-        res.status(200).json(type);
+        res.status(200).json({
+            types: type
+        });
     } catch (e) {
         res.status(500).json({
             message: e.message
