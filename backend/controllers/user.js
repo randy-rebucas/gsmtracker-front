@@ -231,9 +231,10 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
     try {
+        let userType = await Type.findOne({ slug: req.body.usertype }).exec();
         const newUser = new User({
             _id: req.body.id,
-            userType: req.body.userType
+            userType: userType._id
         });
         metaData = req.body.meta;
         for (let index = 0; index < metaData.length; index++) {

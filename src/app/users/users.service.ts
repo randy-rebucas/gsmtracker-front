@@ -40,7 +40,7 @@ export class UsersService {
       map(userData => {
         return { users: userData.users.map(user => {
           return {
-            id: user.userId,
+            id: user.userId._id,
             personId: user.userId.personId._id,
             firstname: user.userId.personId.firstname,
             midlename: user.userId.personId.midlename,

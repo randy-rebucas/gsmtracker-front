@@ -197,6 +197,7 @@ implements OnInit, OnDestroy {
         this.usersSub = this.usersService
         .getUpdateListener()
         .subscribe((userData: {users: UserData[], counts: number}) => {
+          console.log(userData.users);
           this.isLoading = false;
           this.total = userData.counts;
           this.dataSource = new MatTableDataSource(userData.users);
