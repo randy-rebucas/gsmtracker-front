@@ -54,7 +54,7 @@ implements OnInit, OnDestroy {
       super(authService, router, dialog, appconfig);
       this.activatedRoute.parent.parent.parent.parent.parent.params.subscribe(
         (param) => {
-          this.patientId = param.userId;
+          this.patientId = param.myUserId;
         }
       );
     }

@@ -39,6 +39,8 @@ var messagesRouter = require('./routes/message');
 var networkRouter = require('./routes/network');
 var appointmentsRouter = require('./routes/appointment');
 var typeRouter = require('./routes/type');
+var planRouter = require('./routes/plan');
+
 var uploadRouter = require('./routes/upload');
 
 var queRouter = require('./routes/que');
@@ -155,6 +157,7 @@ app.use('/api/que', queRouter);
 app.use('/api/encounter', encounterRouter);
 
 app.use('/api/type', typeRouter);
+app.use('/api/plan', planRouter);
 //app.use((req, res, next) => {
 //    res.sendFile(path.join(__dirname, 'angular', 'index.html'));
 //});

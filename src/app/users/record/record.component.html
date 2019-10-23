@@ -4,8 +4,8 @@
 <div gdAreas="header header | side content | footer footer" gdGap="16px" gdRows="auto auto auto" gdColumns="250px auto" gdAreas.lt-md="header | side | content | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto" *ngIf="!isLoading">
   <div class="area header" gdArea="header">
       <div class="action-button">
-          <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(patientId)">Cancel Visit</button>
-          <button class="mat-raised-button mat-primary" *ngIf="!isOnQue" (click)="moveToQue(patientId)">Move to Que</button>
+          <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(myUserId)">Cancel Visit</button>
+          <button class="mat-raised-button mat-primary" *ngIf="!isOnQue" (click)="moveToQue(myUserId)">Move to Que</button>
       </div>
   </div>
   <div class="area side" gdArea="side">
@@ -45,13 +45,13 @@
                   <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
                 calendar_today
                 </i> &nbsp; Appointment </mat-list-item>
-                  <!-- <mat-list-item (click)="viewChart(patientId)"><i class="material-icons">
+                  <!-- <mat-list-item (click)="viewChart(myUserId)"><i class="material-icons">
               remove_red_eye
                     </i> &nbsp; View Chart </mat-list-item> -->
-                  <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
+                  <mat-list-item (click)="generateQrCode(myUserId)"><i class="material-icons">
                     fingerprint
                     </i> &nbsp; Generate QR Code </mat-list-item>
-                  <!-- <mat-list-item (click)="addToNetwork(personId)"><i class="material-icons">
+                  <!-- <mat-list-item (click)="addToNetwork(myUserId)"><i class="material-icons">
                     group
                             </i> &nbsp; Network Request </mat-list-item> -->
               </mat-list>

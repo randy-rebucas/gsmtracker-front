@@ -14,6 +14,7 @@ const MyUser = require('../models/myuser');
 const Person = require('../models/person');
 const Setting = require('../models/setting');
 const Type = require('../models/type');
+const Plan = require('../models/plan');
 
 exports.createUser = async(req, res, next) => {
     try {
@@ -68,8 +69,10 @@ exports.createUser = async(req, res, next) => {
         /**
          * Set new license in license collection
          */
+        let plan = await Plan.findOne({ slug: 'starter' }).exec();
         const newLicense = new License({
             userId: user._id,
+            planId: plan._id,
             licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
         });
         let license = await newLicense.save();
@@ -272,7 +275,6 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
     try {
-        // console.log(req.body);
         /**
          * get myuser data
          */
@@ -300,7 +302,7 @@ exports.update = async(req, res, next) => {
             newPerson.address.push(addressData[index]);
         }
 
-        let person = await Person.updateOne({ _id: filteredUser.userId.personId }, newPerson);
+        let person = await Person.findOneAndUpdate({ _id: filteredUser.userId.personId }, newPerson, {new: true});
         if (!person) {
             throw new Error('Something went wrong.Cannot update person data!');
         }
@@ -318,19 +320,21 @@ exports.update = async(req, res, next) => {
         if (!user) {
             throw new Error('Something went wrong.Cannot update user data!');
         }
-
+        /**
+         * update myuser data
+         */
         const updateMyUser = new MyUser({
           _id: filteredUser._id,
           userType: req.body.userType,
           userId: req.params.userId,
           licenseId: req.body.licenseId
         });
-        let myuser = await MyUser.updateOne({ _id: filteredUser._id }, updateMyUser, {new: true});
+        let myuser = await MyUser.findOneAndUpdate({ _id: filteredUser._id }, updateMyUser, {new: true});
         if (!myuser) {
-            throw new Error('Something went wrong.Cannot save my user collection!');
+            throw new Error('Something went wrong.Cannot update my user data!');
         }
-        console.log(myuser);
-        res.status(200).json({ message: 'Update successful!' });
+        // console.log(myuser);
+        res.status(200).json({ message: person.firstname + ' Update successful!' });
 
     } catch (error) {
         res.status(500).json({
@@ -342,52 +346,32 @@ exports.update = async(req, res, next) => {
 
 exports.search = async(req, res, next) => {
     try {
-        const query = User.find({ 'licenseId': req.query.licenseId });
-        let users = await query.populate('personId').where('userType', 'patient');
-        const result = [];
-        users.forEach(element => {
-            let fullname = element.personId.firstname + ', ' + element.personId.lastname;
-            result.push({ id: element.personId._id, name: fullname });
-        });
+      let userType = await Type.findOne({ slug: 'patients' }).exec();
+      let query = await MyUser.find({ 'licenseId': req.query.licenseId });
+      let users = await query.populate({
+        path: 'userId',
+        populate: {
+            path: 'personId',
+            model: Person
+        }
+      }).where('userType', userType._id);
+      const result = [];
+      users.forEach(element => {
+          result.push({ id: element.userId._id, name: element.userId.personId.firstname + ', ' + element.userId.personId.lastname });
+      });
 
-        let count = await User.countDocuments({ 'licenseId': req.query.licenseId, 'userType': 'patient' });
+      let count = await MyUser.countDocuments({ 'licenseId': req.query.licenseId, 'userType': userType._id });
 
-        res.status(200).json({
-            total: count,
-            results: result
-        });
+      res.status(200).json({
+          total: count,
+          results: result
+      });
     } catch (error) {
         res.status(500).json({
             message: error.message
         });
     }
 }
-
-exports.getAllGlobal = async(req, res, next) => {
-    try {
-        const pageSize = +req.query.pagesize;
-        const currentPage = +req.query.page;
-        const query = User.find().where('userType', 'patient');
-
-        if (pageSize && currentPage) {
-            query.skip(pageSize * (currentPage - 1)).limit(pageSize);
-        }
-
-        let users = await query.populate('personId').exec();
-        let count = await User.countDocuments();
-
-        res.status(200).json({
-            message: 'Users fetched successfully!',
-            users: users,
-            counts: count
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
 
 exports.getAll = async(req, res, next) => {
     try {
@@ -472,7 +456,9 @@ exports.get = async(req, res, next) => {
         ]);
 
         res.status(200).json({
-            userId: _u[0]._id,
+            myuserId: _u[0]._id,
+            userId: _u[0].users._id,
+            personId: _u[0].people._id,
             metas: _u[0].users.metaData,
             firstname: _u[0].people.firstname,
             lastname: _u[0].people.lastname,
@@ -494,23 +480,64 @@ exports.get = async(req, res, next) => {
 };
 
 exports.delete = async(req, res, next) => {
-    try {
-        let user = await User.findById(req.params.userId).exec();
-        if (user.licenseId != req.userData.licenseId) {
-            throw new Error('Not Authorized!');
-        }
-        await Auth.deleteOne({ personId: user.personId });
-        await Person.deleteOne({ _id: user.personId });
-        await User.deleteOne({ _id: user._id });
+  try {
+      Ids = req.params.myUserIds;
+      Id = Ids.split(',');
+      /**
+       * Find all users and retrive ids
+       */
+      let users = await MyUser.find({ _id: { $in: Id } })
+        .populate({
+          path: 'userId',
+          populate: {
+              path: 'personId',
+              model: Person
+          }
+        }).exec();
 
-        res.status(200).json({
-            message: 'Deletion successfull!'
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
+      userIds = [];
+      personIds = [];
+      users.forEach(user => {
+        userIds.push(new ObjectId(user.userId._id));
+        personIds.push(new ObjectId(user.userId.personId._id));
+      });
+
+      /**
+       * delete auth credentials
+       */
+      let auth = await Auth.deleteMany({ userId: { $in: userIds } });
+      if (!auth) {
+          throw new Error('Error in deleting auth!');
+      }
+      /**
+       * delete person collection
+       */
+      let person = await Person.deleteMany({ _id: { $in: personIds } });
+      if (!person) {
+          throw new Error('Error in deleting person!');
+      }
+      /**
+       * delete user collection
+       */
+      let user = await User.deleteMany({ _id: { $in: userIds } });
+      if (!user) {
+          throw new Error('Error in deleting user!');
+      }
+      /**
+       * delete my user collection
+       */
+      let myuser = await MyUser.deleteMany({ _id: { $in: Id } });
+      if (!myuser) {
+          throw new Error('Error in deleting myuser!');
+      }
+      res.status(200).json({
+          message: user.deletedCount + ' item deleted successfull!'
+      });
+  } catch (error) {
+      res.status(500).json({
+          message: error.message
+      });
+  }
 };
 
 exports.uploadProfile = async(req, res, next) => {
@@ -521,7 +548,6 @@ exports.uploadProfile = async(req, res, next) => {
         }
         const newUser = new User({
             _id: req.body.userId,
-            userType: req.body.userType,
             avatarPath: `data:${req.file.mimetype};base64,${userPicture.toString('base64')}`
         });
 
@@ -545,19 +571,25 @@ exports.uploadProfile = async(req, res, next) => {
 exports.getNewUser = async(req, res, next) => {
     try {
         const today = moment().startOf('day');
-        let newPatientCount = await User.countDocuments({
+        let userType = await Type.findOne({ slug: 'patients' }).exec();
+        let newPatientCount = await MyUser.countDocuments({
                 'licenseId': req.params.licenseId,
-                'userType': 'patient'
+                'userType': userType._id
             })
             .populate({
-                path: 'personId',
-                match: {
+              path: 'userId',
+              populate: {
+                  path: 'personId',
+                  model: Person,
+                  match: {
                     created: {
                         $gte: today.toDate(),
                         $lte: moment(today).endOf('day').toDate()
                     }
                 },
-            }).exec()
+              }
+            })
+            .exec()
 
         res.status(200).json({
             count: newPatientCount
@@ -572,21 +604,39 @@ exports.getNewUser = async(req, res, next) => {
 
 exports.getTodaysBirthday = async(req, res, next) => {
     try {
-        const birthdays = await Person.aggregate([{
+        const birthdays = await MyUser.aggregate([
+            {
+              $lookup: {
+                  from: 'users', // other table name
+                  localField: 'userId', // name of users table field
+                  foreignField: '_id', // name of userinfo table field
+                  as: 'users' // alias for userinfo table
+              }
+            },
+            { $unwind: '$users' },
+            {
                 $lookup: {
-                    from: "users", // other table name
-                    localField: "_id", // name of users table field
-                    foreignField: "personId", // name of userinfo table field
-                    as: "users" // alias for userinfo table
+                    from: 'people', // other table name
+                    localField: 'users.personId', // name of users table field
+                    foreignField: '_id', // name of userinfo table field
+                    as: 'people' // alias for userinfo table
                 }
             },
-            { $unwind: "$users" },
-            { $match: { "users.licenseId": new ObjectId(req.params.licenseId) } },
+            { $unwind: '$people' },
+            {
+                $lookup: {
+                    from: 'auths', // other table name
+                    localField: 'userId', // name of users table field
+                    foreignField: 'userId', // name of userinfo table field
+                    as: 'auths' // alias for userinfo table
+                }
+            },
+            { $match: { licenseId: new ObjectId(req.params.licenseId) } },
             {
                 $redact: {
                     $cond: [{
                             $eq: [
-                                { $month: "$birthdate" },
+                                { $month: "$people.birthdate" },
                                 { $month: new Date() }
                             ]
                         },
@@ -596,7 +646,6 @@ exports.getTodaysBirthday = async(req, res, next) => {
                 }
             }
         ]);
-
         res.status(200).json({
             users: birthdays
         });
@@ -607,38 +656,3 @@ exports.getTodaysBirthday = async(req, res, next) => {
         });
     }
 }
-
-exports.deleteMany = async(req, res, next) => {
-    try {
-        Ids = req.params.userIds;
-        Id = Ids.split(',');
-        /**
-         * Find all users and retrive person ids
-         */
-        let users = await User.find({ _id: { $in: Id } }).exec();
-        personIds = [];
-        users.forEach(user => {
-            personIds.push(new ObjectId(user.personId));
-        });
-
-        let auth = await Auth.deleteMany({ personId: { $in: personIds } });
-        if (!auth) {
-            throw new Error('Error in deleting auth!');
-        }
-        let person = await Person.deleteMany({ _id: { $in: personIds } });
-        if (!person) {
-            throw new Error('Error in deleting person!');
-        }
-        let user = await User.deleteMany({ _id: { $in: Id } });
-        if (!user) {
-            throw new Error('Error in deleting user!');
-        }
-        res.status(200).json({
-            message: user.deletedCount + ' item deleted successfull!'
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};

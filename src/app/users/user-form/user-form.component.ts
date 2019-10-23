@@ -49,6 +49,7 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
+    console.log(this.userType);
     this.types = [{
       id: '8f8c6e98',
       name: 'Physician',
@@ -80,7 +81,7 @@ implements OnInit, OnDestroy {
         this.usersService.get(this.Id).subscribe(userData => {
           this.isLoading = false;
           this.form.patchValue({
-            usertype: userData.userType,
+            usertype: this.userType,
             firstname: userData.firstname,
             midlename: userData.midlename,
             lastname: userData.lastname,
@@ -161,10 +162,10 @@ implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
-    const uType = (this.userType) ? this.userType : this.form.value.usertype;
+
     if (!this.Id) {
       this.usersService.insert(
-        uType,
+        (this.userType) ? this.userType : this.form.value.usertype,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -179,12 +180,12 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.usersService.getAll(uType, this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
       });
     } else {
       this.usersService.update(
         this.Id,
-        uType,
+        (this.userType) ? this.userType : this.form.value.usertype,
         this.form.value.firstname,
         this.form.value.midlename,
         this.form.value.lastname,
@@ -195,9 +196,8 @@ implements OnInit, OnDestroy {
         this.form.value.metas
       ).subscribe(() => {
         this.onClose();
-        console.log(uType);
         this.notificationService.success(':: Updated successfully');
-        this.usersService.getAll(uType, this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
       });
     }
   }

@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../auth/auth.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { QrCodeGenerateComponent } from 'src/app/qr-code/qr-code-generate/qr-code-generate.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 import { UsersService } from 'src/app/users/users.service';
@@ -108,6 +108,8 @@ export class RecordComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
   public userType: string;
+  id: string;
+  myUserId: string;
   created: Date;
   email: string;
   avatar: string;
@@ -146,15 +148,14 @@ implements OnInit, OnDestroy {
 
   ngOnInit() {
     super.doInit();
-    console.log(this.userType);
 
     this.activatedRoute.parent.params.subscribe(
       (param) => {
-        this.userId = param.userId;
+        this.myUserId = param.myUserId;
       }
     );
 
-    this.queService.get(this.userId).subscribe((res) => {
+    this.queService.get(this.myUserId).subscribe((res) => {
       this.isOnQue = res.onQue;
     });
 
@@ -165,11 +166,11 @@ implements OnInit, OnDestroy {
       })
     });
 
-    this.getPatientData(this.userId)
+    this.getPatientData(this.myUserId)
       .then((results) => {
         this.isLoading = false;
-        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname + ' Record');
-
+        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname);
+        // person
         this.personId = results.userData.personId;
         this.firstname = results.userData.firstname;
         this.midlename = results.userData.midlename;
@@ -179,16 +180,21 @@ implements OnInit, OnDestroy {
         this.birthdate = results.userData.birthdate;
         this.addresses = results.userData.addresses;
         this.created = results.userData.created;
-        this.email = results.userData.email;
-        this.userType = results.userData.userType;
+        // users
+        this.id = results.userData.userId;
         this.metas = results.userData.metas;
         this.avatar = results.userData.avatar;
+        // auth
+        this.email = results.userData.email;
+        // myuser document
+        this.myUserId = results.userData.myuserId;
+        this.userType = results.userData.userType;
       })
       .catch(err => console.log(err));
   }
 
-  async getPatientData(userId) {
-    const userResponse = await this.usersService.get(userId).toPromise();
+  async getPatientData(myUserId) {
+    const userResponse = await this.usersService.get(myUserId).toPromise();
     return {
       userData: userResponse
     };
@@ -203,8 +209,7 @@ implements OnInit, OnDestroy {
 
   onSavePicture() {
     this.usersService.upload(
-      this.patientId,
-      this.userType,
+      this.id,
       this.profileForm.value.profilePicture
     ).subscribe((event) => {
       if (event.type === HttpEventType.UploadProgress) {
@@ -219,32 +224,34 @@ implements OnInit, OnDestroy {
     });
   }
 
-  generateQrCode(patientId) {
-    const args = {
-      width: '16%',
-      id: patientId,
-      dialogTitle: 'Generate QR Code',
-      dialogButton: null
+  generateQrCode(myUserId) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '16%';
+    dialogConfig.data = {
+      id: myUserId,
+      title: 'Generate QR Code'
     };
-    super.onPopup(args, QrCodeGenerateComponent);
+    this.dialog.open(QrCodeGenerateComponent, dialogConfig);
   }
 
-  onCancelVisit(patientId) {
-    this.encountersService.update(1, patientId, this.licenseId).subscribe(() => {
-      this.queService.findCancel(patientId).subscribe((res) => {
-        this.notificationService.success(':: on que canceled.');
-        this.isOnQue = false;
-      });
-    });
+  async onCancelVisit(myUserId) {
+    const encounter = await this.encountersService.update(1, myUserId, this.licenseId).toPromise();
+    const que = await this.queService.findCancel(myUserId).toPromise();
+    if (que) {
+      this.notificationService.success(':: on que canceled.');
+      this.isOnQue = false;
+    }
   }
 
-  moveToQue(patientId) {
-    this.encountersService.insert(patientId, this.licenseId).subscribe(() => {
-      this.queService.insert(patientId, this.licenseId).subscribe((queRes) => {
-        this.notificationService.success(':: on que done. #' + queRes.que.queNumber);
-        this.isOnQue = true;
-      });
-    });
+  async moveToQue(myUserId) {
+    const encounter = await this.encountersService.insert(myUserId, this.licenseId).toPromise();
+    const que = await this.queService.insert(myUserId, this.licenseId).toPromise();
+    if (que) {
+      this.notificationService.success(':: on que done. #' + que.que.queNumber);
+      this.isOnQue = true;
+    }
   }
 
   ngOnDestroy() {

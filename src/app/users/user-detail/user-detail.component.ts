@@ -154,9 +154,11 @@ implements OnInit, OnDestroy {
   public imagePreview: string;
   public profileForm: FormGroup;
 
+  id: string;
   created: Date;
   email: string;
   userType: string;
+  myUserId: string;
   avatar: string;
   metas: [];
   queNumber: number;
@@ -186,11 +188,11 @@ implements OnInit, OnDestroy {
       super.doInit();
       this.activatedRoute.parent.params.subscribe(
         (param) => {
-          this.userId = param.userId;
+          this.myUserId = param.myUserId;
         }
       );
 
-      this.queService.get(this.userId).subscribe((res) => {
+      this.queService.get(this.myUserId).subscribe((res) => {
         this.isOnQue = res.onQue;
       });
 
@@ -201,10 +203,12 @@ implements OnInit, OnDestroy {
         })
       });
 
-      this.getPatientData(this.userId)
+      this.getUserData(this.myUserId)
       .then((results) => {
+
         this.isLoading = false;
-        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname + ' Detail');
+        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname);
+        // person
         this.personId = results.userData.personId;
         this.firstname = results.userData.firstname;
         this.midlename = results.userData.midlename;
@@ -214,18 +218,23 @@ implements OnInit, OnDestroy {
         this.birthdate = results.userData.birthdate;
         this.addresses = results.userData.addresses;
         this.created = results.userData.created;
-        this.email = results.userData.email;
-        this.userType = results.userData.userType;
+        // users
+        this.id = results.userData.userId;
         this.metas = results.userData.metas;
         this.avatar = results.userData.avatar;
+        // auth
+        this.email = results.userData.email;
+        // myuser document
+        this.myUserId = results.userData.myuserId;
+        this.userType = results.userData.userType;
       })
       .catch(err => console.log(err));
     }
 
-    async getPatientData(userId) {
-      const userResponse = await this.usersService.get(userId).toPromise();
+    async getUserData(myUserId) {
+      const myUserResponse = await this.usersService.get(myUserId).toPromise();
       return {
-        userData: userResponse,
+        userData: myUserResponse,
       };
     }
 
@@ -238,8 +247,7 @@ implements OnInit, OnDestroy {
 
     onSavePicture() {
       this.usersService.upload(
-        this.patientId,
-        this.userType,
+        this.id,
         this.profileForm.value.profilePicture
       ).subscribe((event) => {
         if (event.type === HttpEventType.UploadProgress) {
@@ -254,13 +262,13 @@ implements OnInit, OnDestroy {
       });
     }
 
-    generateQrCode(patientId) {
+    generateQrCode(myUserId) {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.width = '16%';
         dialogConfig.data = {
-          id: patientId,
+          id: myUserId,
           title: 'Generate QR Code'
         };
         this.dialog.open(QrCodeGenerateComponent, dialogConfig);
@@ -275,22 +283,22 @@ implements OnInit, OnDestroy {
       this.router.navigate(['../record'], {relativeTo: this.activatedRoute});
     }
 
-    onCancelVisit(patientId) {
-      this.encountersService.update(1, patientId, this.licenseId).subscribe(() => {
-        this.queService.findCancel(patientId).subscribe((res) => {
-          this.notificationService.success(':: on que canceled.');
-          this.isOnQue = false;
-        });
-      });
+    async onCancelVisit(myUserId) {
+      const encounter = await this.encountersService.update(1, myUserId, this.licenseId).toPromise();
+      const que = await this.queService.findCancel(myUserId).toPromise();
+      if (que) {
+        this.notificationService.success(':: on que canceled.');
+        this.isOnQue = false;
+      }
     }
 
-    moveToQue(patientId) {
-      this.encountersService.insert(patientId, this.licenseId).subscribe(() => {
-        this.queService.insert(patientId, this.licenseId).subscribe((queRes) => {
-          this.notificationService.success(':: on que done. #' + queRes.que.queNumber);
-          this.isOnQue = true;
-        });
-      });
+    async moveToQue(myUserId) {
+      const encounter = await this.encountersService.insert(myUserId, this.licenseId).toPromise();
+      const que = await this.queService.insert(myUserId, this.licenseId).toPromise();
+      if (que) {
+        this.notificationService.success(':: on que done. #' + que.que.queNumber);
+        this.isOnQue = true;
+      }
     }
 
     async addToNetwork(requesterId) {

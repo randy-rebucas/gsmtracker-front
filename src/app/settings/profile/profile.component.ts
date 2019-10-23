@@ -243,7 +243,6 @@ implements OnInit, OnDestroy {
   onSavePicture() {
     this.usersService.upload(
       this.uId,
-      this.userType,
       this.profileForm.value.profilePicture
     ).subscribe((event) => {
       if (event.type === HttpEventType.UploadProgress) {

@@ -17,7 +17,7 @@ router.post('/login', UserController.userLogin);
 
 router.post('', checkAuth, UserController.create); // preAuth,
 
-router.post('/upload-profile-pic/:userId', extractFile, UserController.uploadProfile);
+router.post('/upload/:userId', extractFile, UserController.uploadProfile);
 
 router.get('', UserController.getAll);
 
@@ -31,8 +31,6 @@ router.get('/search', UserController.search);
 
 router.put('/:myUserId', checkAuth, UserController.update); // preAuth,
 
-router.delete('/:myUserId', checkAuth, UserController.delete);
-
-router.delete('/many/:userIds', checkAuth, UserController.deleteMany);
+router.delete('/:myUserIds', checkAuth, UserController.delete);
 
 module.exports = router;

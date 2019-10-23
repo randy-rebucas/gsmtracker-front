@@ -1,4 +1,5 @@
 const Que = require('../models/que');
+const MyUser = require('../models/myuser');
 const User = require('../models/user');
 const Person = require('../models/person');
 const moment = require('moment');
@@ -6,12 +7,18 @@ const count = 0;
 
 exports.create = async(req, res, next) => {
     try {
-        let queCheck = await Que.findOne({ userId: req.body.patientId })
+
+        let queCheck = await Que.findOne({ myUserId: req.body.patientId })
           .populate({
-            path: 'userId',
+            path: 'myUserId',
+            model: MyUser,
             populate: {
-              path: 'personId',
-              model: Person
+              path: 'userId',
+              model: User,
+              populate: {
+                path: 'personId',
+                model: Person
+              }
             }
           })
           .exec();
@@ -24,7 +31,7 @@ exports.create = async(req, res, next) => {
 
         const queData = new Que({
             queNumber: '00' + (count + 1),
-            userId: req.body.patientId,
+            myUserId: req.body.myUserId,
             licenseId: req.body.licenseId
         });
         let que = await queData.save();
@@ -47,14 +54,19 @@ exports.getAll = async(req, res, next) => {
     try {
 
         const que = await Que.find({ 'licenseId': req.query.licenseId })
-            .sort({ 'queNumber': 'asc' })
             .populate({
-              path: 'userId',
+              path: 'myUserId',
+              model: MyUser,
               populate: {
-                path: 'personId',
-                model: Person
+                path: 'userId',
+                model: User,
+                populate: {
+                  path: 'personId',
+                  model: Person
+                }
               }
             })
+            .sort({ 'queNumber': 'asc' })
             .exec();
 
         newQueings = [];
@@ -62,8 +74,8 @@ exports.getAll = async(req, res, next) => {
             var myObj = {
                 id: element._id,
                 queNum: element.queNumber,
-                fullname: element.userId.personId.firstname + ' ' + element.userId.personId.lastname,
-                userId: element.userId._id
+                fullname: element.myUserId.userId.personId.firstname + ' ' + element.myUserId.userId.personId.lastname,
+                myUserId: element.myUserId._id
             };
             newQueings.push(myObj);
         });
@@ -82,7 +94,7 @@ exports.getAll = async(req, res, next) => {
 exports.get = async(req, res, next) => {
   try {
     let onQue = false;
-    let que = await Que.findOne({ userId: req.params.userId }).exec();
+    let que = await Que.findOne({ myUserId: req.params.myUserId }).exec();
     if (que) {
       onQue = true;
     }
@@ -125,7 +137,7 @@ exports.deleteAll = async(req, res, next) => {
 
 exports.deleteSmooth = async(req, res, next) => {
     try {
-        await Que.deleteOne({ userId: req.params.userId }).exec();
+        await Que.deleteOne({ myUserId: req.params.myUserId }).exec();
         res.status(200).json({
             message: 'Deletion successfull!'
         });
@@ -138,7 +150,7 @@ exports.deleteSmooth = async(req, res, next) => {
 
 exports.deleteCanceled = async(req, res, next) => {
   try {
-      await Que.deleteOne({ userId: req.params.userId }).exec();
+      await Que.deleteOne({ myUserId: req.params.myUserId }).exec();
       res.status(200).json({
           message: 'Deletion successfull!'
       });
@@ -158,7 +170,7 @@ exports.getNext = async(req, res, next) => {
         }
         res.status(200).json({
             _id: nextQue._id,
-            personId: nextQue.personId._id
+            personId: nextQue.myUserId
         });
 
     } catch (error) {

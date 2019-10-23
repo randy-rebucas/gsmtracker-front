@@ -42,7 +42,7 @@ import { UserFormComponent } from './user-form/user-form.component';
         { path: '', redirectTo: 'all', pathMatch: 'full' },
         { path: ':userType', component: ListComponent, children: [
           { path: '', component: UserListComponent },
-          { path: ':userId', component: DetailComponent, children: [
+          { path: ':myUserId', component: DetailComponent, children: [
             { path: '', redirectTo: 'detail', pathMatch: 'full' },
             { path: 'detail', component: UserDetailComponent },
             { path: 'record', component: RecordComponent, children: [

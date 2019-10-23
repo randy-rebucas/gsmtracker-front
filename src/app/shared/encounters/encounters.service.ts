@@ -56,18 +56,18 @@ export class EncountersService {
       );
   }
 
-  insert(patientId: string, licenseId: string) {
+  insert(myUserId: string, licenseId: string) {
     const recordData = {
-      patientId, licenseId
+      myUserId, licenseId
     };
     return this.http.post<{ message: string, record: EncountersData }>(BACKEND_URL, recordData);
   }
 
-  update(status: number, patientId: string, licenseId: string) {
+  update(status: number, myUserId: string, licenseId: string) {
     const recordData = {
       status
     };
-    return this.http.put(BACKEND_URL + '/' + patientId + '/' + licenseId, recordData);
+    return this.http.put(BACKEND_URL + '/' + myUserId + '/' + licenseId, recordData);
   }
 
   delete(encounterId: string) {

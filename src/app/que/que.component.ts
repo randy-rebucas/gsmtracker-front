@@ -122,8 +122,8 @@ implements OnInit, OnDestroy {
     });
   }
 
-  gotoRecord(patientId) {
-    this.router.navigate(['/patients/' + patientId + '/record/chief-complaints']);
+  gotoRecord(myUserId) {
+    this.router.navigate(['/users/patients/' + myUserId + '/record/chief-complaints']);
   }
 
   ngOnDestroy() {

@@ -7,7 +7,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 exports.create = async(req, res, next) => {
     try {
         const encounterData = new Encounter({
-            userId: req.body.patientId,
+            myUserId: req.body.myUserId,
             licenseId: req.body.licenseId
         });
         let encounter = await encounterData.save();
@@ -21,7 +21,7 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
   try {
-    let encounter = await Encounter.findOneAndUpdate({ userId: req.params.userId, licenseId: req.params.licenseId, status: 0 }, {$set:{status: req.body.status}}).exec();
+    let encounter = await Encounter.findOneAndUpdate({ myUserId: req.params.myUserId, licenseId: req.params.licenseId, status: 0 }, {$set:{status: req.body.status}}).exec();
     if (!encounter) {
       throw new Error('Something went wrong.Cannot update encounter!');
     }
@@ -37,17 +37,6 @@ exports.update = async(req, res, next) => {
 exports.getAll = async(req, res, next) => {
     try {
       const encounter = await Encounter.aggregate([
-        // { "$lookup": {
-        //   "from": "connections",
-        //   "localField": "_id",
-        //   "foreignField": "user",
-        //   "as": "connections"
-        // }},
-        // { $redact: {
-        //     $cond: [{ $eq: ["$licenseId", req.query.licenseId ] }, "$$KEEP",
-        //     "$$PRUNE" ]
-        //   }
-        // },
         { $match: { licenseId : new ObjectId(req.query.licenseId) } }, // .toString()
         { $group:
             {

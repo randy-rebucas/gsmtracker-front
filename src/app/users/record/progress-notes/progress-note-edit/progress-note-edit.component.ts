@@ -74,7 +74,7 @@ implements OnInit, OnDestroy {
 
     this.activatedRoute.parent.parent.parent.params.subscribe(
       (param) => {
-        this.patientId = param.userId;
+        this.patientId = param.myUserId;
       }
     );
     this.form = new FormGroup({

@@ -1,22 +1,19 @@
 const slugify = require('slugify');
-const Type = require('../models/type');
+const Plan = require('../models/plan');
 
 exports.create = async(req, res, next) => {
     try {
-        const typeData = new Type({
+        const data = new Plan({
             name: req.body.name,
             slug: slugify(req.body.name, {
               replacement: '-', // replace spaces with replacement
               remove: null, // regex to remove characters
               lower: true, // result in lower case
-            }),
-            description: req.body.description,
-            generated: 'Custom',
-            licenseId: req.body.licenseId
+            })
         });
-        let type = await typeData.save();
+        let plan = await data.save();
         res.status(200).json({
-            message: ':: added user type ' + type.name
+            message: ':: added plan ' + plan.name
         });
     } catch (e) {
         res.status(500).json({
@@ -27,26 +24,24 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
     try {
-        const filter = { _id: req.params.typeId };
+        const filter = { _id: req.params.planId };
         const update = {
-            _id: req.body.typeId,
+            _id: req.body.planId,
             name: req.body.name,
             slug: slugify(req.body.name, {
               replacement: '-', // replace spaces with replacement
               remove: null, // regex to remove characters
               lower: true, // result in lower case
-            }),
-            description: req.body.description,
+            })
         };
 
-        let type = await Type.findOneAndUpdate(filter, update, { new: true });
-        // type.name;
+        let plan = await Plan.findOneAndUpdate(filter, update, { new: true });
 
-        if (!type) {
-            throw new Error('Something went wrong.Cannot update type!');
+        if (!plan) {
+            throw new Error('Something went wrong.Cannot update plan!');
         }
         res.status(200).json({
-            message: 'type update successful!'
+            message: 'plan update successful!'
         });
 
     } catch (e) {
@@ -58,12 +53,12 @@ exports.update = async(req, res, next) => {
 
 exports.getAll = async(req, res, next) => {
     try {
-        let type = await Type.find({ 'licenseId': req.query.licenseId })
+        let plan = await Plan.find()
             .sort({ '_id': 'asc' })
             .exec();
 
         res.status(200).json({
-            types: type
+          plans: plan
         });
     } catch (e) {
         res.status(500).json({
@@ -74,11 +69,11 @@ exports.getAll = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
     try {
-        let type = await Type.findById(req.params.typeId).exec();
-        if (!type) {
-            throw new Error('Something went wrong. Cannot be found type id: ' + req.params.typeId);
+        let plan = await Plan.findById(req.params.planId).exec();
+        if (!plan) {
+            throw new Error('Something went wrong. Cannot be found plan id: ' + req.params.planId);
         }
-        res.status(200).json(typeId);
+        res.status(200).json(plan);
 
     } catch (error) {
         res.status(500).json({
@@ -87,9 +82,25 @@ exports.get = async(req, res, next) => {
     }
 };
 
+exports.getfilter = async(req, res, next) => {
+  try {
+
+      let plan = await Plan.findOne({ slug: req.body.slug }).exec();
+      if (!plan) {
+          throw new Error('Something went wrong. Cannot be found plan id: ' + req.params.slug);
+      }
+      res.status(200).json(plan);
+
+  } catch (error) {
+      res.status(500).json({
+          message: error.message
+      });
+  }
+};
+
 exports.delete = async(req, res, next) => {
     try {
-        await Type.deleteOne({ _id: req.params.typeId }).exec();
+        await Plan.deleteOne({ _id: req.params.planId }).exec();
 
         res.status(200).json({ message: 'Deletion successfull!' });
 

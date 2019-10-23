@@ -30,7 +30,7 @@ export class QueService {
               id: que.id,
               queNumber: que.queNum,
               fullname: que.fullname,
-              patientId: que.userId
+              myUserId: que.myUserId
             };
           }), max: queData.max};
         })
@@ -48,15 +48,15 @@ export class QueService {
     return this.quesUpdated.asObservable();
   }
 
-  get(userId: string) {
+  get(myUserId: string) {
     return this.http.get<{ onQue: boolean }>(
-        BACKEND_URL + '/' + userId
+        BACKEND_URL + '/' + myUserId
       );
   }
 
-  insert(patientId: string, licenseId: string) {
+  insert(myUserId: string, licenseId: string) {
     const queData = {
-      patientId, licenseId
+      myUserId, licenseId
     };
     return this.http.post<{ message: string, que: QueData }>(BACKEND_URL, queData);
   }

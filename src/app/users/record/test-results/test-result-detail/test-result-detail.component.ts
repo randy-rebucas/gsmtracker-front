@@ -7,7 +7,6 @@ import { DialogService } from 'src/app/shared/dialog.service';
 import { NotificationService } from 'src/app/shared/notification.service';
 import { SecureComponent } from 'src/app/secure/secure.component';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { TestResultEditComponent } from '../test-result-edit/test-result-edit.component';
 import { AppConfiguration } from 'src/app/app-configuration.service';
 
 @Component({
@@ -63,20 +62,6 @@ implements OnInit, OnDestroy {
 
     });
 
-  }
-
-  onEdit(progressNoteId) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.width = '30%';
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-        id: progressNoteId,
-        title: 'Update record',
-        patient: this.patientId,
-        btnLabel: 'Update'
-    };
-    this.dialog.open(TestResultEditComponent, dialogConfig);
   }
 
   onDelete(id: string) {

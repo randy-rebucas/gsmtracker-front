@@ -207,10 +207,9 @@ implements OnInit, OnDestroy {
     );
 
     this.usersService.getBirthdays(this.licenseId).subscribe((birthday) => {
-
       birthday.users.forEach(user => {
         const today = new Date();
-        const bDate = new Date(user.birthdate);
+        const bDate = new Date(user.people.birthdate);
         let myage = today.getFullYear() - bDate.getFullYear();
         const m = today.getMonth() - bDate.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < bDate.getDate())) {
@@ -218,11 +217,11 @@ implements OnInit, OnDestroy {
         }
         const obj = {
           useId: user.users._id,
-          birthdate: user.birthdate,
+          birthdate: user.people.birthdate,
           age: myage,
-          fullname: user.firstname + ', ' + user.lastname,
+          fullname: user.people.firstname + ', ' + user.people.lastname,
           avatar: user.users.avatarPath,
-          contact: user.contact
+          contact: user.people.contact
         };
         this.users.push(obj);
       });
@@ -262,7 +261,7 @@ implements OnInit, OnDestroy {
           this.ids.push(element.id);
         });
 
-        this.usersService.deleteAll(this.ids).subscribe((data) => {
+        this.usersService.delete(this.ids).subscribe((data) => {
           this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
           this.notificationService.warn('::' + data.message);
         });
@@ -384,13 +383,17 @@ implements OnInit, OnDestroy {
   }
 
   onEdit(patientId) {
-    const args = {
-      width: '50%',
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
       id: patientId,
-      dialogTitle: 'Update ' + this.userType,
-      dialogButton: 'Update'
+      title: 'Update ' + this.userType,
+      button: 'Update',
+      userType: this.userType
     };
-    super.onPopup(args, UserFormComponent);
+    this.dialog.open(UserFormComponent, dialogConfig);
   }
 
   onScan() {
@@ -403,17 +406,7 @@ implements OnInit, OnDestroy {
     super.onPopup(args, QrCodeScannerComponent);
   }
 
-  onDelete(Id) {
-    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
-    .afterClosed().subscribe(res => {
-      if (res) {
-        this.usersService.delete(Id).subscribe(() => {
-          this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
-          this.notificationService.warn('! Deleted successfully');
-        });
-      }
-    });
-  }
+
 
   /**
    * userId

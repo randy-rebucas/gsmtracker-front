@@ -32,9 +32,9 @@
                       </div>
 
                       <div class="action-button">
-                          <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(userId)">Cancel Visit</button>
+                          <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(myUserId)">Cancel Visit</button>
                           <button class="mat-raised-button mat-primary" *ngIf="isOnQue" (click)="gotoRecord()">Open Record</button>
-                          <button class="mat-raised-button mat-primary" *ngIf="!isOnQue" (click)="moveToQue(userId)">Move to Que</button>
+                          <button class="mat-raised-button mat-primary" *ngIf="!isOnQue" (click)="moveToQue(myUserId)">Move to Que</button>
                       </div>
                   </div>
                   <div>
@@ -88,7 +88,7 @@
                   <a mat-stroked-button (click)="downloadChart()"><i class="material-icons">
                   remove_red_eye
               </i> &nbsp; Print Chart</a>
-                  <a mat-stroked-button (click)="generateQrCode(userId)"><i class="material-icons">
+                  <a mat-stroked-button (click)="generateQrCode(myUserId)"><i class="material-icons">
                   fingerprint
               </i> &nbsp; Generate QR Code</a>
 
@@ -100,71 +100,71 @@
   <div class="area side" gdArea="side">
       <div fxLayout='row wrap' fxLayoutGap="10px">
         <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-            <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'cm'" [type]="'height'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+            <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'cm'" [type]="'height'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
         </div>
         <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-            <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'kg'" [type]="'weight'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+            <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'kg'" [type]="'weight'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
         </div>
         <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-            <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'%'" [type]="'oxygen-saturation'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+            <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'%'" [type]="'oxygen-saturation'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
         </div>
         <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-            <app-record [widget]="'blocks'" [hasPrefix]="false" [prefix]="" [type]="'pain-score'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+            <app-record [widget]="'blocks'" [hasPrefix]="false" [prefix]="" [type]="'pain-score'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
         </div>
         <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-            <app-record [widget]="'default'" [hasPrefix]="false" [prefix]="" [type]="'allergies'" [showPrevious]="false" [showDate]="false" [patientId]="userId"></app-record>
+            <app-record [widget]="'default'" [hasPrefix]="false" [prefix]="" [type]="'allergies'" [showPrevious]="false" [showDate]="false" [patientId]="myUserId"></app-record>
         </div>
       </div>
   </div>
   <div class="area content" gdArea="content">
       <div fxLayout='row wrap' fxLayoutGap="10px">
           <div fxFlex="24.2%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'&#8451;'" [type]="'temperature'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'&#8451;'" [type]="'temperature'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="24.2%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'mmHg'" [type]="'blood-pressure'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'mmHg'" [type]="'blood-pressure'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="24.2%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'bpm'" [type]="'respiratory-rate'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'bpm'" [type]="'respiratory-rate'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="24.2%" fxFlex.xs="100%" fxFlex.sm="47.9%" fxFlex.md="100%" class="fxRecord">
-              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'bpm'" [type]="'pulse-rate'" [showPrevious]="true" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'blocks'" [hasPrefix]="true" [prefix]="'bpm'" [type]="'pulse-rate'" [showPrevious]="true" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'chief-complaint'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'chief-complaint'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'endorsements'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'endorsements'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'present-illness-history'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'present-illness-history'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'past-medical-history'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'past-medical-history'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'social-history'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'social-history'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'family-history'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'family-history'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'order'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'order'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'progress-notes'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'progress-notes'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'table'" [hasPrefix]="false" [prefix]="" [type]="'prescription'" [showPrevious]="false" [showDate]="false" [patientId]="userId"></app-record>
+              <app-record [widget]="'table'" [hasPrefix]="false" [prefix]="" [type]="'prescription'" [showPrevious]="false" [showDate]="false" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="49%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'table'" [hasPrefix]="false" [prefix]="" [type]="'assessments'" [showPrevious]="false" [showDate]="false" [patientId]="userId"></app-record>
+              <app-record [widget]="'table'" [hasPrefix]="false" [prefix]="" [type]="'assessments'" [showPrevious]="false" [showDate]="false" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'immunizations'" [showPrevious]="false" [showDate]="true" [patientId]="userId"></app-record>
+              <app-record [widget]="'list'" [hasPrefix]="false" [prefix]="" [type]="'immunizations'" [showPrevious]="false" [showDate]="true" [patientId]="myUserId"></app-record>
           </div>
           <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.md="100%" class="fxRecord hasMinHeight">
-              <app-record [widget]="'file'" [hasPrefix]="false" [prefix]="" [type]="'test-results'" [showPrevious]="false" [showDate]="false" [patientId]="userId"></app-record>
+              <app-record [widget]="'file'" [hasPrefix]="false" [prefix]="" [type]="'test-results'" [showPrevious]="false" [showDate]="false" [patientId]="myUserId"></app-record>
           </div>
       </div>
   </div>

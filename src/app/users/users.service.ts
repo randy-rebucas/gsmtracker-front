@@ -68,10 +68,10 @@ export class UsersService {
     return this.usersUpdated.asObservable();
   }
 
-  get(userId: string) {
+  get(myUserId: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.get<{ userId: string, personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], metas: [], email: string, avatar: string, userType: string, created: Date }>(
-        BACKEND_URL + '/' + userId
+    return this.http.get<{ personId: string, firstname: any, midlename: any, lastname: string, contact: string, gender: string, birthdate: string, addresses: [], created: Date, email: string, userId: string, metas: [], avatar: string, userType: string, myuserId: string}>(
+        BACKEND_URL + '/' + myUserId
       );
   }
   // tslint:disable-next-line:max-line-length
@@ -134,22 +134,17 @@ export class UsersService {
     return this.http.put(BACKEND_URL + '/' + Id, userData);
   }
 
-  delete(userId: string) {
-    return this.http.delete(BACKEND_URL + '/' + userId);
+  delete(patientIds: []) {
+    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + patientIds);
   }
 
-  deleteAll(patientIds: []) {
-    return this.http.delete<{ message: string }>(BACKEND_URL + '/many/' + patientIds);
-  }
-
-  upload(uId: string, type: string, image: File | string) {
+  upload(uId: string, image: File | string) {
 
     const uploadData = new FormData();
     uploadData.append('userId', uId);
-    uploadData.append('userType', type);
     uploadData.append('profilePicture', image, uId);
 
-    return this.http.post<{ message: string, imagePath: string }>(BACKEND_URL + '/upload-profile-pic/' + uId, uploadData, {
+    return this.http.post<{ message: string, imagePath: string }>(BACKEND_URL + '/upload/' + uId, uploadData, {
       reportProgress: true,
       observe: 'events'
     });
