@@ -154,7 +154,7 @@ implements OnInit, OnDestroy {
   public imagePreview: string;
   public profileForm: FormGroup;
 
-  id: string;
+  userId: string;
   created: Date;
   email: string;
   userType: string;
@@ -203,39 +203,29 @@ implements OnInit, OnDestroy {
         })
       });
 
-      this.getUserData(this.myUserId)
-      .then((results) => {
-
+      this.usersService.get(this.myUserId).subscribe((results) => {
         this.isLoading = false;
-        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname);
+        this.titleService.setTitle(results.firstname + ' ' + results.lastname);
         // person
-        this.personId = results.userData.personId;
-        this.firstname = results.userData.firstname;
-        this.midlename = results.userData.midlename;
-        this.lastname = results.userData.lastname;
-        this.contact = results.userData.contact;
-        this.gender = results.userData.gender;
-        this.birthdate = results.userData.birthdate;
-        this.addresses = results.userData.addresses;
-        this.created = results.userData.created;
+        this.personId = results.personId;
+        this.firstname = results.firstname;
+        this.midlename = results.midlename;
+        this.lastname = results.lastname;
+        this.contact = results.contact;
+        this.gender = results.gender;
+        this.birthdate = results.birthdate;
+        this.addresses = results.addresses;
+        this.created = results.created;
         // users
-        this.id = results.userData.userId;
-        this.metas = results.userData.metas;
-        this.avatar = results.userData.avatar;
+        this.userId = results.userId;
+        this.metas = results.metas;
+        this.avatar = results.avatar;
         // auth
-        this.email = results.userData.email;
+        this.email = results.email;
         // myuser document
-        this.myUserId = results.userData.myuserId;
-        this.userType = results.userData.userType;
-      })
-      .catch(err => console.log(err));
-    }
-
-    async getUserData(myUserId) {
-      const myUserResponse = await this.usersService.get(myUserId).toPromise();
-      return {
-        userData: myUserResponse,
-      };
+        this.myUserId = results.myuserId;
+        this.userType = results.userType;
+      });
     }
 
     onFileChanged(event: Event) {
@@ -247,7 +237,7 @@ implements OnInit, OnDestroy {
 
     onSavePicture() {
       this.usersService.upload(
-        this.id,
+        this.userId,
         this.profileForm.value.profilePicture
       ).subscribe((event) => {
         if (event.type === HttpEventType.UploadProgress) {
@@ -283,27 +273,36 @@ implements OnInit, OnDestroy {
       this.router.navigate(['../record'], {relativeTo: this.activatedRoute});
     }
 
-    async onCancelVisit(myUserId) {
-      const encounter = await this.encountersService.update(1, myUserId, this.licenseId).toPromise();
-      const que = await this.queService.findCancel(myUserId).toPromise();
-      if (que) {
-        this.notificationService.success(':: on que canceled.');
-        this.isOnQue = false;
-      }
+    onCancelVisit(myUserId) {
+      this.encountersService.update(1, myUserId, this.licenseId).subscribe(() => {
+
+        this.queService.findCancel(myUserId).subscribe((que) => {
+          if (que) {
+            this.notificationService.success(':: on que canceled.');
+            this.isOnQue = false;
+          }
+        });
+
+      });
     }
 
-    async moveToQue(myUserId) {
-      const encounter = await this.encountersService.insert(myUserId, this.licenseId).toPromise();
-      const que = await this.queService.insert(myUserId, this.licenseId).toPromise();
-      if (que) {
-        this.notificationService.success(':: on que done. #' + que.que.queNumber);
-        this.isOnQue = true;
-      }
+    moveToQue(myUserId) {
+      this.encountersService.insert(myUserId, this.licenseId).subscribe(() => {
+
+        this.queService.insert(myUserId, this.licenseId).subscribe((que) => {
+          if (que) {
+            this.notificationService.success(':: on que done. #' + que.que.queNumber);
+            this.isOnQue = true;
+          }
+        });
+
+      });
     }
 
-    async addToNetwork(requesterId) {
-      const network = await this.networksService.insert(requesterId, this.userId).toPromise();
-      this.notificationService.success(':: request sent');
+    addToNetwork(requesterId) {
+      this.networksService.insert(requesterId, this.userId).subscribe(() => {
+        this.notificationService.success(':: request sent');
+      });
     }
 
     ngOnDestroy() {

@@ -108,7 +108,7 @@ export class RecordComponent
 extends SecureComponent
 implements OnInit, OnDestroy {
   public userType: string;
-  id: string;
+  userId: string;
   myUserId: string;
   created: Date;
   email: string;
@@ -166,38 +166,29 @@ implements OnInit, OnDestroy {
       })
     });
 
-    this.getPatientData(this.myUserId)
-      .then((results) => {
-        this.isLoading = false;
-        this.titleService.setTitle(results.userData.firstname + ' ' + results.userData.lastname);
-        // person
-        this.personId = results.userData.personId;
-        this.firstname = results.userData.firstname;
-        this.midlename = results.userData.midlename;
-        this.lastname = results.userData.lastname;
-        this.contact = results.userData.contact;
-        this.gender = results.userData.gender;
-        this.birthdate = results.userData.birthdate;
-        this.addresses = results.userData.addresses;
-        this.created = results.userData.created;
-        // users
-        this.id = results.userData.userId;
-        this.metas = results.userData.metas;
-        this.avatar = results.userData.avatar;
-        // auth
-        this.email = results.userData.email;
-        // myuser document
-        this.myUserId = results.userData.myuserId;
-        this.userType = results.userData.userType;
-      })
-      .catch(err => console.log(err));
-  }
-
-  async getPatientData(myUserId) {
-    const userResponse = await this.usersService.get(myUserId).toPromise();
-    return {
-      userData: userResponse
-    };
+    this.usersService.get(this.myUserId).subscribe((results) => {
+      this.isLoading = false;
+      this.titleService.setTitle(results.firstname + ' ' + results.lastname);
+      // person
+      this.personId = results.personId;
+      this.firstname = results.firstname;
+      this.midlename = results.midlename;
+      this.lastname = results.lastname;
+      this.contact = results.contact;
+      this.gender = results.gender;
+      this.birthdate = results.birthdate;
+      this.addresses = results.addresses;
+      this.created = results.created;
+      // users
+      this.userId = results.userId;
+      this.metas = results.metas;
+      this.avatar = results.avatar;
+      // auth
+      this.email = results.email;
+      // myuser document
+      this.myUserId = results.myuserId;
+      this.userType = results.userType;
+    });
   }
 
   onFileChanged(event: Event) {
@@ -209,7 +200,7 @@ implements OnInit, OnDestroy {
 
   onSavePicture() {
     this.usersService.upload(
-      this.id,
+      this.userId,
       this.profileForm.value.profilePicture
     ).subscribe((event) => {
       if (event.type === HttpEventType.UploadProgress) {
@@ -236,22 +227,30 @@ implements OnInit, OnDestroy {
     this.dialog.open(QrCodeGenerateComponent, dialogConfig);
   }
 
-  async onCancelVisit(myUserId) {
-    const encounter = await this.encountersService.update(1, myUserId, this.licenseId).toPromise();
-    const que = await this.queService.findCancel(myUserId).toPromise();
-    if (que) {
-      this.notificationService.success(':: on que canceled.');
-      this.isOnQue = false;
-    }
+  onCancelVisit(myUserId) {
+    this.encountersService.update(1, myUserId, this.licenseId).subscribe(() => {
+
+      this.queService.findCancel(myUserId).subscribe((que) => {
+        if (que) {
+          this.notificationService.success(':: on que canceled.');
+          this.isOnQue = false;
+        }
+      });
+
+    });
   }
 
-  async moveToQue(myUserId) {
-    const encounter = await this.encountersService.insert(myUserId, this.licenseId).toPromise();
-    const que = await this.queService.insert(myUserId, this.licenseId).toPromise();
-    if (que) {
-      this.notificationService.success(':: on que done. #' + que.que.queNumber);
-      this.isOnQue = true;
-    }
+  moveToQue(myUserId) {
+    this.encountersService.insert(myUserId, this.licenseId).subscribe(() => {
+
+      this.queService.insert(myUserId, this.licenseId).subscribe((que) => {
+        if (que) {
+          this.notificationService.success(':: on que done. #' + que.que.queNumber);
+          this.isOnQue = true;
+        }
+      });
+
+    });
   }
 
   ngOnDestroy() {

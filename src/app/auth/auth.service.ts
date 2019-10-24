@@ -15,7 +15,7 @@ const BACKEND_URL = environment.apiUrl + '/user';
 export class AuthService {
   private isAuthenticated: boolean;
   private token: string;
-  private userId: string;
+  private myUserId: string;
   private userEmail: string;
   private userType: string;
   private licenseId: string;
@@ -37,7 +37,7 @@ export class AuthService {
   }
 
   getUserId() {
-    return this.userId;
+    return this.myUserId;
   }
 
   getUserEmail() {
@@ -74,16 +74,17 @@ export class AuthService {
 
   login(Email: string, Password: string, Remember: boolean) {
     const authData: AuthData = {email: Email, password: Password, remember: Remember};
-    this.http.post<{token: string, userEmail: string, userId: string, userType: string, licenseId: string}>(
+    this.http.post<{token: string, userEmail: string, myUserId: string, userType: string, licenseId: string}>(
       BACKEND_URL + '/login',
       authData
     )
     .subscribe(response => {
+      console.log(response);
       const token = response.token;
       this.token = token;
       if (token) {
 
-        this.userId = response.userId;
+        this.myUserId = response.myUserId;
         this.userEmail = response.userEmail;
         this.userType = response.userType;
         this.licenseId = response.licenseId;
@@ -96,7 +97,7 @@ export class AuthService {
           this.cookieService.set('pass', Password );
         }
 
-        this.saveAuthData(token, this.userId, this.userEmail, this.userType, this.licenseId);
+        this.saveAuthData(token, this.myUserId, this.userEmail, this.userType, this.licenseId);
         this.router.navigate(['/']);
       }
     }, error => {
@@ -111,7 +112,7 @@ export class AuthService {
     }
     this.token = authInformation.token;
 
-    this.userId = authInformation.userId;
+    this.myUserId = authInformation.myUserId;
     this.userEmail = authInformation.userEmail;
     this.userType = authInformation.userType;
     this.licenseId = authInformation.licenseId;
@@ -120,7 +121,7 @@ export class AuthService {
 
   logout() {
     this.token = null;
-    this.userId = null;
+    this.myUserId = null;
     this.userType = null;
     this.licenseId = null;
     this.userEmail = null;
@@ -129,9 +130,9 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
-  private saveAuthData(token: string, userId: string, userEmail: string, userType: string, licenseId: string) {
+  private saveAuthData(token: string, myUserId: string, userEmail: string, userType: string, licenseId: string) {
     localStorage.setItem('token', token);
-    localStorage.setItem('userId', userId);
+    localStorage.setItem('myUserId', myUserId);
     localStorage.setItem('userEmail', userEmail);
     localStorage.setItem('userType', userType);
     localStorage.setItem('licenseId', licenseId);
@@ -139,7 +140,7 @@ export class AuthService {
 
   private clearAuthData() {
     localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('myUserId');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userType');
     localStorage.removeItem('licenseId');
@@ -147,13 +148,13 @@ export class AuthService {
 
   private getAuthData() {
     const authToken = localStorage.getItem('token');
-    const authUserId = localStorage.getItem('userId');
+    const authMyUserId = localStorage.getItem('myUserId');
     const authUserEmail = localStorage.getItem('userEmail');
     const authUserType = localStorage.getItem('userType');
     const authLicenseId = localStorage.getItem('licenseId');
     return {
       token: authToken,
-      userId: authUserId,
+      myUserId: authMyUserId,
       userEmail: authUserEmail,
       userType: authUserType,
       licenseId: authLicenseId

@@ -100,6 +100,7 @@ implements OnInit, OnDestroy {
 
   async ngOnInit() {
     super.doInit();
+
     this.titleService.setTitle('Settings - Profile');
     this.profileForm = new FormGroup({
       profilePicture: new FormControl(null, {
