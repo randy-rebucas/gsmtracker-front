@@ -1,6 +1,8 @@
 const Appointment = require('../models/appointment');
 const Person = require('../models/person');
-
+const User = require('../models/user');
+const myUser = require('../models/myuser');
+const ObjectId = require('mongoose').Types.ObjectId;
 const moment = require('moment');
 
 exports.create = async(req, res, next) => {
@@ -63,15 +65,22 @@ exports.getAll = async(req, res, next) => {
             query.skip(pageSize * (currentPage - 1)).limit(pageSize);
         }
 
-        let appointments = await query.populate({
+        let appointments = await query
+        .populate({
           path: 'userId',
           populate: {
-            path: 'personId',
-            model: Person
+            path: 'userId',
+            model: User,
+            populate: {
+              path: 'personId',
+              model: Person
+            }
           }
         }).exec();
+
         newAppointments = [];
         appointments.forEach(element => {
+
             var myObj = {
                 _id: element._id,
                 title: element.title,
@@ -80,8 +89,8 @@ exports.getAll = async(req, res, next) => {
                 backgroundColor: element.backgroundColor,
                 borderColor: element.borderColor,
                 textColor: element.textColor,
-                avatar: element.userId.avatarPath,
-                fullname: element.userId.personId.firstname + ' ' + element.userId.personId.midlename + ', ' + element.userId.personId.lastname,
+                avatar: element.userId.userId.avatarPath,
+                fullname: element.userId.userId.personId.firstname + ' ' + element.userId.userId.personId.midlename + ', ' + element.userId.userId.personId.lastname,
                 status: element.status
             };
             newAppointments.push(myObj);
@@ -106,8 +115,12 @@ exports.get = async(req, res, next) => {
         let appointment = await Appointment.findById(req.params.appointmentId).populate({
           path: 'userId',
           populate: {
-            path: 'personId',
-            model: Person
+            path: 'userId',
+            model: User,
+            populate: {
+              path: 'personId',
+              model: Person
+            }
           }
         }).exec();
         res.status(200).json({
@@ -116,12 +129,12 @@ exports.get = async(req, res, next) => {
             start: appointment.start,
             end: appointment.end,
             status: appointment.status,
-            avatar: appointment.userId.avatarPath,
-            fullname: appointment.userId.personId.firstname + ' ' + appointment.userId.personId.midlename + ', ' + appointment.userId.personId.lastname,
-            gender: appointment.userId.personId.gender,
-            address: appointment.userId.personId.address,
-            birthdate: appointment.userId.personId.birthdate,
-            contact: appointment.userId.personId.contact,
+            avatar: appointment.userId.userId.avatarPath,
+            fullname: appointment.userId.userId.personId.firstname + ' ' + appointment.userId.userId.personId.midlename + ', ' + appointment.userId.userId.personId.lastname,
+            gender: appointment.userId.userId.personId.gender,
+            address: appointment.userId.userId.personId.address,
+            birthdate: appointment.userId.userId.personId.birthdate,
+            contact: appointment.userId.userId.personId.contact,
             detailId: appointment.userId._id
         });
     } catch (error) {
@@ -133,16 +146,16 @@ exports.get = async(req, res, next) => {
 
 exports.getNewAppointment = async(req, res, next) => {
     try {
-        const today = moment().startOf('day');
-
-        let newAppointmentCount = await Appointment.countDocuments({
-            'licenseId': req.params.licenseId,
-            'status': 0
-        }).exec()
-
-        res.status(200).json({
-            count: newAppointmentCount
-        });
+        const pendingAppointment = await Appointment.aggregate([
+          { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
+          { $match: { 'status': 0 } },
+          {
+            $count: "pending"
+          }
+      ]);
+      res.status(200).json({
+          count: (pendingAppointment.length) ? pendingAppointment[0].pending : 0
+      });
 
     } catch (error) {
         res.status(500).json({

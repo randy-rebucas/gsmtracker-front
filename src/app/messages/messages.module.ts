@@ -13,6 +13,7 @@ import { MessageInitialComponent } from './message-initial/message-initial.compo
 import { MessageEditComponent } from './message-edit/message-edit.component';
 import { MessageDetailComponent } from './message-detail/message-detail.component';
 import { MessageListComponent } from './message-list/message-list.component';
+import { EllipsisPipe } from '../ellipsis-pipe';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { MessageListComponent } from './message-list/message-list.component';
     MessageListComponent,
     MessageInitialComponent,
     MessageEditComponent,
-    MessageDetailComponent
+    MessageDetailComponent,
+    EllipsisPipe
   ],
   imports: [
     CommonModule,

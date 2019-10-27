@@ -22,10 +22,10 @@ export interface User {
   .example-full-width {
     width: 100%;
   }
-  .is-loading ::ng-deep .mat-option-text {
+  /*.is-loading ::ng-deep .mat-option-text {
     display: flex;
     justify-content: center;
-  }
+  }*/
   form.message-form {
     padding: 1em;
     border-top: 1px solid rgba(0,0,0,.14);

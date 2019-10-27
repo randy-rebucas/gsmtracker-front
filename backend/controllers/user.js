@@ -343,21 +343,45 @@ exports.update = async(req, res, next) => {
     }
 
 };
+exports.search = async(req, res, next) => {
+  try {
+      const patientQuery = User.find({ 'licenseId': req.query.licenseId });
+      let patient = await patientQuery.populate('personId').where('userType', 'patient');
+      const result = [];
+      patient.forEach(element => {
+          let fullname = element.personId.firstname + ', ' + element.personId.lastname;
+          result.push({ id: element._id, name: fullname });
+      });
+
+      let count = await User.countDocuments({ 'licenseId': req.query.licenseId });
+
+      res.status(200).json({
+          total: count,
+          results: result
+      });
+  } catch (error) {
+      res.status(500).json({
+          message: error.message
+      });
+  }
+}
 
 exports.search = async(req, res, next) => {
     try {
+
       let userType = await Type.findOne({ slug: 'patients' }).exec();
-      let query = await MyUser.find({ 'licenseId': req.query.licenseId });
-      let users = await query.populate({
+      let myUsers = await MyUser.find({ 'licenseId': req.query.licenseId })
+      .populate({
         path: 'userId',
         populate: {
             path: 'personId',
             model: Person
         }
       }).where('userType', userType._id);
+
       const result = [];
-      users.forEach(element => {
-          result.push({ id: element.userId._id, name: element.userId.personId.firstname + ', ' + element.userId.personId.lastname });
+      myUsers.forEach(element => {
+          result.push({ id: element._id, name: element.userId.personId.firstname + ', ' + element.userId.personId.lastname });
       });
 
       let count = await MyUser.countDocuments({ 'licenseId': req.query.licenseId, 'userType': userType._id });

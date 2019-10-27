@@ -23,6 +23,7 @@ export class UsersService {
     return this.http.get<IUserResponse>(BACKEND_URL + '/search' + queryParams)
     .pipe(
       tap((response: IUserResponse) => {
+        console.log(response);
         response.results = response.results
           .map(user => new User(user.id, user.name))
           .filter(user => user.name.includes(filter.name));

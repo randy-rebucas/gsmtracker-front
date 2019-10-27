@@ -8,7 +8,7 @@ const appointmentSchema = mongoose.Schema({
     borderColor: { type: String },
     textColor: { type: String },
     status: { type: Number, default: 0 }, // 0 = pending, 1 = confirmed, 2 = canceled
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'MyUsers', required: true },
     licenseId: { type: mongoose.Schema.Types.ObjectId, ref: 'License', required: true }
 });
 

@@ -10,11 +10,11 @@ router.post('', checkAuth, AppointmentController.create);
 
 router.put('/:appointmentId', checkAuth, AppointmentController.update);
 
-router.get('', AppointmentController.getAll);
-
-router.get('/new/:licenseId', AppointmentController.getAll);
+router.get('/new/:licenseId', AppointmentController.getNewAppointment);
 
 router.get('/:appointmentId', AppointmentController.get);
+
+router.get('', AppointmentController.getAll);
 
 router.delete('/:appointmentId', checkAuth, AppointmentController.delete);
 

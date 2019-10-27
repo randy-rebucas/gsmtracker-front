@@ -53,13 +53,17 @@ exports.create = async (req, res, next) => {
 exports.getAll = async (req, res, next) => {
     try {
       let threads = await Thread.find({ 'ownerId': req.query.ownerId })
-        .populate({
+      .populate({
+        path: 'userId',
+        populate: {
           path: 'userId',
+          model: User,
           populate: {
             path: 'personId',
             model: Person
           }
-        })
+        }
+      })
         .sort({ 'created': 'asc' })
         .exec();
       newThreads = [];
@@ -68,8 +72,8 @@ exports.getAll = async (req, res, next) => {
             id: element._id,
             created: moment(element.created, "YYYYMMDD").fromNow(),
             ownerId: element.ownerId,
-            avatar: element.userId.avatarPath,
-            fullname: element.userId.personId.firstname + ' ' + element.userId.personId.midlename + ', ' + element.userId.personId.lastname
+            avatar: element.userId.userId.avatarPath,
+            fullname: element.userId.userId.personId.firstname + ' ' + element.userId.userId.personId.midlename + ', ' + element.userId.userId.personId.lastname
           };
           newThreads.push(myObj);
       });
@@ -98,11 +102,16 @@ exports.getLastMessage = async (req, res, next) => {
 
 exports.get = async (req, res, next) => {
   try {
-    let thread = await Thread.findById(req.params.threadId).populate({
+    let thread = await Thread.findById(req.params.threadId)
+    .populate({
       path: 'userId',
       populate: {
-        path: 'personId',
-        model: Person
+        path: 'userId',
+        model: User,
+        populate: {
+          path: 'personId',
+          model: Person
+        }
       }
     }).exec();
     if (!thread) {
@@ -111,13 +120,13 @@ exports.get = async (req, res, next) => {
     res.status(200).json({
       threadId: thread._id,
       ownerId: thread.ownerId,
-      avatar: thread.userId.avatarPath,
-      fullname: thread.userId.personId.firstname + ' ' + thread.userId.personId.midlename + ', ' + thread.userId.personId.lastname,
-      gender: thread.userId.gender,
-      address: thread.userId.address,
-      birthdate: thread.userId.birthdate,
-      contact: thread.userId.contact,
-      personId: thread.userId._id,
+      avatar: thread.userId.userId.avatarPath,
+      fullname: thread.userId.userId.personId.firstname + ' ' + thread.userId.userId.personId.midlename + ', ' + thread.userId.userId.personId.lastname,
+      gender: thread.userId.userId.personIdgender,
+      address: thread.userId.userId.personIdaddress,
+      birthdate: thread.userId.userId.personIdbirthdate,
+      contact: thread.userId.userId.personIdcontact,
+      personId: thread.userId.userId.personId,
       created: moment(thread.created, "YYYYMMDD").fromNow()
     });
 

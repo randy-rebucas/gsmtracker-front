@@ -94,8 +94,8 @@ implements OnInit, OnDestroy {
         debounceTime(300),
         tap(() => this.isLoading = true),
         switchMap(value => this.usersService.search({name: value}, this.currentPage, this.licenseId)
-        .pipe(
-          finalize(() => this.isLoading = false),
+          .pipe(
+            finalize(() => this.isLoading = false),
           )
         )
       )

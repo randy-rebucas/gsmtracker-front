@@ -49,12 +49,17 @@ exports.getAll = async(req, res, next) => {
             );
         }
 
-        const user = await Message.find({ 'threadId': req.query.threadId }).populate({
+        const user = await Message.find({ 'threadId': req.query.threadId })
+        .populate({
+          path: 'userId',
+          populate: {
             path: 'userId',
+            model: User,
             populate: {
-                path: 'personId',
-                model: Person
+              path: 'personId',
+              model: Person
             }
+          }
         }).exec();
         newMessages = [];
         user.forEach(element => {
@@ -62,9 +67,9 @@ exports.getAll = async(req, res, next) => {
                 id: element._id,
                 created: moment(element.created, "YYYYMMDD").fromNow(),
                 message: element.message,
-                avatar: element.userId.avatarPath,
-                fullname: element.userId.personId.firstname + ' ' + element.userId.personId.lastname,
-                personId: element.userId.personId._id
+                avatar: element.userId.userId.avatarPath,
+                fullname: element.userId.userId.personId.firstname + ' ' + element.userId.userId.personId.lastname,
+                personId: element.userId.userId.personId._id
             };
             newMessages.push(myObj);
         });

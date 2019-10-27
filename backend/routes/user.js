@@ -19,6 +19,8 @@ router.post('', checkAuth, UserController.create); // preAuth,
 
 router.post('/upload/:userId', extractFile, UserController.uploadProfile);
 
+router.get('/search', UserController.search);
+
 router.get('', UserController.getAll);
 
 router.get('/:myUserId', UserController.get);
@@ -26,8 +28,6 @@ router.get('/:myUserId', UserController.get);
 router.get('/new/:licenseId', UserController.getNewUser);
 
 router.get('/birthdays/:licenseId', UserController.getTodaysBirthday);
-
-router.get('/search', UserController.search);
 
 router.put('/:myUserId', checkAuth, UserController.update); // preAuth,
 

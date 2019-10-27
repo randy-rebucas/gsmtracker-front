@@ -5,7 +5,7 @@ const messageSchema = mongoose.Schema({
   message: { type: String, required: true },
   status: { type: Number, default: 0  },
   threadId: { type: mongoose.Schema.Types.ObjectId, ref: 'Thread', required: true},
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'MyUsers', required: true }
 });
 
 module.exports = mongoose.model('Messages', messageSchema);

@@ -5,8 +5,8 @@
   <mat-form-field class="example-full-width" *ngIf="!threadId">
     <input type="text" placeholder="Type a name or multiple names" aria-label="Patient" matInput formControlName='userInput' [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-      <mat-option *ngIf="loading" class="is-loading"><mat-spinner diameter="50"></mat-spinner></mat-option>
-      <ng-container *ngIf="!loading">
+      <mat-option *ngIf="isLoading" class="is-loading"><mat-spinner diameter="50"></mat-spinner></mat-option>
+      <ng-container *ngIf="!isLoading">
         <mat-option *ngFor="let user of filteredUsers" [value]="user">
           <span>{{ user.name }}</span>
         </mat-option>
