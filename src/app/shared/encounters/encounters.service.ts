@@ -18,11 +18,8 @@ export class EncountersService {
     private http: HttpClient
     ) {}
 
-  getAll(licenseId: string) {
-    const queryParams = `?licenseId=${licenseId}`;
-    this.http.get<{message: string, encounters: any }>(
-      BACKEND_URL + queryParams
-    )
+  getAll() {
+    this.http.get<{message: string, encounters: any }>(BACKEND_URL)
     .pipe(
       map(encounterData => {
         return { encounters: encounterData.encounters.map(
@@ -63,11 +60,11 @@ export class EncountersService {
     return this.http.post<{ message: string, record: EncountersData }>(BACKEND_URL, recordData);
   }
 
-  update(status: number, myUserId: string, licenseId: string) {
+  update(status: number, myUserId: string) {
     const recordData = {
       status
     };
-    return this.http.put(BACKEND_URL + '/' + myUserId + '/' + licenseId, recordData);
+    return this.http.put(BACKEND_URL + '/' + myUserId, recordData);
   }
 
   delete(encounterId: string) {

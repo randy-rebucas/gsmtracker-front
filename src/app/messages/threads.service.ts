@@ -61,16 +61,16 @@ export class ThreadsService {
       );
   }
 
-  insert(message: string, users: [], ownerId: string, licenseId: string) {
+  insert(message: string, users: [], ownerId: string) {
     const recordData = {
-      message, users, ownerId, licenseId
+      message, users, ownerId
     };
     return this.http.post<{ message: string, record: ThreadData }>(BACKEND_URL, recordData);
   }
 
-  update(threadId: string, message: string, users: [], ownerId: string, licenseId: string) {
+  update(threadId: string, message: string, users: [], ownerId: string) {
     const recordData = {
-      threadId, message, users, ownerId, licenseId
+      threadId, message, users, ownerId
     };
     return this.http.put(BACKEND_URL + '/' + threadId, recordData);
   }

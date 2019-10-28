@@ -19,9 +19,8 @@ export class TypesService {
     ) {}
 
   getAll(licenseId: string) {
-    const queryParams = `?licenseId=${licenseId}`;
     this.http.get<{message: string, types: any }>(
-      BACKEND_URL + queryParams
+      BACKEND_URL
     )
     .pipe(
       map(data => {
@@ -51,21 +50,21 @@ export class TypesService {
   }
 
   get(typeId: string) {
-    return this.http.get<{ _id: string; name: string, description: string, generated: string, licenseId: string }>(
+    return this.http.get<{ _id: string; name: string, description: string, generated: string }>(
       BACKEND_URL + '/' + typeId
       );
   }
 
-  insert(name: string, description: string, generated: string, licenseId: string) {
+  insert(name: string, description: string, generated: string) {
     const data = {
-        name, description, generated, licenseId
+        name, description, generated
     };
     return this.http.post<{ message: string, type: TypesData }>(BACKEND_URL, data);
   }
 
-  update(typeId: string, name: string, description: string, generated: string, licenseId: string) {
+  update(typeId: string, name: string, description: string, generated: string) {
     const data = {
-        name, description, generated, licenseId
+        name, description, generated
     };
     return this.http.put(BACKEND_URL + '/' + typeId , data);
   }

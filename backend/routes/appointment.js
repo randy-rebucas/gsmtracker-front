@@ -10,7 +10,7 @@ router.post('', checkAuth, AppointmentController.create);
 
 router.put('/:appointmentId', checkAuth, AppointmentController.update);
 
-router.get('/new/:licenseId', AppointmentController.getNewAppointment);
+router.get('/new', AppointmentController.getNewAppointment);
 
 router.get('/:appointmentId', AppointmentController.get);
 

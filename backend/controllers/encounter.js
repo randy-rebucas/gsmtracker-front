@@ -7,8 +7,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 exports.create = async(req, res, next) => {
     try {
         const encounterData = new Encounter({
-            myUserId: req.body.myUserId,
-            licenseId: req.body.licenseId
+            myUserId: req.body.myUserId
         });
         let encounter = await encounterData.save();
         res.status(200).json();
@@ -21,7 +20,7 @@ exports.create = async(req, res, next) => {
 
 exports.update = async(req, res, next) => {
   try {
-    let encounter = await Encounter.findOneAndUpdate({ myUserId: req.params.myUserId, licenseId: req.params.licenseId, status: 0 }, {$set:{status: req.body.status}}).exec();
+    let encounter = await Encounter.findOneAndUpdate({ myUserId: req.params.myUserId, status: 0 }, {$set:{status: req.body.status}}).exec();
     if (!encounter) {
       throw new Error('Something went wrong.Cannot update encounter!');
     }
@@ -37,7 +36,7 @@ exports.update = async(req, res, next) => {
 exports.getAll = async(req, res, next) => {
     try {
       const encounter = await Encounter.aggregate([
-        { $match: { licenseId : new ObjectId(req.query.licenseId) } }, // .toString()
+        // { $match: { licenseId : new ObjectId(req.query.licenseId) } }, // .toString()
         { $group:
             {
               _id:

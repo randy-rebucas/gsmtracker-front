@@ -25,7 +25,7 @@ export class SettingsGeneralService {
       return this.settingsUpdated.asObservable();
     }
 
-    get(licenseId: string) {
+    get() {
       return this.http.get<{
         _id: string,
         logoPath: string,
@@ -39,7 +39,7 @@ export class SettingsGeneralService {
         address: []
         clinicPhone: [],
         clinicHours: []}>(
-        BACKEND_URL + '/' + licenseId
+        BACKEND_URL
         );
     }
 
@@ -52,14 +52,14 @@ export class SettingsGeneralService {
     }
 
     // tslint:disable-next-line:max-line-length
-    update(Id: string, licenseId: string, Name: string, Owner: string, Address: [], Email: string, Prc: string, Ptr: string, S2: string, Nobreak: boolean, Phones: [], Hours: []) {
+    update(Id: string, Name: string, Owner: string, Address: [], Email: string, Prc: string, Ptr: string, S2: string, Nobreak: boolean, Phones: [], Hours: []) {
 
       const settingData = {
           // tslint:disable-next-line:max-line-length
           id: Id, name: Name, owner: Owner, address: Address, email: Email, prc: Prc, ptr: Ptr, s2: S2, nobreak: Nobreak, phones: Phones, hours: Hours
         };
 
-      return this.http.put(BACKEND_URL + '/' + licenseId, settingData);
+      return this.http.put(BACKEND_URL, settingData);
     }
 
     upload(settingId: string, image: File | string) {

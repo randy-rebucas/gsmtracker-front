@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('', Controller.getAll);
 
-router.put('/:myUserId/:licenseId', checkAuth, Controller.update);
+router.put('/:myUserId', checkAuth, Controller.update);
 
 router.post('', checkAuth, Controller.create);
 

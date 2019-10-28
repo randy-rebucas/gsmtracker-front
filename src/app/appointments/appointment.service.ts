@@ -18,8 +18,8 @@ export class AppointmentService {
     private http: HttpClient
     ) {}
 
-    getAll(licenseId: string, perPage: number, currentPage: number) {
-      const queryParams = `?licenseId=${licenseId}&pagesize=${perPage}&page=${currentPage}`;
+    getAll(perPage: number, currentPage: number) {
+      const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
       this.http.get<{message: string, appointment: any, max: number }>(
         BACKEND_URL + queryParams
       )
@@ -62,16 +62,16 @@ export class AppointmentService {
       );
   }
 
-  getAllNew(licenseId: string) {
+  getAllNew() {
     // tslint:disable-next-line: max-line-length
     return this.http.get<{ count: number }>(
-        BACKEND_URL + '/new/' + licenseId
+        BACKEND_URL + '/new/'
       );
   }
 
-  insert(users: string, title: string, start: string, licenseId: string) {
+  insert(users: string, title: string, start: string) {
     const appointmentData = {
-      users, title, start, licenseId
+      users, title, start
     };
     return this.http.post<{ message: string, record: AppointmentData }>(BACKEND_URL, appointmentData);
   }

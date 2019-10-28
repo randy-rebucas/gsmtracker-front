@@ -14,7 +14,7 @@ router.get('/:myUserId', QueController.get);
 
 router.delete('/:queId', checkAuth, QueController.delete);
 
-router.delete('/clear/:licenseId', checkAuth, QueController.deleteAll);
+router.delete('/clear/', checkAuth, QueController.deleteAll);
 
 router.delete('/smooth/:myUserId', checkAuth, QueController.deleteSmooth);
 

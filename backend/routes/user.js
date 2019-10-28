@@ -21,13 +21,13 @@ router.post('/upload/:userId', extractFile, UserController.uploadProfile);
 
 router.get('/search', UserController.search);
 
+router.get('/new', UserController.getNewUser);
+
+router.get('/birthdays', UserController.getTodaysBirthday);
+
 router.get('', UserController.getAll);
 
 router.get('/:myUserId', UserController.get);
-
-router.get('/new/:licenseId', UserController.getNewUser);
-
-router.get('/birthdays/:licenseId', UserController.getTodaysBirthday);
 
 router.put('/:myUserId', checkAuth, UserController.update); // preAuth,
 

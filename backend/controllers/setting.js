@@ -3,7 +3,6 @@ const sharp = require('sharp');
 exports.create = async(req, res, next) => {
     try {
         const setting = new Setting({
-            licenseId: req.body.licenseId,
             clinicName: req.body.name,
             clinicOwner: req.body.owner,
             // clinicAddress: req.body.address,
@@ -85,7 +84,7 @@ exports.update = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
     try {
-        let setting = await Setting.findOne({ 'licenseId': req.params.licenseId }).exec();
+        let setting = await Setting.find().exec();
         // console.log(setting);
         res.status(200).json(setting);
 

@@ -13,8 +13,7 @@ exports.create = async(req, res, next) => {
             backgroundColor: '#ff4081',
             borderColor: '#ff4081',
             textColor: '#fff',
-            userId: req.body.users.id,
-            licenseId: req.body.licenseId
+            userId: req.body.users.id
         });
         let appointment = await appointmentData.save();
         if (!appointment) {
@@ -59,7 +58,7 @@ exports.getAll = async(req, res, next) => {
     try {
         const pageSize = +req.query.pagesize;
         const currentPage = +req.query.page;
-        const query = Appointment.find({ 'licenseId': req.query.licenseId });
+        const query = Appointment.find();
 
         if (pageSize && currentPage) {
             query.skip(pageSize * (currentPage - 1)).limit(pageSize);
@@ -147,7 +146,6 @@ exports.get = async(req, res, next) => {
 exports.getNewAppointment = async(req, res, next) => {
     try {
         const pendingAppointment = await Appointment.aggregate([
-          { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
           { $match: { 'status': 0 } },
           {
             $count: "pending"
@@ -167,9 +165,9 @@ exports.getNewAppointment = async(req, res, next) => {
 exports.delete = async(req, res, next) => {
     try {
         let appointment = await Appointment.findById(req.params.appointmentId).exec();
-        if (appointment.licenseId != req.userData.licenseId) {
-            throw new Error('Not Authorized!');
-        }
+        // if (appointment.licenseId != req.userData.licenseId) {
+        //     throw new Error('Not Authorized!');
+        // }
         await Appointment.deleteOne({ _id: req.params.appointmentId });
 
         res.status(200).json({

@@ -18,10 +18,9 @@ export class QueService {
     private http: HttpClient
     ) {}
 
-    getAll(licenseId: string) {
-      const queryParams = `?licenseId=${licenseId}`;
+    getAll() {
       this.http.get<{message: string, ques: any, max: number }>(
-        BACKEND_URL + queryParams
+        BACKEND_URL
       )
       .pipe(
         map(queData => {
@@ -54,9 +53,9 @@ export class QueService {
       );
   }
 
-  insert(myUserId: string, licenseId: string) {
+  insert(myUserId: string) {
     const queData = {
-      myUserId, licenseId
+      myUserId
     };
     return this.http.post<{ message: string, que: QueData }>(BACKEND_URL, queData);
   }
@@ -73,8 +72,8 @@ export class QueService {
     return this.http.delete(BACKEND_URL + '/smooth/' + personId);
   }
 
-  clear(licenseId: string) {
-    return this.http.delete(BACKEND_URL + '/clear/' + licenseId);
+  clear() {
+    return this.http.delete(BACKEND_URL + '/clear/');
   }
 
 }

@@ -27,12 +27,11 @@ exports.create = async(req, res, next) => {
           throw new Error('Something went wrong.' + queCheck.userId.personId.firstname + ' ' + queCheck.userId.personId.lastname + ' already on que!');
         }
 
-        let count = await Que.countDocuments({ 'licenseId': req.body.licenseId });
+        let count = await Que.countDocuments();
 
         const queData = new Que({
             queNumber: '00' + (count + 1),
-            myUserId: req.body.myUserId,
-            licenseId: req.body.licenseId
+            myUserId: req.body.myUserId
         });
         let que = await queData.save();
         res.status(201).json({
@@ -53,7 +52,7 @@ exports.create = async(req, res, next) => {
 exports.getAll = async(req, res, next) => {
     try {
 
-        const que = await Que.find({ 'licenseId': req.query.licenseId })
+        const que = await Que.find()
             .populate({
               path: 'myUserId',
               model: MyUser,
@@ -124,7 +123,7 @@ exports.delete = async(req, res, next) => {
 
 exports.deleteAll = async(req, res, next) => {
     try {
-        await Que.deleteMany({ licenseId: req.params.licenseId }).exec();
+        await Que.deleteMany().exec();
         res.status(200).json({
             message: 'Deletion successfull!'
         });
@@ -164,7 +163,7 @@ exports.deleteCanceled = async(req, res, next) => {
 exports.getNext = async(req, res, next) => {
 
     try {
-        let nextQue = await Que.findOne({ 'licenseId': req.params.licenseId }).populate('personId').sort({ created: -1 }).exec();
+        let nextQue = await Que.findOne().populate('personId').sort({ created: -1 }).exec();
         if (!nextQue) {
             throw new Error('Something went wrong.!');
         }

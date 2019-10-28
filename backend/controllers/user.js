@@ -69,16 +69,16 @@ exports.createUser = async(req, res, next) => {
         /**
          * Set new license in license collection
          */
-        let plan = await Plan.findOne({ slug: 'starter' }).exec();
-        const newLicense = new License({
-            userId: user._id,
-            planId: plan._id,
-            licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
-        });
-        let license = await newLicense.save();
-        if (!license) {
-            throw new Error('Something went wrong.Cannot save license collection!');
-        }
+        // let plan = await Plan.findOne({ slug: 'starter' }).exec();
+        // const newLicense = new License({
+        //     userId: user._id,
+        //     planId: plan._id,
+        //     licenseKey: (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
+        // });
+        // let license = await newLicense.save();
+        // if (!license) {
+        //     throw new Error('Something went wrong.Cannot save license collection!');
+        // }
 
         /**
          * Set physicians doc in type collection
@@ -90,8 +90,7 @@ exports.createUser = async(req, res, next) => {
                 remove: null, // regex to remove characters
                 lower: true, // result in lower case
             }),
-            description: 'a person qualified to practice medicine',
-            licenseId: license._id,
+            description: 'a person qualified to practice medicine'
         });
         let type = await newType.save();
         if (!type) {
@@ -103,8 +102,7 @@ exports.createUser = async(req, res, next) => {
          */
         const myUser = new MyUser({
             userType: type._id,
-            userId: user._id,
-            licenseId: license._id
+            userId: user._id
         });
         let myuser = await myUser.save();
         if (!myuser) {
@@ -121,8 +119,7 @@ exports.createUser = async(req, res, next) => {
                 remove: null, // regex to remove characters
                 lower: true, // result in lower case
             }),
-            description: 'a person receiving or registered to receive medical treatment.',
-            licenseId: license._id,
+            description: 'a person receiving or registered to receive medical treatment.'
         });
         await otherType.save();
 
@@ -130,7 +127,6 @@ exports.createUser = async(req, res, next) => {
          * Set new setting doc in Setting Collection
          */
         const newSetting = new Setting({
-            licenseId: license._id,
             clinicName: req.body.clinicname,
             clinicOwner: person.firstname + ', ' + person.lastname
         });
@@ -168,8 +164,7 @@ exports.userLogin = async(req, res, next) => {
 
         let token = await jwt.sign({
                 email: auth.email,
-                myUserId: myUser._id,
-                licenseId: myUser.licenseId
+                myUserId: myUser._id
             },
             process.env.JWT_KEY, {}
         );
@@ -178,8 +173,7 @@ exports.userLogin = async(req, res, next) => {
             token: token,
             myUserId: myUser._id,
             userEmail: auth.email,
-            userType: myUser.userType,
-            licenseId: myUser.licenseId
+            userType: myUser.userType
         });
     } catch (error) {
         res.status(500).json({
@@ -251,8 +245,7 @@ exports.create = async(req, res, next) => {
          */
         const myUser = new MyUser({
             userType: userType._id,
-            userId: user._id,
-            licenseId: req.body.licenseId
+            userId: user._id
         });
         let myuser = await myUser.save();
         if (!myuser) {
@@ -326,8 +319,7 @@ exports.update = async(req, res, next) => {
         const updateMyUser = new MyUser({
           _id: filteredUser._id,
           userType: req.body.userType,
-          userId: req.params.userId,
-          licenseId: req.body.licenseId
+          userId: req.params.userId
         });
         let myuser = await MyUser.findOneAndUpdate({ _id: filteredUser._id }, updateMyUser, {new: true});
         if (!myuser) {
@@ -345,7 +337,7 @@ exports.update = async(req, res, next) => {
 };
 exports.search = async(req, res, next) => {
   try {
-      const patientQuery = User.find({ 'licenseId': req.query.licenseId });
+      const patientQuery = User.find();
       let patient = await patientQuery.populate('personId').where('userType', 'patient');
       const result = [];
       patient.forEach(element => {
@@ -353,7 +345,7 @@ exports.search = async(req, res, next) => {
           result.push({ id: element._id, name: fullname });
       });
 
-      let count = await User.countDocuments({ 'licenseId': req.query.licenseId });
+      let count = await User.countDocuments();
 
       res.status(200).json({
           total: count,
@@ -370,7 +362,7 @@ exports.search = async(req, res, next) => {
     try {
 
       let userType = await Type.findOne({ slug: 'patients' }).exec();
-      let myUsers = await MyUser.find({ 'licenseId': req.query.licenseId })
+      let myUsers = await MyUser.find()
       .populate({
         path: 'userId',
         populate: {
@@ -384,7 +376,7 @@ exports.search = async(req, res, next) => {
           result.push({ id: element._id, name: element.userId.personId.firstname + ', ' + element.userId.personId.lastname });
       });
 
-      let count = await MyUser.countDocuments({ 'licenseId': req.query.licenseId, 'userType': userType._id });
+      let count = await MyUser.countDocuments({ 'userType': userType._id });
 
       res.status(200).json({
           total: count,
@@ -401,7 +393,7 @@ exports.getAll = async(req, res, next) => {
     try {
         const pageSize = +req.query.pagesize;
         const currentPage = +req.query.page;
-        const query = MyUser.find({ 'licenseId': req.query.licenseId });
+        const query = MyUser.find();
 
         let userCount = 0;
         if (req.query.usertype != 'all') {
@@ -597,7 +589,6 @@ exports.getNewUser = async(req, res, next) => {
         const today = moment().startOf('day');
         let userType = await Type.findOne({ slug: 'patients' }).exec();
         let newPatientCount = await MyUser.countDocuments({
-                'licenseId': req.params.licenseId,
                 'userType': userType._id
             })
             .populate({
@@ -655,7 +646,6 @@ exports.getTodaysBirthday = async(req, res, next) => {
                     as: 'auths' // alias for userinfo table
                 }
             },
-            { $match: { licenseId: new ObjectId(req.params.licenseId) } },
             {
                 $redact: {
                     $cond: [{

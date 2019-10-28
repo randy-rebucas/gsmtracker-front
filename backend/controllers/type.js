@@ -11,8 +11,7 @@ exports.create = async(req, res, next) => {
               lower: true, // result in lower case
             }),
             description: req.body.description,
-            generated: 'Custom',
-            licenseId: req.body.licenseId
+            generated: 'Custom'
         });
         let type = await typeData.save();
         res.status(200).json({
@@ -58,7 +57,7 @@ exports.update = async(req, res, next) => {
 
 exports.getAll = async(req, res, next) => {
     try {
-        let type = await Type.find({ 'licenseId': req.query.licenseId })
+        let type = await Type.find()
             .sort({ '_id': 'asc' })
             .exec();
 

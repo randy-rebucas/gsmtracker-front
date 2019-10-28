@@ -18,8 +18,8 @@ export class UsersService {
     private http: HttpClient
     ) {}
 
-  search(filter: {name: string} = {name: ''}, page: number, licenseId: string): Observable<IUserResponse> {
-    const queryParams = `?licenseId=${licenseId}&page=${page}`;
+  search(filter: {name: string} = {name: ''}, page: number): Observable<IUserResponse> {
+    const queryParams = `?page=${page}`;
     return this.http.get<IUserResponse>(BACKEND_URL + '/search' + queryParams)
     .pipe(
       tap((response: IUserResponse) => {
@@ -32,8 +32,8 @@ export class UsersService {
     );
   }
 
-  getAll(userType: string, licenseId: string, perPage: number, currentPage: number) {
-    const queryParams = `?usertype=${userType}&licenseId=${licenseId}&pagesize=${perPage}&page=${currentPage}`;
+  getAll(userType: string, perPage: number, currentPage: number) {
+    const queryParams = `?usertype=${userType}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, users: any, counts: number }>(
       BACKEND_URL + queryParams
     )
@@ -87,8 +87,7 @@ export class UsersService {
     Addresses: [],
     Meta: [],
     Email: string,
-    Pass: string,
-    LicenseId: string
+    Pass: string
   ) {
     const userData = {
       userType: UserType,
@@ -101,8 +100,7 @@ export class UsersService {
       address: Addresses,
       meta: Meta,
       email: Email,
-      password: Pass,
-      licenseId: LicenseId
+      password: Pass
     };
     return this.http.post<{ message: string, user: UserData }>(BACKEND_URL, userData);
   }
@@ -151,14 +149,14 @@ export class UsersService {
     });
   }
 
-  getBirthdays(licenseId: string) {
-    return this.http.get<{users: any}>(BACKEND_URL + '/birthdays/' + licenseId);
+  getBirthdays() {
+    return this.http.get<{users: any}>(BACKEND_URL + '/birthdays/');
   }
 
-  getAllNew(licenseId: string) {
+  getAllNew() {
     // tslint:disable-next-line: max-line-length
     return this.http.get<{ count: number }>(
-        BACKEND_URL + '/new/' + licenseId
+        BACKEND_URL + '/new'
       );
   }
 }

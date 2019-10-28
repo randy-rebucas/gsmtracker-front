@@ -109,19 +109,19 @@ implements OnInit, OnDestroy {
     this.titleService.setTitle('Home');
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
 
-    this.usersService.getAllNew(this.licenseId).subscribe((res) => {
+    this.usersService.getAllNew().subscribe((res) => {
       this.newPatient = (res.count) ? res.count : 0;
     });
 
-    this.appointmentService.getAllNew(this.licenseId).subscribe((res) => {
+    this.appointmentService.getAllNew().subscribe((res) => {
       this.newAppointment = (res.count) ? res.count : 0;
     });
 
-    this.messagesService.getAllUnread(this.licenseId).subscribe((res) => {
+    this.messagesService.getAllUnread().subscribe((res) => {
       this.newMessage = (res.count) ? res.count : 0;
     });
 
-    this.encountersService.getAll(this.licenseId);
+    this.encountersService.getAll();
     this.encountersChartSub = this.encountersService
     .getUpdateListener()
     .subscribe((chartData: {encounters: EncountersData[]}) => {
@@ -148,12 +148,12 @@ implements OnInit, OnDestroy {
   }
 
   onClear() {
-    this.queService.clear(this.licenseId);
+    this.queService.clear();
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        this.queService.clear(this.licenseId).subscribe(() => {
-          this.queService.getAll(this.licenseId);
+        this.queService.clear().subscribe(() => {
+          this.queService.getAll();
           this.notificationService.warn('! Deleted successfully');
         });
       }

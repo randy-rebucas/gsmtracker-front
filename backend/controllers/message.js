@@ -109,7 +109,7 @@ exports.getAllUnread = async(req, res, next) => {
                 }
             },
             { $unwind: '$messages' },
-            { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
+            // { $match: { licenseId: new ObjectId(req.params.licenseId) } }, // .toString()
             { $match: { 'messages.status': 0 } },
             {
               $count: "unread"

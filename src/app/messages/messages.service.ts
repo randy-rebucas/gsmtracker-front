@@ -81,10 +81,10 @@ export class MessagesService {
     return this.http.delete(BACKEND_URL + '/' + recordId);
   }
 
-  getAllUnread(licenseId: string) {
+  getAllUnread() {
     // tslint:disable-next-line: max-line-length
     return this.http.get<{ count: number }>(
-        BACKEND_URL + '/unread/' + licenseId
+        BACKEND_URL + '/unread/'
       );
   }
 }

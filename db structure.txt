@@ -27,3 +27,4 @@ plans
   name
   max_checks
   features
+---------------

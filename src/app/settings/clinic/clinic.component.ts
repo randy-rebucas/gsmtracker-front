@@ -148,7 +148,7 @@ implements OnInit, OnDestroy {
   }
 
   populateForm() {
-    this.settingsGeneralService.get(this.licenseId).subscribe(settingData => {
+    this.settingsGeneralService.get().subscribe(settingData => {
       this.isLoading = false;
       this.imagePreview = settingData.logoPath;
       this.form.patchValue({
@@ -245,7 +245,6 @@ implements OnInit, OnDestroy {
   onSaveGenSetting() {
     this.settingsGeneralService.update(
       this.settingId,
-      this.licenseId,
       this.form.value.clinicName,
       this.form.value.clinicOwner,
       this.form.value.addresses,

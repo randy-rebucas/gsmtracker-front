@@ -7,9 +7,9 @@ const checkAuth = require('../middleware/check-auth');
 const router = express.Router();
 const extractFile = require('../middleware/file');
 
-router.get('/:licenseId', SettingController.get);
+router.get('/', SettingController.get);
 
-router.put('/:licenseId', checkAuth, SettingController.update);
+router.put('/', checkAuth, SettingController.update);
 
 router.post('', checkAuth, SettingController.create);
 
