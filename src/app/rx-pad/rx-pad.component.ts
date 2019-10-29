@@ -124,7 +124,7 @@ implements OnInit, OnDestroy {
   async getPatientData(patientId) {
     const userResponse = await this.usersService.get(patientId).toPromise();
     const prescriptionResponse = await this.prescriptionService.get(this.recordId).toPromise();
-    const settingResponse = await this.settingsGeneralService.get(this.licenseId).toPromise();
+    const settingResponse = await this.settingsGeneralService.get().toPromise();
     return {
       userData: userResponse,
       prescriptionData: prescriptionResponse,
@@ -376,7 +376,7 @@ implements OnInit, OnDestroy {
       pdfDoc.autoPrint();
       pdfDoc.output('dataurlnewwindow');
 
-      this.encountersService.update(2, this.patientId, this.licenseId).subscribe(() => {
+      this.encountersService.update(2, this.patientId).subscribe(() => {
         this.queService.findDelete(this.patientId).subscribe((res) => {
           // redirect to encounter
           console.log(res);

@@ -53,9 +53,9 @@ export class EncountersService {
       );
   }
 
-  insert(myUserId: string, licenseId: string) {
+  insert(myUserId: string) {
     const recordData = {
-      myUserId, licenseId
+      myUserId
     };
     return this.http.post<{ message: string, record: EncountersData }>(BACKEND_URL, recordData);
   }

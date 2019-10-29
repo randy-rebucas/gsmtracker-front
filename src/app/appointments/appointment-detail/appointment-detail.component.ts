@@ -139,7 +139,7 @@ implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.onClose();
       this.notificationService.success(':: Updated successfully');
-      this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
+      this.appointmentService.getAll(this.perPage, this.currentPage);
     });
   }
 

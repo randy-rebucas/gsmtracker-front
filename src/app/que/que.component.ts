@@ -101,7 +101,7 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
 
-    this.queService.getAll(this.licenseId);
+    this.queService.getAll();
     this.queSub = this.queService
     .getUpdateListener()
     .subscribe((queData: {ques: QueData[]}) => {
@@ -115,7 +115,7 @@ implements OnInit, OnDestroy {
     .afterClosed().subscribe(res => {
       if (res) {
         this.queService.delete(quedId).subscribe(() => {
-          this.queService.getAll(this.licenseId);
+          this.queService.getAll();
           this.notificationService.warn('! Deleted successfully');
         });
       }

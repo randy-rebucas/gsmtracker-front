@@ -89,7 +89,16 @@ Selling physical products
 Affiliate Links
 Selling information products
 
+Subscription Payments
+Email Notifications
+Security/Permission
+Landing Page
+Users & Authentication // done
+Master Dashboard & Metrics // done
+REST API // done
 
+Departments
+Roles
 ///////
 AIzaSyAG6XBWVT7fFU1newS7FUz9S8LsSb1h9bs
 <script>

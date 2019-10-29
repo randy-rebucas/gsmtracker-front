@@ -274,7 +274,7 @@ implements OnInit, OnDestroy {
     }
 
     onCancelVisit(myUserId) {
-      this.encountersService.update(1, myUserId, this.licenseId).subscribe(() => {
+      this.encountersService.update(1, myUserId).subscribe(() => {
 
         this.queService.findCancel(myUserId).subscribe((que) => {
           if (que) {
@@ -287,9 +287,9 @@ implements OnInit, OnDestroy {
     }
 
     moveToQue(myUserId) {
-      this.encountersService.insert(myUserId, this.licenseId).subscribe(() => {
+      this.encountersService.insert(myUserId).subscribe(() => {
 
-        this.queService.insert(myUserId, this.licenseId).subscribe((que) => {
+        this.queService.insert(myUserId).subscribe((que) => {
           if (que) {
             this.notificationService.success(':: on que done. #' + que.que.queNumber);
             this.isOnQue = true;

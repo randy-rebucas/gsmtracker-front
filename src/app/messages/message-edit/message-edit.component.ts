@@ -69,7 +69,7 @@ implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.usersService.search({name: value}, this.currentPage, this.licenseId)
+        switchMap(value => this.usersService.search({name: value}, this.currentPage)
         .pipe(
           finalize(() => this.isLoading = false),
           )
@@ -106,8 +106,7 @@ implements OnInit, OnDestroy {
       this.threadService.insert(
         this.form.value.message,
         this.form.value.userInput,
-        this.userId,
-        this.licenseId
+        this.userId
       ).subscribe(() => {
         this.threadService.getAll(this.userId);
         this.form.reset();

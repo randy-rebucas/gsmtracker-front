@@ -175,12 +175,11 @@ implements OnInit, OnDestroy {
         this.form.value.addresses,
         this.form.value.metas,
         this.form.value.email,
-        this.form.value.password,
-        this.licenseId
+        this.form.value.password
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Added successfully');
-        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(this.userType, this.perPage, this.currentPage);
       });
     } else {
       this.usersService.update(
@@ -197,7 +196,7 @@ implements OnInit, OnDestroy {
       ).subscribe(() => {
         this.onClose();
         this.notificationService.success(':: Updated successfully');
-        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(this.userType, this.perPage, this.currentPage);
       });
     }
   }

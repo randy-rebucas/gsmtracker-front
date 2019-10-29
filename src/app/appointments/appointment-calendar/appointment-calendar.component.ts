@@ -56,7 +56,7 @@ implements OnInit, OnDestroy {
   ngOnInit() {
     super.doInit();
 
-    this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
+    this.appointmentService.getAll(this.perPage, this.currentPage);
     this.recordsSub = this.appointmentService
       .getUpdateListener()
       .subscribe((appointmentData: {appointments: AppointmentData[], count: number}) => {

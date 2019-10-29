@@ -193,7 +193,7 @@ implements OnInit, OnDestroy {
       (param) => {
         this.userType = param.userType;
         this.titleService.setTitle('Users: ' + param.userType);
-        this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
+        this.usersService.getAll(this.userType, this.perPage, this.currentPage);
         this.usersSub = this.usersService
         .getUpdateListener()
         .subscribe((userData: {users: UserData[], counts: number}) => {
@@ -206,7 +206,7 @@ implements OnInit, OnDestroy {
       }
     );
 
-    this.usersService.getBirthdays(this.licenseId).subscribe((birthday) => {
+    this.usersService.getBirthdays().subscribe((birthday) => {
       birthday.users.forEach(user => {
         const today = new Date();
         const bDate = new Date(user.people.birthdate);
@@ -262,7 +262,7 @@ implements OnInit, OnDestroy {
         });
 
         this.usersService.delete(this.ids).subscribe((data) => {
-          this.usersService.getAll(this.userType, this.licenseId, this.perPage, this.currentPage);
+          this.usersService.getAll(this.userType, this.perPage, this.currentPage);
           this.notificationService.warn('::' + data.message);
         });
       }
@@ -348,7 +348,7 @@ implements OnInit, OnDestroy {
   }
 
   async getSettingsData() {
-    const settingResponse = await this.settingsGeneralService.get(this.licenseId).toPromise();
+    const settingResponse = await this.settingsGeneralService.get().toPromise();
     return {
       settingData: settingResponse
     };
@@ -365,7 +365,7 @@ implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.usersService.getAll(this.userType, this.userId, this.perPage, this.currentPage);
+    this.usersService.getAll(this.userType, this.perPage, this.currentPage);
   }
 
   onCreate() {

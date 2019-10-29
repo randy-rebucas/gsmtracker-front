@@ -59,7 +59,7 @@ implements OnInit, OnDestroy {
     ngOnInit() {
       super.doInit();
 
-      this.queService.getAll(this.licenseId);
+      this.queService.getAll();
       this.recordsSub = this.queService
       .getUpdateListener()
       .subscribe((queData: {ques: QueData[], count: number}) => {
@@ -77,7 +77,7 @@ implements OnInit, OnDestroy {
         if (res) {
           this.queService.delete(queId).subscribe(() => {
             this.notificationService.warn('! Deleted successfully');
-            this.queService.getAll(this.licenseId);
+            this.queService.getAll();
           });
         }
       });

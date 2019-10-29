@@ -93,7 +93,7 @@ implements OnInit, OnDestroy {
       .pipe(
         debounceTime(300),
         tap(() => this.isLoading = true),
-        switchMap(value => this.usersService.search({name: value}, this.currentPage, this.licenseId)
+        switchMap(value => this.usersService.search({name: value}, this.currentPage)
           .pipe(
             finalize(() => this.isLoading = false),
           )
@@ -118,12 +118,11 @@ implements OnInit, OnDestroy {
     this.appointmentService.insert(
       this.form.value.userInput,
       this.form.value.title,
-      this.form.value.start,
-      this.licenseId
+      this.form.value.start
     ).subscribe(() => {
       this.form.reset();
       this.notificationService.success(':: Added successfully');
-      this.appointmentService.getAll(this.licenseId, this.perPage, this.currentPage);
+      this.appointmentService.getAll(this.perPage, this.currentPage);
     });
   }
 
