@@ -1,0 +1,16 @@
+service
+	patients
+	records
+	practetioners
+
+entities
+	use cases
+		controllers
+		presenters
+		gateways
+			web
+			ui
+			devices
+			db
+			interfaces
+	
