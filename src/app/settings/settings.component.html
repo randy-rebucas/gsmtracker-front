@@ -1,9 +1,0 @@
-<nav mat-tab-nav-bar>
-  <a mat-tab-link routerLink="/settings/clinic" routerLinkActive #rlaClinic="routerLinkActive" [active]="rlaClinic.isActive">Clinic</a>
-  <a mat-tab-link routerLink="/settings/account" routerLinkActive #rlaProfile="routerLinkActive" [active]="rlaProfile.isActive">General</a>
-  <a mat-tab-link routerLink="/settings/payment" routerLinkActive #rlaPayment="routerLinkActive" [active]="rlaPayment.isActive">Payment</a>
-  <a mat-tab-link routerLink="/settings/plan" routerLinkActive #rlaPlan="routerLinkActive" [active]="rlaPlan.isActive">Plan</a>
-  <a mat-tab-link routerLink="/settings/notifications" routerLinkActive #rlaNotification="routerLinkActive" [active]="rlaNotification.isActive">Notification</a>
-</nav>
-<br/>
-<router-outlet></router-outlet>

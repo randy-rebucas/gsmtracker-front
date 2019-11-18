@@ -1,5 +1,0 @@
-<nav mat-tab-nav-bar>
-    <a mat-tab-link routerLink="./all" routerLinkActive #rlaAll="routerLinkActive" [active]="rlaAll.isActive">All</a>
-    <a mat-tab-link *ngFor="let type of types" [routerLink]="['./', type.slug]" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">{{type.name}}</a>
-</nav>
-<router-outlet></router-outlet>
