@@ -90,11 +90,7 @@ export class AuthenticationService {
 
         this.saveAuthData(token, this.userId, this.userEmail);
         this.userService.get(response.userId).subscribe(userData => {
-          if (userData.activated) {
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.router.navigate(['/not-activated']);
-          }
+          this.router.navigate(['/dashboard']);
         });
       }
     }, error => {

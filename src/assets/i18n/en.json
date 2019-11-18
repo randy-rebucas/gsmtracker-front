@@ -34,6 +34,18 @@
   "dashboard": {
     "title": "Dashboard"
   },
+  "patients": {
+    "title": "Patients"
+  },
+  "appointments": {
+    "title": "Appointments"
+  },
+  "messages": {
+    "title": "Messages"
+  },
+  "settings": {
+    "title": "Settings"
+  },
   "common": {
     "error": "Error",
     "okey": "Okey",

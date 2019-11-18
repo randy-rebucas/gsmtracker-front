@@ -47,10 +47,7 @@ export class DashboardComponent implements OnInit {
       this.isActivated = response.activated;
     });
 
-    if (this.isActivated) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.router.navigate(['/not-activated']);
-    }
+    this.router.navigate(['/dashboard']);
+
   }
 }

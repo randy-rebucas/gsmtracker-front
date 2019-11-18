@@ -29,6 +29,10 @@ export class LoginComponent implements OnInit {
    }
 
   ngOnInit() {
+    if (this.authenticationService.getIsAuth()) {
+      this.router.navigate(['/dashboard']);
+    }
+
     this.titleService.setTitle('Authentication - Login');
 
     this.form = new FormGroup({
