@@ -3,6 +3,8 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +17,6 @@ import { PromptDialogComponent } from './modules/prompt-dialog/prompt-dialog.com
 import { AuthenticationInterceptor } from './modules/authentication/authentication-interceptor';
 import { ErrorInterceptor } from './error-interceptor';
 import { CookieService } from 'ngx-cookie-service';
-import { FormsModule } from '@angular/forms';
 
 import {
   MatSnackBarModule,
@@ -27,8 +28,6 @@ import {
   MatListModule,
   MatDialogModule
 } from '@angular/material';
-import { CommonModule } from '@angular/common';
-import { NotActivatedComponent } from './modules/not-activated/not-activated.component';
 import { AppConfigurationService } from './configs/app-configuration.service';
 
 // import ngx-translate and the http loader
@@ -37,6 +36,14 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 // import ngx-translate-messageformat-compiler
 import {TranslateMessageFormatCompiler} from 'ngx-translate-messageformat-compiler';
 import { MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
+import { AppointmentsComponent } from './modules/appointments/appointments.component';
+import { MessagesComponent } from './modules/messages/messages.component';
+import { PatientsComponent } from './modules/patients/patients.component';
+import { QueingComponent } from './shared/components/queing/queing.component';
+import { RxPadComponent } from './shared/components/rx-pad/rx-pad.component';
+import { EncounterComponent } from './shared/components/encounter/encounter.component';
+import { StatComponent } from './shared/components/stat/stat.component';
+import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +52,14 @@ import { MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
     FooterComponent,
     ErrorComponent,
     PromptDialogComponent,
-    NotActivatedComponent
+    AppointmentsComponent,
+    MessagesComponent,
+    PatientsComponent,
+    QueingComponent,
+    RxPadComponent,
+    EncounterComponent,
+    StatComponent,
+    QrCodeComponent
   ],
   imports: [
     BrowserModule,
