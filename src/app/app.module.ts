@@ -36,15 +36,11 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 // import ngx-translate-messageformat-compiler
 import {TranslateMessageFormatCompiler} from 'ngx-translate-messageformat-compiler';
 import { MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
-import { AppointmentsComponent } from './modules/appointments/appointments.component';
-import { MessagesComponent } from './modules/messages/messages.component';
-import { PatientsComponent } from './modules/patients/patients.component';
 import { QueingComponent } from './shared/components/queing/queing.component';
 import { RxPadComponent } from './shared/components/rx-pad/rx-pad.component';
 import { EncounterComponent } from './shared/components/encounter/encounter.component';
 import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
-import { SettingsComponent } from './modules/settings/settings.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,15 +49,11 @@ import { SettingsComponent } from './modules/settings/settings.component';
     FooterComponent,
     ErrorComponent,
     PromptDialogComponent,
-    AppointmentsComponent,
-    MessagesComponent,
-    PatientsComponent,
     QueingComponent,
     RxPadComponent,
     EncounterComponent,
     StatComponent,
-    QrCodeComponent,
-    SettingsComponent
+    QrCodeComponent
   ],
   imports: [
     BrowserModule,

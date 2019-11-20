@@ -6,8 +6,8 @@ const routes: Routes = [
   {path: '', loadChildren: './modules/home/home.module#HomeModule'},
   {path: 'about', loadChildren: './modules/about/about.module#AboutModule'},
   {path: 'contact', loadChildren: './modules/contact/contact.module#ContactModule'},
-  {path: 'auth', loadChildren: './modules/authentication/authentication.module#AuthenticationModule', canActivate: [AuthenticationGuard]},
-  {path: 'dashboard', loadChildren: './modules/dashboard/dashboard.module#DashboardModule', canActivate: [AuthenticationGuard]},
+  {path: 'auth', loadChildren: './modules/authentication/authentication.module#AuthenticationModule'},
+  {path: 'dashboard', loadChildren: './modules/dashboard/dashboard.module#DashboardModule'},
 ];
 
 @NgModule({

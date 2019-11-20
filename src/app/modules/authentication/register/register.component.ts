@@ -25,9 +25,6 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Auth - Register');
-    if (this.authenticationService.getIsAuth()) {
-      this.router.navigate(['/dashboard']);
-    }
 
     this.isLoading = false;
   }
