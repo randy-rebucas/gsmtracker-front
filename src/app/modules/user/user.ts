@@ -8,12 +8,7 @@ export interface User {
   birthdate: string;
   status: string;
   contact: string;
-  classification: string;
-  sss: string;
-  tin: string;
-  philhealth: string;
   avatar: string;
-  activated: boolean;
   createdAt: Date;
   address: Address[];
 }

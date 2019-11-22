@@ -1,0 +1,38 @@
+<div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 350px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
+  <div class="area header" gdArea="header">
+      <div class="search-div">
+          <mat-form-field>
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+          </mat-form-field>
+          <div (click)="onScan()">
+              <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
+          </div>
+      </div>
+      <div class="action-button">
+          <button mat-flat-button color="accent" (click)="onPrint()" *ngIf="isAllSelected()">
+            <mat-icon>print</mat-icon> Print
+       </button>
+          <button mat-flat-button color="warn" (click)="onDeleteAll()" *ngIf="isAllSelected()">
+            <mat-icon>delete_sweep</mat-icon> Delete
+       </button>
+          <button mat-flat-button color="primary" (click)="onCreate()">
+            <mat-icon>add</mat-icon> Add New
+        </button>
+
+      </div>
+      <div class="support-div">
+          <p>For contact support<br/> 09179157515
+          </p>
+      </div>
+  </div>
+
+  <div class="area content" gdArea="content">
+      <!-- table -->
+  </div>
+  <div class="area side" gdArea="side">
+     <!--birthdays-->
+  </div>
+  <div class="area footer" gdArea="footer">
+
+  </div>
+</div>

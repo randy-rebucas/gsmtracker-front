@@ -26,7 +26,9 @@ import {
   MatSidenavModule,
   MatIconModule,
   MatListModule,
-  MatDialogModule
+  MatDialogModule,
+  MatCardModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 import { AppConfigurationService } from './configs/app-configuration.service';
 
@@ -41,6 +43,7 @@ import { RxPadComponent } from './shared/components/rx-pad/rx-pad.component';
 import { EncounterComponent } from './shared/components/encounter/encounter.component';
 import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
+import { BirthdaysComponent } from './shared/components/birthdays/birthdays.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +56,8 @@ import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
     RxPadComponent,
     EncounterComponent,
     StatComponent,
-    QrCodeComponent
+    QrCodeComponent,
+    BirthdaysComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +75,8 @@ import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
     MatListModule,
     MatSnackBarModule,
     MatDialogModule,
-
+    MatCardModule,
+    MatProgressSpinnerModule,
     // ngx-translate and the loader module
     HttpClientModule,
     TranslateModule.forRoot({

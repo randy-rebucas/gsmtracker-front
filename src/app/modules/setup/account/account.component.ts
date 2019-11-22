@@ -76,9 +76,6 @@ export class AccountComponent implements OnInit {
         birthdate: userData.birthdate,
         status: userData.status,
         contact: userData.contact,
-        sss: userData.sss,
-        tin: userData.tin,
-        philhealth: userData.philhealth
       });
       const addressControl = this.form.controls.addresses as FormArray;
       const address = userData.address;

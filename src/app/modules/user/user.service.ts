@@ -20,7 +20,7 @@ export class UserService {
     private http: HttpClient
   ) {}
 
-  getAll(userType: string, perPage: number, currentPage: number) {
+  getAll(perPage: number, currentPage: number) {
     const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, users: any, counts: number }>(
       BACKEND_URL + queryParams
@@ -28,18 +28,21 @@ export class UserService {
     .pipe(
       map(userData => {
         return { users: userData.users.map(user => {
+          console.log(user);
           return {
             id: user._id,
-            firstname: user.userId.personId.firstname,
-            midlename: user.userId.personId.midlename,
-            lastname: user.userId.personId.lastname,
-            contact: user.userId.personId.contact,
-            gender: user.userId.personId.gender,
-            birthdate: user.userId.personId.birthdate,
-            address: user.userId.personId.address,
-            created: user.userId.personId.created,
-            meta: user.userId.metaData,
-            avatar: user.userId.avatarPath
+            firstname: user.firstname,
+            midlename: user.midlename,
+            lastname: user.lastname,
+            contact: user.contact,
+            gender: user.gender,
+            birthdate: user.birthdate,
+            address: user.address,
+            created: user.createdAt,
+            updated: user.updatedAt,
+            avatar: user.avatar,
+            privateKey: user.prikey,
+            publicKey: user.pubkey
           };
         }), max: userData.counts};
       })

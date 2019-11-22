@@ -43,9 +43,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     const userId = this.authenticationService.getUserId();
-    this.userService.get(userId).subscribe((response) => {
-      this.isActivated = response.activated;
-    });
 
     this.router.navigate(['/dashboard']);
 
