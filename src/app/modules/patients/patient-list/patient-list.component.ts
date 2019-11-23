@@ -13,25 +13,34 @@ import { SettingsService } from '../../settings/settings.service';
 
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { trigger, style, state, transition, animate } from '@angular/animations';
+import { AuthenticationService } from '../../authentication/authentication.service';
 
 @Component({
   selector: 'app-patient-list',
   templateUrl: './patient-list.component.html',
-  styleUrls: ['./patient-list.component.scss']
+  styleUrls: ['./patient-list.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class PatientListComponent implements OnInit, OnDestroy {
   public total: number;
   public perPage: number;
   public currentPage: number;
   public pageSizeOptions: any;
-
   public isLoading: boolean;
+
   private usersSub: Subscription;
   private users: any[] = [];
   private ids: any = [];
   private contacts: any[] = [];
   private hours: any[] = [];
-  public addresses: any[];
+  private addresses: any[];
 
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = ['select', 'image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
@@ -40,6 +49,8 @@ export class PatientListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  private userId: string;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -47,6 +58,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private userService: UserService,
+    private authenticationService: AuthenticationService,
     private settingsService: SettingsService
   ) {
     this.total = 0;
@@ -56,6 +68,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.userId = this.authenticationService.getUserId();
     this.titleService.setTitle('Users');
     this.userService.getAll(this.perPage, this.currentPage);
     this.usersSub = this.userService
@@ -120,11 +133,11 @@ export class PatientListComponent implements OnInit, OnDestroy {
         // clinic owner
         pdfDoc.setFontSize(16);
         pdfDoc.setFont('normal');
-        pdfDoc.addImage(results.settingData.logoPath, 'PNG', 10, 10, 18, 18);
+        pdfDoc.addImage(results.settingData.imagePath, 'PNG', 10, 10, 18, 18);
         pdfDoc.text(results.settingData.clinicName, 35, 10, null, null, 'left');
         pdfDoc.setFontSize(10);
         pdfDoc.setFont('courier');
-        this.addresses = results.settingData.address;
+        this.addresses = results.settingData.addresses;
         this.addresses.forEach(element => {
           pdfDoc.text(element.address1, 35, 14, null, null, 'left');
           let gap = 0;
@@ -139,14 +152,14 @@ export class PatientListComponent implements OnInit, OnDestroy {
         });
 
         pdfDoc.text('Clinic hour', 125, 14, null, null, 'left');
-        this.hours = results.settingData.clinicHours;
+        this.hours = results.settingData.hours;
         for (let index = 0; index < this.hours.length; index++) {
           const element = this.hours[index];
           pdfDoc.text(element.morningOpen + ' - ' + element.afternoonClose, 155, 14 + ( index * 4 ), null, null, 'left');
         }
 
         pdfDoc.text('Tel no: ', 125, 18, null, null, 'left');
-        this.contacts = results.settingData.clinicPhone;
+        this.contacts = results.settingData.phones;
         for (let index = 0; index < this.contacts.length; index++) {
           const element = this.contacts[index];
           pdfDoc.text(element.contact, 155, 18 + ( index * 4 ), null, null, 'left');
@@ -188,7 +201,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   }
 
   async getSettingsData() {
-    const settingResponse = await this.settingsService.get().toPromise();
+    const settingResponse = await this.settingsService.getOwnSetting(this.userId).toPromise();
     return {
       settingData: settingResponse
     };

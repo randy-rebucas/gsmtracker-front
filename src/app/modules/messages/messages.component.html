@@ -1,1 +1,26 @@
-<p>messages works!</p>
+<div class="primary-header">
+  <h1>Messages</h1>
+</div>
+<div class="wrapper">
+  <div gdAreas="header header header | side1 content side2 | footer footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="350px auto 350px" gdAreas.lt-md="header | side1 | content | side2 | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
+    <div class="area header" gdArea="header">
+      <!--premium ads-->
+      <app-ads></app-ads>
+    </div>
+    <div class="area content" gdArea="content">
+      <app-message-detail></app-message-detail>
+
+      <app-message-form></app-message-form>
+    </div>
+    <div class="area side" gdArea="side1">
+      <app-message-list></app-message-list>
+    </div>
+    <div class="area side" gdArea="side2">
+      <app-ads></app-ads>
+    </div>
+    <div class="area footer" gdArea="footer">
+      <!-- footer -->
+    </div>
+  </div>
+</div>
+

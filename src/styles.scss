@@ -23,7 +23,7 @@ mat-sidenav-content.mat-drawer-content::-webkit-scrollbar {
   height: 4px;
 }
 app-footer {
-    position: fixed;
+    // position: fixed;
     bottom: 0;
     width: 100%;
 }
@@ -48,10 +48,8 @@ app-footer {
 }
 
 .content {
-  align-items: center;
   display: flex;
   flex-direction: column;
-  padding: 16px;
 }
 
 .content>div {

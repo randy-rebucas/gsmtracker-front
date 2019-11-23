@@ -1,0 +1,145 @@
+.wrapper {
+  flex-grow: 1;
+    margin: 1em 2em;
+}
+.arrayGroup {
+  position: relative;
+}
+
+.arrayGroup .action {
+  position: absolute;
+  top: 0;
+  right: 0;
+  visibility: hidden;
+}
+
+.arrayGroup:hover .action {
+  visibility: visible;
+}
+mat-form-field {
+  width: 100%;
+}
+
+mat-form-field:not(:first-child) {
+    margin-left: 1em;
+}
+mat-form-field.time {
+  width: 48%;
+  flex-direction: row;
+}
+.form-field-block {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    flex-basis: auto;
+}
+.mat-form-field-flex .mat-form-field-infix ngx-material-timepicker-toggle button {
+  position: absolute !important;
+  right: 0;
+  top: 0;
+}
+.action-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+mat-form-field.contact {
+  width: 48%;
+}
+
+.image-preview {
+  position: relative;
+  border: 2px solid transparent;
+}
+.image-preview:hover {
+  border: 2px solid #dcdcdc;
+}
+.image-preview button {
+  position: absolute;
+  right: 0;
+  visibility: hidden;
+}
+.image-preview:hover button {
+  visibility: visible;
+}
+.image-preview img {
+  width: 100%;
+}
+
+.rxpad-output {
+  border: 1px solid #dcdcdc;
+  min-height: 745px;
+  -webkit-box-shadow: -10px 10px 54px 0px rgba(224,224,224,0.95);
+  -moz-box-shadow: -10px 10px 54px 0px rgba(224,224,224,0.95);
+  box-shadow: -10px 10px 54px 0px rgba(224,224,224,0.95);
+  position: relative;
+}
+
+.rxpad-output table {
+  width: 100%;
+  padding: 1em;
+}
+
+.rxpad-output .rxhead {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.rxpad-output .rxhead h3 {
+  text-align: center;
+  font-weight: 400;
+  font-family: initial;
+  font-style: italic;
+  font-size: 28px;
+}
+
+.rxpad-output .rxhead h3 small{
+  font-style: initial;
+}
+
+.rxpad-output .rxhead table tr td:first-child {
+  width: 70%;
+}
+
+.rxhead table tr td {
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.rxpad-output .rxfooter {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.rxfooter table tr td {
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.rxpad-output .rxfooter table tr td {
+  width: 50%;
+}
+
+.rxpad-output .rxfooter table tr td:last-child {
+  text-align: right;
+}
+
+.rxpad-output .rxbody {
+  position: absolute;
+  width: 100%;
+  top: 45%;
+}
+
+.rxpad-output .rxbody table tr td {
+  vertical-align: top;
+}
+
+.rxpad-output .rxbody table tr td span {
+  font-style: italic;
+}
+
+.rxpad-output .rxbody table tr td:last-child {
+  text-align: right;
+}

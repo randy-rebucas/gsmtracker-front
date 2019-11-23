@@ -1,0 +1,35 @@
+mat-icon.md-48 {
+  font-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+small.mat-line {
+  float: right;
+}
+mat-list-item {
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+mat-list-item.active {
+  border-left: 3px solid #3f51b5;
+}
+p.mat-line.bold {
+  font-weight: bold !important;
+}
+.thread-starter-user {
+  padding-left: 1em;
+  width: 100%;
+}
+.thread-starter-user h4 {
+  font-weight: 100;
+  margin: 0;
+}
+.thread-starter-user h4 small {
+  float: right;
+}
+.thread-starter-user p {
+  margin: 0;
+}
+.mat-list-base .mat-list-item.mat-3-line, .mat-list-base .mat-list-option.mat-3-line {
+  height: 60px;
+}

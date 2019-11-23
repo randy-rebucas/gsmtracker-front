@@ -3,7 +3,7 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -28,7 +28,8 @@ import {
   MatListModule,
   MatDialogModule,
   MatCardModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatProgressBarModule
 } from '@angular/material';
 import { AppConfigurationService } from './configs/app-configuration.service';
 
@@ -43,7 +44,7 @@ import { RxPadComponent } from './shared/components/rx-pad/rx-pad.component';
 import { EncounterComponent } from './shared/components/encounter/encounter.component';
 import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
-import { BirthdaysComponent } from './shared/components/birthdays/birthdays.component';
+import { UploadComponent } from './shared/components/upload/upload.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +58,6 @@ import { BirthdaysComponent } from './shared/components/birthdays/birthdays.comp
     EncounterComponent,
     StatComponent,
     QrCodeComponent,
-    BirthdaysComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +67,7 @@ import { BirthdaysComponent } from './shared/components/birthdays/birthdays.comp
     HttpClientModule,
     LayoutModule,
     FormsModule,
+    ReactiveFormsModule,
     MatToolbarModule,
     MatInputModule,
     MatButtonModule,
@@ -77,6 +78,7 @@ import { BirthdaysComponent } from './shared/components/birthdays/birthdays.comp
     MatDialogModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     // ngx-translate and the loader module
     HttpClientModule,
     TranslateModule.forRoot({

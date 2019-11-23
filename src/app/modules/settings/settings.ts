@@ -1,27 +1,26 @@
 export interface Settings {
-  id: string;
+  _id: string;
   userId: string;
-  clinicName: string;
-  clinicOwner: string;
-  clinicEmail: string;
-  clinicUrl: string;
-  prc: string;
-  ptr: string;
-  s2: string;
+  name: string;
+  owner: string;
+  email: string;
+  prc: number;
+  ptr: number;
+  s2: number;
   nobreak: boolean;
   addresses: Address[];
-  clinicPhone: Contact[];
-  clinicHours: Hour[];
+  phones: Contact[];
+  hours: Hour[];
   imagePath: string;
 }
 
 export interface Address {
-address1: string;
-address2: string;
-city: string;
-province: string;
-postalCode: number;
-country: string;
+  address1: string;
+  address2: string;
+  city: string;
+  province: string;
+  postalCode: number;
+  country: string;
 }
 
 export interface Contact {

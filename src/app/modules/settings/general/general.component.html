@@ -1,0 +1,166 @@
+<div class="primary-header">
+    <h1>General settings</h1>
+  </div>
+  <div class="wrapper">
+    <div gdAreas="header header header | side1 content side2 | footer footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="200px auto 700px" gdAreas.lt-md="header | side1 | content | side2 | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
+      <div class="area header" gdArea="header">
+        <h3 class="mat-subheading-2">Please complete all important informations.</h3>
+      </div>
+      <div class="area content" gdArea="content">
+
+        <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
+            <h4 subheading-1>Clinic Information</h4>
+            <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="name" placeholder="Clinic Name" [(ngModel)]="name">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="owner" placeholder="Clinic Owner" [(ngModel)]="owner">
+                </mat-form-field>
+            </div>
+
+            <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
+                <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address1" placeholder="Street Address" [(ngModel)]="address1">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2" [(ngModel)]="address2">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="city" placeholder="City" [(ngModel)]="city">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="province" placeholder="Province" [(ngModel)]="province">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-field-block">
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="postalCode" placeholder="Postal Code" [(ngModel)]="postalcode">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="country" placeholder="Country" [(ngModel)]="country">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+
+            <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="email" placeholder="Clinic Email" [(ngModel)]="email">
+                </mat-form-field>
+            </div>
+            <div class="form-field-block">
+                <mat-form-field>
+                    <input matInput type="text" formControlName="prc" placeholder="PRC" [(ngModel)]="prc">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="ptr" placeholder="PTR" [(ngModel)]="ptr">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="s2" placeholder="S2" [(ngModel)]="s2">
+                </mat-form-field>
+            </div>
+            <ng-container formArrayName="phones" *ngIf="contactArray.length > 0">
+                <div class="form-field-block form-field-contact" *ngFor="let contact of contactArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
+                    <mat-form-field class="contact">
+                        <input matInput type="text" formControlName="contact" placeholder="Contact {{i+1}}" [(ngModel)]="phone">
+                    </mat-form-field>
+                    <div class="action-button">
+                        <button mat-icon-button *ngIf="contactArray.controls.length < 3" (click)="addContact()" type="button"><mat-icon>add</mat-icon></button>
+                        <!-- row delete button, hidden if there is just one row -->
+                        <button mat-icon-button color="warn" *ngIf="contactArray.controls.length > 1" (click)="removeContact(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container formArrayName="hours">
+                <div class="form-field-block form-field-hour" *ngFor="let hour of hourArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
+                    <mat-form-field class="time">
+                        <input matInput type="text" formControlName="morningOpen" placeholder="opening hour" aria-label="opening hour" [(ngModel)]="morning">
+                        <!-- <ngx-material-timepicker #morningopenpicker></ngx-material-timepicker> -->
+                    </mat-form-field>
+                    <mat-form-field class="time">
+                        <input matInput type="text" formControlName="afternoonClose" placeholder="closing hour" aria-label="closing hour" [(ngModel)]="afternoon">
+                        <!-- <ngx-material-timepicker #afternoonclosepicker></ngx-material-timepicker> -->
+                    </mat-form-field>
+                    <div class="action-button">
+                        <button mat-icon-button *ngIf="hourArray.controls.length < 3" (click)="addHour()" type="button"><mat-icon>add</mat-icon></button>
+                        <button mat-icon-button color="warn" *ngIf="hourArray.controls.length > 1" (click)="removeHour(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="form-field-block">
+                <mat-checkbox formControlName="nobreak" [(ngModel)]="nobreak"> No Noon Break </mat-checkbox>
+            </div>
+            <br/>
+            <button mat-raised-button color="primary" type="submit">Update</button>
+        </form>
+
+      </div>
+      <div class="area side" gdArea="side1">
+        <app-upload [sourceId]="settingId" [imagePath]="imagePath"></app-upload>
+      </div>
+      <div class="area side" gdArea="side2">
+          <div class="rxpad-output">
+              <div class="rxhead">
+                <h3>
+                  {{owner}} <br/>
+                  <small>{{name}}</small>
+                </h3>
+                <table>
+                  <tr>
+                    <td>
+                        {{address1}}<br/>
+                        {{address2}} <br/>
+                        {{province}} {{city}} <br/>
+                        {{country}} {{postalcode}}
+                    </td>
+                    <td>
+                      Clinic Hours: <br/>
+                      {{morning}} - {{afternoon}}<br/>
+                      {{nobreak ? 'No noon break' : ''}} <br/>
+                      Contact #: {{phone}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="rxbody">
+                <table>
+                  <tr>
+                    <td>1</td>
+                    <td>Medicine <br/>
+                      <span>sig</span> <span>preparation</span>
+                    </td>
+                    <td>#1</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="rxfooter">
+                <table>
+                  <tr>
+                    <td>
+                      QR CODE
+                    </td>
+                    <td>
+                      {{owner}} <br/>
+                      License No: {{prc}} <br/>
+                      PTR No: {{ptr}} <br/>
+                      S2 No: {{s2}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+      </div>
+      <div class="area footer" gdArea="footer">
+        <!-- footer -->
+      </div>
+    </div>
+  </div>
+

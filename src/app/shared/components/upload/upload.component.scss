@@ -1,0 +1,18 @@
+.image-preview {
+  position: relative;
+  border: 2px solid transparent;
+}
+.image-preview:hover {
+  border: 2px solid #dcdcdc;
+}
+.image-preview button {
+  position: absolute;
+  right: 0;
+  visibility: hidden;
+}
+.image-preview:hover button {
+  visibility: visible;
+}
+.image-preview img {
+  width: 100%;
+}

@@ -12,8 +12,15 @@ import {
   MatIconModule,
   MatInputModule,
   MatCardModule,
-  MatButtonModule
+  MatButtonModule,
+  MatProgressSpinnerModule,
+  MatListModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatCheckboxModule
 } from '@angular/material';
+import { BirthdaysComponent } from 'src/app/shared/components/birthdays/birthdays.component';
 
 
 @NgModule({
@@ -21,15 +28,22 @@ import {
     PatientsComponent,
     PatientListComponent,
     PatientFormComponent,
-    PatientDetailComponent
+    PatientDetailComponent,
+    BirthdaysComponent
   ],
   imports: [
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
     MatIconModule,
     MatCardModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
+    MatListModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: PatientsComponent, children: [

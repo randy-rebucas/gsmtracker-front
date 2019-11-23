@@ -1,0 +1,24 @@
+<div class="message-list">
+    <div *ngIf="isLoading" class="loading">
+        <mat-spinner [diameter]="25"></mat-spinner>
+    </div>
+
+    <mat-list *ngIf="!isLoading">
+        <mat-list-item *ngFor="let message of messages" [routerLink]="['./', message.id]" routerLinkActive="active" >
+          <div *ngIf="message.avatar; then thenBlock else elseBlock"></div>
+          <ng-template #thenBlock>
+              <img [src]="message.avatar" [alt]="message.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+          </ng-template>
+          <ng-template #elseBlock>
+              <img src="assets/images/blank.png" [alt]="message.fullname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+          </ng-template>
+          <div class="thread-starter-user">
+              <h4 mat-line [title]="message.fullname">{{message.fullname | ellipsis:25}} <small mat-line> {{message.created }} </small></h4>
+              <p mat-line [ngClass]="{'bold': thread.status==0}"> {{message.message}} </p>
+          </div>
+
+        </mat-list-item>
+        <mat-list-item *ngIf="messages.length === 0">No message available.</mat-list-item>
+      </mat-list>
+
+  </div>
