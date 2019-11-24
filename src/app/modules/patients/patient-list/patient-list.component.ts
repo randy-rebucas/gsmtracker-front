@@ -15,6 +15,7 @@ import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { AuthenticationService } from '../../authentication/authentication.service';
+import { TypeService } from 'src/app/shared/services/type.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -50,6 +51,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   private userId: string;
+  private userTypeId: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -59,27 +61,34 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private userService: UserService,
     private authenticationService: AuthenticationService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private typeService: TypeService
   ) {
     this.total = 0;
     this.perPage = 10;
     this.currentPage = 1;
     this.pageSizeOptions = [5, 10, 25, 100];
+
   }
 
   ngOnInit() {
     this.userId = this.authenticationService.getUserId();
     this.titleService.setTitle('Users');
-    this.userService.getAll(this.perPage, this.currentPage);
-    this.usersSub = this.userService
-    .getUpdateListener()
-    .subscribe((userData: {users: User[], counts: number}) => {
-      this.isLoading = false;
-      this.total = userData.counts;
-      this.dataSource = new MatTableDataSource(userData.users);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+
+    this.typeService.getBySlug('patients').subscribe((type) => {
+
+      this.userService.getAll(type._id, this.perPage, this.currentPage);
+      this.usersSub = this.userService
+      .getUpdateListener()
+      .subscribe((userData: {users: User[], counts: number}) => {
+        this.isLoading = false;
+        this.total = userData.counts;
+        this.dataSource = new MatTableDataSource(userData.users);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
     });
+
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -115,7 +124,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
         });
 
         this.userService.delete(this.ids).subscribe((data) => {
-          this.userService.getAll(this.perPage, this.currentPage);
+          this.userService.getAll(this.userTypeId, this.perPage, this.currentPage);
           this.notificationService.warn('::' + data.message);
         });
       }
@@ -218,7 +227,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.userService.getAll(this.perPage, this.currentPage);
+    this.userService.getAll(this.userTypeId, this.perPage, this.currentPage);
   }
 
   onCreate() {

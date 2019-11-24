@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../../environments/environment';
 import { Settings } from './settings';
-import { Subject } from 'rxjs';
+
 const BACKEND_URL = environment.apiUrl + '/setting';
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class SettingsService {
   ) { }
 
   getOwnSetting(userId: string) {
-    return this.http.get<Settings>(
+   return this.http.get<Settings>(
       BACKEND_URL + '/' + userId
     );
   }

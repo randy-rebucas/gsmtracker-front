@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@ang
 import { mime } from 'src/app/shared/validators/mime-validator';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-general',
@@ -56,8 +57,6 @@ export class GeneralComponent implements OnInit {
     this.titleService.setTitle('Settings - General');
     this.userId = this.authenticationService.getUserId();
 
-
-
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       owner: ['', [Validators.required]],
@@ -71,12 +70,14 @@ export class GeneralComponent implements OnInit {
       hours: this.fb.array([this.addClinicHourGroup()])
     });
 
-    this.settingsService.getOwnSetting(this.userId).subscribe(settingData => {
+    this.settingsService.getOwnSetting(this.userId)
+    .subscribe(settingData => {
+
       this.isLoading = false;
       if (settingData) {
         this.settingId = settingData._id;
         this.uploadService.get(this.settingId).subscribe((res) => {
-          this.imagePath = res.image ? res.image : null;
+          this.imagePath = res.image;
         });
 
         this.name = settingData.name;

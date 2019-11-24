@@ -20,8 +20,8 @@ export class UserService {
     private http: HttpClient
   ) {}
 
-  getAll(perPage: number, currentPage: number) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
+  getAll(userType: string, perPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}&usertype=${userType}`;
     this.http.get<{message: string, users: any, counts: number }>(
       BACKEND_URL + queryParams
     )
