@@ -1,4 +1,4 @@
-<form [formGroup]="form" (submit)="onUpload()">
+<form [formGroup]="form">
     <input style="display: none" type="file" (change)="onFileChanged($event)" #filePicker>
     <div class="image-preview">
         <button mat-icon-button type="button" color="primary" (click)="filePicker.click()" aria-label="Change Logo">

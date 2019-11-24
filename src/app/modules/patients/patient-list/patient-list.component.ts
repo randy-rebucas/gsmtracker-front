@@ -134,7 +134,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
         pdfDoc.setFontSize(16);
         pdfDoc.setFont('normal');
         pdfDoc.addImage(results.settingData.imagePath, 'PNG', 10, 10, 18, 18);
-        pdfDoc.text(results.settingData.clinicName, 35, 10, null, null, 'left');
+        pdfDoc.text(results.settingData.name, 35, 10, null, null, 'left');
         pdfDoc.setFontSize(10);
         pdfDoc.setFont('courier');
         this.addresses = results.settingData.addresses;

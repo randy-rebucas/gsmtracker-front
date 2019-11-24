@@ -13,7 +13,7 @@ import { NotificationService } from '../../services/notification.service';
 export class UploadComponent implements OnInit {
 
   @Input() sourceId: string;
-  @Input() imagePath: string;
+  @Input() imagePreview: ArrayBuffer | any;
 
   form: FormGroup;
   loadingPic: boolean;
@@ -21,7 +21,6 @@ export class UploadComponent implements OnInit {
   color: string;
   mode: string;
   selectedFile: File = null;
-  imagePreview: string;
 
   constructor(
     private uploadService: UploadService,
@@ -31,40 +30,38 @@ export class UploadComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.sourceId);
+
     this.form = new FormGroup({
       image: new FormControl(null, {
         validators: [Validators.required],
         asyncValidators: [mime]
       })
     });
-    if (this.imagePath) {
-      this.imagePreview = this.imagePath;
-    }
 
   }
 
   onFileChanged(event: Event) {
-    this.selectedFile = (event.target as HTMLInputElement).files[0];
-    this.form.patchValue({ image: this.selectedFile });
     this.loadingPic = true;
-    this.onUpload();
+    this.selectedFile = (event.target as HTMLInputElement).files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+      this.uploadService.upload(
+        this.sourceId,
+        reader.result
+      ).subscribe((e) => {
+        if (e.type === HttpEventType.UploadProgress) {
+          this.bufferValue = Math.round(e.loaded / e.total * 100);
+          this.color = 'primary';
+          this.mode = 'determinate';
+        } else if (e.type === HttpEventType.Response) {
+          this.loadingPic = false;
+          this.imagePreview = e.body.imagePath;
+          this.notificationService.success(':: ' + e.body.message);
+        }
+      });
+    };
+    reader.readAsDataURL(this.selectedFile);
   }
 
-  onUpload() {
-    this.uploadService.upload(
-      this.sourceId,
-      this.form.value.image
-    ).subscribe((event) => {
-      if (event.type === HttpEventType.UploadProgress) {
-        this.bufferValue = Math.round(event.loaded / event.total * 100);
-        this.color = 'primary';
-        this.mode = 'determinate';
-      } else if (event.type === HttpEventType.Response) {
-        this.loadingPic = false;
-        this.imagePreview = event.body.imagePath;
-        this.notificationService.success(':: ' + event.body.message);
-      }
-    });
-  }
 }

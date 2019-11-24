@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Title, DomSanitizer } from '@angular/platform-browser';
 import { SettingsService } from '../settings.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { mime } from 'src/app/shared/validators/mime-validator';
 import { AuthenticationService } from '../../authentication/authentication.service';
+import { UploadService } from 'src/app/shared/services/upload.service';
 
 @Component({
   selector: 'app-general',
@@ -15,7 +16,7 @@ export class GeneralComponent implements OnInit {
 
   public form: FormGroup;
   public settingId: string;
-  public imagePath: string;
+  public imagePath: any;
 
   public isLoading: boolean;
   public name: string;
@@ -34,6 +35,7 @@ export class GeneralComponent implements OnInit {
   public phone: string;
   public morning: string;
   public afternoon: string;
+  imagePreview: string;
 
   private userId: string;
 
@@ -42,15 +44,19 @@ export class GeneralComponent implements OnInit {
     public settingsService: SettingsService,
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private uploadService: UploadService,
+    private domSanitizer: DomSanitizer
   ) {
     this.isLoading = false;
-    this.settingId = null;
+    // this.settingId = null;
   }
 
   ngOnInit() {
     this.titleService.setTitle('Settings - General');
     this.userId = this.authenticationService.getUserId();
+
+
 
     this.form = this.fb.group({
       name: ['', [Validators.required]],
@@ -69,7 +75,9 @@ export class GeneralComponent implements OnInit {
       this.isLoading = false;
       if (settingData) {
         this.settingId = settingData._id;
-        this.imagePath = settingData.imagePath;
+        this.uploadService.get(this.settingId).subscribe((res) => {
+          this.imagePath = res.image ? res.image : null;
+        });
 
         this.name = settingData.name;
         this.owner = settingData.owner;
@@ -112,6 +120,7 @@ export class GeneralComponent implements OnInit {
       }
 
     });
+
 
   }
 
