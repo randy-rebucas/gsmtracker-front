@@ -66,7 +66,6 @@ export class AccountComponent implements OnInit {
 
     this.userService.get(this.userId).subscribe(userData => {
       this.isLoadingContent = false;
-      this.avatar = userData.avatar;
       this.form.patchValue({
         firstname: userData.firstname,
         midlename: userData.midlename,
@@ -74,7 +73,6 @@ export class AccountComponent implements OnInit {
         gender: userData.gender,
         age: userData.age,
         birthdate: userData.birthdate,
-        status: userData.status,
         contact: userData.contact,
       });
       const addressControl = this.form.controls.addresses as FormArray;
@@ -111,34 +109,34 @@ export class AccountComponent implements OnInit {
     return this.form.get('addresses') as FormArray;
   }
 
-  onFileChanged(event: Event) {
-    const file = (event.target as HTMLInputElement).files[0];
-    this.imageForm.patchValue({ profilePicture: file });
-    this.imageForm.get('profilePicture').updateValueAndValidity();
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.avatar = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-    this.onSavePicture();
-  }
+  // onFileChanged(event: Event) {
+  //   const file = (event.target as HTMLInputElement).files[0];
+  //   this.imageForm.patchValue({ profilePicture: file });
+  //   this.imageForm.get('profilePicture').updateValueAndValidity();
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.avatar = reader.result as string;
+  //   };
+  //   reader.readAsDataURL(file);
+  //   this.onSavePicture();
+  // }
 
-  onSavePicture() {
-    this.userService.upload(
-      this.userId,
-      this.imageForm.value.profilePicture
-    ).subscribe((event) => {
-      if (event.type === HttpEventType.UploadProgress) {
-        this.bufferValue = Math.round(event.loaded / event.total * 100);
-        this.color = 'primary';
-        this.mode = 'determinate';
-      } else if (event.type === HttpEventType.Response) {
-        this.isLoadingPic = false;
-        this.avatar = event.body.avatar;
-        this.notificationService.success(':: ' + event.body.message);
-      }
-    });
-  }
+  // onSavePicture() {
+  //   this.userService.upload(
+  //     this.userId,
+  //     this.imageForm.value.profilePicture
+  //   ).subscribe((event) => {
+  //     if (event.type === HttpEventType.UploadProgress) {
+  //       this.bufferValue = Math.round(event.loaded / event.total * 100);
+  //       this.color = 'primary';
+  //       this.mode = 'determinate';
+  //     } else if (event.type === HttpEventType.Response) {
+  //       this.isLoadingPic = false;
+  //       this.avatar = event.body.avatar;
+  //       this.notificationService.success(':: ' + event.body.message);
+  //     }
+  //   });
+  // }
 
   onUpdate() {
     const updatedUser = {

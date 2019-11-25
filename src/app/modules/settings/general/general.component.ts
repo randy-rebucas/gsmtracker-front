@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Title, DomSanitizer } from '@angular/platform-browser';
 import { SettingsService } from '../settings.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { mime } from 'src/app/shared/validators/mime-validator';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-general',

@@ -44,7 +44,7 @@ import { RxPadComponent } from './shared/components/rx-pad/rx-pad.component';
 import { EncounterComponent } from './shared/components/encounter/encounter.component';
 import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
-import { UploadComponent } from './shared/components/upload/upload.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +57,7 @@ import { UploadComponent } from './shared/components/upload/upload.component';
     RxPadComponent,
     EncounterComponent,
     StatComponent,
-    QrCodeComponent,
+    QrCodeComponent
   ],
   imports: [
     BrowserModule,

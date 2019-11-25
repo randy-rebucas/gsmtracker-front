@@ -4,13 +4,13 @@ export interface User {
   midlename: string;
   lastname: string;
   gender: string;
-  age: string;
   birthdate: string;
-  status: string;
   contact: string;
-  avatar: string;
   createdAt: Date;
   address: Address[];
+  metas: Meta[];
+
+  age: number;
 }
 
 export interface Address {
@@ -20,4 +20,9 @@ export interface Address {
   province: string;
   postalCode: number;
   country: string;
+}
+
+export interface Meta {
+  label: string;
+  value: string;
 }

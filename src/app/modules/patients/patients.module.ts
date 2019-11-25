@@ -18,9 +18,17 @@ import {
   MatTableModule,
   MatPaginatorModule,
   MatSortModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSelectModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatDialogModule,
+  MatProgressBarModule
 } from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BirthdaysComponent } from 'src/app/shared/components/birthdays/birthdays.component';
+import { PhysiciansComponent } from 'src/app/shared/components/physicians/physicians.component';
+import { BirthdayPipe } from 'src/app/shared/pipes/birthday.pipe';
 
 
 @NgModule({
@@ -29,21 +37,30 @@ import { BirthdaysComponent } from 'src/app/shared/components/birthdays/birthday
     PatientListComponent,
     PatientFormComponent,
     PatientDetailComponent,
-    BirthdaysComponent
+    BirthdaysComponent,
+    PhysiciansComponent,
+    BirthdayPipe
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
     MatIconModule,
     MatCardModule,
     MatButtonModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatListModule,
+    MatSelectModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatDialogModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: PatientsComponent, children: [
@@ -54,6 +71,9 @@ import { BirthdaysComponent } from 'src/app/shared/components/birthdays/birthday
         { path: ':patientId/edit', component: PatientFormComponent, canActivate: [AuthenticationGuard]  }
       ] }
     ])
+  ],
+  entryComponents: [
+    PatientFormComponent
   ]
 })
 export class PatientsModule { }

@@ -1,0 +1,68 @@
+mat-form-field {
+    width: 100%;
+}
+
+mat-form-field:not(:first-child) {
+    margin-left: 1em;
+}
+
+.form-field-block {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    flex-basis: auto;
+}
+
+div#patient-picture .image-preview {
+    display: inline-flex;
+    margin-right: 2em;
+}
+
+textarea {
+    width: 100%;
+}
+
+mat-spinner {
+    margin: auto;
+}
+
+.mat-dialog-title button {
+    float: right;
+    border: none;
+}
+
+.mat-dialog-title {
+    border-bottom: 1px solid rgb(169, 169, 169);
+    padding: 0 0 1em 0;
+}
+
+.addressGroup,
+.metaGroup {
+    position: relative;
+}
+
+.addressGroup .action,
+.metaGroup .action {
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
+}
+
+.addressGroup:hover .action,
+.metaGroup:hover .action {
+    visibility: visible;
+}
+
+.form-field-block.user-type {
+    width: 32%;
+}
+
+mat-dialog-content::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+}
+
+mat-dialog-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .26);
+}

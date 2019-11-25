@@ -15,7 +15,6 @@ import {
   MatButtonModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { UploadComponent } from 'src/app/shared/components/upload/upload.component';
 
 
@@ -37,7 +36,6 @@ import { UploadComponent } from 'src/app/shared/components/upload/upload.compone
     MatButtonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    NgxMaterialTimepickerModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: SettingsComponent, children: [

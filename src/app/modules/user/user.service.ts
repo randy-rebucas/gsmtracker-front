@@ -39,7 +39,8 @@ export class UserService {
             address: user.address,
             created: user.createdAt,
             updated: user.updatedAt,
-            avatar: user.avatar,
+            meta: user.metas,
+            physicians: user.physicians,
             privateKey: user.prikey,
             publicKey: user.pubkey
           };
@@ -75,26 +76,4 @@ export class UserService {
     return this.http.delete<{ message: string }>(BACKEND_URL + '/' + patientIds);
   }
 
-  upload(userId: string, image: File | string) {
-
-    const uploadData = new FormData();
-    uploadData.append('userId', userId);
-    uploadData.append('image', image, userId);
-
-    return this.http.post<{ message: string, avatar: string }>(BACKEND_URL + '/upload/' + userId, uploadData, {
-      reportProgress: true,
-      observe: 'events'
-    });
-  }
-
-  getAllClassifiedUser(classificationId: string) {
-    return this.http.get<{classifiedUsers: any, count: number}>(BACKEND_URL + '/classified-user/' + classificationId);
-  }
-
-  updateClassification(userId: string, classificationId: string) {
-    const classification = {
-      classification: classificationId
-    };
-    return this.http.put<{ message: string }>(BACKEND_URL + '/classification/' + userId, classification);
-  }
 }

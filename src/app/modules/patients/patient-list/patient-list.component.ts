@@ -6,7 +6,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { UserService } from '../../user/user.service';
 import { Subscription } from 'rxjs';
 import { User } from '../../user/user';
-import { MatTableDataSource, MatPaginator, MatSort, PageEvent } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe } from '@angular/common';
 import { SettingsService } from '../../settings/settings.service';
@@ -16,6 +16,8 @@ import html2canvas from 'html2canvas';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { TypeService } from 'src/app/shared/services/type.service';
+import { PatientFormComponent } from '../patient-form/patient-form.component';
+import { UploadService } from 'src/app/shared/services/upload.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -44,7 +46,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   private addresses: any[];
 
   public dataSource: MatTableDataSource<any>;
-  public columnsToDisplay: string[] = ['select', 'image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'action'];
+  public columnsToDisplay: string[] = ['select', 'image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'age', 'action'];
   public selection = new SelectionModel<any>(true, []);
   public expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -62,7 +64,9 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
-    private typeService: TypeService
+    private typeService: TypeService,
+    private dialog: MatDialog,
+    private uploadService: UploadService
   ) {
     this.total = 0;
     this.perPage = 10;
@@ -76,7 +80,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('Users');
 
     this.typeService.getBySlug('patients').subscribe((type) => {
-
+      this.userTypeId = type._id;
       this.userService.getAll(type._id, this.perPage, this.currentPage);
       this.usersSub = this.userService
       .getUpdateListener()
@@ -132,7 +136,8 @@ export class PatientListComponent implements OnInit, OnDestroy {
   }
 
   onPrint() {
-    this.getSettingsData()
+
+    this.settingsService.getOwnSetting(this.userId).toPromise()
       .then((results) => {
         const datePipe = new DatePipe('en-US');
         const pdfDoc = new jsPDF('p', 'mm', 'a4');
@@ -142,33 +147,35 @@ export class PatientListComponent implements OnInit, OnDestroy {
         // clinic owner
         pdfDoc.setFontSize(16);
         pdfDoc.setFont('normal');
-        pdfDoc.addImage(results.settingData.imagePath, 'PNG', 10, 10, 18, 18);
-        pdfDoc.text(results.settingData.name, 35, 10, null, null, 'left');
+        // this.uploadService.get(results._id).subscribe((res) => {
+        //   pdfDoc.addImage(res.image, 'PNG', 10, 10, 18, 18);
+        // });
+        pdfDoc.text(results.name, 10, 10, null, null, 'left');
         pdfDoc.setFontSize(10);
         pdfDoc.setFont('courier');
-        this.addresses = results.settingData.addresses;
+        this.addresses = results.addresses;
         this.addresses.forEach(element => {
-          pdfDoc.text(element.address1, 35, 14, null, null, 'left');
+          pdfDoc.text(element.address1, 10, 14, null, null, 'left');
           let gap = 0;
           if (element.address2) {
             gap = 4;
-            pdfDoc.text(element.address2, 35, 18, null, null, 'left');
+            pdfDoc.text(element.address2, 10, 18, null, null, 'left');
           }
-          pdfDoc.text('' + element.postalCode + '', 35, 18 + gap, null, null, 'left');
+          pdfDoc.text('' + element.postalCode + '', 10, 18 + gap, null, null, 'left');
           pdfDoc.text(element.province, 45, 18 + gap, null, null, 'left');
           pdfDoc.text(element.city, 70, 18 + gap, null, null, 'left');
-          pdfDoc.text(element.country, 35, 22 + gap, null, null, 'left');
+          pdfDoc.text(element.country, 10, 22 + gap, null, null, 'left');
         });
 
         pdfDoc.text('Clinic hour', 125, 14, null, null, 'left');
-        this.hours = results.settingData.hours;
+        this.hours = results.hours;
         for (let index = 0; index < this.hours.length; index++) {
           const element = this.hours[index];
           pdfDoc.text(element.morningOpen + ' - ' + element.afternoonClose, 155, 14 + ( index * 4 ), null, null, 'left');
         }
 
         pdfDoc.text('Tel no: ', 125, 18, null, null, 'left');
-        this.contacts = results.settingData.phones;
+        this.contacts = results.phones;
         for (let index = 0; index < this.contacts.length; index++) {
           const element = this.contacts[index];
           pdfDoc.text(element.contact, 155, 18 + ( index * 4 ), null, null, 'left');
@@ -209,13 +216,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
 
   }
 
-  async getSettingsData() {
-    const settingResponse = await this.settingsService.getOwnSetting(this.userId).toPromise();
-    return {
-      settingData: settingResponse
-    };
-  }
-
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
@@ -230,32 +230,32 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.userService.getAll(this.userTypeId, this.perPage, this.currentPage);
   }
 
-  onCreate() {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.width = '50%';
-    // dialogConfig.data = {
-    //   id: null,
-    //   title: 'Create New ' + this.userType,
-    //   button: 'Save',
-    //   userType: this.userType
-    // };
-    // this.dialog.open(UserFormComponent, dialogConfig);
+  onCreate(userTypeId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
+      id: null,
+      title: 'Create New',
+      button: 'Save',
+      userType: userTypeId
+    };
+    this.dialog.open(PatientFormComponent, dialogConfig);
   }
 
-  onEdit(patientId) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.width = '50%';
-    // dialogConfig.data = {
-    //   id: patientId,
-    //   title: 'Update ' + this.userType,
-    //   button: 'Update',
-    //   userType: this.userType
-    // };
-    // this.dialog.open(UserFormComponent, dialogConfig);
+  onEdit(userTypeId: string, patientId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
+      id: patientId,
+      title: 'Update',
+      button: 'Update',
+      userType: userTypeId
+    };
+    this.dialog.open(PatientFormComponent, dialogConfig);
   }
 
   onScan() {
@@ -275,4 +275,5 @@ export class PatientListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.usersSub.unsubscribe();
   }
+
 }
