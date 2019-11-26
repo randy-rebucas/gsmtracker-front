@@ -50,39 +50,25 @@ export class AppointmentsService {
     });
   }
 
-getUpdateListener() {
-  return this.appointmentsUpdated.asObservable();
-}
+  getUpdateListener() {
+    return this.appointmentsUpdated.asObservable();
+  }
 
-get(appointmentId: string) {
-  // tslint:disable-next-line:max-line-length
-  return this.http.get<{ appointmentId: string, title: string, start: Date, end: Date, avatar: string, fullname: string, gender: string, address: string, birthdate: string, contact: string, type: number, status: number, detailId: string }>(
-    BACKEND_URL + '/' + appointmentId
+  get(appointmentId: string) {
+    return this.http.get<Appointments>(
+      BACKEND_URL + '/' + appointmentId
     );
-}
+  }
 
-getAllNew() {
-  // tslint:disable-next-line: max-line-length
-  return this.http.get<{ count: number }>(
-      BACKEND_URL + '/new/'
-    );
-}
+  insert(newAppointment: any) {
+    return this.http.post<{ message: string, appointment: Appointments }>(BACKEND_URL, newAppointment);
+  }
 
-insert(users: string, title: string, start: string) {
-  const appointmentData = {
-    users, title, start
-  };
-  return this.http.post<{ message: string, record: Appointments }>(BACKEND_URL, appointmentData);
-}
+  update(updatedAppointment: any) {
+    return this.http.put(BACKEND_URL + '/' + updatedAppointment.appointmentId, updatedAppointment);
+  }
 
-update(appointmentId: string, status: number) {
-  const detailData = {
-    appointmentId, status
-  };
-  return this.http.put(BACKEND_URL + '/' + appointmentId, detailData);
-}
-
-delete(appointmentId: string) {
-  return this.http.delete(BACKEND_URL + '/' + appointmentId);
-}
+  delete(appointmentIds: []) {
+    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + appointmentIds);
+  }
 }

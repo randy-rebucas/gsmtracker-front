@@ -4,6 +4,8 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { UserService } from '../user/user.service';
+import { BlockchainService } from 'src/app/shared/services/blockchain.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,19 +34,44 @@ export class DashboardComponent implements OnInit {
     })
   );
 
+  public perPage: number;
+  public currentPage: number;
+  public pageSizeOptions: any;
+
   private isActivated: boolean;
+  private blockchainSub: Subscription;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private blockchainService: BlockchainService
+  ) {
+    this.perPage = 10;
+    this.currentPage = 1;
+    this.pageSizeOptions = [5, 10, 25, 100];
+  }
 
   ngOnInit() {
     const userId = this.authenticationService.getUserId();
 
-    this.router.navigate(['/dashboard']);
+    // this.blockchainService.getChain(this.perPage, this.currentPage);
+    // this.blockchainSub = this.blockchainService.getChainListener().subscribe((blockchain) => {
+    //   const chain = blockchain.chain;
 
+    //   // if (Array.isArray(chain) || chain.lenght) {
+    //   //   const newTransaction = {
+    //   //     timestamp: Date.parse(new Date().toJSON().slice(0, 10)),
+    //   //     transactions: [],
+    //   //     previousHash: 0
+    //   //   };
+
+    //   //   this.blockchainService.insertTransaction(newTransaction).subscribe(() => {
+    //   //     console.log('transaction added');
+    //   //   });
+    //   // }
+    //   console.log(chain);
+    // });
   }
 }

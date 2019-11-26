@@ -50,7 +50,7 @@
                                 <img [src]="element.avatar" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
                             </ng-template>
                             <ng-template #elseBlock>
-                                <img src="./../../../../assets/images/blank.png" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+                              <ngx-avatar name="{{element.firstname + ' ' + element.lastname}}" size="40"></ngx-avatar>
                             </ng-template>
                         </mat-cell>
                     </div>
@@ -71,13 +71,13 @@
                         <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
                         <div *ngIf="column === 'birthdate'; then thenBlockDate else elseBlockDate"></div>
                         <ng-template #thenBlockDate>
-                            <mat-cell *matCellDef="let element"> {{element[column] | date}}</mat-cell>
+                            <mat-cell *matCellDef="let element"> {{ element[column] | date }}</mat-cell>
                         </ng-template>
                         <ng-template [ngIf]="column === 'age'">
                             <mat-cell *matCellDef="let element"> {{ element.birthdate | birthday }}</mat-cell>
                         </ng-template>
                         <ng-template #elseBlockDate>
-                            <mat-cell *matCellDef="let element"> {{element[column]}}</mat-cell>
+                            <mat-cell *matCellDef="let element"> {{ element[column] }}</mat-cell>
                         </ng-template>
                     </ng-template>
 
@@ -134,7 +134,7 @@
                 <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
                 <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
             </mat-table>
-            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" showFirstLastButtons></mat-paginator>
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage"></mat-paginator>
         </div>
         <div class="area side" gdArea="side">
             <!--birthdays-->

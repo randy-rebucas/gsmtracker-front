@@ -46,14 +46,25 @@ export class PatientListComponent implements OnInit, OnDestroy {
   private addresses: any[];
 
   public dataSource: MatTableDataSource<any>;
-  public columnsToDisplay: string[] = ['select', 'image', 'firstname', 'midlename', 'lastname', 'contact', 'gender', 'birthdate', 'age', 'action'];
+  public columnsToDisplay: string[] = [
+    'select',
+    'image',
+    'firstname',
+    'midlename',
+    'lastname',
+    'contact',
+    'gender',
+    'birthdate',
+    'age',
+    'action'
+  ];
   public selection = new SelectionModel<any>(true, []);
   public expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   private userId: string;
-  private userTypeId: any;
+  public userTypeId: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -92,7 +103,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
         this.dataSource.sort = this.sort;
       });
     });
-
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

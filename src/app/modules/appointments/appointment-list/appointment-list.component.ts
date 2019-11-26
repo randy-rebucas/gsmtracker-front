@@ -1,9 +1,13 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort, MatDialogConfig } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatDialogConfig, MatDialog, PageEvent } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs';
 import { AppointmentsService } from '../appointments.service';
 import { Appointments } from '../appointments';
+import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
+import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
+import { DialogService } from 'src/app/shared/services/dialog.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-appointment-list',
@@ -20,13 +24,18 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   public appointmentSub: Subscription;
 
   public dataSource: MatTableDataSource<any>;
-  public columnsToDisplay: string[] = ['img', 'fullname', 'title', 'start', 'status', 'action'];
+  public columnsToDisplay: string[] = ['select', 'img', 'fullname', 'title', 'start', 'status', 'action'];
   public selection = new SelectionModel<any>(true, []);
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  private ids: any = [];
+
   constructor(
-    public appointmentsService: AppointmentsService,
+    private appointmentsService: AppointmentsService,
+    private dialog: MatDialog,
+    private dialogService: DialogService,
+    private notificationService: NotificationService
   ) {
     this.total = 0;
     this.perPage = 10;
@@ -74,68 +83,45 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     }
   }
 
-  viewEvent(eventId) {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.width = '30%';
-    // dialogConfig.data = {
-    //     id: eventId
-    // };
-    // this.dialog.open(AppointmentDetailComponent, dialogConfig);
+  onCreate(appointmentId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '30%';
+    dialogConfig.data = {
+      id: appointmentId,
+      title: 'Create New',
+      button: 'Save'
+    };
+    this.dialog.open(AppointmentFormComponent, dialogConfig);
   }
-
-  // onDelete(appointmentId) {
-  //   this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
-  //   .afterClosed().subscribe(res => {
-  //     if (res) {
-  //       this.appointmentService.delete(appointmentId).subscribe(() => {
-  //         this.notificationService.warn('! Deleted successfully');
-  //         this.appointmentService.getAll(this.perPage, this.currentPage);
-  //       });
-  //     }
-  //   });
-  // }
 
   onDelete() {
-    // const numSelected = this.selection.selected;
-    // const plural = (numSelected.length > 1) ? '(s)' : '';
-    // this.dialogService.openConfirmDialog('Are you sure to delete ' + numSelected.length +
-    // ' item' + plural +
-    // ' record ?')
-    // .afterClosed().subscribe(res => {
-    //   if (res) {
-    //     numSelected.forEach(element => {
-    //       this.ids.push(element.id);
-    //     });
+    const numSelected = this.selection.selected;
+    const plural = (numSelected.length > 1) ? '(s)' : '';
+    this.dialogService.openConfirmDialog('Are you sure to delete ' + numSelected.length +
+    ' item' + plural +
+    ' record ?')
+    .afterClosed().subscribe(res => {
+      if (res) {
+        numSelected.forEach(element => {
+          this.ids.push(element.id);
+        });
 
-    //     this.userService.delete(this.ids).subscribe((data) => {
-    //       this.userService.getAll(this.perPage, this.currentPage);
-    //       this.notificationService.warn('::' + data.message);
-    //     });
-    //   }
-    // });
+        this.appointmentsService.delete(this.ids).subscribe((data) => {
+          this.appointmentsService.getAll(this.perPage, this.currentPage);
+          this.notificationService.warn('::' + data.message);
+        });
+      }
+    });
   }
 
-  onCreate() {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.width = '50%';
-    // dialogConfig.data = {
-    //   id: null,
-    //   title: 'Create New ' + this.userType,
-    //   button: 'Save',
-    //   userType: this.userType
-    // };
-    // this.dialog.open(UserFormComponent, dialogConfig);
+  onChangedPage(pageData: PageEvent) {
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.perPage = pageData.pageSize;
+    this.appointmentsService.getAll(this.perPage, this.currentPage);
   }
-  // onChangedPage(pageData: PageEvent) {
-  //   this.isLoading = true;
-  //   this.currentPage = pageData.pageIndex + 1;
-  //   this.perPage = pageData.pageSize;
-  //   this.userService.getAll(this.perPage, this.currentPage);
-  // }
 
   ngOnDestroy() {
     this.appointmentSub.unsubscribe();

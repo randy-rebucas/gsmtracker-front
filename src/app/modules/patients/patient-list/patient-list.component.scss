@@ -1,3 +1,4 @@
+
 .wrapper {
     flex-grow: 1;
     margin: 10px 25px;
@@ -48,7 +49,7 @@ mat-header-row.mat-header-row mat-header-cell:last-child {
 }
 
 .mat-column-image {
-    width: 5%;
+  max-width: 3%;
 }
 
 mat-cell.mat-cell.cdk-column-select.mat-column-select {

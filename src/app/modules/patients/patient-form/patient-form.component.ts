@@ -26,6 +26,8 @@ export class PatientFormComponent implements OnInit {
   public currentPage: number;
   public pageSizeOptions: any;
 
+  public startDate = new Date(1990, 0, 1);
+
   constructor(
     private notificationService: NotificationService,
     private userService: UserService,

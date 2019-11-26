@@ -17,19 +17,22 @@ body {
 .main-content {
     position: relative;
     margin: 0 0 2em;
+    min-height: 75%;
 }
+
 mat-sidenav-content.mat-drawer-content::-webkit-scrollbar {
-  width: 0;
+  width: 4px;
   height: 4px;
 }
-app-footer {
-    // position: fixed;
-    bottom: 0;
-    width: 100%;
+
+mat-sidenav-content.mat-drawer-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, .26);
 }
+
 .spacer {
   flex: 1 1 auto;
 }
+
 .hidden {
     display: none;
 }

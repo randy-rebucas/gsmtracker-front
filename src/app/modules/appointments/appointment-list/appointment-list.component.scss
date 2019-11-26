@@ -25,7 +25,9 @@
 .hide {
   display: none;
 }
-
+mat-cell.mat-cell.cdk-column-select.mat-column-select {
+  max-width: 30px;
+}
 mat-row.example-element-row mat-cell:first-child ,
 mat-header-row.mat-header-row mat-header-cell:first-child {
   max-width: 30px;
@@ -37,8 +39,9 @@ mat-header-row.mat-header-row mat-header-cell:last-child {
   flex: 0 0 auto;
   width: 80px;
 }
-.mat-column-image {
-  width: 5%;
+mat-cell.mat-cell.cdk-column-img.mat-column-img,
+mat-header-cell.mat-header-cell.cdk-column-img.mat-column-img {
+  max-width: 3%;
 }
 mat-row.example-detail-row {
   min-height: 0;
@@ -48,4 +51,29 @@ mat-paginator.mat-paginator {
 }
 .action-button button {
   margin-left: 10px;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-fullname.mat-column-fullname {
+  max-width: 20%;
+}
+
+mat-cell.mat-cell.cdk-column-fullname.mat-column-fullname {
+  max-width: 20%;
+}
+mat-header-cell.mat-header-cell.ng-tns-c16-2.cdk-column-title.mat-column-title {
+  max-width: 20%;
+}
+mat-header-cell.mat-header-cell.cdk-column-start.mat-column-start {
+  max-width: 20%;
+}
+mat-cell.mat-cell.cdk-column-title.mat-column-title {
+  max-width: 20%;
+}
+
+mat-cell.mat-cell.cdk-column-start.mat-column-start {
+  max-width: 20%;
+}
+
+mat-cell.mat-cell.cdk-column-status.mat-column-status {
+  max-width: 20%;
 }

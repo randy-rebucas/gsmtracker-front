@@ -7,13 +7,6 @@
     </div>
     <form [formGroup]="form" class="normal-form" (submit)="onSavePatient()" *ngIf="!isLoading">
         <h4 subheading-1>Basic Information</h4>
-        <div class="form-field-block user-type" *ngIf="userType === 'all'">
-            <mat-form-field>
-                <mat-select formControlName="type" placeholder="User Type">
-                    <mat-option *ngFor="let type of types" [value]="type._id">{{ type.name }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
         <div class="form-field-block">
             <mat-form-field>
                 <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
@@ -43,12 +36,12 @@
         </div>
         <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
             <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
-                <h4 subheading-1>Address {{i+1}}</h4>
-                <ng-container *ngIf="i < 1">
-                    <div class="form-field-block">
-                        <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
-                    </div>
-                </ng-container>
+                <h4 subheading-1>Address</h4>
+
+                  <div class="form-field-block">
+                      <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
+                  </div>
+
 
                 <div class="form-field-block">
                     <mat-form-field>
@@ -83,8 +76,8 @@
                 </div>
             </div>
         </ng-container>
-        <h4 subheading-1 *ngIf="!Id">Login Access</h4>
-        <div class="form-field-block" *ngIf="!Id">
+        <h4 subheading-1 *ngIf="!formId">Login Access</h4>
+        <div class="form-field-block" *ngIf="!formId">
             <mat-form-field>
                 <input matInput type="email" formControlName="email" placeholder="Email">
             </mat-form-field>
@@ -109,6 +102,8 @@
                 </div>
             </div>
         </ng-container>
-        <button mat-raised-button color="primary" type="submit">{{formButtontext}}</button>
     </form>
 </mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onSavePatient()">{{formButtontext}}</button>
+</mat-dialog-actions>

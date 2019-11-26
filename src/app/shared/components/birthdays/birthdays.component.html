@@ -2,9 +2,6 @@
     <mat-card-header>
         <mat-card-title>Birthdays</mat-card-title>
     </mat-card-header>
-    <div *ngIf="isLoading">
-        <mat-spinner [diameter]="25"></mat-spinner>
-    </div>
     <mat-list *ngIf="!isLoading">
         <mat-list-item *ngFor="let birthday of birthdays" class="birthday-list">
             <div *ngIf="birthday.avatar; then thenBlock else elseBlock"></div>
@@ -12,7 +9,7 @@
                 <img [src]="birthday.avatar" [alt]="birthday.fullname" style="width:42px; height:42px; vertical-align: middle;border-radius: 100%;" />
             </ng-template>
             <ng-template #elseBlock>
-                <img src="assets/images/blank.png" [alt]="birthday.fullname" style="width:42px; height:42px; vertical-align: middle;border-radius: 100%;" />
+                <ngx-avatar name="{{birthday.fullname}}" size="50"></ngx-avatar>
             </ng-template>
             <div class="birthday-user">
                 <h4 mat-line>{{ birthday.fullname }} <small mat-line> {{ birthday.birthdate | date}} </small></h4>

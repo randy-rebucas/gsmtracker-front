@@ -19,10 +19,16 @@ import {
   MatTableModule,
   MatSortModule,
   MatPaginatorModule,
-  MatMenuModule
+  MatMenuModule,
+  MatDialogModule,
+  MatAutocompleteModule,
+  MatDatepickerModule,
+  MatNativeDateModule
 } from '@angular/material';
 import { EventsComponent } from 'src/app/shared/components/events/events.component';
 import { CalendarComponent } from 'src/app/shared/components/calendar/calendar.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AvatarModule } from 'ngx-avatar';
 
 @NgModule({
   declarations: [
@@ -35,6 +41,8 @@ import { CalendarComponent } from 'src/app/shared/components/calendar/calendar.c
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
@@ -47,6 +55,11 @@ import { CalendarComponent } from 'src/app/shared/components/calendar/calendar.c
     MatSortModule,
     MatPaginatorModule,
     MatMenuModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
+    AvatarModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: AppointmentsComponent, children: [
@@ -57,6 +70,10 @@ import { CalendarComponent } from 'src/app/shared/components/calendar/calendar.c
         { path: ':appointmentId/edit', component: AppointmentFormComponent, canActivate: [AuthenticationGuard]  }
       ] }
     ])
+  ],
+  entryComponents: [
+    AppointmentFormComponent,
+    AppointmentDetailComponent
   ]
 })
 export class AppointmentsModule { }
