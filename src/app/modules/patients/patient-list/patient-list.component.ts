@@ -147,7 +147,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
 
   onPrint() {
 
-    this.settingsService.getOwnSetting(this.userId).toPromise()
+    this.settingsService.getSetting(this.userId).toPromise()
       .then((results) => {
         const datePipe = new DatePipe('en-US');
         const pdfDoc = new jsPDF('p', 'mm', 'a4');

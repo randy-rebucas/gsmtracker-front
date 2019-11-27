@@ -12,10 +12,16 @@ import {
   MatIconModule,
   MatProgressSpinnerModule,
   MatProgressBarModule,
-  MatButtonModule
+  MatButtonModule,
+  MatTabsModule,
+  MatCardModule,
+  MatListModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UploadComponent } from 'src/app/shared/components/upload/upload.component';
+import { PaymentComponent } from './payment/payment.component';
+import { PlanComponent } from './plan/plan.component';
+import { NotificationComponent } from './notification/notification.component';
 
 
 @NgModule({
@@ -23,12 +29,15 @@ import { UploadComponent } from 'src/app/shared/components/upload/upload.compone
     SettingsComponent,
     AccountComponent,
     GeneralComponent,
-    UploadComponent
+    UploadComponent,
+    PaymentComponent,
+    PlanComponent,
+    NotificationComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
@@ -36,11 +45,18 @@ import { UploadComponent } from 'src/app/shared/components/upload/upload.compone
     MatButtonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatTabsModule,
+    MatCardModule,
+    MatListModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: SettingsComponent, children: [
         { path: '', redirectTo: 'general', pathMatch: 'full' },
-        { path: 'general', component: GeneralComponent }
+        { path: 'general', component: GeneralComponent },
+        { path: 'account', component: AccountComponent },
+        { path: 'payment', component: PaymentComponent },
+        { path: 'plan', component: PlanComponent },
+        { path: 'notification', component: NotificationComponent }
       ] }
     ])
   ]

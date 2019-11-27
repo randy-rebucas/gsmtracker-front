@@ -40,12 +40,11 @@ export class GeneralComponent implements OnInit {
 
   constructor(
     private titleService: Title,
-    public settingsService: SettingsService,
+    private settingsService: SettingsService,
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService,
     private fb: FormBuilder,
-    private uploadService: UploadService,
-    private domSanitizer: DomSanitizer
+    private uploadService: UploadService
   ) {
     this.isLoading = false;
     // this.settingId = null;
@@ -59,7 +58,7 @@ export class GeneralComponent implements OnInit {
       name: ['', [Validators.required]],
       owner: ['', [Validators.required]],
       email: [''],
-      prc: [''],
+      prc: ['', [Validators.required]],
       ptr: [''],
       s2: [''],
       nobreak: [''],
@@ -68,23 +67,25 @@ export class GeneralComponent implements OnInit {
       hours: this.fb.array([this.addClinicHourGroup()])
     });
 
-    this.settingsService.getOwnSetting(this.userId)
+    this.settingsService.getSetting(this.userId)
     .subscribe(settingData => {
 
       this.isLoading = false;
+
       if (settingData) {
-        this.settingId = settingData._id;
+        const general = settingData.general;
+        this.settingId = settingData.settingId;
         this.uploadService.get(this.settingId).subscribe((res) => {
           this.imagePath = res.image;
         });
 
-        this.name = settingData.name;
-        this.owner = settingData.owner;
-        this.email = settingData.email;
-        this.prc = settingData.prc;
-        this.ptr = settingData.ptr;
-        this.s2 = settingData.s2;
-        this.nobreak = settingData.nobreak;
+        this.name = (general.length) ? general[0].name : null;
+        this.owner = (general.length) ? general[0].owner : null;
+        this.email = (general.length) ? general[0].email : null;
+        this.prc = (general.length) ? general[0].prc : null;
+        this.ptr = (general.length) ? general[0].ptr : null;
+        this.s2 = (general.length) ? general[0].s2 : null;
+        this.nobreak = (general.length) ? general[0].nobreak : null;
 
         this.form.patchValue({
           name: this.name,
@@ -97,21 +98,21 @@ export class GeneralComponent implements OnInit {
         });
 
         const addressControl = this.form.controls.addresses as FormArray;
-        const address = settingData.addresses;
+        const address = (general.length) ? general[0].addresses : [];
         for (let i = 1; i < address.length; i++) {
           addressControl.push(this.addAddressGroup());
         }
         this.form.patchValue({addresses: address});
 
         const contactControl = this.form.controls.phones as FormArray;
-        const contacts = settingData.phones;
+        const contacts = (general.length) ? general[0].phones : [];
         for (let i = 1; i < contacts.length; i++) {
           contactControl.push(this.addClinicContactGroup());
         }
         this.form.patchValue({phones: contacts});
 
         const timesControl = this.form.controls.hours as FormArray;
-        const times = settingData.hours;
+        const times = (general.length) ? general[0].hours : [];
         for (let i = 1; i < times.length; i++) {
           timesControl.push(this.addClinicHourGroup());
         }
@@ -119,31 +120,31 @@ export class GeneralComponent implements OnInit {
       }
 
     });
-
-
   }
 
   addAddressGroup() {
     return this.fb.group({
-      address1: ['', [Validators.required]],
-      address2: [''],
-      city: ['', [Validators.required]],
-      province: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]],
-      country: ['', [Validators.required]]
+      address1: [null, [Validators.required]],
+      address2: null,
+      city: [null, [Validators.required]],
+      province: [null, [Validators.required]],
+      postalCode: [null, Validators.compose([
+        Validators.required, Validators.minLength(5), Validators.maxLength(5)])
+      ],
+      country: [null, [Validators.required]]
     });
   }
 
   addClinicHourGroup() {
     return this.fb.group({
-      morningOpen: [''],
-      afternoonClose: ['']
+      morningOpen: [null],
+      afternoonClose: [null]
     });
   }
 
   addClinicContactGroup() {
     return this.fb.group({
-      contact: ['']
+      contact: [null]
     });
   }
 
@@ -180,8 +181,12 @@ export class GeneralComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.invalid) {
+      return;
+    }
 
-    const newSetting = {
+    const updatedSetting = {
+      id: this.settingId,
       userId: this.userId,
       name: this.form.value.name,
       owner: this.form.value.owner,
@@ -195,22 +200,9 @@ export class GeneralComponent implements OnInit {
       hours: this.form.value.hours
     };
 
-    const idSetting = {
-      id: this.settingId
-    };
+    this.settingsService.updateGeneral(updatedSetting).subscribe((general) => {
+      this.notificationService.success(general.message);
+    });
 
-    const updatedSetting = {
-      ...newSetting, ...idSetting
-    };
-
-    if (this.settingId) {
-        this.settingsService.update(updatedSetting).subscribe(() => {
-          this.notificationService.success('::Updated successfully');
-        });
-    } else {
-        this.settingsService.insert(newSetting).subscribe(() => {
-          this.notificationService.success(':: Updated successfully');
-        });
-    }
   }
 }

@@ -49,24 +49,21 @@ export class AuthenticationService {
     return this.authStatusListener.asObservable();
   }
 
-  createUser(FirstName: string, LastName: string, Email: string, Password: string) {
-    const authRegister: Register = {
-      firstname: FirstName,
-      lastname: LastName,
-      email: Email,
-      password: Password
-    };
-
+  createUser(authRegister: any) {
     this.http.post<{message: string, userId: string}>(BACKEND_URL + '/register', authRegister).subscribe((res) => {
       this.notificationService.success(res.message);
-      this.login(Email, Password, false);
+      const authData = {
+        email: authRegister.email,
+        password: authRegister.password,
+        remember: false
+      };
+      this.login(authData);
     }, error => {
       this.authStatusListener.next(false);
     });
   }
 
-  login(Email: string, Password: string, Remember: boolean) {
-    const authData: Login = {email: Email, password: Password, remember: Remember};
+  login(authData: any) {
     this.http.post<{token: string, userEmail: string, userId: string}>(
       BACKEND_URL + '/login',
       authData
@@ -82,10 +79,10 @@ export class AuthenticationService {
 
         this.authStatusListener.next(true);
 
-        if (Remember) {
-          this.cookieService.set('remember', (Remember) ? 'yes' : 'no' );
-          this.cookieService.set('email', Email );
-          this.cookieService.set('pass', Password );
+        if (authData.remember) {
+          this.cookieService.set('remember', (authData.remember) ? 'yes' : 'no' );
+          this.cookieService.set('email', authData.email );
+          this.cookieService.set('pass', authData.password );
         }
 
         this.saveAuthData(token, this.userId, this.userEmail);

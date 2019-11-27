@@ -57,7 +57,14 @@ export class LoginComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.authenticationService.login(this.form.value.email, this.form.value.password, this.form.value.remember);
+
+    const authData = {
+      email: this.form.value.email,
+      password: this.form.value.password,
+      remember: this.form.value.remember
+    };
+
+    this.authenticationService.login(authData);
   }
 
   onSignup() {

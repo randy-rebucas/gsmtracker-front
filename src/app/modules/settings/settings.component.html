@@ -1,1 +1,12 @@
+<div class="primary-header">
+    <h1>{{ title | titlecase }}</h1>
+</div>
+<nav mat-tab-nav-bar>
+    <a mat-tab-link routerLink="/settings/general" routerLinkActive #rlaGeneral="routerLinkActive" [active]="rlaGeneral.isActive">General</a>
+    <a mat-tab-link routerLink="/settings/account" routerLinkActive #rlaAccount="routerLinkActive" [active]="rlaAccount.isActive">Account</a>
+    <a mat-tab-link routerLink="/settings/payment" routerLinkActive #rlaPayment="routerLinkActive" [active]="rlaPayment.isActive">Payment</a>
+    <a mat-tab-link routerLink="/settings/plan" routerLinkActive #rlaPlan="routerLinkActive" [active]="rlaPlan.isActive">Plan</a>
+    <a mat-tab-link routerLink="/settings/notification" routerLinkActive #rlaNotification="routerLinkActive" [active]="rlaNotification.isActive">Notification</a>
+</nav>
+
 <router-outlet></router-outlet>

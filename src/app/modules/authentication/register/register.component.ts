@@ -34,7 +34,16 @@ export class RegisterComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-    this.authenticationService.createUser(form.value.firstname, form.value.lastname, form.value.email, form.value.password);
+
+    const authRegister = {
+      name: form.value.name,
+      firstname: form.value.firstname,
+      lastname: form.value.lastname,
+      email: form.value.email,
+      password: form.value.password
+    };
+
+    this.authenticationService.createUser(authRegister);
   }
 
   onLogin() {

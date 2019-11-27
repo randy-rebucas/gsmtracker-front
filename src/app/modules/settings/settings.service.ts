@@ -15,18 +15,18 @@ export class SettingsService {
     private http: HttpClient
   ) { }
 
-  getOwnSetting(userId: string) {
-   return this.http.get<Settings>(
+  getSetting(userId: string) {
+   return this.http.get<any>(
       BACKEND_URL + '/' + userId
     );
   }
 
-  insert(newSetting: any) {
-    return this.http.post<{ message: string, record: Settings }>(BACKEND_URL, newSetting);
+  updateGeneral(updatedSetting: any) {
+    return this.http.put<{message: string}>(BACKEND_URL + '/general', updatedSetting);
   }
 
-  update(updatedSetting: any) {
-    return this.http.put(BACKEND_URL, updatedSetting);
+  updateNotificaiton(updatedNotification: any) {
+    return this.http.put<{message: string}>(BACKEND_URL + '/notification', updatedNotification);
   }
 
 }
