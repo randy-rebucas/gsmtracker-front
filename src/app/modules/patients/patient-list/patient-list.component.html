@@ -50,7 +50,7 @@
                                 <img [src]="element.avatar" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
                             </ng-template>
                             <ng-template #elseBlock>
-                              <ngx-avatar name="{{element.firstname + ' ' + element.lastname}}" size="40"></ngx-avatar>
+                                <app-avatar [firstname]="element.firstname" [lastname]="element.lastname"></app-avatar>
                             </ng-template>
                         </mat-cell>
                     </div>
@@ -139,6 +139,7 @@
         <div class="area side" gdArea="side">
             <!--birthdays-->
             <app-birthdays></app-birthdays>
+
         </div>
         <div class="area footer" gdArea="footer">
 

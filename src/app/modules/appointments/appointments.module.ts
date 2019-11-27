@@ -28,7 +28,7 @@ import {
 import { EventsComponent } from 'src/app/shared/components/events/events.component';
 import { CalendarComponent } from 'src/app/shared/components/calendar/calendar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AvatarModule } from 'ngx-avatar';
+import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
 
 @NgModule({
   declarations: [

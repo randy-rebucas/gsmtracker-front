@@ -1,0 +1,12 @@
+<div class="avatar-container" [ngStyle]="{'width': setSize(), 'height': setSize()}">
+    <div class="avatar-content" [ngStyle]="{
+        'background-color': bgColor,
+        'text-align': 'center', 
+        'border-radius': setRadius(),
+        'text-transform': 'uppercase',
+        'color': 'rgb(255, 255, 255)',
+        'font': setFontSize()
+        }">
+        {{initials}}
+    </div>
+</div>

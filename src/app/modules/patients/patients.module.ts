@@ -29,7 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BirthdaysComponent } from 'src/app/shared/components/birthdays/birthdays.component';
 import { PhysiciansComponent } from 'src/app/shared/components/physicians/physicians.component';
 import { BirthdayPipe } from 'src/app/shared/pipes/birthday.pipe';
-import { AvatarModule } from 'ngx-avatar';
+import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
 
 @NgModule({
   declarations: [

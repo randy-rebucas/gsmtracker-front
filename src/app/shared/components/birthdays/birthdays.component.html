@@ -9,13 +9,12 @@
                 <img [src]="birthday.avatar" [alt]="birthday.fullname" style="width:42px; height:42px; vertical-align: middle;border-radius: 100%;" />
             </ng-template>
             <ng-template #elseBlock>
-                <ngx-avatar name="{{birthday.fullname}}" size="50"></ngx-avatar>
+                <app-avatar [fullname]="birthday.fullname" [isFullname]="true" [size]="'50'"></app-avatar>
             </ng-template>
             <div class="birthday-user">
                 <h4 mat-line>{{ birthday.fullname }} <small mat-line> {{ birthday.birthdate | date}} </small></h4>
                 <p mat-line> {{ birthday.contact }} <span>Age: {{ birthday.age }}</span></p>
             </div>
-
         </mat-list-item>
         <mat-list-item *ngIf="birthdays.length === 0">No birthday's available.</mat-list-item>
     </mat-list>
