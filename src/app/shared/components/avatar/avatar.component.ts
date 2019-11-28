@@ -15,6 +15,7 @@ export class AvatarComponent implements OnInit, AfterViewInit {
   @Input() isFullname: boolean;
   @Input() isRounded: boolean;
   @Input() size: number;
+  @Input() src: string;
 
   constructor(private cdr: ChangeDetectorRef) {
     this.isFullname = false;

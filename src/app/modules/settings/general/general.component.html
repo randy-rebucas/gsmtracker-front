@@ -1,12 +1,14 @@
 <div class="wrapper">
     <div gdAreas="header header header | side1 content side2 | footer footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="200px auto 700px" gdAreas.lt-md="header | side1 | content | side2 | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
         <div class="area header" gdArea="header">
-            <h3 class="mat-subheading-2">Please complete all important informations.</h3>
+            <h2 class="mat-title">General</h2>
         </div>
         <div class="area content" gdArea="content">
 
             <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
-                <h4 subheading-1>Clinic Information</h4>
+                <h2 class="mat-subheading-2">Clinic Info<br/>
+                  <small class="mat-caption">Provide all information about your clinic as this will be used in your prescription.</small>
+                </h2>
                 <div class="form-field-block">
                     <mat-form-field>
                         <input matInput type="text" formControlName="name" placeholder="Clinic Name" [(ngModel)]="name">
@@ -55,7 +57,7 @@
                         <div class="form-field-block">
                             <mat-form-field>
                                 <input matInput #postalCode maxlength="5" type="number" formControlName="postalCode" placeholder="Postal Code" [(ngModel)]="postalcode">
-                                <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+                                <mat-hint>{{postalCode.value.length}} / 5</mat-hint>
                             </mat-form-field>
                             <mat-form-field>
                                 <input matInput type="text" formControlName="country" placeholder="Country" [(ngModel)]="country">
@@ -86,7 +88,7 @@
                 <ng-container formArrayName="phones" *ngIf="contactArray.length > 0">
                     <div class="form-field-block form-field-contact" *ngFor="let contact of contactArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
                         <mat-form-field class="contact">
-                            <input matInput type="text" formControlName="contact" placeholder="Contact {{i+1}}" [(ngModel)]="phone">
+                            <input matInput type="text" formControlName="contact" placeholder="Contact" [(ngModel)]="phone">
                             <mat-error *ngIf="contactArray.controls[i].get('contact').hasError('required')">
                                 Contact is <strong>required</strong>
                             </mat-error>
@@ -127,7 +129,7 @@
 
         </div>
         <div class="area side" gdArea="side1">
-            <app-upload [sourceId]="settingId" [imagePreview]="imagePath"></app-upload>
+            <app-upload [sourceId]="settingId" [imagePreview]="imagePath" [defaultImage]="'./../../../../assets/images/clinic-blank.png'"></app-upload>
         </div>
         <div class="area side" gdArea="side2">
             <div class="rxpad-output">

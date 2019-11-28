@@ -14,6 +14,7 @@ export class UploadComponent implements OnInit {
 
   @Input() sourceId: string;
   @Input() imagePreview: ArrayBuffer | any;
+  @Input() defaultImage: string;
 
   form: FormGroup;
   loadingPic: boolean;
@@ -27,6 +28,7 @@ export class UploadComponent implements OnInit {
     private notificationService: NotificationService
   ) {
     this.loadingPic = false;
+    this.defaultImage = './../../../../assets/images/blank.png';
   }
 
   ngOnInit() {

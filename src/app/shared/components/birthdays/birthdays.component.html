@@ -2,7 +2,7 @@
     <mat-card-header>
         <mat-card-title>Birthdays</mat-card-title>
     </mat-card-header>
-    <mat-list *ngIf="!isLoading">
+    <mat-list>
         <mat-list-item *ngFor="let birthday of birthdays" class="birthday-list">
             <div *ngIf="birthday.avatar; then thenBlock else elseBlock"></div>
             <ng-template #thenBlock>

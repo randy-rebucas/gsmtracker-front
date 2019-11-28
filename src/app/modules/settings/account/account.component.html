@@ -1,17 +1,154 @@
 <div class="wrapper">
-    <div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 350px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
+    <div gdAreas="header header header | side1 content side2 | footer footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="200px auto 700px" gdAreas.lt-md="header | side1 | content | side2 | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
         <div class="area header" gdArea="header">
-            head
+            <h2 class="mat-title">Account</h2>
         </div>
         <div class="area content" gdArea="content">
-            <p>accounts-works</p>
+            <h2 class="mat-subheading-2">Blockchain Info<br/>
+              <small class="mat-caption">Your blockchain private and public key are very usefull in any instance.Use this to recieve/send token also for persmissions.</small>
+            </h2>
+            <mat-list>
+                <mat-list-item>
+                  <span>Private Key: </span>
+                  <span>
+                      <mat-form-field class="example-full-width">
+                          <input matInput value="{{privateKey}}" #private readonly>
+                      </mat-form-field>
+                  </span>
+                  <button mat-flat-button type="button" (click)="copyInputMessage(private)">Copy</button>
+                </mat-list-item>
+                <mat-list-item>
+                  <span>Public Key: </span>
+                  <span>
+                      <mat-form-field class="example-full-width">
+                          <input matInput value="{{publicKey}}" #public readonly>
+                      </mat-form-field>
+                  </span>
+                  <button mat-flat-button type="button" (click)="copyInputMessage(public)">Copy</button>
+                </mat-list-item>
+                <mat-list-item>
+                  <span>Email: </span>
+                  <span>{{email}} </span>
+                  <button mat-flat-button type="button">Change</button>
+                </mat-list-item>
+                <mat-list-item>
+                  <span>Password: </span>
+                  <span>***** </span>
+                  <button mat-flat-button type="button">Change</button>
+                </mat-list-item>
+            </mat-list>
+            <hr/>
+            <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
+                <h2 class="mat-subheading-2">Basic Information <br/>
+                    <small class="mat-caption">Your profile info will be used in invoices. Also we will use your Name to address you with our interactive chat messages and emails.</small>
+                </h2>
+                <div class="form-field-block">
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="midlename" placeholder="Midlename">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="lastname" placeholder="Lastname">
+                    </mat-form-field>
+                </div>
+                <div class="form-field-block">
+                    <mat-form-field>
+                        <input matInput type="number" formControlName="contact" placeholder="Contact">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select formControlName="gender" placeholder="Gender">
+                            <mat-option value="Male">Male</mat-option>
+                            <mat-option value="Female">Female</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput readonly [matDatepicker]="picker" formControlName="birthdate" placeholder="Birthdate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
+                    <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+                        <h2 class="mat-subheading-2">Address <br/>
+                            <small class="mat-caption">This is your home address.</small>
+                        </h2>
+
+                          <div class="form-field-block">
+                              <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
+                          </div>
+
+
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="address1" placeholder="Street Address">
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="city" placeholder="City">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="province" placeholder="Province">
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="postalCode" placeholder="Postal Code">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="country" placeholder="Country">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="action">
+                            <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                            <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <h2 class="mat-subheading-2">Meta Data <br/>
+                  <small class="mat-caption">Any additional information about you eg: Label = Practice, Value = Pediatric</small></h2>
+                <ng-container formArrayName="metas" *ngIf="metaArray.length > 0">
+                    <div *ngFor="let meta of metaArray.controls; let i = index;" [formGroupName]="i" class="metaGroup">
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="label" placeholder="Label">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="value" placeholder="Value">
+                            </mat-form-field>
+                        </div>
+                        <div class="action">
+                            <button mat-icon-button *ngIf="metaArray.controls.length < 10" (click)="addMeta()" type="button"><mat-icon>add</mat-icon></button>
+                            <button mat-icon-button color="warn" *ngIf="metaArray.controls.length > 1" (click)="removeMeta(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                        </div>
+                    </div>
+                </ng-container>
+                <button mat-raised-button color="primary" (click)="onSubmit()">Update</button>
+            </form>
+            <div class="danger-zone">
+                <p>Delete account and cancel any associated subscriptions.<br/>
+                  This action is permanent.</p>
+              <button mat-flat-button type="button" color="warn">Delete Account</button>
+            </div>
         </div>
-        <div class="area side" gdArea="side">
+        <div class="area side" gdArea="side1">
+            <app-upload [sourceId]="userId" [imagePreview]="imagePath"></app-upload>
+        </div>
+        <div class="area side" gdArea="side2">
             <!--events-->
-            side
+            <app-ads></app-ads>
         </div>
         <div class="area footer" gdArea="footer">
-            footer
+            <!-- footer -->
         </div>
     </div>
 </div>

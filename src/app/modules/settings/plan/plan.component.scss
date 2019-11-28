@@ -1,4 +1,15 @@
 .wrapper {
-    flex-grow: 1;
-    margin: 1em 2em;
+  flex-grow: 1;
+  margin: 1em 2em;
+}
+.plans {
+  display: flex;
+}
+
+.plans mat-card {
+  flex: 1 1 auto;
+}
+
+.plans mat-card:not(:first-child) {
+  margin-left: 10px;
 }

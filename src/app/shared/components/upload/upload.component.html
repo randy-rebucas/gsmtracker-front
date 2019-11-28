@@ -9,7 +9,7 @@
             <img [src]="imagePreview">
         </ng-template>
         <ng-template #elseBlock>
-            <img src="assets/images/clinic-blank.png" alt="" />
+            <app-avatar [src]="defaultImage" [size]="'200'"></app-avatar>
         </ng-template>
     </div>
     <div *ngIf="loadingPic">

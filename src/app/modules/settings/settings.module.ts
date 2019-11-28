@@ -15,13 +15,19 @@ import {
   MatButtonModule,
   MatTabsModule,
   MatCardModule,
-  MatListModule
+  MatListModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatSelectModule,
+  MatTableModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UploadComponent } from 'src/app/shared/components/upload/upload.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PlanComponent } from './plan/plan.component';
 import { NotificationComponent } from './notification/notification.component';
+import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
+import { AdsComponent } from 'src/app/shared/components/ads/ads.component';
 
 
 @NgModule({
@@ -32,7 +38,8 @@ import { NotificationComponent } from './notification/notification.component';
     UploadComponent,
     PaymentComponent,
     PlanComponent,
-    NotificationComponent
+    NotificationComponent,
+    AdsComponent
   ],
   imports: [
     CommonModule,
@@ -48,6 +55,11 @@ import { NotificationComponent } from './notification/notification.component';
     MatTabsModule,
     MatCardModule,
     MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    AvatarModule,
+    MatTableModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: SettingsComponent, children: [

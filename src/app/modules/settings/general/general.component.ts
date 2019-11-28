@@ -74,6 +74,7 @@ export class GeneralComponent implements OnInit {
 
       if (settingData) {
         const general = settingData.general;
+
         this.settingId = settingData.settingId;
         this.uploadService.get(this.settingId).subscribe((res) => {
           this.imagePath = res.image;

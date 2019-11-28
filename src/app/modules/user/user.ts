@@ -7,10 +7,14 @@ export interface User {
   birthdate: string;
   contact: string;
   createdAt: Date;
+  updatedAt: Date;
   address: Address[];
   metas: Meta[];
 
   age: number;
+  publicKey: string;
+  privateKey: string;
+  usertypes: Type[];
 }
 
 export interface Address {
@@ -25,4 +29,8 @@ export interface Address {
 export interface Meta {
   label: string;
   value: string;
+}
+
+export interface Type {
+  type: string;
 }

@@ -1,7 +1,11 @@
 <div class="avatar-container" [ngStyle]="{'width': setSize(), 'height': setSize()}">
-    <div class="avatar-content" [ngStyle]="{
+  <ng-container *ngIf="src">
+    <img [src]="src" style="width: 100%;"/>
+  </ng-container>
+  <ng-container *ngIf="!src">
+      <div class="avatar-content" [ngStyle]="{
         'background-color': bgColor,
-        'text-align': 'center', 
+        'text-align': 'center',
         'border-radius': setRadius(),
         'text-transform': 'uppercase',
         'color': 'rgb(255, 255, 255)',
@@ -9,4 +13,6 @@
         }">
         {{initials}}
     </div>
+  </ng-container>
+
 </div>
