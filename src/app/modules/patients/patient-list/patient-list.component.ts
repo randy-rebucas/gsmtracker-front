@@ -47,7 +47,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
 
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
-    'select',
     'image',
     'firstname',
     'midlename',
@@ -63,7 +62,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  private userId: string;
+  public userId: string;
   public userTypeId: any;
 
   constructor(
@@ -97,47 +96,27 @@ export class PatientListComponent implements OnInit, OnDestroy {
       .getUpdateListener()
       .subscribe((userData: {users: User[], counts: number}) => {
         this.isLoading = false;
+        const newUsers = [];
+        userData.users.forEach(user => {
+          user.physicians.filter((physician) => {
+            const ownerShip = { isOwned : physician.userId === this.userId};
+            newUsers.push({...user, ...ownerShip });
+          });
+        });
+        console.log(newUsers);
         this.total = userData.counts;
-        this.dataSource = new MatTableDataSource(userData.users);
+        this.dataSource = new MatTableDataSource(newUsers);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
     });
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    return this.selection.selected.length;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: any): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
-
-  onDeleteAll() {
-    const numSelected = this.selection.selected;
-    const plural = (numSelected.length > 1) ? '(s)' : '';
-    this.dialogService.openConfirmDialog('Are you sure to delete ' + numSelected.length +
-    ' item' + plural +
-    ' record ?')
+  onDelete(userId: string) {
+    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
     .afterClosed().subscribe(res => {
       if (res) {
-        numSelected.forEach(element => {
-          this.ids.push(element.id);
-        });
-
-        this.userService.delete(this.ids).subscribe((data) => {
+        this.userService.delete(userId).subscribe((data) => {
           this.userService.getAll(this.userTypeId, this.perPage, this.currentPage);
           this.notificationService.warn('::' + data.message);
         });

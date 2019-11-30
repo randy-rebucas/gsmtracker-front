@@ -1,37 +1,3 @@
-
-.wrapper {
-    flex-grow: 1;
-    margin: 10px 25px;
-}
-
-.search-div {
-    position: relative;
-    width: 15%;
-}
-
-.mat-form-field {
-    width: 100%;
-}
-
-.search-div>div {
-    position: absolute;
-    top: 1rem;
-    right: 0;
-}
-
-.search-div>div img {
-    cursor: pointer;
-}
-
-.action-button {
-    text-align: right;
-    padding: 1em 0;
-}
-
-.hide {
-    display: none;
-}
-
 mat-row.example-element-row mat-cell:first-child,
 mat-header-row.mat-header-row mat-header-cell:first-child {
     max-width: 30px;
@@ -52,16 +18,117 @@ mat-header-row.mat-header-row mat-header-cell:last-child {
   max-width: 3%;
 }
 
-mat-cell.mat-cell.cdk-column-select.mat-column-select {
-    max-width: 30px;
+mat-row.detail-row {
+  min-height: 0;
 }
 
-mat-row.detail-row {
-    min-height: 0;
+mat-row mat-cell.mat-cell.cdk-column-action.mat-column-action button {
+  visibility: hidden;
+}
+
+mat-row:hover mat-cell.mat-cell.cdk-column-action.mat-column-action button {
+  visibility: visible;
+}
+
+mat-cell.mat-cell.cdk-column-select.mat-column-select {
+  max-width: 30px;
+}
+
+mat-cell.mat-cell.cdk-column-expandedDetail.mat-column-expandedDetail {
+  width: 100% !important;
 }
 
 mat-paginator.mat-paginator {
     width: 100%;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-firstname.mat-column-firstname {
+  max-width: 13%;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-midlename.mat-column-midlename {
+  max-width: 12%;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-lastname.mat-column-lastname {
+  max-width: 12%;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-contact.mat-column-contact {
+  max-width: 12%;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-gender.mat-column-gender {
+  max-width: 10%;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-birthdate.mat-column-birthdate {
+  max-width: 12%;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-age.mat-column-age {
+  max-width: 12%;
+}
+
+mat-cell.mat-cell.cdk-column-firstname.mat-column-firstname {
+  max-width: 12%;
+}
+
+mat-cell.mat-cell.cdk-column-midlename.mat-column-midlename {
+  max-width: 12%;
+}
+
+mat-cell.mat-cell.cdk-column-lastname.mat-column-lastname {
+  max-width: 12%;
+}
+
+mat-cell.mat-cell.cdk-column-contact.mat-column-contact {
+  max-width: 12%;
+}
+
+mat-cell.mat-cell.cdk-column-gender.mat-column-gender {
+  max-width: 10%;
+}
+
+mat-cell.mat-cell.cdk-column-birthdate.mat-column-birthdate {
+  max-width: 12%;
+}
+
+mat-cell.mat-cell.cdk-column-age.mat-column-age {
+  max-width: 12%;
+}
+
+.wrapper {
+  flex-grow: 1;
+  margin: 10px 25px;
+}
+
+.search-div {
+  position: relative;
+  width: 15%;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.search-div>div {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+}
+
+.search-div>div img {
+  cursor: pointer;
+}
+
+.action-button {
+  text-align: right;
+  padding: 1em 0;
+}
+
+.hide {
+  display: none;
 }
 
 .action-button button {
@@ -78,9 +145,7 @@ mat-paginator.mat-paginator {
     width: 22%;
 }
 
-mat-cell.mat-cell.cdk-column-expandedDetail.mat-column-expandedDetail {
-    width: 100% !important;
-}
+
 
 ul.addresses li:first-child {
     list-style: none;
@@ -99,3 +164,4 @@ ul.metadata li:first-child {
     font-size: 16px;
     font-weight: 500;
 }
+

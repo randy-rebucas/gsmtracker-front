@@ -76,8 +76,8 @@ export class UserService {
     return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedUser.id + '/profile', updatedUser);
   }
 
-  delete(patientIds: []) {
-    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + patientIds);
+  delete(patientId: string) {
+    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + patientId);
   }
 
 }

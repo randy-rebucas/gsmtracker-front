@@ -11,10 +11,12 @@ export interface User {
   address: Address[];
   metas: Meta[];
 
+  isOwned: boolean;
   age: number;
   publicKey: string;
   privateKey: string;
-  usertypes: Type[];
+  usertypes: string;
+  physicians: Physicians[];
 }
 
 export interface Address {
@@ -31,6 +33,6 @@ export interface Meta {
   value: string;
 }
 
-export interface Type {
-  type: string;
+export interface Physicians {
+  userId: string;
 }

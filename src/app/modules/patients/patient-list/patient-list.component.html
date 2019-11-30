@@ -14,12 +14,12 @@
                     </div>
                 </div>
                 <div class="action-button" fxFlex="20" fxFlex.sm="100%" fxFlex.md="20%">
-                    <button mat-flat-button color="accent" (click)="onPrint()" [disabled]="!isAllSelected()">
+                    <!-- <button mat-flat-button color="accent" (click)="onPrint()" [disabled]="!isAllSelected()">
             <mat-icon>print</mat-icon> Print
-          </button>
-                    <button mat-flat-button color="warn" (click)="onDeleteAll()" [disabled]="!isAllSelected()">
+          </button> -->
+                    <!-- <button mat-flat-button color="warn" (click)="onDelete()" [disabled]="!isAllSelected()">
             <mat-icon>delete_sweep</mat-icon> Delete
-          </button>
+          </button> -->
                     <button mat-flat-button color="primary" (click)="onCreate(userTypeId)">
             <mat-icon>add</mat-icon> Add New
           </button>
@@ -32,18 +32,8 @@
             <mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
 
                 <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-                    <div *ngIf="column === 'select'">
-                        <mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                            </mat-checkbox>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let row">
-                            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-                            </mat-checkbox>
-                        </mat-cell>
-                    </div>
                     <div *ngIf="column === 'image'">
-                        <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> &nbsp; </mat-header-cell>
                         <mat-cell *matCellDef="let element">
                             <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
                             <ng-template #thenBlock>
@@ -59,12 +49,15 @@
                         <mat-header-cell *matHeaderCellDef style="text-align: right;">
                         </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                            <button mat-icon-button (click)="onEdit(userTypeId, element.id)" aria-label="Edit">
-                        <mat-icon>launch</mat-icon>
-                    </button>
-                            <button mat-icon-button [routerLink]="['./', element.id, 'record']" aria-label="Record">
-                      <mat-icon>assignment</mat-icon>
-                    </button>
+                            <ng-container *ngIf="element.isOwned">
+                                <button mat-icon-button (click)="onEdit(userTypeId, element.id)" aria-label="Edit" title="Edit">
+                                    <mat-icon>launch</mat-icon>
+                                  </button>
+                                  <button mat-icon-button color="warn" (click)="onDelete(element.id)" aria-label="Delete" title="Delete">
+                                    <mat-icon>delete</mat-icon>
+                                  </button>
+                            </ng-container>
+
                         </mat-cell>
                     </ng-template>
                     <ng-template #elseBlockRow>
@@ -104,7 +97,8 @@
                                 <ul class="metadata">
                                     <li>Meta Data:</li>
                                     <li *ngFor="let meta of element.meta; let m = index;">
-                                        {{meta.label}}: <span>{{meta.value}}</span>
+                                        <ng-container *ngIf="meta.label != ''">{{meta.label}}: <span>{{meta.value}}</span></ng-container>
+                                        <ng-container *ngIf="meta.label == ''">--</ng-container>
                                     </li>
                                 </ul>
                             </div>
@@ -112,6 +106,9 @@
                                 <!--physicians-->
                                 <app-physicians [physicians]="element.physicians"></app-physicians>
                             </div>
+                            <button mat-icon-button [routerLink]="['../', element.id, 'record']" aria-label="Record" title="Record">
+                              <mat-icon>assignment</mat-icon>
+                            </button>
                         </div>
                     </mat-cell>
                 </ng-container>
@@ -119,7 +116,7 @@
                 <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
                 <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
                 </mat-row>
-                <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row" (click)="onDetail(row.id)"></mat-row>
+                <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
 
                 <ng-container matColumnDef="loading">
                     <mat-footer-cell *matFooterCellDef colspan="8">

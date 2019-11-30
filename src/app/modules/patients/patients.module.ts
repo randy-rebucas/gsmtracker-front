@@ -30,6 +30,7 @@ import { BirthdaysComponent } from 'src/app/shared/components/birthdays/birthday
 import { PhysiciansComponent } from 'src/app/shared/components/physicians/physicians.component';
 import { BirthdayPipe } from 'src/app/shared/pipes/birthday.pipe';
 import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
+import { RecordsComponent } from '../records/records.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
         { path: 'list', component: PatientListComponent },
         { path: 'form', component: PatientFormComponent, canActivate: [AuthenticationGuard] },
         { path: ':patientId', component: PatientDetailComponent },
-        { path: ':patientId/edit', component: PatientFormComponent, canActivate: [AuthenticationGuard]  }
+        { path: ':patientId/edit', component: PatientFormComponent, canActivate: [AuthenticationGuard]  },
+        { path: ':patientId/record', loadChildren: './../records/records.module#RecordsModule', canActivate: [AuthenticationGuard]  }
       ] }
     ])
   ],

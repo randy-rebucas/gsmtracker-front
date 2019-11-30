@@ -1,6 +1,6 @@
 <div class="avatar-container" [ngStyle]="{'width': setSize(), 'height': setSize()}">
   <ng-container *ngIf="src">
-    <img [src]="src" style="width: 100%;"/>
+    <img matListAvatar [src]="src" style="width: 100%;"/>
   </ng-container>
   <ng-container *ngIf="!src">
       <div class="avatar-content" [ngStyle]="{
