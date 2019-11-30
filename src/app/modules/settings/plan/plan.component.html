@@ -4,126 +4,62 @@
             <h2 class="mat-title">Billing</h2>
         </div>
         <div class="area content" gdArea="content">
-            <h2 class="mat-subheading-2">Next charge details<br/>
-              <small class="mat-caption">Next charge will be on Dec 23, 2019.</small>
-            </h2>
-            <mat-table [dataSource]="planSource" class="mat-elevation-z8">
-                <!-- Quantity Column -->
-                <ng-container matColumnDef="quantity">
-                  <mat-header-cell *matHeaderCellDef> Qty. </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
-                </ng-container>
-
-                <!-- Item Column -->
-                <ng-container matColumnDef="item">
-                  <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.item}} </mat-cell>
-                </ng-container>
-
-                <!-- Price Column -->
-                <ng-container matColumnDef="price">
-                  <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.unitPrice | currency:'PHP':'symbol-narrow' }} </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="planColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: planColumns;"></mat-row>
-              </mat-table>
-              <br/>
               <h2 class="mat-subheading-2">Upgrade plan<br/>
                 <small class="mat-caption">Select a plan that sutes to your business.</small>
               </h2>
               <div class="plans">
-                <mat-card class="plan-card" *ngFor="let plan of plans">
+                <mat-card class="plan-card" *ngFor="let plan of plans" [ngClass]="{'active': package === plan.name}">
                     <mat-card-header>
                         <mat-card-title>{{plan.name}}</mat-card-title>
-                        <mat-card-subtitle>Monthly payment</mat-card-subtitle>
+                        <mat-card-subtitle *ngIf="plan.slug != 'enterprise'">Monthly payment</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <mat-list>
+                        <ng-container *ngIf="plan.slug === 'enterprise'">
+                            <mat-list>
                             <mat-list-item *ngFor="let package of plan.packages"><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> {{package.title}} </mat-list-item>
+                                check_circle_outline
+                              </i> {{package.title}}
+                            </mat-list-item>
+                            <mat-divider></mat-divider>
+                            <mat-list-item>Please contact us:</mat-list-item>
+                            <mat-list-item><i class="material-icons">
+                                local_phone
+                            </i> 09179157515</mat-list-item>
+                          </mat-list>
+                        </ng-container>
+                        <mat-list *ngIf="plan.slug != 'enterprise'">
+                            <mat-list-item *ngFor="let package of plan.packages"><i class="material-icons">
+                              check_circle_outline
+                            </i> {{package.title}}</mat-list-item>
                         </mat-list>
+                        <p  class="note" *ngIf="plan.slug === 'expanded'"><strong>Note:</strong> You are not allowed to downgrade your plan after this upgrade.</p>
                     </mat-card-content>
-                    <mat-card-actions>
-                        <button mat-flat-button type="button">Change</button>
+                    <mat-card-actions  *ngIf="plan.slug != 'enterprise'">
+                      <!-- if package is equal to expanded -->
+                      <ng-container *ngIf="package != 'Expanded'">
+                          <button mat-flat-button type="button" (click)="onUpdatePlan(plan._id)" *ngIf="package != plan.name">Select</button>
+                      </ng-container>
+
                     </mat-card-actions>
                 </mat-card>
               </div>
-              <!-- <mat-card class="plan-card">
-                  <mat-card-header>
-                      <mat-card-title>Expanded</mat-card-title>
-                      <mat-card-subtitle>Monthly payment</mat-card-subtitle>
-                  </mat-card-header>
-                  <mat-card-content>
-                      <mat-list>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> 1 set pc setup</mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                </i> 1 ipad</mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> 1 printer </mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Single Providers </mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Free Updates </mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Lifetime Support </mat-list-item>
-                      </mat-list>
-                  </mat-card-content>
-                  <mat-card-actions>
-                      <button mat-flat-button type="button">Change</button>
-                  </mat-card-actions>
-              </mat-card>
-
-              <mat-card class="plan-card">
-                  <mat-card-header>
-                      <mat-card-title>Enterprise</mat-card-title>
-                      <mat-card-subtitle>Pricing</mat-card-subtitle>
-                  </mat-card-header>
-                  <mat-card-content>
-                      <mat-list>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Multi set pc setup</mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                </i> 1 ipad</mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Multi printer </mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Multi providers connection</mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Multi clinic branching </mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Free Updates </mat-list-item>
-                          <mat-list-item><i class="material-icons">
-                                                  check_circle_outline
-                                                  </i> Lifetime Support </mat-list-item>
-                      </mat-list>
-                  </mat-card-content>
-                  <mat-card-actions>
-                      <button mat-flat-button type="button">Change</button>
-                  </mat-card-actions>
-              </mat-card> -->
-
         </div>
         <div class="area side" gdArea="side1">
-            <h2 class="mat-subheading-2">You are using demo.<br/>
+            <h2 class="mat-subheading-2" *ngIf="!subscription">You are using demo.<br/>
               <small class="mat-caption">Demo plan are only allowed to view some modules that are permitted.</small>
             </h2>
-            <button mat-flat-button type="button" color="primary">Change plan</button>
+            <ng-container *ngIf="subscription">
+              <h2 class="mat-subheading-2">Active plan: <strong>{{package}}</strong> <br/>
+                <small class="mat-caption">Subscription Date: {{subscriptionDate | date}}</small></h2>
+              <mat-list>
+                <mat-list-item *ngFor="let package of packages"> {{package.title}} </mat-list-item>
+               </mat-list>
+              <!-- <br/>
+
+              <h2 class="mat-subheading-2">Next charge will be on<br/>
+                <small class="mat-caption">Dec 23, 2019.</small>
+              </h2> -->
+            </ng-container>
         </div>
         <div class="area side" gdArea="side2">
           <app-ads></app-ads>

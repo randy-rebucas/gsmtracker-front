@@ -176,5 +176,6 @@ export class AccountComponent implements OnInit {
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
+    this.notificationService.success(':: Copied');
   }
 }

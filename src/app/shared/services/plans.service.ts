@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
-const BACKEND_URL = environment.apiUrl + '/subscription';
+const BACKEND_URL = environment.apiUrl + '/plan';
 
 
 export interface Plan {
@@ -26,9 +26,9 @@ export class PlansService {
       );
   }
 
-  getById(subcriptionId: string) {
+  getById(planId: string) {
     return this.http.get<Plan>(
-      BACKEND_URL + '/' + subcriptionId
+      BACKEND_URL + '/' + planId
     );
   }
 

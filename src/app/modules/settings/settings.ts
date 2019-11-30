@@ -33,3 +33,10 @@ export interface Hour {
   afternoonOpen: string;
   afternoonClose: string;
 }
+
+export interface Subscription {
+  settingId: string;
+  general: any;
+  notification: any;
+  subscription: string;
+}

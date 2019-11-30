@@ -44,6 +44,7 @@ import { RxPadComponent } from './shared/components/rx-pad/rx-pad.component';
 import { EncounterComponent } from './shared/components/encounter/encounter.component';
 import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
+import { PaymentsComponent } from './shared/components/payments/payments.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
     RxPadComponent,
     EncounterComponent,
     StatComponent,
-    QrCodeComponent
+    QrCodeComponent,
+    PaymentsComponent
   ],
   imports: [
     BrowserModule,
