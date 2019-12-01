@@ -64,7 +64,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
 
   public userId: string;
   public userTypeId: any;
-
+  public avatar: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -84,7 +84,11 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.pageSizeOptions = [5, 10, 25, 100];
 
   }
-
+  getAvatar(patientId: string) {
+    this.uploadService.get(patientId).subscribe((res) => {
+      return res.image;
+    });
+  }
   ngOnInit() {
     this.userId = this.authenticationService.getUserId();
     this.titleService.setTitle('Users');
@@ -98,11 +102,18 @@ export class PatientListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         const newUsers = [];
         userData.users.forEach(user => {
-          user.physicians.filter((physician) => {
-            const ownerShip = { isOwned : physician.userId === this.userId};
-            newUsers.push({...user, ...ownerShip });
+          // this.uploadService.get(user.id).subscribe((res) => {
+          //   const patientImage = {
+          //     avatar : res.image
+          //   };
+            user.physicians.filter((physician) => {
+              const ownerShip = {
+                isOwned : physician.userId === this.userId
+              };
+              newUsers.push({...user, ...ownerShip}); // , ...patientImage
+            });
           });
-        });
+        // });
         console.log(newUsers);
         this.total = userData.counts;
         this.dataSource = new MatTableDataSource(newUsers);
@@ -111,6 +122,8 @@ export class PatientListComponent implements OnInit, OnDestroy {
       });
     });
   }
+
+
 
   onDelete(userId: string) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')

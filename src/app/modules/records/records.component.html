@@ -4,16 +4,43 @@
 <div class="wrapper">
     <div gdAreas="header header header | side1 content side2 | footer footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="200px auto 350px" gdAreas.lt-md="header | side1 | content | side2 | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
         <div class="area header" gdArea="header">
-            <h2 class="mat-title">Record</h2>
+            <div class="action-button">
+                <button class="mat-raised-button mat-accent" *ngIf="isOnQue" (click)="onCancelVisit(patientId)">Cancel Visit</button>
+                <button class="mat-raised-button mat-primary" *ngIf="!isOnQue" (click)="onMoveToQue(patientId)">Move to Que</button>
+            </div>
         </div>
         <div class="area content" gdArea="content">
-            <h2 class="mat-subheading-2">Blockchain Info<br/>
-              <small class="mat-caption">Your blockchain private and public key are very usefull in any instance.Use this to recieve/send token also for persmissions.</small>
+            <h2 class="mat-subheading-2">{{fullname}}<br/>
+              <small class="mat-caption">Created: {{ created | date }}</small>
             </h2>
+            <ng-container *ngFor="let recordForm of recordForms" >
+              <app-record [patientId]="patientId" [formProperties]="recordForm"></app-record>
+            </ng-container>
 
+            <!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let movie of movies" cdkDrag>
+                  <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                  {{movie}}
+                </div>
+              </div> -->
         </div>
         <div class="area side" gdArea="side1">
-            <!-- <app-upload [sourceId]="patientId" [imagePreview]=""></app-upload> -->
+            <app-upload [sourceId]="patientId" [imagePreview]="imagePath"></app-upload>
+            <mat-list>
+                <h3 mat-subheader>Quick Actions</h3>
+                <mat-list-item [routerLink]="['/messages']"><i class="material-icons">
+                  message
+                  </i> &nbsp; Message </mat-list-item>
+                <mat-list-item [routerLink]="['/appointments']"><i class="material-icons">
+              calendar_today
+              </i> &nbsp; Appointment </mat-list-item>
+                <!-- <mat-list-item (click)="viewChart(myUserId)"><i class="material-icons">
+            remove_red_eye
+                  </i> &nbsp; View Chart </mat-list-item> -->
+                <mat-list-item (click)="generateQrCode(patientId)"><i class="material-icons">
+                  fingerprint
+                  </i> &nbsp; Generate QR Code </mat-list-item>
+            </mat-list>
         </div>
         <div class="area side" gdArea="side2">
             <!--events-->
