@@ -56,22 +56,10 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     const userId = this.authenticationService.getUserId();
 
-    // this.blockchainService.getChain(this.perPage, this.currentPage);
-    // this.blockchainSub = this.blockchainService.getChainListener().subscribe((blockchain) => {
-    //   const chain = blockchain.chain;
-
-    //   // if (Array.isArray(chain) || chain.lenght) {
-    //   //   const newTransaction = {
-    //   //     timestamp: Date.parse(new Date().toJSON().slice(0, 10)),
-    //   //     transactions: [],
-    //   //     previousHash: 0
-    //   //   };
-
-    //   //   this.blockchainService.insertTransaction(newTransaction).subscribe(() => {
-    //   //     console.log('transaction added');
-    //   //   });
-    //   // }
-    //   console.log(chain);
-    // });
+    this.blockchainService.getChain(this.perPage, this.currentPage, userId);
+    this.blockchainSub = this.blockchainService.getChainListener().subscribe((blockchain) => {
+      const chain = blockchain.chain;
+      console.log(chain);
+    });
   }
 }

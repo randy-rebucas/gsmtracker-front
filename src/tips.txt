@@ -37,3 +37,8 @@ public ngOnDestroy (): void {
     this._destroyed$.complete();
 }
 --------------
+
+packages
+    -expanded
+        single provider
+            [front desc Information]

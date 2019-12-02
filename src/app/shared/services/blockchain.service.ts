@@ -23,8 +23,8 @@ export class BlockchainService {
 
   constructor(private http: HttpClient) { }
 
-  getChain(perPage: number, currentPage: number) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
+  getChain(perPage: number, currentPage: number, providerKey: string) {
+    const queryParams = `?providerKey=${providerKey}&pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, chains: any }>(
       BACKEND_URL + queryParams
     )
@@ -53,16 +53,8 @@ export class BlockchainService {
     return this.chainUpdated.asObservable();
   }
 
-  getWalletKeys() {
-    return this.http.get<Blockchain>(BACKEND_URL + '/wallet-key');
-  }
-
-  getPendingTransactions() {
-    return this.http.get<{ message: string, chain: Blockchain }>(BACKEND_URL + '/pending');
-  }
-
-  minePendingTransaction(newTransaction: any) {
-    return this.http.post<{ message: string, chain: Blockchain }>(BACKEND_URL, newTransaction);
+  getRecordTransactions(patiendPubKey: string) {
+    return this.http.get<Blockchain>(BACKEND_URL + '/' + patiendPubKey);
   }
 
   insertTransaction(newTransaction: any) {
