@@ -22,6 +22,13 @@
                             Clinic owner is <strong>required</strong>
                         </mat-error>
                     </mat-form-field>
+                    <mat-form-field>
+                      <mat-select formControlName="practice" placeholder="Practice">
+                        <mat-option *ngFor="let practice of practices" [value]="practice.value">
+                          {{practice.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
                 </div>
 
                 <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">

@@ -22,6 +22,7 @@
         "register": "Register",
         "logout": "Logout",
         "name": "Clinic name",
+        "practice": "Practice",
         "firstname": "Firstname",
         "lastname": "Lastname",
         "email": "Email",

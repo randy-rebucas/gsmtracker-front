@@ -15,7 +15,9 @@
                           <input matInput value="{{privateKey}}" #private readonly>
                       </mat-form-field>
                   </span>
-                  <button mat-flat-button type="button" (click)="copyInputMessage(private)">Copy</button>
+                  <button mat-icon-button aria-label="Copy" (click)="onCopy(private)">
+                    <mat-icon>file_copy</mat-icon>
+                  </button>
                 </mat-list-item>
                 <mat-list-item>
                   <span>Public Key: </span>
@@ -24,17 +26,24 @@
                           <input matInput value="{{publicKey}}" #public readonly>
                       </mat-form-field>
                   </span>
-                  <button mat-flat-button type="button" (click)="copyInputMessage(public)">Copy</button>
+                  <button mat-icon-button aria-label="Copy" (click)="onCopy(public)">
+                    <mat-icon>file_copy</mat-icon>
+                  </button>
                 </mat-list-item>
                 <mat-list-item>
                   <span>Email: </span>
                   <span>{{email}} </span>
-                  <button mat-flat-button type="button">Change</button>
+
+                  <button mat-icon-button aria-label="Change" (click)="onChangeEmail()">
+                    <mat-icon>edit</mat-icon>
+                  </button>
                 </mat-list-item>
                 <mat-list-item>
                   <span>Password: </span>
                   <span>***** </span>
-                  <button mat-flat-button type="button">Change</button>
+                  <button mat-icon-button aria-label="Change" (click)="onChangePass()">
+                    <mat-icon>edit</mat-icon>
+                  </button>
                 </mat-list-item>
             </mat-list>
             <hr/>

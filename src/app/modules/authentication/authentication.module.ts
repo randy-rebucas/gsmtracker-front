@@ -12,7 +12,8 @@ import {
   MatProgressSpinnerModule,
   MatButtonModule,
   MatCheckboxModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatSelectModule
 } from '@angular/material';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -34,6 +35,7 @@ import { HttpLoaderFactory } from 'src/app/app.module';
     MatProgressSpinnerModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatSelectModule,
     HttpClientModule,
     TranslateModule.forChild({
         loader: {

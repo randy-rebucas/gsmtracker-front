@@ -172,10 +172,18 @@ export class AccountComponent implements OnInit {
 
   }
 
-  copyInputMessage(inputElement: any) {
+  onCopy(inputElement: any) {
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
     this.notificationService.success(':: Copied');
+  }
+
+  onChangeEmail() {
+
+  }
+
+  onChangePass() {
+
   }
 }

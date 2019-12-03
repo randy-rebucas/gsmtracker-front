@@ -6,6 +6,10 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { UploadService } from 'src/app/shared/services/upload.service';
 
+export interface Practices {
+  value: string;
+  viewValue: string;
+}
 @Component({
   selector: 'app-general',
   templateUrl: './general.component.html',
@@ -20,6 +24,7 @@ export class GeneralComponent implements OnInit {
   public isLoading: boolean;
   public name: string;
   public owner: string;
+  public practice: string;
   public email: string;
   public prc: number;
   public ptr: number;
@@ -37,6 +42,28 @@ export class GeneralComponent implements OnInit {
   imagePreview: string;
 
   private userId: string;
+
+  practices: Practices[] = [
+    {value: 'ALLERGY & IMMUNOLOGY', viewValue: 'ALLERGY & IMMUNOLOGY'},
+    {value: 'ANESTHESIOLOGY', viewValue: 'ANESTHESIOLOGY'},
+    {value: 'DERMATOLOGY', viewValue: 'DERMATOLOGY'},
+    {value: 'DIAGNOSTIC RADIOLOGY', viewValue: 'DIAGNOSTIC RADIOLOGY'},
+    {value: 'EMERGENCY MEDICINE', viewValue: 'EMERGENCY MEDICINE'},
+    {value: 'FAMILY MEDICINE', viewValue: 'FAMILY MEDICINE'},
+    {value: 'INTERNAL MEDICINE', viewValue: 'INTERNAL MEDICINE'},
+    {value: 'MEDICAL GENETICS', viewValue: 'MEDICAL GENETICS'},
+    {value: 'NEUROLOGY', viewValue: 'NEUROLOGY'},
+    {value: 'NUCLEAR MEDICINE', viewValue: 'NUCLEAR MEDICINE'},
+    {value: 'OBSTETRICS AND GYNECOLOGY', viewValue: 'OBSTETRICS AND GYNECOLOGY'},
+    {value: 'PATHOLOGY', viewValue: 'PATHOLOGY'},
+    {value: 'PEDIATRICS', viewValue: 'PEDIATRICS'},
+    {value: 'PHYSICAL MEDICINE & REHABILITATION', viewValue: 'PHYSICAL MEDICINE & REHABILITATION'},
+    {value: 'PREVENTIVE MEDICINE', viewValue: 'PREVENTIVE MEDICINE'},
+    {value: 'PSYCHIATRY', viewValue: 'PSYCHIATRY'},
+    {value: 'RADIATION ONCOLOGY', viewValue: 'RADIATION ONCOLOGY'},
+    {value: 'SURGERY', viewValue: 'SURGERY'},
+    {value: 'UROLOGY', viewValue: 'UROLOGY'}
+  ];
 
   constructor(
     private titleService: Title,
@@ -57,6 +84,7 @@ export class GeneralComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       owner: ['', [Validators.required]],
+      practice: ['', [Validators.required]],
       email: [''],
       prc: ['', [Validators.required]],
       ptr: [''],
@@ -82,6 +110,7 @@ export class GeneralComponent implements OnInit {
 
         this.name = (general.length) ? general[0].name : null;
         this.owner = (general.length) ? general[0].owner : null;
+        this.practice = (general.length) ? general[0].practice : null;
         this.email = (general.length) ? general[0].email : null;
         this.prc = (general.length) ? general[0].prc : null;
         this.ptr = (general.length) ? general[0].ptr : null;
@@ -91,6 +120,7 @@ export class GeneralComponent implements OnInit {
         this.form.patchValue({
           name: this.name,
           owner: this.owner,
+          practice: this.practice,
           email: this.email,
           prc: this.prc,
           ptr: this.ptr,
@@ -191,6 +221,7 @@ export class GeneralComponent implements OnInit {
       userId: this.userId,
       name: this.form.value.name,
       owner: this.form.value.owner,
+      practice: this.form.value.practice,
       addresses: this.form.value.addresses,
       email: this.form.value.email,
       prc: this.form.value.prc,
