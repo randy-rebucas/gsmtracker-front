@@ -50,7 +50,7 @@ export class AuthenticationService {
   }
 
   createUser(authRegister: any) {
-    this.http.post<{message: string, userId: string}>(BACKEND_URL + '/register', authRegister).subscribe((res) => {
+    this.http.post<{message: string, user: any}>(BACKEND_URL + '/register', authRegister).subscribe((res) => {
       this.notificationService.success(res.message);
       const authData = {
         email: authRegister.email,
