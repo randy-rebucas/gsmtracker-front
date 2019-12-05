@@ -17,6 +17,8 @@ install animate.css
 https://daneden.github.io/animate.css/
 class="animated slideInRight"
 
+mongoDB2019!
+GYEx1MOIMVNICovH
 -----------
 Clean up subscriptions
 
