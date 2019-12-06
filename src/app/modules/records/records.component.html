@@ -10,12 +10,223 @@
             </div>
         </div>
         <div class="area content" gdArea="content">
-            <h2 class="mat-subheading-2">{{fullname}}<br/>
-              <small class="mat-caption">Created: {{ created | date }}</small>
-            </h2>
-            <ng-container *ngFor="let recordForm of recordForms" >
+
+            <mat-grid-list cols="2" rowHeight="350px">
+              <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
+                <mat-card class="dashboard-card">
+                  <mat-card-header>
+                    <mat-card-title>
+                      {{card.title}}
+                      <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu" xPosition="before">
+                        <button mat-menu-item>Expand</button>
+                        <button mat-menu-item>Remove</button>
+                      </mat-menu>
+                    </mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content class="dashboard-card-content">
+                    <div>{{ card.type }}</div>
+                  </mat-card-content>
+                </mat-card>
+              </mat-grid-tile>
+            </mat-grid-list>
+
+            <mat-card class="vital-sign-card">
+              <mat-card-header>
+                <mat-card-title>Complaint</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <editor [init]="{
+                  plugins: 'link',
+                  toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+                }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </mat-card-content>
+              <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions> -->
+            </mat-card>
+
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" class="history">
+              <div>
+                <h4 class="mat-subheading-1">Family history</h4>
+            <!-- formControlName="complaint"  -->
+            <editor [init]="{
+              plugins: 'link',
+              toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+            }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </div>
+              <div>
+                <h4 class="mat-subheading-1">Past Medical</h4>
+            <!-- formControlName="complaint"  -->
+            <editor [init]="{
+              plugins: 'link',
+              toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+            }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </div>
+
+            </div>
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" class="history">
+              <div>
+                <h4 class="mat-subheading-1">Present Illness</h4>
+            <!-- formControlName="complaint"  -->
+            <editor [init]="{
+              plugins: 'link',
+              toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+            }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </div>
+              <div>
+                <h4 class="mat-subheading-1">Social history</h4>
+            <!-- formControlName="complaint"  -->
+            <editor [init]="{
+              plugins: 'link',
+              toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+            }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </div>
+            </div>
+
+            <mat-card class="physical-exam-card">
+              <mat-card-header>
+                <mat-card-title>Physical exams</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="form-field-block">
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="Height">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" placeholder="Weight">
+                </mat-form-field>
+              </div>
+              </mat-card-content>
+              <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions> -->
+            </mat-card>
+
+            <mat-card class="vital-sign-card">
+              <mat-card-header>
+                <mat-card-title>Vital signs</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="form-field-block">
+                  <mat-form-field>
+                      <input matInput type="text" placeholder="Temperature">
+                  </mat-form-field>
+                  <mat-form-field>
+                      <input matInput type="text" placeholder="Blood pressure">
+                  </mat-form-field>
+                  <mat-form-field>
+                      <input matInput type="text" placeholder="Pulse rate">
+                  </mat-form-field>
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="Respiratory rate">
+                </mat-form-field>
+              </div>
+              </mat-card-content>
+              <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions> -->
+            </mat-card>
+
+            <mat-card class="vital-sign-card">
+              <mat-card-header>
+                <mat-card-title>Orders</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <editor [init]="{
+                  plugins: 'link',
+                  toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+                }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </mat-card-content>
+              <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions> -->
+            </mat-card>
+
+            <mat-card class="vital-sign-card">
+              <mat-card-header>
+                <mat-card-title>Prescriptions</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <!-- <div *ngFor="let group of prescriptionArray.controls; let i = index;" [formGroupName]="i"> -->
+                  <div class="form-field-block">
+                      <mat-checkbox>Maintenable</mat-checkbox>
+                      <!-- <div class="action-btn">
+                          <button mat-icon-button (click)="addPrescription()" type="button"><mat-icon>add</mat-icon></button>
+                          <button mat-icon-button color="warn" *ngIf="prescriptionArray.controls.length > 1" (click)="removePrescription(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                      </div> -->
+                  </div>
+                  <div class="form-field-block">
+                      <mat-form-field>
+                          <input matInput type="text" placeholder="Medicine">
+                      </mat-form-field>
+                      <mat-form-field>
+                          <input matInput type="text" placeholder="Preparation">
+                      </mat-form-field>
+                  </div>
+                  <div class="form-field-block">
+                      <mat-form-field>
+                          <input matInput type="text" placeholder="Sig">
+                      </mat-form-field>
+                      <mat-form-field>
+                          <input matInput type="number" placeholder="Quantity">
+                      </mat-form-field>
+                  </div>
+
+
+              <!-- </div> -->
+              </mat-card-content>
+              <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions> -->
+            </mat-card>
+            <mat-card class="vital-sign-card">
+              <mat-card-header>
+                <mat-card-title>Progress note</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <editor [init]="{
+                  plugins: 'link',
+                  toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+                }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </mat-card-content>
+              <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions> -->
+            </mat-card>
+            <mat-card class="vital-sign-card">
+              <mat-card-header>
+                <mat-card-title>Assessment</mat-card-title>
+                <mat-card-subtitle></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <editor [init]="{
+                  plugins: 'link',
+                  toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+                }"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+              </mat-card-content>
+              <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions> -->
+            </mat-card>
+            <!-- < ng-container *ngFor="let recordForm of recordForms" >
               <app-record [patientId]="patientId" [formProperties]="recordForm"></app-record>
-            </ng-container>
+            </ng-container> -->
 
             <!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
                 <div class="example-box" *ngFor="let movie of movies" cdkDrag>
@@ -26,6 +237,9 @@
         </div>
         <div class="area side" gdArea="side1">
             <app-upload [sourceId]="patientId" [imagePreview]="imagePath"></app-upload>
+            <h2 class="mat-subheading-2">{{fullname}}<br/>
+              <small class="mat-caption">Created: {{ created | date }}</small>
+            </h2>
             <mat-list>
                 <h3 mat-subheader>Quick Actions</h3>
                 <mat-list-item [routerLink]="['/messages']"><i class="material-icons">

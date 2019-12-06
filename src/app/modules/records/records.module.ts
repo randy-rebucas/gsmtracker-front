@@ -14,13 +14,14 @@ import {
   MatButtonModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
-  MatListModule
+  MatListModule,
+  MatCheckboxModule,
+  MatGridListModule,
+  MatMenuModule
 } from '@angular/material';
 import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
 import { RecordModule } from 'src/app/shared/components/record/record.module';
-// import { DragDropModule } from '@angular/cdk/drag-drop';
-
-
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { RecordModule } from 'src/app/shared/components/record/record.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatGridListModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
@@ -40,9 +42,11 @@ import { RecordModule } from 'src/app/shared/components/record/record.module';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatListModule,
+    MatCheckboxModule,
+    MatMenuModule,
     AvatarModule,
     RecordModule,
-    // DragDropModule,
+    EditorModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: RecordsComponent }

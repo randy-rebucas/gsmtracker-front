@@ -27,7 +27,7 @@ import { PaymentComponent } from './payment/payment.component';
 import { PlanComponent } from './plan/plan.component';
 import { NotificationComponent } from './notification/notification.component';
 import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
-import { AdsComponent } from 'src/app/shared/components/ads/ads.component';
+import { AdsModule } from 'src/app/shared/components/ads/ads.module';
 
 
 @NgModule({
@@ -38,8 +38,7 @@ import { AdsComponent } from 'src/app/shared/components/ads/ads.component';
     UploadComponent,
     PaymentComponent,
     PlanComponent,
-    NotificationComponent,
-    AdsComponent
+    NotificationComponent
   ],
   imports: [
     CommonModule,
@@ -59,6 +58,7 @@ import { AdsComponent } from 'src/app/shared/components/ads/ads.component';
     MatNativeDateModule,
     MatSelectModule,
     AvatarModule,
+    AdsModule,
     MatTableModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
