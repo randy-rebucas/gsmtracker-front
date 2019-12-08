@@ -22,12 +22,12 @@ import {
   MatTableModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UploadComponent } from 'src/app/shared/components/upload/upload.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PlanComponent } from './plan/plan.component';
 import { NotificationComponent } from './notification/notification.component';
 import { AvatarModule } from 'src/app/shared/components/avatar/avatar.module';
 import { AdsModule } from 'src/app/shared/components/ads/ads.module';
+import { UploadModule } from 'src/app/shared/components/upload/upload.module';
 
 
 @NgModule({
@@ -35,7 +35,6 @@ import { AdsModule } from 'src/app/shared/components/ads/ads.module';
     SettingsComponent,
     AccountComponent,
     GeneralComponent,
-    UploadComponent,
     PaymentComponent,
     PlanComponent,
     NotificationComponent
@@ -59,6 +58,7 @@ import { AdsModule } from 'src/app/shared/components/ads/ads.module';
     MatSelectModule,
     AvatarModule,
     AdsModule,
+    UploadModule,
     MatTableModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([

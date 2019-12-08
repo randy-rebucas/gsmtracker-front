@@ -7,33 +7,14 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { EncounterService } from 'src/app/shared/services/encounter.service';
 import { QueingService } from 'src/app/shared/services/queing.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-records',
   templateUrl: './records.component.html',
   styleUrls: ['./records.component.scss']
 })
 export class RecordsComponent implements OnInit {
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Cheif Complaint', type: 'complaint', cols: 1, rows: 1 },
-          { title: 'Family History', type: 'family-history', cols: 1, rows: 1 },
-          { title: 'Social History', type: 'social-history', cols: 1, rows: 1 },
-          { title: 'Present Illness', type: 'present-illness', cols: 1, rows: 1 }
-        ];
-      }
-
-      return [
-        { title: 'Cheif Complaint', type: 'complaint', cols: 2, rows: 1 },
-        { title: 'Family History', type: 'family-history', cols: 1, rows: 1 },
-        { title: 'Social History', type: 'social-history', cols: 1, rows: 2 },
-        { title: 'Present Illness', type: 'present-illness', cols: 1, rows: 1 }
-      ];
-    })
-  );
+  cards: any;
 
   public imagePath: any;
   public isOnQue: boolean;
@@ -41,7 +22,21 @@ export class RecordsComponent implements OnInit {
   public fullname: string;
   public created: Date;
 
-  // public form: FormGroup;
+  public form: FormGroup;
+
+  records: any[] = [
+    {name: 'Complaint', slug: 'complaint' },
+    {name: 'Family History', slug: 'family-history' },
+    {name: 'Social History', slug: 'social-history' },
+    {name: 'Present Illness', slug: 'present-illness' },
+    {name: 'Past Medical', slug: 'past-medical' },
+    {name: 'Physical Exam', slug: 'physical-exam' },
+    {name: 'Vital Sign', slug: 'vital-sign' },
+    {name: 'Precription', slug: 'prescription' },
+    {name: 'Progress Note', slug: 'progress-notes' },
+    {name: 'Assessment', slug: 'assessment' }
+  ];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private notificationService: NotificationService,
@@ -51,29 +46,8 @@ export class RecordsComponent implements OnInit {
     private encounterService: EncounterService,
     private queingService: QueingService,
 
-    // private fb: FormBuilder,
+    private fb: FormBuilder,
   ) { }
-
-  recordForms = [
-    {
-      id: 1,
-      name: 'Height',
-      slug: 'height',
-      formInputs: [
-        {label: 'Date', type: 'date'},
-        {label: 'Height', type: 'text'}
-      ]
-    },
-    {
-      id: 2,
-      name: 'Weight',
-      slug: 'weight',
-      formInputs: [
-        {label: 'Date', type: 'date'},
-        {label: 'Weight', type: 'text'}
-      ]
-    }
-  ];
 
   ngOnInit() {
 
@@ -91,16 +65,47 @@ export class RecordsComponent implements OnInit {
     });
 
     this.userService.get(this.patientId).subscribe((patient) => {
-      console.log(patient);
       this.fullname = patient.firstname + ' ' + patient.midlename + ' ' + patient.lastname;
       this.created = patient.createdAt;
     });
 
 
-    // this.form = this.fb.group({
-    //   record_date: [new Date(), [Validators.required]],
-    //   prescriptions: this.fb.array([this.addPrescriptionGroup()])
-    // });
+    this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+      map(({ matches }) => {
+        if (matches) {
+         //mobile
+        }
+      // default
+      })
+    );
+
+    this.form = this.fb.group({
+      prescriptions: this.fb.array([this.addPrescriptionGroup()])
+    });
+  }
+
+  addPrescriptionGroup() {
+    return this.fb.group({
+      maintenableFlg: [],
+      medicine: ['', [Validators.required]],
+      preparation: [''],
+      sig: ['', [Validators.required]],
+      quantity: [1, [Validators.required]]
+    });
+  }
+
+  addPrescription() {
+    this.prescriptionArray.push(this.addPrescriptionGroup());
+  }
+
+  removePrescription(index: number) {
+    this.prescriptionArray.removeAt(index);
+    this.prescriptionArray.markAsDirty();
+    this.prescriptionArray.markAsTouched();
+  }
+
+  get prescriptionArray() {
+    return this.form.get('prescriptions') as FormArray;
   }
 
   onCancelVisit(patientId: string) {
@@ -125,27 +130,22 @@ export class RecordsComponent implements OnInit {
     console.log(patientId);
   }
 
-  // addPrescriptionGroup() {
-  //   return this.fb.group({
-  //     maintenableFlg: [],
-  //     medicine: ['', [Validators.required]],
-  //     preparation: [''],
-  //     sig: ['', [Validators.required]],
-  //     quantity: [1, [Validators.required]]
-  //   });
-  // }
+  onSetOption(recordType: string, isExpanded: boolean, isDeleted: boolean ) {
+    const recordObject = {
+      expanded: isExpanded,
+      deleted: isDeleted
+    };
+    // console.log(recordObject);
+    localStorage.setItem(recordType, JSON.stringify(recordObject));
 
-  // addPrescription() {
-  //   this.prescriptionArray.push(this.addPrescriptionGroup());
-  // }
+  }
 
-  // removePrescription(index) {
-  //   this.prescriptionArray.removeAt(index);
-  //   this.prescriptionArray.markAsDirty();
-  //   this.prescriptionArray.markAsTouched();
-  // }
+  onGetOption(recordType: string) {
+    const recordObject = localStorage.getItem(recordType);
+    return JSON.parse(recordObject);
+  }
 
-  // get prescriptionArray() {
-  //   return this.form.get('prescriptions') as FormArray;
-  // }
+  onSubmit() {
+
+  }
 }
