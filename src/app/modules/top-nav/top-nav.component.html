@@ -1,14 +1,14 @@
-<button mat-button [routerLink]="['/about']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.about' | translate}}</button>
-<button mat-button [routerLink]="['/contact']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.contact' | translate}}</button>
+<button mat-button [routerLink]="['/page/about']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.about' | translate}}</button>
+<button mat-button [routerLink]="['/page/contact']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.contact' | translate}}</button>
 <span class="spacer"></span>
 <button mat-button [routerLink]="['/auth/login']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'authentication.login' | translate}}</button>
 <button mat-button [routerLink]="['/auth/register']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'authentication.register' | translate}}</button>
 
 <ng-container *ngIf="isAuthenticated">
-  <button mat-button [routerLink]="['/dashboard']" routerLinkActive="mat-accent">{{'dashboard.title' | translate}}</button>
-  <button mat-button [routerLink]="['/patients']" routerLinkActive="mat-accent">{{'patients.title' | translate}}</button>
-  <button mat-button [routerLink]="['/appointments']" routerLinkActive="mat-accent">{{'appointments.title' | translate}}</button>
-  <button mat-button [routerLink]="['/messages']" routerLinkActive="mat-accent">{{'messages.title' | translate}}</button>
-  <button mat-button [routerLink]="['/settings']" routerLinkActive="mat-accent">{{'settings.title' | translate}}</button>
+  <button mat-button [routerLink]="['/secure/dashboard']" routerLinkActive="mat-accent">{{'dashboard.title' | translate}}</button>
+  <button mat-button [routerLink]="['/secure/patients']" routerLinkActive="mat-accent">{{'patients.title' | translate}}</button>
+  <button mat-button [routerLink]="['/secure/appointments']" routerLinkActive="mat-accent">{{'appointments.title' | translate}}</button>
+  <button mat-button [routerLink]="['/secure/messages']" routerLinkActive="mat-accent">{{'messages.title' | translate}}</button>
+  <button mat-button [routerLink]="['/secure/settings']" routerLinkActive="mat-accent">{{'settings.title' | translate}}</button>
   <button mat-button (click)="onLogout()">{{'authentication.logout' | translate}}</button>
 </ng-container>

@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { Subject } from 'rxjs';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { CookieService } from 'ngx-cookie-service';
-import { UserService } from '../user/user.service';
+import { UserService } from '../secure/user/user.service';
 import { Login, Register } from './authentication';
 
 const BACKEND_URL = environment.apiUrl + '/auth';
@@ -87,7 +87,7 @@ export class AuthenticationService {
 
         this.saveAuthData(token, this.userId, this.userEmail);
         this.userService.get(response.userId).subscribe(userData => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/secure']);
         });
       }
     }, error => {

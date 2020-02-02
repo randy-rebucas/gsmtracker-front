@@ -45,6 +45,7 @@ import { EncounterComponent } from './shared/components/encounter/encounter.comp
 import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
 import { PaymentsComponent } from './shared/components/payments/payments.component';
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public router: Router,
-    public authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService,
     public titleService: Title,
     private cookieService: CookieService,
     private translate: TranslateService
@@ -65,6 +65,12 @@ export class LoginComponent implements OnInit {
     };
 
     this.authenticationService.login(authData);
+
+    this.authenticationService.getAuthStatusListener().subscribe((res) => {
+      if(!res) {
+        this.isLoading = false;
+      }
+    })
   }
 
   onSignup() {

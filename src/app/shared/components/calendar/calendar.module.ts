@@ -1,17 +1,17 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AvatarComponent } from './avatar.component';
+import { CalendarComponent } from './calendar.component';
 
 
 
 @NgModule({
   declarations: [
-    AvatarComponent
+    CalendarComponent
   ],
   imports: [
     CommonModule
   ],
-  exports: [ AvatarComponent ],
+  exports: [ CalendarComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
-export class AvatarModule { }
+export class CalendarModule { }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserService } from 'src/app/modules/user/user.service';
+import { UserService } from 'src/app/modules/secure/user/user.service';
 
 @Component({
   selector: 'app-physicians',

@@ -1,17 +1,17 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AvatarComponent } from './avatar.component';
+import { PhysiciansComponent } from './physicians.component';
 
 
 
 @NgModule({
   declarations: [
-    AvatarComponent
+    PhysiciansComponent
   ],
   imports: [
     CommonModule
   ],
-  exports: [ AvatarComponent ],
+  exports: [ PhysiciansComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
-export class AvatarModule { }
+export class PhysiciansModule { }
