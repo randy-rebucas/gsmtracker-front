@@ -2,32 +2,21 @@
     <h1>Patients</h1>
 </div>
 <div class="wrapper">
+    <button mat-fab color="primary" (click)="onCreate(userTypeId)" id="create-new"><mat-icon>add</mat-icon></button>
     <div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 350px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
         <div class="area header" gdArea="header">
-            <div fxLayout='row'>
-                <div class="search-div" fxFlex="80" fxFlex.sm="100%" fxFlex.md="90%">
-                    <mat-form-field>
-                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
-                    </mat-form-field>
-                    <div (click)="onScan()">
-                        <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
-                    </div>
-                </div>
-                <div class="action-button" fxFlex="20" fxFlex.sm="100%" fxFlex.md="20%">
-                    <!-- <button mat-flat-button color="accent" (click)="onPrint()" [disabled]="!isAllSelected()">
-            <mat-icon>print</mat-icon> Print
-          </button> -->
-                    <!-- <button mat-flat-button color="warn" (click)="onDelete()" [disabled]="!isAllSelected()">
-            <mat-icon>delete_sweep</mat-icon> Delete
-          </button> -->
-                    <button mat-flat-button color="primary" (click)="onCreate(userTypeId)">
-            <mat-icon>add</mat-icon> Add New
-          </button>
-                </div>
-            </div>
+            
         </div>
 
         <div class="area content" gdArea="content">
+            <div class="search-div" fxFlex="80" fxFlex.sm="100%" fxFlex.md="90%">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+                </mat-form-field>
+                <div (click)="onScan()">
+                    <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
+                </div>
+            </div>
             <!-- table -->
             <mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
 
@@ -52,6 +41,12 @@
                             <ng-container *ngIf="element.isOwned">
                                 <button mat-icon-button (click)="onEdit(userTypeId, element.id)" aria-label="Edit" title="Edit">
                                     <mat-icon>launch</mat-icon>
+                                  </button>
+                                  <button mat-icon-button (click)="onDetail(element.id)" aria-label="View" title="View">
+                                    <mat-icon>visibility</mat-icon>
+                                  </button>
+                                  <button mat-icon-button (click)="onCreateRecord(element.id)" aria-label="View" title="View">
+                                    <mat-icon>assignment</mat-icon>
                                   </button>
                                   <button mat-icon-button color="warn" (click)="onDelete(element.id)" aria-label="Delete" title="Delete">
                                     <mat-icon>delete</mat-icon>
@@ -80,35 +75,58 @@
                 <ng-container matColumnDef="expandedDetail">
                     <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                         <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                            <div class="element element-description">
-                                <ul class="addresses">
-                                    <li>Addresses:</li>
-                                    <li *ngFor="let address of element.address; let i = index;" [ngClass]="{'current': address.current}">
-                                        {{address.address1}}
-                                        <br/>
-                                        <ng-container *ngIf="address.address2">
-                                            {{address.address2}} <br/>
+                            <mat-card class="example-card">
+                                <mat-card-header>
+                                  <mat-card-title>Address</mat-card-title>
+                                  <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <ng-container *ngFor="let address of element.address; let i = index;">
+                                        <p>
+                                            {{address.address1}} <br/>
+                                            <ng-container *ngIf="address.address2">
+                                                {{address.address2}} <br/>
+                                            </ng-container>
+                                            {{address.postalCode}} {{address.province}}, {{address.city}}<br/> 
+                                            {{address.country}}
+                                        </p>
+                                    </ng-container>
+                                </mat-card-content>
+                            </mat-card>
+                            <mat-card class="example-card">
+                                <mat-card-header>
+                                  <mat-card-title>Metadata</mat-card-title>
+                                  <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <mat-list dense>
+                                        <ng-container *ngIf="condition; else elseBlock">
+                                            <mat-list-item *ngFor="let meta of element.meta; let m = index;">{{meta.label}}: <span>{{meta.value}}</span> </mat-list-item>
                                         </ng-container>
-                                        {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="element element-metadata">
-                                <ul class="metadata">
-                                    <li>Meta Data:</li>
-                                    <li *ngFor="let meta of element.meta; let m = index;">
-                                        <ng-container *ngIf="meta.label != ''">{{meta.label}}: <span>{{meta.value}}</span></ng-container>
-                                        <ng-container *ngIf="meta.label == ''">--</ng-container>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="element element-physicians">
-                                <!--physicians-->
-                                <app-physicians [physicians]="element.physicians"></app-physicians>
-                            </div>
-                            <button mat-icon-button [routerLink]="['../', element.id, 'record']" aria-label="Record" title="Record">
-                              <mat-icon>assignment</mat-icon>
-                            </button>
+                                        <ng-template #elseBlock>
+                                            <mat-list-item>No metadata found! </mat-list-item>
+                                        </ng-template>
+                                    </mat-list>
+                                </mat-card-content>
+                            </mat-card>
+                            <mat-card class="example-card">
+                                <mat-card-header>
+                                  <mat-card-title>Physicians</mat-card-title>
+                                  <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <app-physicians [physicians]="element.physicians"></app-physicians>
+                                </mat-card-content>
+                            </mat-card>
+                            <mat-card class="example-card">
+                                <mat-card-header>
+                                  <mat-card-title>Record Chain</mat-card-title>
+                                  <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p>record chain</p>
+                                </mat-card-content>
+                            </mat-card>
                         </div>
                     </mat-cell>
                 </ng-container>
@@ -131,15 +149,13 @@
                 <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
                 <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
             </mat-table>
-            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="dataSource.data.length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>
         </div>
         <div class="area side" gdArea="side">
-            <!--birthdays-->
             <app-birthdays></app-birthdays>
-
         </div>
         <div class="area footer" gdArea="footer">
-
+            
         </div>
     </div>
 </div>

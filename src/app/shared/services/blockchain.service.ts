@@ -1,30 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { Blockchain } from '../interfaces/blockchain';
+
 
 const BACKEND_URL = environment.apiUrl + '/blockchain';
-
-export interface Blockchain {
-  timestamp: Date;
-  transactions: any;
-  previousHash: string;
-  hash: string;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlockchainService {
   private chain: Blockchain[] = [];
-  private chainUpdated = new Subject<{ chain: Blockchain[] }>();
+  private chainUpdated = new Subject<Blockchain[]>();
 
   constructor(private http: HttpClient) { }
 
-  getChain(perPage: number, currentPage: number, providerKey: string) {
-    const queryParams = `?providerKey=${providerKey}&pagesize=${perPage}&page=${currentPage}`;
+  getChain(perPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, chains: any }>(
       BACKEND_URL + queryParams
     )
@@ -43,9 +38,7 @@ export class BlockchainService {
     )
     .subscribe((transformData) => {
       this.chain = transformData.chains;
-      this.chainUpdated.next({
-        chain: [...this.chain]
-      });
+      this.chainUpdated.next([...this.chain]);
     });
   }
 

@@ -36,6 +36,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   public perPage: number;
   public currentPage: number;
   public pageSizeOptions: any;
+
   public isLoading: boolean;
 
   private usersSub: Subscription;
@@ -62,9 +63,10 @@ export class PatientListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  private userTypeId: string;
   public userId: string;
-  public userTypeId: any;
   public avatar: string;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -82,39 +84,31 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.perPage = 10;
     this.currentPage = 1;
     this.pageSizeOptions = [5, 10, 25, 100];
+    this.isLoading = true;
+  }
 
-  }
-  getAvatar(patientId: string) {
-    this.uploadService.get(patientId).subscribe((res) => {
-      return res.image;
-    });
-  }
   ngOnInit() {
     this.userId = this.authenticationService.getUserId();
-    this.titleService.setTitle('Users');
-
+    
     this.typeService.getBySlug('patients').subscribe((type) => {
+
+      this.titleService.setTitle(type.name);
       this.userTypeId = type._id;
+
       this.userService.getAll(type._id, this.perPage, this.currentPage);
-      this.usersSub = this.userService
-      .getUpdateListener()
-      .subscribe((userData: {users: User[], counts: number}) => {
+      this.usersSub = this.userService.getUpdateListener().subscribe((userData: {users: User[], counts: number}) => {
         this.isLoading = false;
+
         const newUsers = [];
         userData.users.forEach(user => {
-          // this.uploadService.get(user.id).subscribe((res) => {
-          //   const patientImage = {
-          //     avatar : res.image
-          //   };
-            user.physicians.filter((physician) => {
-              const ownerShip = {
-                isOwned : physician.userId === this.userId
-              };
-              newUsers.push({...user, ...ownerShip}); // , ...patientImage
-            });
+          user.physicians.filter((physician) => {
+            const ownerShip = {
+              isOwned : physician.userId === this.userId
+            };
+            newUsers.push({...user, ...ownerShip});
           });
-        // });
-        console.log(newUsers);
+        });
+      
         this.total = userData.counts;
         this.dataSource = new MatTableDataSource(newUsers);
         this.dataSource.paginator = this.paginator;
@@ -122,8 +116,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
       });
     });
   }
-
-
 
   onDelete(userId: string) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
@@ -270,12 +262,16 @@ export class PatientListComponent implements OnInit, OnDestroy {
     // super.onPopup(args, QrCodeScannerComponent);
   }
 
-  onDetail(userId) {
+  onDetail(userId: string) {
+    this.router.navigate(['./', userId], {relativeTo: this.activatedRoute});
+  }
+
+  onCreateRecord(userId: string) {
     this.router.navigate(['./', userId], {relativeTo: this.activatedRoute});
   }
 
   ngOnDestroy() {
-    this.usersSub.unsubscribe();
+    // this.usersSub.unsubscribe();
   }
 
 }

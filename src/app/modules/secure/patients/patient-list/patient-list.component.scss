@@ -136,32 +136,39 @@ mat-cell.mat-cell.cdk-column-age.mat-column-age {
 }
 
 .element-detail {
-    display: flex;
-    flex-flow: row wrap;
-    width: 100%;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-flow: row;
+  flex-grow: 1;
 }
 
 .element-detail>.element {
     width: 22%;
 }
 
-
-
-ul.addresses li:first-child {
-    list-style: none;
-    margin-left: -18px;
-    font-size: 16px;
-    font-weight: 500;
+.element-detail mat-card ::ng-deep .mat-card-header-text {
+  /* CSS styles go here */
+  margin: 0px; // for example to remove the margin
 }
 
-ul.addresses li.ng-tns-c11-1.current {
-    background: #f3f3f3;
+.mat-card-header .mat-card-title {
+  font-size: 16px;
+  font-weight: 400;
 }
 
-ul.metadata li:first-child {
-    list-style: none;
-    margin-left: -18px;
-    font-size: 16px;
-    font-weight: 500;
+.element-detail mat-card {
+  flex: 1 1 auto;
+  border-radius: 0;
+  box-shadow: none !important;
 }
 
+.element-detail mat-card:not(:first-child) {
+  border-left: 1px solid #e0e0e0;
+}
+
+button#create-new {
+  position: fixed;
+  right: 1%;
+  bottom: 12%;
+}
