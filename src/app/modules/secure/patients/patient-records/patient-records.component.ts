@@ -10,10 +10,10 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { FormArray, FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-records',
-  templateUrl: './records.component.html',
-  styleUrls: ['./records.component.scss']
+  templateUrl: './patient-records.component.html',
+  styleUrls: ['./patient-records.component.scss']
 })
-export class RecordsComponent implements OnInit {
+export class PatientRecordsComponent implements OnInit {
   cards: any;
 
   public imagePath: any;
@@ -73,7 +73,7 @@ export class RecordsComponent implements OnInit {
     this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
       map(({ matches }) => {
         if (matches) {
-         //mobile
+         // mobile
         }
       // default
       })

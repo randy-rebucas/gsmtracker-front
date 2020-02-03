@@ -1,0 +1,38 @@
+components
+	clinics
+		clinicOne: {
+			doctors: []
+		}
+	patients
+		clinicId: []
+	doctors: // manually added from server admin
+		clinicId: []
+	appointment
+		book an appointment
+		list of appointment
+		messages: {
+			canceled: 'canceled appointment'
+			confirmed: 'confirmed appointment id: {appointmentId} for {date}, {time} with {drName} at {clinicName}, {clinicAddress} {contactNumber}'
+		}
+		send email together with the location coordinates
+		
+	claims
+		collection report
+	reporting
+	
+Doctors portal
+	verification check
+	activation
+	
+	speciality
+	availability
+	profesional fee
+	
+Patients Portal
+	vital signs
+		BP, Pulse, Temp, Weight, height, BMI, remarks
+	symptoms
+		signs and symptoms
+		history
+		diagnosis
+	

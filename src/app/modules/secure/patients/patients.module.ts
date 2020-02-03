@@ -33,7 +33,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
         { path: 'form', component: PatientFormComponent, canActivate: [AuthenticationGuard] },
         { path: ':patientId', component: PatientDetailComponent },
         { path: ':patientId/edit', component: PatientFormComponent, canActivate: [AuthenticationGuard]  },
-        { path: ':patientId/record', loadChildren: './../records/records.module#RecordsModule', canActivate: [AuthenticationGuard]  }
+        { path: ':patientId/record',
+          loadChildren: () => import('./patient-records/patient-records.module').then(m => m.PatientRecordsModule)
+        },
       ] }
     ])
   ],

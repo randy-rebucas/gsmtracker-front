@@ -23,8 +23,6 @@ import {
   MatTabsModule
 } from '@angular/material';
 
-
-MatTableModule
 @NgModule({
   declarations: [],
   imports: [

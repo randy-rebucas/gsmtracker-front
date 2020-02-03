@@ -16,7 +16,7 @@ export class AppConfigurationService {
     return new Promise((r, e) => {
       // mock because can't xhr local file here
       const content = {
-        title : 'shop-inventory',
+        title : 'clinicplus',
         dayTrial : 14,
         version : '1.0.0'
       };

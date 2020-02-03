@@ -89,7 +89,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = this.authenticationService.getUserId();
-    
+
     this.typeService.getBySlug('patients').subscribe((type) => {
 
       this.titleService.setTitle(type.name);
@@ -108,7 +108,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
             newUsers.push({...user, ...ownerShip});
           });
         });
-      
+
         this.total = userData.counts;
         this.dataSource = new MatTableDataSource(newUsers);
         this.dataSource.paginator = this.paginator;
@@ -263,11 +263,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   }
 
   onDetail(userId: string) {
-    this.router.navigate(['./', userId], {relativeTo: this.activatedRoute});
-  }
-
-  onCreateRecord(userId: string) {
-    this.router.navigate(['./', userId], {relativeTo: this.activatedRoute});
+    this.router.navigate(['../', userId], {relativeTo: this.activatedRoute});
   }
 
   ngOnDestroy() {

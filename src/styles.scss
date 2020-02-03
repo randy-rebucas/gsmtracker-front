@@ -16,8 +16,9 @@ body {
 
 .main-content {
     position: relative;
-    margin: 0 0 2em;
+    margin: 0 0 5em;
     min-height: 75%;
+    padding: 0 0 2em;
 }
 
 mat-sidenav-content.mat-drawer-content::-webkit-scrollbar {
@@ -49,4 +50,3 @@ mat-sidenav-content.mat-drawer-content::-webkit-scrollbar-thumb {
     font-size: 20px;
     color: #fff;
 }
-
