@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from 'src/app/modules/secure/user/user.service';
+import { Physicians } from 'src/app/modules/secure/user/user';
 
 @Component({
   selector: 'app-physicians',
@@ -10,7 +11,8 @@ export class PhysiciansComponent implements OnInit {
 
   public physiciansNames: any;
 
-  @Input() physicians: any;
+  @Input() physicians: Physicians[];
+  
   constructor(
     private userService: UserService
   ) {
@@ -18,7 +20,7 @@ export class PhysiciansComponent implements OnInit {
    }
 
   ngOnInit() {
-    
+
     this.physicians.forEach(physician => {
       this.userService.get(physician.userId).subscribe((user) => {
         this.physiciansNames.push(user.firstname + ' ' + user.lastname);

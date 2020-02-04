@@ -1,6 +1,7 @@
-ul.Physicians-list li:first-child {
-    list-style: none;
-    margin-left: -18px;
-    font-size: 16px;
-    font-weight: 500;
+mat-list-item ::ng-deep .mat-list-item-content {
+    padding: unset !important;
+    span {
+        flex: 1;
+        text-align: right;
+    }
 }

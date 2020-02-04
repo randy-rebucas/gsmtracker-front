@@ -1,0 +1,29 @@
+
+
+mat-form-field:not(:last-child) {
+    margin-right: 10px;
+    flex: 1;
+}
+.form-field-block {
+    display: flex;
+    flex-direction: row;
+    .action-btn {
+        float: right;
+    }
+}
+  
+.blocks {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2em;
+    div {
+        flex: 1 1 auto;
+    }
+    div:first-child {
+        margin-right: 10px;
+    }
+}
+
+mat-tab-group ::ng-deep .mat-tab-body-wrapper {
+    margin-top: 1em;
+}

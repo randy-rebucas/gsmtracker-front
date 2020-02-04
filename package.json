@@ -25,6 +25,7 @@
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "@tinymce/tinymce-angular": "^3.4.0",
+    "adminbsb-materialdesign": "^1.0.7",
     "hammerjs": "^2.0.8",
     "html2canvas": "^1.0.0-rc.5",
     "jspdf": "^1.5.3",

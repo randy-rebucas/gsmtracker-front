@@ -1,0 +1,109 @@
+<h2 mat-dialog-title>{{ formTitle | titlecase }}</h2>
+<mat-dialog-content class="mat-typography" style="min-height: 300px;">
+    <div *ngIf="isLoading" class="loading">
+        <mat-spinner [diameter]="25"></mat-spinner>
+    </div>
+    <form [formGroup]="form" class="normal-form" (submit)="onSave()" *ngIf="!isLoading">
+        <mat-tab-group dynamicHeight>
+            <mat-tab label="Basic"> 
+                <h4 subheading-1>Vital Signs</h4>
+                <div class="form-field-block">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Temperature</mat-label>
+                        <input matInput placeholder="Temperature">
+                        <span matSuffix>°C</span>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Blood pressure</mat-label>
+                        <input matInput placeholder="Blood pressure">
+                        <span matSuffix>mmHg</span>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Pulse rate</mat-label>
+                        <input matInput placeholder="Pulse rate">
+                        <span matSuffix>bpm</span>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Respiratory rate</mat-label>
+                        <input matInput placeholder="Respiratory rate">
+                        <span matSuffix>bpm</span>
+                    </mat-form-field>
+                </div>
+                <h4 subheading-1>Physical Exam</h4>
+                <div class="form-field-block">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Height</mat-label>
+                        <input matInput placeholder="Height">
+                        <span matSuffix>cm</span>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Weight</mat-label>
+                        <input matInput placeholder="Weight">
+                        <span matSuffix>kg</span>
+                    </mat-form-field>
+                </div>
+                <h4 subheading-1>Complaint</h4>
+                <editor [init]="{plugins: 'link', branding: false}"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+                <div class="blocks">
+                    <div class="block">
+                        <h4 subheading-1>Present Illness</h4>
+                        <editor [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+                    </div>
+                    <div class="block">
+                        <h4 subheading-1>Past Medical</h4>
+                        <editor [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+                    </div>
+                </div>
+                <div class="blocks">
+                    <div class="block">
+                        <h4 subheading-1>Family history</h4>
+                        <editor [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+                    </div>
+                    <div class="block">
+                        <h4 subheading-1>Social history</h4>
+                        <editor [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+                    </div>
+                </div>
+                <div class="blocks">
+                    <div class="block">
+                        <h4 subheading-1>Assessments</h4>
+                        <editor [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+                    </div>
+                    <div class="block">
+                        <h4 subheading-1>Progress Notes</h4>
+                        <editor [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}"  [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Prescription"> 
+                <h4 subheading-1>Prescriptions</h4>
+                <div class="form-field-block" *ngFor="let group of prescriptionArray.controls; let i = index;" >
+                    <mat-form-field appearance="outline">
+                        <mat-label>Medicine</mat-label>
+                        <input matInput formControlName="medicine" placeholder="Medicine">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Preparation</mat-label>
+                        <input matInput formControlName="preparation" placeholder="Preparation">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Sig</mat-label>
+                        <input matInput formControlName="sig" placeholder="Sig">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Quantity</mat-label>
+                        <input matInput formControlName="quantity" placeholder="Quantity">
+                    </mat-form-field>
+                    <div class="action-btn">
+                        <button mat-icon-button type="button" (click)="addPrescription()"><mat-icon>add</mat-icon></button>
+                        <button mat-icon-button color="warn" type="button" *ngIf="prescriptionArray.controls.length > 1" (click)="removePrescription(i)"><mat-icon>delete_outline</mat-icon></button>
+                    </div>
+                </div> 
+            </mat-tab>
+        </mat-tab-group>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button color="primary" (click)="onSave()">{{formButtontext}}</button>
+</mat-dialog-actions>

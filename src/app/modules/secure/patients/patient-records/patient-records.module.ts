@@ -7,11 +7,15 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { AngularMaterialModule } from 'src/app/angular-material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
-import { PatientRecordsComponent } from './patient-records.component';
+import { PatientRecordListComponent } from './patient-record-list/patient-record-list.component';
+import { PatientRecordFormComponent } from './patient-record-form/patient-record-form.component';
+import { PatientRecordDetailComponent } from './patient-record-detail/patient-record-detail.component';
 
 @NgModule({
   declarations: [
-    PatientRecordsComponent
+    PatientRecordListComponent,
+    PatientRecordDetailComponent,
+    PatientRecordFormComponent
   ],
   imports: [
     CommonModule,
@@ -22,8 +26,12 @@ import { PatientRecordsComponent } from './patient-records.component';
     EditorModule,
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
-      { path: '', component: PatientRecordsComponent }
+      { path: '', component: PatientRecordListComponent },
+      { path: ':recordId', component: PatientRecordDetailComponent }
     ])
+  ],
+  entryComponents: [
+    PatientRecordFormComponent
   ]
 })
 export class PatientRecordsModule { }

@@ -31,11 +31,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
         { path: '', redirectTo: 'list', pathMatch: 'full' },
         { path: 'list', component: PatientListComponent },
         { path: 'form', component: PatientFormComponent, canActivate: [AuthenticationGuard] },
-        { path: ':patientId', component: PatientDetailComponent },
-        { path: ':patientId/edit', component: PatientFormComponent, canActivate: [AuthenticationGuard]  },
-        { path: ':patientId/record',
-          loadChildren: () => import('./patient-records/patient-records.module').then(m => m.PatientRecordsModule)
-        },
+        { path: ':patientId', component: PatientDetailComponent, children: [
+          { path: '', redirectTo: 'records', pathMatch: 'full' },
+          { path: 'records', loadChildren: () => import('./patient-records/patient-records.module').then(m => m.PatientRecordsModule) },
+        ] },
       ] }
     ])
   ],

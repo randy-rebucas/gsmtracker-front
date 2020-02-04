@@ -32,7 +32,7 @@ import { UploadService } from 'src/app/shared/services/upload.service';
   ],
 })
 export class PatientListComponent implements OnInit, OnDestroy {
-  public total: number;
+  public length: number;
   public perPage: number;
   public currentPage: number;
   public pageSizeOptions: any;
@@ -80,7 +80,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private uploadService: UploadService
   ) {
-    this.total = 0;
+    this.length = 0;
     this.perPage = 10;
     this.currentPage = 1;
     this.pageSizeOptions = [5, 10, 25, 100];
@@ -109,8 +109,9 @@ export class PatientListComponent implements OnInit, OnDestroy {
           });
         });
 
-        this.total = userData.counts;
         this.dataSource = new MatTableDataSource(newUsers);
+        this.length = this.dataSource.data.length;
+
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });

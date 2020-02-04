@@ -142,10 +142,10 @@
                         <p class="mat-body">No patient data.</p>
                     </mat-footer-cell>
                 </ng-container>
-                <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource!=null}"></mat-footer-row>
-                <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
+                <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource != null}"></mat-footer-row>
+                <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource != null && length == 0)}"></mat-footer-row>
             </mat-table>
-            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="dataSource.data.length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>
         </div>
         <div class="area side" gdArea="side">
             <app-birthdays></app-birthdays>

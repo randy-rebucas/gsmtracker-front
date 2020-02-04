@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PhysiciansComponent } from './physicians.component';
-import { MatListModule } from '@angular/material';
+import { MatListModule, MatIconModule } from '@angular/material';
 
 
 
@@ -11,7 +11,8 @@ import { MatListModule } from '@angular/material';
   ],
   imports: [
     CommonModule,
-    MatListModule
+    MatListModule,
+    MatIconModule
   ],
   exports: [ PhysiciansComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
