@@ -11,6 +11,8 @@ import { PatientListComponent } from './patient-list/patient-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMaterialModule } from 'src/app/angular-material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CanDeactivateGuard } from './can-deactivate.guard';
+
 
 @NgModule({
   declarations: [
@@ -30,7 +32,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
       { path: '', component: PatientsComponent, children: [
         { path: '', redirectTo: 'list', pathMatch: 'full' },
         { path: 'list', component: PatientListComponent },
-        { path: 'form', component: PatientFormComponent, canActivate: [AuthenticationGuard] },
+        { path: 'form', component: PatientFormComponent, canDeactivate: [CanDeactivateGuard] },
         { path: ':patientId', component: PatientDetailComponent, children: [
           { path: '', redirectTo: 'records', pathMatch: 'full' },
           { path: 'records', loadChildren: () => import('./patient-records/patient-records.module').then(m => m.PatientRecordsModule) },

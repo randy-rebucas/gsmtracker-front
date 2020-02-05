@@ -11,6 +11,7 @@ import { User } from '../../user/user';
 })
 export class PatientDetailComponent implements OnInit {
   user: User;
+  patientId: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -18,14 +19,15 @@ export class PatientDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      (param) => {
-        this.usersService.get(param.patientId).subscribe((user) => {
-          this.user = user;
-          console.log(this.user);
-        });
-      }
-    );
+    this.patientId = this.activatedRoute.snapshot.params.patientId;
+
+    this.usersService.get(this.patientId).subscribe((user) => {
+      this.user = user;
+    });
+
   }
 
+  onSetRecord(record: any) {
+    localStorage.setItem('record', record);
+  }
 }

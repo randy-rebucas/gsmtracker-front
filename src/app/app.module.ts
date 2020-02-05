@@ -17,21 +17,8 @@ import { PromptDialogComponent } from './modules/prompt-dialog/prompt-dialog.com
 import { AuthenticationInterceptor } from './modules/authentication/authentication-interceptor';
 import { ErrorInterceptor } from './error-interceptor';
 import { CookieService } from 'ngx-cookie-service';
-
-import {
-  MatSnackBarModule,
-  MatInputModule,
-  MatToolbarModule,
-  MatButtonModule,
-  MatSidenavModule,
-  MatIconModule,
-  MatListModule,
-  MatDialogModule,
-  MatCardModule,
-  MatProgressSpinnerModule,
-  MatProgressBarModule
-} from '@angular/material';
 import { AppConfigurationService } from './configs/app-configuration.service';
+import { AngularMaterialModule } from './angular-material.module';
 
 // import ngx-translate and the http loader
 import {TranslateLoader, TranslateModule, TranslateCompiler} from '@ngx-translate/core';
@@ -70,17 +57,7 @@ import { PaymentsComponent } from './shared/components/payments/payments.compone
     LayoutModule,
     FormsModule,
     ReactiveFormsModule,
-    MatToolbarModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
+    AngularMaterialModule,
     // ngx-translate and the loader module
     HttpClientModule,
     TranslateModule.forRoot({

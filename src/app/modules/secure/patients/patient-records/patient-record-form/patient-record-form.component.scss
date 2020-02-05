@@ -1,9 +1,11 @@
-
+mat-form-field {
+    flex: 1;
+}
 
 mat-form-field:not(:last-child) {
     margin-right: 10px;
-    flex: 1;
 }
+
 .form-field-block {
     display: flex;
     flex-direction: row;
@@ -11,7 +13,7 @@ mat-form-field:not(:last-child) {
         float: right;
     }
 }
-  
+
 .blocks {
     display: flex;
     flex-direction: row;

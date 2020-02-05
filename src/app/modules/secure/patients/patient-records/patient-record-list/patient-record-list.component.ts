@@ -4,7 +4,7 @@ import { Blockchain } from 'src/app/shared/interfaces/blockchain';
 import { Observable } from 'rxjs';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { PatientRecordFormComponent } from '../patient-record-form/patient-record-form.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-patient-record-list',
@@ -21,7 +21,8 @@ export class PatientRecordListComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private blockchainService: BlockchainService
+    private blockchainService: BlockchainService,
+    private router: Router
   ) {
     this.perPage = 10;
     this.currentPage = 1;

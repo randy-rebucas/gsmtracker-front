@@ -10,6 +10,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { PatientRecordListComponent } from './patient-record-list/patient-record-list.component';
 import { PatientRecordFormComponent } from './patient-record-form/patient-record-form.component';
 import { PatientRecordDetailComponent } from './patient-record-detail/patient-record-detail.component';
+import { CanDeactivateGuard } from '../can-deactivate.guard';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { PatientRecordDetailComponent } from './patient-record-detail/patient-re
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
     AngularMaterialModule,
     SharedModule,
@@ -27,6 +30,7 @@ import { PatientRecordDetailComponent } from './patient-record-detail/patient-re
     FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: PatientRecordListComponent },
+      { path: 'form', component: PatientRecordFormComponent, canDeactivate: [CanDeactivateGuard]},
       { path: ':recordId', component: PatientRecordDetailComponent }
     ])
   ],
