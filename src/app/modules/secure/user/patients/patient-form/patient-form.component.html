@@ -76,7 +76,7 @@
                 </div>
             </div>
         </ng-container>
-        <h4 subheading-1 *ngIf="!formId">Login Access</h4>
+        <!-- <h4 subheading-1 *ngIf="!formId">Login Access</h4>
         <div class="form-field-block" *ngIf="!formId">
             <mat-form-field>
                 <input matInput type="email" formControlName="email" placeholder="Email">
@@ -84,8 +84,8 @@
             <mat-form-field>
                 <input matInput type="password" formControlName="password" placeholder="password">
             </mat-form-field>
-        </div>
-        <h4 subheading-1>Meta Data</h4>
+        </div> -->
+        <!-- <h4 subheading-1>Meta Data</h4>
         <ng-container formArrayName="metas" *ngIf="metaArray.length > 0">
             <div *ngFor="let meta of metaArray.controls; let i = index;" [formGroupName]="i" class="metaGroup">
                 <div class="form-field-block">
@@ -101,7 +101,7 @@
                     <button mat-icon-button color="warn" *ngIf="metaArray.controls.length > 1" (click)="removeMeta(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
                 </div>
             </div>
-        </ng-container>
+        </ng-container> -->
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>

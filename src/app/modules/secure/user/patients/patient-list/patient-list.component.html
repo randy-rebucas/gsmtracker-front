@@ -26,10 +26,10 @@
                         <mat-cell *matCellDef="let element">
                             <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
                             <ng-template #thenBlock>
-                                <img [src]="element.avatar" [alt]="element.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+                                <img [src]="element.avatar" [alt]="element.name.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
                             </ng-template>
                             <ng-template #elseBlock>
-                                <app-avatar [firstname]="element.firstname" [lastname]="element.lastname"></app-avatar>
+                                <app-avatar [firstname]="element.name.firstname" [lastname]="element.name.lastname"></app-avatar>
                             </ng-template>
                         </mat-cell>
                     </div>
@@ -39,7 +39,7 @@
                         </mat-header-cell>
                         <mat-cell *matCellDef="let element">
                             <ng-container *ngIf="element.isOwned">
-                                <button mat-icon-button (click)="onEdit(userTypeId, element.id)" aria-label="Edit" title="Edit">
+                                <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit" title="Edit">
                                     <mat-icon>launch</mat-icon>
                                   </button>
                                 <button mat-icon-button (click)="onDetail(element.id)" aria-label="View" title="View">
@@ -60,6 +60,15 @@
                         </ng-template>
                         <ng-template [ngIf]="column === 'age'">
                             <mat-cell *matCellDef="let element"> {{ element.birthdate | birthday }}</mat-cell>
+                        </ng-template>
+                        <ng-template [ngIf]="column === 'firstname'">
+                            <mat-cell *matCellDef="let element"> {{ element.name.firstname }}</mat-cell>
+                        </ng-template>
+                        <ng-template [ngIf]="column === 'midlename'">
+                            <mat-cell *matCellDef="let element"> {{ element.name.midlename }}</mat-cell>
+                        </ng-template>
+                        <ng-template [ngIf]="column === 'lastname'">
+                            <mat-cell *matCellDef="let element"> {{ element.name.lastname }}</mat-cell>
                         </ng-template>
                         <ng-template #elseBlockDate>
                             <mat-cell *matCellDef="let element"> {{ element[column] }}</mat-cell>

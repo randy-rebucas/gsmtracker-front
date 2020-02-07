@@ -5,7 +5,7 @@
             <a mat-list-item [routerLink]="['/page/about']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.about' | translate}}</a>
             <a mat-list-item [routerLink]="['/page/contact']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.contact' | translate}}</a>
             <a mat-list-item [routerLink]="['/secure/dashboard']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'dashboard.title' | translate}}</a>
-            <a mat-list-item [routerLink]="['/secure/patients']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'patients.title' | translate}}</a>
+            <a mat-list-item [routerLink]="['/secure/users']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'patients.title' | translate}}</a>
             <a mat-list-item [routerLink]="['/secure/appointments']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'appointments.title' | translate}}</a>
             <a mat-list-item [routerLink]="['/secure/messages']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'messages.title' | translate}}</a>
             <a mat-list-item [routerLink]="['/secure/settings']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'settings.title' | translate}}</a>

@@ -67,9 +67,9 @@ export class AccountComponent implements OnInit {
     this.userService.get(this.userId).subscribe(userData => {
       this.isLoadingContent = false;
       this.form.patchValue({
-        firstname: userData.firstname,
-        midlename: userData.midlename,
-        lastname: userData.lastname,
+        firstname: userData.name.firstname,
+        midlename: userData.name.midlename,
+        lastname: userData.name.lastname,
         gender: userData.gender,
         age: userData.age,
         birthdate: userData.birthdate,

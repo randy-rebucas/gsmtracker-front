@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { NotificationService } from 'src/app/shared/services/notification.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { UserService } from '../../user/user.service';
-import { User } from '../../user/user';
-import { AuthenticationService } from '../../../authentication/authentication.service';
+
+import { AuthenticationService } from '../../../../authentication/authentication.service';
+import { UserService } from '../../user.service';
+import { PatientsService } from '../patients.service';
 
 @Component({
   selector: 'app-patient-form',
@@ -13,13 +13,11 @@ import { AuthenticationService } from '../../../authentication/authentication.se
 })
 export class PatientFormComponent implements OnInit {
 
-  private user: User;
-
   public form: FormGroup;
   public formId: string;
   public formTitle: string;
   public formButtontext: string;
-  public userType: string;
+
   public isLoading: boolean;
   public total: number;
   public perPage: number;
@@ -29,8 +27,8 @@ export class PatientFormComponent implements OnInit {
   public startDate = new Date(1990, 0, 1);
 
   constructor(
-    private notificationService: NotificationService,
     private userService: UserService,
+    private patientsService: PatientsService,
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private dialogRef: MatDialogRef < PatientFormComponent >,
@@ -39,7 +37,6 @@ export class PatientFormComponent implements OnInit {
     this.formId = data.id;
     this.formTitle = data.title;
     this.formButtontext = data.button;
-    this.userType = data.userType;
 
     this.total = 0;
     this.perPage = 10;
@@ -50,44 +47,36 @@ export class PatientFormComponent implements OnInit {
   ngOnInit() {
 
     this.form = this.fb.group({
+      userId: [],
       firstname: ['', [Validators.required]],
       midlename: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
       contact: ['', [Validators.required]],
       gender: ['', [Validators.required]],
       birthdate: ['', [Validators.required]],
-      email: [''],
-      password: [''],
-      addresses: this.fb.array([this.addAddressGroup()]),
-      metas: this.fb.array([this.addMetaGroup()])
+      addresses: this.fb.array([this.addAddressGroup()])
     });
 
     if (this.formId) {
         this.isLoading = true;
-        this.userService.get(this.formId).subscribe(userData => {
+        this.patientsService.get(this.formId).subscribe(userData => {
           this.isLoading = false;
+
           this.form.patchValue({
-            firstname: userData.firstname,
-            midlename: userData.midlename,
-            lastname: userData.lastname,
-            contact: userData.contact,
-            gender: userData.gender,
-            birthdate: userData.birthdate
+            firstname: userData.userId.name.firstname,
+            midlename: userData.userId.name.midlename,
+            lastname: userData.userId.name.lastname,
+            contact: userData.userId.contact,
+            gender: userData.userId.gender,
+            birthdate: userData.userId.birthdate,
+            userId: userData.userId._id
           });
           const addressControl = this.form.controls.addresses as FormArray;
-          const address = userData.address;
+          const address = userData.userId.addresses;
           for (let i = 1; i < address.length; i++) {
             addressControl.push(this.addAddressGroup());
           }
           this.form.patchValue({addresses: address});
-
-          const metaControl = this.form.controls.metas as FormArray;
-          const meta = userData.metas;
-          for (let i = 1; i < meta.length; i++) {
-            metaControl.push(this.addMetaGroup());
-          }
-          this.form.patchValue({metas: meta});
-
         });
       } else {
         this.isLoading = false;
@@ -107,19 +96,8 @@ export class PatientFormComponent implements OnInit {
     });
   }
 
-  addMetaGroup() {
-    return this.fb.group({
-      label: [''],
-      value: ['']
-    });
-  }
-
   addAddress() {
     this.addressArray.push(this.addAddressGroup());
-  }
-
-  addMeta() {
-    this.metaArray.push(this.addMetaGroup());
   }
 
   removeAddress(index: number) {
@@ -128,18 +106,8 @@ export class PatientFormComponent implements OnInit {
     this.addressArray.markAsTouched();
   }
 
-  removeMeta(index: number) {
-    this.metaArray.removeAt(index);
-    this.metaArray.markAsDirty();
-    this.metaArray.markAsTouched();
-  }
-
   get addressArray() {
     return this.form.get('addresses') as FormArray;
-  }
-
-  get metaArray() {
-    return this.form.get('metas') as FormArray;
   }
 
   onSavePatient() {
@@ -147,41 +115,40 @@ export class PatientFormComponent implements OnInit {
       return;
     }
 
-    const newPatient = {
-      firstname: this.form.value.firstname,
-      lastname: this.form.value.lastname,
-      midlename: this.form.value.midlename,
+    const newUser = {
+      name: {
+        firstname: this.form.value.firstname,
+        midlename: this.form.value.midlename,
+        lastname: this.form.value.lastname
+      },
       gender: this.form.value.gender,
       birthdate: this.form.value.birthdate,
       contact: this.form.value.contact,
       current: this.form.value.current,
-      address: this.form.value.addresses,
-      email: this.form.value.email,
-      password: this.form.value.password,
-      meta: this.form.value.metas,
-      typeId: this.userType,
-      physician: this.authenticationService.getUserId()
+      addresses: this.form.value.addresses
     };
 
-    const patientId = {
-      id: this.formId,
+    const userId = {
+      _id: this.form.value.userId,
     };
 
     const updatePatient = {
-      ...newPatient, ...patientId
+      ...newUser, ...userId
     };
 
     if (!this.formId) {
-      this.userService.insert(newPatient).subscribe(() => {
-        this.onClose();
-        this.notificationService.success(':: Added successfully');
-        this.userService.getAll(this.userType, this.perPage, this.currentPage);
+      this.userService.insert(newUser).subscribe((res) => {
+        const newpatient = {
+          userId: res.id,
+          physician: this.authenticationService.getUserId()
+        }
+        this.patientsService.insert(newpatient).subscribe(() => {
+          this.onClose();
+        });
       });
     } else {
       this.userService.update(updatePatient).subscribe(() => {
         this.onClose();
-        this.notificationService.success(':: Updated successfully');
-        this.userService.getAll(this.userType, this.perPage, this.currentPage);
       });
     }
   }

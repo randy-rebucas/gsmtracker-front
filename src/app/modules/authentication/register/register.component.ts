@@ -61,8 +61,8 @@ export class RegisterComponent implements OnInit {
     this.isLoading = true;
 
     const authRegister = {
-      name: form.value.name,
-      practice: form.value.practice,
+      // name: form.value.name,
+      // practice: form.value.practice,
       firstname: form.value.firstname,
       lastname: form.value.lastname,
       email: form.value.email,
@@ -70,6 +70,12 @@ export class RegisterComponent implements OnInit {
     };
 
     this.authenticationService.createUser(authRegister);
+
+    this.authenticationService.getAuthStatusListener().subscribe((res) => {
+      if(!res) {
+        this.isLoading = false;
+      }
+    })
   }
 
   onLogin() {

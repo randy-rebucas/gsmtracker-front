@@ -6,7 +6,7 @@
 
 <ng-container *ngIf="isAuthenticated">
   <button mat-button [routerLink]="['/secure/dashboard']" routerLinkActive="mat-accent">{{'dashboard.title' | translate}}</button>
-  <button mat-button [routerLink]="['/secure/patients']" routerLinkActive="mat-accent">{{'patients.title' | translate}}</button>
+  <button mat-button [routerLink]="['/secure/users']" routerLinkActive="mat-accent">{{'patients.title' | translate}}</button>
   <button mat-button [routerLink]="['/secure/appointments']" routerLinkActive="mat-accent">{{'appointments.title' | translate}}</button>
   <button mat-button [routerLink]="['/secure/messages']" routerLinkActive="mat-accent">{{'messages.title' | translate}}</button>
   <button mat-button [routerLink]="['/secure/settings']" routerLinkActive="mat-accent">{{'settings.title' | translate}}</button>

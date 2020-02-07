@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
       if(!res) {
         this.isLoading = false;
       }
-    })
+    });
   }
 
   onSignup() {

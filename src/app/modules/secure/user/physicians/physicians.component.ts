@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from 'src/app/modules/secure/user/user.service';
-import { Physicians } from 'src/app/modules/secure/user/user';
+import { Physicians } from './physicians';
+
 
 @Component({
   selector: 'app-physicians',
@@ -23,7 +24,7 @@ export class PhysiciansComponent implements OnInit {
 
     this.physicians.forEach(physician => {
       this.userService.get(physician.userId).subscribe((user) => {
-        this.physiciansNames.push(user.firstname + ' ' + user.lastname);
+        this.physiciansNames.push(user.name.firstname + ' ' + user.name.lastname);
       });
     });
 

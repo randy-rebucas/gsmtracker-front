@@ -1,0 +1,99 @@
+
+mat-row.detail-row {
+  min-height: 0;
+}
+
+mat-row mat-cell.mat-cell.cdk-column-action.mat-column-action button {
+  visibility: hidden;
+}
+
+mat-row:hover mat-cell.mat-cell.cdk-column-action.mat-column-action button {
+  visibility: visible;
+}
+
+mat-cell.mat-cell.cdk-column-select.mat-column-select {
+  max-width: 30px;
+}
+
+mat-cell.mat-cell.cdk-column-expandedDetail.mat-column-expandedDetail {
+  width: 100% !important;
+}
+
+mat-paginator.mat-paginator {
+    width: 100%;
+}
+
+.wrapper {
+  flex-grow: 1;
+  margin: 10px 25px;
+}
+
+.search-div {
+  position: relative;
+  width: 15%;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.search-div>div {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+}
+
+.search-div>div img {
+  cursor: pointer;
+}
+
+.action-button {
+  text-align: right;
+  padding: 1em 0;
+}
+
+.hide {
+  display: none;
+}
+
+.action-button button {
+    margin-left: 10px;
+}
+
+.element-detail {
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-flow: row;
+  flex-grow: 1;
+}
+
+.element-detail>.element {
+    width: 22%;
+}
+
+.element-detail mat-card ::ng-deep .mat-card-header-text {
+  /* CSS styles go here */
+  margin: 0px; // for example to remove the margin
+}
+
+.mat-card-header .mat-card-title {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.element-detail mat-card {
+  flex: 1 1 auto;
+  border-radius: 0;
+  box-shadow: none !important;
+}
+
+.element-detail mat-card:not(:first-child) {
+  border-left: 1px solid #e0e0e0;
+}
+
+button#create-new {
+  position: fixed;
+  right: 1%;
+  bottom: 12%;
+}

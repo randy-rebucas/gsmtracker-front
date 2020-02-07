@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from '../../user/user.service';
+
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { EncounterService } from 'src/app/shared/services/encounter.service';
 import { QueingService } from 'src/app/shared/services/queing.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { FormArray, FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { UserService } from '../../user.service';
 @Component({
   selector: 'app-records',
   templateUrl: './patient-records.component.html',
@@ -65,7 +66,7 @@ export class PatientRecordsComponent implements OnInit {
     });
 
     this.userService.get(this.patientId).subscribe((patient) => {
-      this.fullname = patient.firstname + ' ' + patient.midlename + ' ' + patient.lastname;
+      this.fullname = patient.name.firstname + ' ' + patient.name.midlename + ' ' + patient.name.lastname;
       this.created = patient.createdAt;
     });
 

@@ -18,19 +18,23 @@ export class BirthdaysComponent implements OnInit {
 
   ngOnInit() {
     this.userService.getBirthdays().subscribe((birthday) => {
+      const birthdayCeleb = birthday.users;
 
-      birthday.users.forEach(user => {
-        // get the avatar
-        const obj = {
-          useId: user._id,
-          birthdate: user.birthdate,
-          age: moment().diff(user.birthdate, 'years'),
-          fullname: user.firstname + ', ' + user.lastname,
-          avatar: user.avatarPath,
-          contact: user.contact
-        };
-        this.users.push(obj);
-      });
+      if (birthdayCeleb.length) {
+        birthdayCeleb.forEach(user => {
+          // get the avatar
+          const obj = {
+            useId: user._id,
+            birthdate: user.birthdate,
+            age: moment().diff(user.birthdate, 'years'),
+            fullname: user.name.firstname + ' ' + user.name.midlename + ' ' + user.name.lastname,
+            avatar: user.avatarPath,
+            contact: user.contact
+          };
+          this.users.push(obj);
+        });
+      }
+      
 
       this.birthdays = this.users;
     });

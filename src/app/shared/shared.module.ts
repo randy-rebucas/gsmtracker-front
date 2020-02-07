@@ -7,7 +7,7 @@ import { EventsModule } from './components/events/events.module';
 import { CalendarModule } from './components/calendar/calendar.module';
 import { BirthdaysModule } from './components/birthdays/birthdays.module';
 import { BirthdayPipe } from './pipes/birthday.pipe';
-import { PhysiciansModule } from './components/physicians/physicians.module';
+import { PhysiciansModule } from '../modules/secure/user/physicians/physicians.module';
 import { UploadModule } from './components/upload/upload.module';
 import { RecordModule } from './components/record/record.module';
 

@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { User } from './user';
 
+
 const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable({
@@ -20,8 +21,8 @@ export class UserService {
     private http: HttpClient
   ) {}
 
-  getAll(userType: string, perPage: number, currentPage: number) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}&usertype=${userType}`;
+  getAll(perPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, users: any, counts: number }>(
       BACKEND_URL + queryParams
     )
@@ -30,9 +31,7 @@ export class UserService {
         return { users: userData.users.map(user => {
           return {
             id: user._id,
-            firstname: user.firstname,
-            midlename: user.midlename,
-            lastname: user.lastname,
+            name: user.name,
             contact: user.contact,
             gender: user.gender,
             birthdate: user.birthdate,
@@ -65,11 +64,11 @@ export class UserService {
   }
 
   insert(newUser: any) {
-    return this.http.post<{ message: string, user: User }>(BACKEND_URL, newUser);
+    return this.http.post<{ message: string, user: User, id: string }>(BACKEND_URL, newUser);
   }
 
   update(updatedUser: any) {
-    return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedUser.id, updatedUser);
+    return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedUser._id, updatedUser);
   }
 
   updateProfile(updatedUser: any) {

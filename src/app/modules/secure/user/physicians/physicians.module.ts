@@ -2,12 +2,14 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PhysiciansComponent } from './physicians.component';
 import { MatListModule, MatIconModule } from '@angular/material';
+import { PhysicianWidgetComponent } from './physician-widget/physician-widget.component';
 
 
 
 @NgModule({
   declarations: [
-    PhysiciansComponent
+    PhysiciansComponent,
+    PhysicianWidgetComponent
   ],
   imports: [
     CommonModule,

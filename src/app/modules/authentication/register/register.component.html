@@ -6,12 +6,7 @@
                 <h2 class="app-name">{{ 'authentication.register' | translate }}</h2>
                 <p class="subheading">{{ 'authentication.required-label' | translate }}</p>
             </div>
-            <div>
-                <mat-form-field class="w-100">
-                    <input matInput name="name" type="text" maxlength="50" ngModel placeholder="{{ 'authentication.name' | translate }}" #name="ngModel" required>
-                    <mat-error *ngIf="name.invalid">{{ 'validation.required' | translate:{'s':'name'} }}</mat-error>
-                </mat-form-field>
-            </div>
+
             <div>
                 <mat-form-field class="w-100">
                     <input matInput name="firstname" type="text" maxlength="50" ngModel placeholder="{{ 'authentication.firstname' | translate }}" #firstnameInput="ngModel" required>
@@ -26,7 +21,7 @@
                 </mat-form-field>
             </div>
 
-            <div>
+            <!-- <div>
               <mat-form-field class="w-100">
                 <mat-select name="practice" ngModel #practiceInput="ngModel" placeholder="{{ 'authentication.practice' | translate }}">
                   <mat-option *ngFor="let practice of practices" [value]="practice.value">
@@ -34,7 +29,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
+            </div> -->
 
             <div>
                 <mat-form-field class="w-100">

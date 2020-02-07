@@ -1,22 +1,15 @@
 export interface User {
   id: string;
-  firstname: string;
-  midlename: string;
-  lastname: string;
+  name: Name; 
   gender: string;
   birthdate: string;
   contact: string;
   createdAt: Date;
   updatedAt: Date;
   address: Address[];
-  metas: Meta[];
-
-  isOwned: boolean;
   age: number;
   publicKey: string;
   privateKey: string;
-  usertypes: string;
-  physicians: Physicians[];
 }
 
 export interface Address {
@@ -28,11 +21,8 @@ export interface Address {
   country: string;
 }
 
-export interface Meta {
-  label: string;
-  value: string;
-}
-
-export interface Physicians {
-  userId: string;
+export interface Name {
+  firstname: string;
+  midlename: string;
+  lastname: string;
 }

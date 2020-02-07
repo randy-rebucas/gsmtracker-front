@@ -3,21 +3,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { UserService } from '../../user/user.service';
 import { Subscription } from 'rxjs';
-import { User } from '../../user/user';
+import { User } from '../../user';
 import { MatTableDataSource, MatPaginator, MatSort, PageEvent, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe } from '@angular/common';
-import { SettingsService } from '../../settings/settings.service';
+import { SettingsService } from '../../../settings/settings.service';
 
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { trigger, style, state, transition, animate } from '@angular/animations';
-import { AuthenticationService } from '../../../authentication/authentication.service';
+import { AuthenticationService } from '../../../../authentication/authentication.service';
 import { TypeService } from 'src/app/shared/services/type.service';
 import { PatientFormComponent } from '../patient-form/patient-form.component';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { UserService } from '../../user.service';
+import { PatientsService } from '../patients.service';
+import { Patients } from '../patients';
+import { Physicians } from '../../physicians/physicians';
 
 @Component({
   selector: 'app-patient-list',
@@ -74,6 +77,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private userService: UserService,
+    private patientsService: PatientsService,
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
     private typeService: TypeService,
@@ -90,44 +94,104 @@ export class PatientListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userId = this.authenticationService.getUserId();
 
-    this.typeService.getBySlug('patients').subscribe((type) => {
+      this.titleService.setTitle('Patients');
 
-      this.titleService.setTitle(type.name);
-      this.userTypeId = type._id;
-
-      this.userService.getAll(type._id, this.perPage, this.currentPage);
-      this.usersSub = this.userService.getUpdateListener().subscribe((userData: {users: User[], counts: number}) => {
+      this.patientsService.getAll(this.perPage, this.currentPage);
+      this.usersSub = this.patientsService.getUpdateListener().subscribe((userData: {patients: any[], counts: number}) => {
         this.isLoading = false;
-
+  
         const newUsers = [];
-        userData.users.forEach(user => {
-          user.physicians.filter((physician) => {
+        userData.patients.forEach(user => {
+          user.physicians.filter((physician: Physicians) => {
             const ownerShip = {
               isOwned : physician.userId === this.userId
             };
             newUsers.push({...user, ...ownerShip});
           });
         });
-
+     
         this.dataSource = new MatTableDataSource(newUsers);
         this.length = this.dataSource.data.length;
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-    });
+
   }
 
-  onDelete(userId: string) {
+  onDelete(patientId: string) {
     this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
-    .afterClosed().subscribe(res => {
-      if (res) {
-        this.userService.delete(userId).subscribe((data) => {
-          this.userService.getAll(this.userTypeId, this.perPage, this.currentPage);
-          this.notificationService.warn('::' + data.message);
+    .afterClosed().subscribe(dialogRes => {
+      if (dialogRes) {
+        this.patientsService.delete(patientId).subscribe((patientRes) => {
+          // delete related user data
+          this.userService.delete(patientRes.id).subscribe(() => {
+            this.patientsService.getAll(this.perPage, this.currentPage);
+            this.notificationService.warn('::' + patientRes.message);
+          });
         });
       }
     });
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  onChangedPage(pageData: PageEvent) {
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.perPage = pageData.pageSize;
+    this.patientsService.getAll(this.perPage, this.currentPage);
+  }
+
+  onCreate() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
+      id: null,
+      title: 'Create New',
+      button: 'Save'
+    };
+    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe(() => {
+      this.notificationService.success(':: Added successfully');
+      this.patientsService.getAll(this.perPage, this.currentPage);
+    });
+  }
+
+  onEdit(patientId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '50%';
+    dialogConfig.data = {
+      id: patientId,
+      title: 'Update',
+      button: 'Update'
+    };
+    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe(() => {
+      this.notificationService.success(':: Updated successfully');
+      this.patientsService.getAll(this.perPage, this.currentPage);
+    });
+  }
+
+  onScan() {
+    // const args = {
+    //   width: '30%',
+    //   id: null,
+    //   dialogTitle: 'Scan Code',
+    //   dialogButton: null
+    // };
+    // super.onPopup(args, QrCodeScannerComponent);
+  }
+
+  onDetail(userId: string) {
+    this.router.navigate(['../', userId], {relativeTo: this.activatedRoute});
   }
 
   onPrint() {
@@ -210,63 +274,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
       });
 
   }
-
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  onChangedPage(pageData: PageEvent) {
-    this.isLoading = true;
-    this.currentPage = pageData.pageIndex + 1;
-    this.perPage = pageData.pageSize;
-    this.userService.getAll(this.userTypeId, this.perPage, this.currentPage);
-  }
-
-  onCreate(userTypeId: string) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-      id: null,
-      title: 'Create New',
-      button: 'Save',
-      userType: userTypeId
-    };
-    this.dialog.open(PatientFormComponent, dialogConfig);
-  }
-
-  onEdit(userTypeId: string, patientId: string) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-      id: patientId,
-      title: 'Update',
-      button: 'Update',
-      userType: userTypeId
-    };
-    this.dialog.open(PatientFormComponent, dialogConfig);
-  }
-
-  onScan() {
-    // const args = {
-    //   width: '30%',
-    //   id: null,
-    //   dialogTitle: 'Scan Code',
-    //   dialogButton: null
-    // };
-    // super.onPopup(args, QrCodeScannerComponent);
-  }
-
-  onDetail(userId: string) {
-    this.router.navigate(['../', userId], {relativeTo: this.activatedRoute});
-  }
-
+  
   ngOnDestroy() {
     // this.usersSub.unsubscribe();
   }

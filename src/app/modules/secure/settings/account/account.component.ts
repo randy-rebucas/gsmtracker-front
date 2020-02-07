@@ -62,24 +62,24 @@ export class AccountComponent implements OnInit {
 
     this.userService.get(this.userId).subscribe((user) => {
 
-      this.firstname = user.firstname;
-      this.midlename = user.midlename;
-      this.lastname = user.lastname;
+      this.firstname = user.name.firstname;
+      this.midlename = user.name.midlename;
+      this.lastname = user.name.lastname;
       this.birthdate = user.birthdate;
       this.contact = user.contact;
       this.gender = user.gender;
       this.createdAt = user.createdAt;
       this.updatedAt = user.updatedAt;
       this.address = user.address;
-      this.metas = user.metas;
+      // this.metas = user.metas;
 
       this.publicKey = user.publicKey;
       this.privateKey = user.privateKey;
 
       this.form.patchValue({
-        firstname: user.firstname,
-        midlename: user.midlename,
-        lastname: user.lastname,
+        firstname: user.name.firstname,
+        midlename: user.name.midlename,
+        lastname: user.name.lastname,
         birthdate: user.birthdate,
         contact: user.contact,
         gender: user.gender
@@ -91,12 +91,12 @@ export class AccountComponent implements OnInit {
       }
       this.form.patchValue({addresses: address});
 
-      const metaControl = this.form.controls.metas as FormArray;
-      const meta = user.metas;
-      for (let i = 1; i < meta.length; i++) {
-        metaControl.push(this.addMetaGroup());
-      }
-      this.form.patchValue({metas: meta});
+      // const metaControl = this.form.controls.metas as FormArray;
+      // const meta = user.metas;
+      // for (let i = 1; i < meta.length; i++) {
+      //   metaControl.push(this.addMetaGroup());
+      // }
+      // this.form.patchValue({metas: meta});
 
     });
   }
