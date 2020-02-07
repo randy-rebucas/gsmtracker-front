@@ -40,18 +40,19 @@ export class PatientRecordListComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.hasBackdrop = true;
-    dialogConfig.width = '60%';
-    dialogConfig.data = {
-      id: this.patientId,
-      title: 'Create New',
-      button: 'Save'
-    };
-    this.dialog.open(PatientRecordFormComponent, dialogConfig).afterClosed().subscribe(result => {
-      this.blockchainService.getChain(this.perPage, this.currentPage);
-    });
+    this.router.navigate(['../form'], {relativeTo: this.activatedRoute});
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+    // dialogConfig.autoFocus = true;
+    // dialogConfig.hasBackdrop = true;
+    // dialogConfig.width = '60%';
+    // dialogConfig.data = {
+    //   id: this.patientId,
+    //   title: 'Create New',
+    //   button: 'Save'
+    // };
+    // this.dialog.open(PatientRecordFormComponent, dialogConfig).afterClosed().subscribe(result => {
+    //   this.blockchainService.getChain(this.perPage, this.currentPage);
+    // });
   }
 }

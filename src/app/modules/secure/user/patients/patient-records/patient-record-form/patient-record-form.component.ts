@@ -1,13 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { CanComponentDeactivate } from '../../can-deactivate.guard';
 import { Observable } from 'rxjs';
 import { startWith, map, debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { DrugsService } from 'src/app/shared/services/drugs.service';
+import { Location } from '@angular/common';
 
-export interface Medicine {
+export interface Drugs {
   id: string;
   name: string;
 }
@@ -25,41 +25,47 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
   public showMore: boolean;
   preLoading = false;
   selectedMedicine: string;
-  filteredMovies: any;
+  // filteredDrugs: any;
+  public filteredDrugs: Drugs[] = [];
   errorMsg: string;
 
-  searchMoviesCtrl = new FormControl();
-  options: any[] = [];
-  filteredOptions: Observable<Medicine[]>;
+  searchDrugsCtrl = new FormControl();
+
+  vitalSignFormGroup: FormGroup;
+  physicalExamFormGroup: FormGroup;
+  complaintFormGroup: FormGroup;
+  prescriptionsFormGroup: FormGroup;
+  presentIllnessFormGroup: FormGroup;
+  pastMedicalFormGroup: FormGroup;
+  familyHistoryFormGroup: FormGroup;
+  socialHistoryFormGroup: FormGroup;
+  assessmentsFormGroup: FormGroup;
+  progressNotesFormGroup: FormGroup;
+  isOptional = true;
+  // options: any[] = [];
+  // filteredOptions: Observable<Medicine[]>;
 
   constructor(
-    private http: HttpClient,
+    private drugService: DrugsService,
     private fb: FormBuilder,
+    private location: Location,
     private authenticationService: AuthenticationService,
-    private dialogRef: MatDialogRef < PatientRecordFormComponent >,
-    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.formTitle = data.title;
-    this.formButtontext = data.button;
-    this.patientId = data.id;
+    // this.formTitle = data.title;
+    // this.formButtontext = data.button;
+    // this.patientId = data.id;
 
     this.showMore = false;
   }
 
   ngOnInit() {
-    // this.filteredOptions = this.myControl.valueChanges
-    //   .pipe(
-    //     startWith(''),
-    //     map(value => this._filter(value))
-    //   );
-    this.searchMoviesCtrl.valueChanges
+    this.searchDrugsCtrl.valueChanges
       .pipe(
         debounceTime(500),
         tap(() => {
-          this.filteredMovies = [];
           this.preLoading = true;
         }),
-        switchMap(value => this.http.get('http://www.omdbapi.com/?t=' + value + '&apikey=74fdfa11&')
+        switchMap(value => this.drugService.search({name: value})
           .pipe(
             finalize(() => {
               this.preLoading = false;
@@ -67,21 +73,60 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
           )
         )
       )
-      .subscribe(data => {
-        console.log(data);
-        this.options.push(data);
-        if (data === undefined) {
-          this.filteredMovies = [];
-        } else {
-          this.filteredMovies = data;
-        }
-        console.log(this.options);
+      .subscribe(drug => {
+        console.log(drug);
+        this.filteredDrugs = drug.results;
       });
 
-    this.form = this.fb.group({
-      firstname: ['', [Validators.required]],
+    // this.form = this.fb.group({
+    //   firstname: ['', [Validators.required]],
+    //   prescriptions: this.fb.array([this.addPrescriptionGroup()])
+    // });
+
+    this.vitalSignFormGroup = this.fb.group({
+      temperature: ['', Validators.required],
+      bloodPressure: ['', Validators.required],
+      pulseRate: ['', Validators.required],
+      respiratoryRate: ['', Validators.required]
+    });
+
+    this.physicalExamFormGroup = this.fb.group({
+      height: ['', Validators.required],
+      weight: ['', Validators.required]
+    });
+
+    this.complaintFormGroup = this.fb.group({
+      chiefCompliant: ['', Validators.required]
+    });
+
+    this.prescriptionsFormGroup = this.fb.group({
       prescriptions: this.fb.array([this.addPrescriptionGroup()])
     });
+
+    this.presentIllnessFormGroup = this.fb.group({
+      presentIllness: ''
+    });
+
+    this.pastMedicalFormGroup = this.fb.group({
+      pastMedical: ''
+    });
+
+    this.familyHistoryFormGroup = this.fb.group({
+      familyHistory: ''
+    });
+
+    this.socialHistoryFormGroup = this.fb.group({
+      socialHistory: ''
+    });
+
+    this.assessmentsFormGroup = this.fb.group({
+      assessments: ''
+    });
+
+    this.progressNotesFormGroup = this.fb.group({
+      progressNotes: ''
+    });
+    
   }
 
   // private _filter(value: string): Medicine[] {
@@ -90,11 +135,11 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
 
   //   // return this.options.filter(option => option.title.toLowerCase().includes(filterValue));
   // }
-
-  displayFn(medicine: string) {
-    // this.selectedMedicine = medicine;
-    // console.log(this.selectedMedicine);
-    // return country ? country.Country : country.CountryID;
+  
+  displayFn(drug: Drugs) {
+    if (drug) {
+      return drug.name;
+    }
   }
 
   addPrescriptionGroup() {
@@ -117,7 +162,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
   }
 
   get prescriptionArray() {
-    return this.form.get('prescriptions') as FormArray;
+    return this.prescriptionsFormGroup.get('prescriptions') as FormArray;
   }
 
   onSave() {
@@ -126,9 +171,13 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     }
   }
 
-  closeDialog() {
+  onCancel() {
+    this.location.back();
+  }
+
+  onClose() {
     this.form.reset();
-    this.dialogRef.close();
+    // this.dialogRef.close();
   }
 
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {

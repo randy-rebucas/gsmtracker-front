@@ -24,13 +24,12 @@ mat-paginator.mat-paginator {
 }
 
 .wrapper {
-  flex-grow: 1;
-  margin: 10px 25px;
+  max-width: 1200px;
+    margin: 0 auto;
 }
 
 .search-div {
   position: relative;
-  width: 15%;
 }
 
 .mat-form-field {

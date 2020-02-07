@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../user.service';
 import { User } from '../../user';
 import { PatientsService } from '../patients.service';
@@ -17,7 +17,8 @@ export class PatientDetailComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private usersService: UserService,
-    private patientsService: PatientsService
+    private patientsService: PatientsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -25,9 +26,12 @@ export class PatientDetailComponent implements OnInit {
 
     this.patientsService.get(this.patientId).subscribe((user) => {
       this.user = user;
-      console.log(this.user);
     });
 
+  }
+
+  onCreate() {
+    this.router.navigate(['./records/form'], {relativeTo: this.activatedRoute});
   }
 
   onSetRecord(record: any) {

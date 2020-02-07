@@ -62,14 +62,8 @@
                         <ng-template [ngIf]="column === 'age'">
                             <mat-cell *matCellDef="let element"> {{ element.birthdate | birthday }}</mat-cell>
                         </ng-template>
-                        <ng-template [ngIf]="column === 'firstname'">
-                            <mat-cell *matCellDef="let element"> {{ element.name.firstname }}</mat-cell>
-                        </ng-template>
-                        <ng-template [ngIf]="column === 'midlename'">
-                            <mat-cell *matCellDef="let element"> {{ element.name.midlename }}</mat-cell>
-                        </ng-template>
-                        <ng-template [ngIf]="column === 'lastname'">
-                            <mat-cell *matCellDef="let element"> {{ element.name.lastname }}</mat-cell>
+                        <ng-template [ngIf]="column === 'fullname'">
+                            <mat-cell *matCellDef="let element"> {{ element.name.firstname }} {{ element.name.midlename }} {{ element.name.lastname }}</mat-cell>
                         </ng-template>
                         <ng-template #elseBlockDate>
                             <mat-cell *matCellDef="let element"> {{ element[column] }}</mat-cell>
@@ -82,7 +76,7 @@
                 <ng-container matColumnDef="expandedDetail">
                     <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                         <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                            <mat-card class="example-card">
+                            <mat-card class="address-card">
                                 <mat-card-header>
                                     <mat-card-title>Address</mat-card-title>
                                     <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
@@ -99,23 +93,7 @@
                                     </ng-container>
                                 </mat-card-content>
                             </mat-card>
-                            <mat-card class="example-card">
-                                <mat-card-header>
-                                    <mat-card-title>Metadata</mat-card-title>
-                                    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-                                </mat-card-header>
-                                <mat-card-content>
-                                    <mat-list dense>
-                                        <ng-container *ngIf="condition; else elseBlock">
-                                            <mat-list-item *ngFor="let meta of element.meta; let m = index;">{{meta.label}}: <span>{{meta.value}}</span> </mat-list-item>
-                                        </ng-container>
-                                        <ng-template #elseBlock>
-                                            <mat-list-item>No metadata found! </mat-list-item>
-                                        </ng-template>
-                                    </mat-list>
-                                </mat-card-content>
-                            </mat-card>
-                            <mat-card class="example-card">
+                            <mat-card class="physicians-card">
                                 <mat-card-header>
                                     <mat-card-title>Physicians</mat-card-title>
                                     <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
@@ -124,7 +102,7 @@
                                     <app-physicians [physicians]="element.physicians"></app-physicians>
                                 </mat-card-content>
                             </mat-card>
-                            <mat-card class="example-card">
+                            <mat-card class="record-card">
                                 <mat-card-header>
                                     <mat-card-title>Record Chain</mat-card-title>
                                     <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->

@@ -55,9 +55,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
     'image',
-    'firstname',
-    'midlename',
-    'lastname',
+    'fullname',
     'contact',
     'gender',
     'birthdate',

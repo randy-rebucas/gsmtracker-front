@@ -10,12 +10,14 @@ import { BirthdayPipe } from './pipes/birthday.pipe';
 import { PhysiciansModule } from '../modules/secure/user/physicians/physicians.module';
 import { UploadModule } from './components/upload/upload.module';
 import { RecordModule } from './components/record/record.module';
+import { DrugsComponent } from './components/lookup/drugs/drugs.component';
 
 
 @NgModule({
   declarations: [
     EllipsisPipe,
-    BirthdayPipe
+    BirthdayPipe,
+    DrugsComponent
   ],
   imports: [
     CommonModule

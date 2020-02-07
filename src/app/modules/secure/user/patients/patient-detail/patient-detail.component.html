@@ -3,7 +3,7 @@
 </div>
 <div class="wrapper">
 
-    <div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 350px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
+    <div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 250px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
         <div class="area header" gdArea="header">
             <!-- header -->
             <!-- <h4>My Chain Address: {{ user?.privateKey }}</h4> -->
@@ -23,7 +23,7 @@
                 </mat-card-header>
                 <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
                 <mat-card-content>
-                    <h2>Id: {{ user?._id }}</h2>
+                    <!-- <h2>Id: {{ user?._id }}</h2> -->
                   <!-- <p>
                     The Shiba Inu is the smallest
                   </p> -->
@@ -33,6 +33,10 @@
                     <mat-list-item> <mat-icon matListIcon>wc</mat-icon> {{ user?.userId.gender }} </mat-list-item>
                    </mat-list >
                 </mat-card-content>
+                <mat-card-actions>
+                  <button mat-stroked-button color="primary" (click)="onCreate()"><mat-icon>add</mat-icon> New Record</button>
+                  <!-- <button mat-button>SHARE</button> -->
+                </mat-card-actions>
               </mat-card>
 
               <mat-card class="patient-physicians-detail-card">

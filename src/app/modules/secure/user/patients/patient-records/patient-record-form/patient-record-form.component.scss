@@ -11,6 +11,9 @@ mat-form-field:not(:last-child) {
     flex-direction: row;
     .action-btn {
         float: right;
+        display: flex;
+        align-items: center;
+        height: 75%;
     }
 }
 
