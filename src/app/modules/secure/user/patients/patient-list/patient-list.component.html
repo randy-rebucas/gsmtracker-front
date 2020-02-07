@@ -2,14 +2,15 @@
     <h1>Patients</h1>
 </div>
 <div class="wrapper">
-    <button mat-fab color="primary" (click)="onCreate(userTypeId)" id="create-new"><mat-icon>add</mat-icon></button>
+    <button mat-fab color="primary" (click)="onCreate()" id="create-new"><mat-icon>add</mat-icon></button>
+
     <div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 350px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
         <div class="area header" gdArea="header">
 
         </div>
 
         <div class="area content" gdArea="content">
-            <div class="search-div" fxFlex="80" fxFlex.sm="100%" fxFlex.md="90%">
+            <div class="search-div">
                 <mat-form-field>
                     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
                 </mat-form-field>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-// import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { MessagesComponent } from './messages.component';
@@ -21,7 +21,7 @@ import { AngularMaterialModule } from 'src/app/angular-material.module';
     CommonModule,
     AngularMaterialModule,
     SharedModule,
-    // FlexLayoutModule.withConfig({addFlexToParent: false}),
+    FlexLayoutModule,
     RouterModule.forChild([
       { path: '', component: MessagesComponent },
     ])

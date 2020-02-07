@@ -6,7 +6,7 @@
     <mat-card-subtitle>{{patientId}}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="form" class="normal-form" (submit)="onSubmit()" *ngIf="!isLoading">
+    <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
       <h4 subheading-1>Basic Information</h4>
         <ng-container *ngFor="let formInput of this.formProperties.formInputs">
           {{formInput.type}}

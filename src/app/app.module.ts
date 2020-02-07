@@ -19,7 +19,7 @@ import { ErrorInterceptor } from './error-interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { AppConfigurationService } from './configs/app-configuration.service';
 import { AngularMaterialModule } from './angular-material.module';
-
+import {FlexLayoutModule} from '@angular/flex-layout';
 // import ngx-translate and the http loader
 import {TranslateLoader, TranslateModule, TranslateCompiler} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -61,6 +61,7 @@ import { PaymentsComponent } from './shared/components/payments/payments.compone
     CommonModule,
     HttpClientModule,
     LayoutModule,
+    FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,

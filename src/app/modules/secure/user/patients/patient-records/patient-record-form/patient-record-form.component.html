@@ -1,9 +1,7 @@
 <h2 mat-dialog-title>{{ formTitle | titlecase }}</h2>
 <mat-dialog-content class="mat-typography" style="min-height: 300px;">
-    <div *ngIf="isLoading" class="loading">
-        <mat-spinner [diameter]="25"></mat-spinner>
-    </div>
-    <form [formGroup]="form" class="normal-form" (submit)="onSave()" *ngIf="!isLoading">
+
+    <form [formGroup]="form" class="normal-form" (submit)="onSave()">
         <mat-tab-group dynamicHeight>
             <mat-tab label="Basic">
                 <h4 subheading-1>Vital Signs</h4>

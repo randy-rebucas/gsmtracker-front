@@ -2,8 +2,8 @@
     <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === true">
         <mat-toolbar [routerLink]="['/']" routerLinkActive="active">{{'navigation.home' | translate}}</mat-toolbar>
         <mat-nav-list>
-            <a mat-list-item [routerLink]="['/page/about']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.about' | translate}}</a>
-            <a mat-list-item [routerLink]="['/page/contact']" routerLinkActive="mat-accent" *ngIf="!isAuthenticated">{{'navigation.contact' | translate}}</a>
+            <a mat-list-item [routerLink]="['/page/about']" routerLinkActive="mat-accent" *ngIf="!userIsAuthenticated">{{'navigation.about' | translate}}</a>
+            <a mat-list-item [routerLink]="['/page/contact']" routerLinkActive="mat-accent" *ngIf="!userIsAuthenticated">{{'navigation.contact' | translate}}</a>
             <a mat-list-item [routerLink]="['/secure/dashboard']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'dashboard.title' | translate}}</a>
             <a mat-list-item [routerLink]="['/secure/users']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'patients.title' | translate}}</a>
             <a mat-list-item [routerLink]="['/secure/appointments']" routerLinkActive="mat-accent" *ngIf="userIsAuthenticated">{{'appointments.title' | translate}}</a>

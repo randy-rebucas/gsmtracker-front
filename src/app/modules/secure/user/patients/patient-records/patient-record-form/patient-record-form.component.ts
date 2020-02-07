@@ -91,11 +91,11 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
   //   // return this.options.filter(option => option.title.toLowerCase().includes(filterValue));
   // }
 
-  // displayFn(medicine: string) {
-  //   this.selectedMedicine = medicine;
-  //   console.log(this.selectedMedicine);
-  //   // return country ? country.Country : country.CountryID;
-  // }
+  displayFn(medicine: string) {
+    // this.selectedMedicine = medicine;
+    // console.log(this.selectedMedicine);
+    // return country ? country.Country : country.CountryID;
+  }
 
   addPrescriptionGroup() {
     return this.fb.group({
