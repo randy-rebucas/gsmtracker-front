@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
+// import { FlexLayoutModule } from '@angular/flex-layout';
 import { AuthenticationGuard } from '../../authentication/authentication.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMaterialModule } from 'src/app/angular-material.module';
@@ -25,7 +25,7 @@ import { AppointmentDetailComponent } from './appointment-detail/appointment-det
     ReactiveFormsModule,
     AngularMaterialModule,
     SharedModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false}),
+    // FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: AppointmentsComponent, children: [
         { path: '', redirectTo: 'list', pathMatch: 'full' },

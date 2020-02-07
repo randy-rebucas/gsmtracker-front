@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
+// import { FlexLayoutModule } from '@angular/flex-layout';
 import { PatientsComponent } from './patients.component';
 import { AuthenticationGuard } from '../../../authentication/authentication.guard';
 import { PatientFormComponent } from './patient-form/patient-form.component';
@@ -27,7 +27,7 @@ import { CanDeactivateGuard } from './can-deactivate.guard';
     ReactiveFormsModule,
     AngularMaterialModule,
     SharedModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false}),
+    // FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: PatientsComponent, children: [
         { path: '', redirectTo: 'list', pathMatch: 'full' },

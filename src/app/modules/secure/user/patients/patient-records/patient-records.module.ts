@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
+// import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditorModule } from '@tinymce/tinymce-angular';
@@ -27,7 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     AngularMaterialModule,
     SharedModule,
     EditorModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false}),
+    // FlexLayoutModule.withConfig({addFlexToParent: false}),
     RouterModule.forChild([
       { path: '', component: PatientRecordListComponent },
       { path: 'form', component: PatientRecordFormComponent, canDeactivate: [CanDeactivateGuard]},
