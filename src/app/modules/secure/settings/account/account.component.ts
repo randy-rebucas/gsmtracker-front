@@ -156,17 +156,18 @@ export class AccountComponent implements OnInit {
 
     const updatePatient = {
       id: this.userId,
-      firstname: this.form.value.firstname,
-      lastname: this.form.value.lastname,
-      midlename: this.form.value.midlename,
+      name: {
+        firstname: this.form.value.firstname,
+        lastname: this.form.value.lastname,
+        midlename: this.form.value.midlename
+      },
       gender: this.form.value.gender,
       birthdate: this.form.value.birthdate,
       contact: this.form.value.contact,
-      address: this.form.value.addresses,
-      meta: this.form.value.metas,
+      addresses: this.form.value.addresses
     };
 
-    this.userService.updateProfile(updatePatient).subscribe(() => {
+    this.userService.update(updatePatient).subscribe(() => {
       this.notificationService.success(':: Updated successfully');
     });
 
