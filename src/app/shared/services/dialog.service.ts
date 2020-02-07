@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { PromptDialogComponent } from 'src/app/modules/prompt-dialog/prompt-dialog.component';
 
 @Injectable({

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { AppointmentsService } from '../appointments.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { UserService } from 'src/app/shared/services/user.service';
 

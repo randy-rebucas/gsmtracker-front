@@ -2,7 +2,9 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UploadComponent } from './upload.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatIconModule, MatButtonModule, MatProgressBarModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AvatarModule } from '../avatar/avatar.module';
 
 

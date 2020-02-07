@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { Blockchain } from 'src/app/shared/interfaces/blockchain';
 import { Observable } from 'rxjs';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { PatientRecordFormComponent } from '../patient-record-form/patient-record-form.component';
 import { ActivatedRoute, Router } from '@angular/router';
 

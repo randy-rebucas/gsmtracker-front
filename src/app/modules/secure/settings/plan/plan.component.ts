@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../../authentication/authentication.se
 import { SettingsService } from '../settings.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { Settings } from '../settings';
 export interface Setting {
   settingId: string;

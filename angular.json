@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "myRecord": {
+    "clinicplus": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/myRecord",
+            "outputPath": "dist/clinicplus",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "myRecord:build"
+            "browserTarget": "clinicplus:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "myRecord:build:production"
+              "browserTarget": "clinicplus:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "myRecord:build"
+            "browserTarget": "clinicplus:build"
           }
         },
         "test": {
@@ -115,16 +115,19 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "myRecord:serve"
+            "devServerTarget": "clinicplus:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "myRecord:serve:production"
+              "devServerTarget": "clinicplus:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "myRecord"
+  "defaultProject": "clinicplus",
+  "cli": {
+    "analytics": "45ffeb4f-3df7-40ce-878d-b9f5b0aff565"
+  }
 }

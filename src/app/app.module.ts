@@ -33,6 +33,12 @@ import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
 import { PaymentsComponent } from './shared/components/payments/payments.component';
 
+// import { registerLocaleData } from '@angular/common';
+// import localeFr from '@angular/common/locales/fr';
+// import localeFrExtra from '@angular/common/locales/extra/fr';
+
+// registerLocaleData(localeFr, 'fr-FR', localeFrExtra)
+
 @NgModule({
   declarations: [
     AppComponent,
