@@ -32,6 +32,7 @@ import { EncounterComponent } from './shared/components/encounter/encounter.comp
 import { StatComponent } from './shared/components/stat/stat.component';
 import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
 import { PaymentsComponent } from './shared/components/payments/payments.component';
+import { CanDeactivateGuard } from './modules/secure/user/patients/can-deactivate.guard';
 
 // import { registerLocaleData } from '@angular/common';
 // import localeFr from '@angular/common/locales/fr';
@@ -83,6 +84,7 @@ import { PaymentsComponent } from './shared/components/payments/payments.compone
   ],
   providers: [
     CookieService,
+    CanDeactivateGuard,
     // app-configuration
     AppConfigurationService,
     {

@@ -24,8 +24,23 @@ export class DrugsService {
     private http: HttpClient
   ) { }
 
+  get(drugId: string) {
+    return this.http.get<any>(BACKEND_URL + '/' + drugId);
+  }
+
+  insert(newDrug: any) {
+    return this.http.post<{ message: string, drugs: any }>(BACKEND_URL, newDrug);
+  }
+
+  update(updatedDrug: any) {
+    return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedDrug._id, updatedDrug);
+  }
+
+  delete(drugId: string) {
+    return this.http.delete<{ message: string, id: string }>(BACKEND_URL + '/' + drugId);
+  }
+
   search(filter: {name: string} = {name: ''}): Observable<Drugs> {
-    console.log(filter);
     return this.http.get<Drugs>(BACKEND_URL + '/lookup')
     .pipe(
       tap((response: Drugs) => {

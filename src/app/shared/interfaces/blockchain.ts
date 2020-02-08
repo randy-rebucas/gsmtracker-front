@@ -1,7 +1,14 @@
 export interface Blockchain {
     timestamp: Date;
-    transactions: any;
+    transactions: Transaction;
     previousHash: string;
     hash: string;
     nonce: number;
+}
+
+export interface Transaction {
+  setFrom: string;
+  setTo: string;
+  message: string;
+  records: any[];
 }

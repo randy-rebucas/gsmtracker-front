@@ -1,10 +1,7 @@
 mat-form-field {
-    flex: 1;
+    width: 23%;
 }
 
-mat-form-field:not(:last-child) {
-    margin-right: 10px;
-}
 
 .form-field-block {
     display: flex;
@@ -31,4 +28,17 @@ mat-form-field:not(:last-child) {
 
 mat-tab-group ::ng-deep .mat-tab-body-wrapper {
     margin-top: 1em;
+}
+
+.form-group {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  mat-form-field {
+    width: 20%;
+  }
+}
+
+.filter-full-width {
+  width: 100%;
 }

@@ -11,6 +11,7 @@ import { PhysiciansModule } from '../modules/secure/user/physicians/physicians.m
 import { UploadModule } from './components/upload/upload.module';
 import { RecordModule } from './components/record/record.module';
 import { DrugsComponent } from './components/lookup/drugs/drugs.component';
+import { PromptModule } from './components/prompt/prompt.module';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { DrugsComponent } from './components/lookup/drugs/drugs.component';
     PhysiciansModule,
     UploadModule,
     RecordModule,
+    PromptModule,
     // Pipes
     EllipsisPipe,
     BirthdayPipe,

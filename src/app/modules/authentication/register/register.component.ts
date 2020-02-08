@@ -72,10 +72,10 @@ export class RegisterComponent implements OnInit {
     this.authenticationService.createUser(authRegister);
 
     this.authenticationService.getAuthStatusListener().subscribe((res) => {
-      if(!res) {
+      if (!res) {
         this.isLoading = false;
       }
-    })
+    });
   }
 
   onLogin() {

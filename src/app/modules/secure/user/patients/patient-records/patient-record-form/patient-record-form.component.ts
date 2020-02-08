@@ -1,13 +1,18 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { CanComponentDeactivate } from '../../can-deactivate.guard';
 import { Observable } from 'rxjs';
 import { startWith, map, debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { DrugsService } from 'src/app/shared/services/drugs.service';
-import { Location } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { PromptComponent } from 'src/app/shared/components/prompt/prompt.component';
+import { PatientsService } from '../../patients.service';
+import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 
-export interface Drugs {
+export interface Drug {
   id: string;
   name: string;
 }
@@ -18,141 +23,139 @@ export interface Drugs {
   styleUrls: ['./patient-record-form.component.scss']
 })
 export class PatientRecordFormComponent implements OnInit, CanComponentDeactivate {
-  public form: FormGroup;
-  public formTitle: string;
-  public formButtontext: string;
+
+  preLoading: boolean;
   public patientId: string;
-  public showMore: boolean;
-  preLoading = false;
-  selectedMedicine: string;
-  // filteredDrugs: any;
-  public filteredDrugs: Drugs[] = [];
-  errorMsg: string;
+  public searchDrugsCtrl = new FormControl();
+  public filteredOptions: Drug[] = [];
+  public form: FormGroup;
+  selectedDrug: string;
 
-  searchDrugsCtrl = new FormControl();
+  get prescriptionArray() {
+    return this.form.get('prescriptions').get('prescriptions') as FormArray;
+  }
 
-  vitalSignFormGroup: FormGroup;
-  physicalExamFormGroup: FormGroup;
-  complaintFormGroup: FormGroup;
-  prescriptionsFormGroup: FormGroup;
-  presentIllnessFormGroup: FormGroup;
-  pastMedicalFormGroup: FormGroup;
-  familyHistoryFormGroup: FormGroup;
-  socialHistoryFormGroup: FormGroup;
-  assessmentsFormGroup: FormGroup;
-  progressNotesFormGroup: FormGroup;
-  isOptional = true;
-  // options: any[] = [];
-  // filteredOptions: Observable<Medicine[]>;
+  user: any;
 
   constructor(
     private drugService: DrugsService,
     private fb: FormBuilder,
-    private location: Location,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private patientsService: PatientsService,
+    private blockchainService: BlockchainService,
+    private dialog: MatDialog,
     private authenticationService: AuthenticationService,
   ) {
-    // this.formTitle = data.title;
-    // this.formButtontext = data.button;
-    // this.patientId = data.id;
-
-    this.showMore = false;
+    this.preLoading = false;
   }
 
   ngOnInit() {
+
+    this.patientId = this.activatedRoute.snapshot.parent.parent.params.patientId;
+    this.patientsService.get(this.patientId).subscribe((user) => {
+      this.user = user;
+    });
+
     this.searchDrugsCtrl.valueChanges
       .pipe(
-        debounceTime(500),
-        tap(() => {
-          this.preLoading = true;
-        }),
-        switchMap(value => this.drugService.search({name: value})
+        debounceTime(300),
+        tap(() => this.preLoading = true),
+        startWith(''),
+        switchMap((value) => {
+          return this.drugService.search({name: value})
           .pipe(
-            finalize(() => {
-              this.preLoading = false;
-            }),
-          )
-        )
-      )
-      .subscribe(drug => {
-        console.log(drug);
-        this.filteredDrugs = drug.results;
+            finalize(() => this.preLoading = false),
+          );
+        })
+      ).subscribe((users) => {
+        this.filteredOptions = users.results;
       });
 
-    // this.form = this.fb.group({
-    //   firstname: ['', [Validators.required]],
-    //   prescriptions: this.fb.array([this.addPrescriptionGroup()])
-    // });
-
-    this.vitalSignFormGroup = this.fb.group({
-      temperature: ['', Validators.required],
-      bloodPressure: ['', Validators.required],
-      pulseRate: ['', Validators.required],
-      respiratoryRate: ['', Validators.required]
+    this.form = this.fb.group({
+        vitalSign: this.fb.group({
+          temperature: ['', Validators.required],
+          bloodPressure: ['', Validators.required],
+          pulseRate: ['', Validators.required],
+          respiratoryRate: ['', Validators.required]
+        }),
+        physicalExam: this.fb.group({
+          height: ['', Validators.required],
+          weight: ['', Validators.required]
+        }),
+        chiefCompliant: this.fb.group({
+          chiefCompliant: ['', Validators.required]
+        }),
+        prescriptions: this.fb.group({
+          prescriptions: this.fb.array([this.addPrescriptionGroup(this.selectedDrug)])
+        }),
+        presentIllness: this.fb.group({
+          presentIllness: ''
+        }),
+        pastMedical: this.fb.group({
+          pastMedical: ''
+        }),
+        familyHistory: this.fb.group({
+          familyHistory: ''
+        }),
+        socialHistory: this.fb.group({
+          socialHistory: ''
+        }),
+        assessments: this.fb.group({
+          assessments: ''
+        }),
+        progressNotes: this.fb.group({
+          progressNotes: ''
+        })
     });
-
-    this.physicalExamFormGroup = this.fb.group({
-      height: ['', Validators.required],
-      weight: ['', Validators.required]
-    });
-
-    this.complaintFormGroup = this.fb.group({
-      chiefCompliant: ['', Validators.required]
-    });
-
-    this.prescriptionsFormGroup = this.fb.group({
-      prescriptions: this.fb.array([this.addPrescriptionGroup()])
-    });
-
-    this.presentIllnessFormGroup = this.fb.group({
-      presentIllness: ''
-    });
-
-    this.pastMedicalFormGroup = this.fb.group({
-      pastMedical: ''
-    });
-
-    this.familyHistoryFormGroup = this.fb.group({
-      familyHistory: ''
-    });
-
-    this.socialHistoryFormGroup = this.fb.group({
-      socialHistory: ''
-    });
-
-    this.assessmentsFormGroup = this.fb.group({
-      assessments: ''
-    });
-
-    this.progressNotesFormGroup = this.fb.group({
-      progressNotes: ''
-    });
-    
   }
 
-  // private _filter(value: string): Medicine[] {
-  //   console.log(value);
-  //   const filterValue = value.toLowerCase();
-
-  //   // return this.options.filter(option => option.title.toLowerCase().includes(filterValue));
-  // }
-  
-  displayFn(drug: Drugs) {
-    if (drug) {
-      return drug.name;
-    }
+  displayFn(drug: Drug) {
+    return drug && drug.name ? drug.name : '';
   }
 
-  addPrescriptionGroup() {
+  getDrugs(event: MatAutocompleteSelectedEvent) {
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '30%';
+    dialogConfig.data = {
+      title: 'Please confirm?',
+      message: 'This will add ' + event.option.value.name
+    };
+    // show prompt
+    this.dialog.open(PromptComponent, dialogConfig).afterClosed().subscribe((dialogRes) => {
+      // check if confirmed
+      if (dialogRes) {
+        // get drug information
+        this.drugService.get(event.option.value.id).subscribe((drugRes) => {
+          // set new drug object with updated qty
+          const updatedDrug = {
+            _id: drugRes._id,
+            quantity: Number(drugRes.quantity - 1)
+          };
+          this.drugService.update(updatedDrug).subscribe((updatedDrugRes) => {
+            // append new row
+            this.addPrescription(event.option.value.name);
+          });
+        });
+      }
+    });
+
+  }
+
+  addPrescriptionGroup(selectedDrug: string): FormGroup {
     return this.fb.group({
-      medicine: ['', [Validators.required]],
+      medicine: [selectedDrug, [Validators.required]],
       preparation: [''],
       sig: ['', [Validators.required]],
       quantity: [1, [Validators.required]]
     });
   }
 
-  addPrescription() {
-    this.prescriptionArray.push(this.addPrescriptionGroup());
+  addPrescription(selectedDrug: string) {
+    this.prescriptionArray.push(this.addPrescriptionGroup(selectedDrug));
   }
 
   removePrescription(index: number) {
@@ -161,26 +164,25 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     this.prescriptionArray.markAsTouched();
   }
 
-  get prescriptionArray() {
-    return this.prescriptionsFormGroup.get('prescriptions') as FormArray;
-  }
-
   onSave() {
     if (this.form.invalid) {
       return;
     }
-  }
 
-  onCancel() {
-    this.location.back();
-  }
+    const newTransaction = {
+      from: this.authenticationService.getPrivateKey(),
+      to: this.user.userId.privateKey,
+      name: this.user.userId.name.firstname + ' ' + this.user.userId.name.midlename + ' ' + this.user.userId.name.lastname,
+      transactions: this.form.value
+    };
 
-  onClose() {
-    this.form.reset();
-    // this.dialogRef.close();
+    this.blockchainService.insertTransaction(newTransaction).subscribe(() => {
+      this.router.navigate(['../'], {relativeTo: this.activatedRoute });
+    });
   }
 
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+
     if (this.form.dirty) {
       return confirm('Do you want to discard the changes?');
     }
@@ -188,7 +190,4 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     return true;
   }
 
-  onToggleMore() {
-    this.showMore = !this.showMore;
-  }
 }
