@@ -46,11 +46,15 @@ export class BlockchainService {
     return this.chainUpdated.asObservable();
   }
 
-  getRecordTransactions(patiendPubKey: string) {
-    return this.http.get<Blockchain>(BACKEND_URL + '/' + patiendPubKey);
+  get(blockId: string) {
+    return this.http.get<any>(BACKEND_URL + '/' + blockId);
   }
 
-  insertTransaction(newTransaction: any) {
+  getByUser(privateKey: string): Observable<Blockchain[]> {
+    return this.http.get<Blockchain[]>(BACKEND_URL + '/user/' + privateKey);
+  }
+
+  insert(newTransaction: any) {
     return this.http.post<{ message: string, chain: Blockchain }>(BACKEND_URL, newTransaction);
   }
 

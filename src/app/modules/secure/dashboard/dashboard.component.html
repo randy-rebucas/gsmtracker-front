@@ -29,11 +29,13 @@
           <!-- Record Chains -->
           <ng-container *ngIf="i == 2">
             <mat-list>
-              <h3 mat-subheader *ngIf="(blockchains | async)?.length">Blockchain</h3>
               <mat-list-item *ngFor="let blockchain of blockchains | async">
-                <mat-icon mat-list-icon>folder</mat-icon>
-                <h4 mat-line>{{blockchain.hash}}</h4>
-                <p mat-line> {{blockchain.timestamp | date}} </p>
+                <img matListAvatar src="../../../../assets/images/blocks-colored.png" alt="blocks">
+                <h3 mat-line>{{blockchain.transactions.message}}</h3>
+                <p matLine>
+                  <span><b>Hash:</b> {{blockchain.hash}} </span>
+                  <span style="float: right;"> -- {{blockchain.timestamp | date:'medium'}} </span>
+                </p>
               </mat-list-item>
               <mat-list-item *ngIf="!(blockchains | async)?.length">
                 <h4 mat-line>No chain recorded</h4>

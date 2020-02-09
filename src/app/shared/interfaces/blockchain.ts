@@ -1,4 +1,5 @@
 export interface Blockchain {
+  id: string;
     timestamp: Date;
     transactions: Transaction;
     previousHash: string;

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { PatientRecordFormComponent } from '../patient-record-form/patient-record-form.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PatientsService } from '../../patients.service';
 
 @Component({
   selector: 'app-patient-record-list',
@@ -18,9 +19,11 @@ export class PatientRecordListComponent implements OnInit {
   public currentPage: number;
 
   public patientId: string;
+  public blockchain: Blockchain;
   constructor(
     private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
+    private patientsService: PatientsService,
     private blockchainService: BlockchainService,
     private router: Router
   ) {
@@ -29,30 +32,20 @@ export class PatientRecordListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.blockchainService.getChain(this.perPage, this.currentPage);
-    this.blockchains = this.blockchainService.getChainListener();
-
-    this.activatedRoute.parent.parent.params.subscribe(
-      (param) => {
-        this.patientId = param.patientId;
-      }
-    );
+    // get patientid parameter
+    this.patientId = this.activatedRoute.snapshot.parent.parent.params.patientId;
+    // get patient Info
+    this.patientsService.get(this.patientId).subscribe((user) => {
+      // get patient blockchain
+      this.blockchains = this.blockchainService.getByUser(user.userId.privateKey);
+    });
   }
 
   onCreate() {
     this.router.navigate(['../form'], {relativeTo: this.activatedRoute});
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.hasBackdrop = true;
-    // dialogConfig.width = '60%';
-    // dialogConfig.data = {
-    //   id: this.patientId,
-    //   title: 'Create New',
-    //   button: 'Save'
-    // };
-    // this.dialog.open(PatientRecordFormComponent, dialogConfig).afterClosed().subscribe(result => {
-    //   this.blockchainService.getChain(this.perPage, this.currentPage);
-    // });
+  }
+
+  onViewRecord(blockchain: any) {
+    this.router.navigate(['../', blockchain._id], {relativeTo: this.activatedRoute});
   }
 }

@@ -33,7 +33,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     RouterModule.forChild([
       { path: '', component: PatientRecordListComponent },
       { path: 'form', component: PatientRecordFormComponent, canDeactivate: [CanDeactivateGuard] },
-      { path: ':recordId', component: PatientRecordDetailComponent },
+      { path: ':blockId', component: PatientRecordDetailComponent },
     ])
   ]
 })

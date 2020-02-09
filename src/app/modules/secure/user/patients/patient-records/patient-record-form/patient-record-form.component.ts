@@ -176,7 +176,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
       transactions: this.form.value
     };
 
-    this.blockchainService.insertTransaction(newTransaction).subscribe(() => {
+    this.blockchainService.insert(newTransaction).subscribe(() => {
       this.router.navigate(['../'], {relativeTo: this.activatedRoute });
     });
   }

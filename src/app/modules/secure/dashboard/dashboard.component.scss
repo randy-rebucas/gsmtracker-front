@@ -17,5 +17,9 @@
 }
 
 .dashboard-card-content {
-  text-align: center;
+  text-align: left;
+}
+
+mat-list-item ::ng-deep .mat-list-item-content {
+  align-items: flex-start !important;
 }
