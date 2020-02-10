@@ -1,13 +1,20 @@
+<button mat-stroked-button color="primary" (click)="onCreate()"><mat-icon>add</mat-icon> New Record</button>
 <mat-list>
-    <mat-list-item *ngFor="let blockchain of blockchains | async" (click)="onViewRecord(blockchain)">
-      <img matListAvatar src="../../../../assets/images/blocks-colored.png" alt="blocks">
-      <h3 matLine>{{blockchain.transactions.message}}</h3>
-      <p matLine>
-        <span><b>Hash:</b> {{blockchain.hash}} </span>
-        <span style="float: right;"> -- {{blockchain.timestamp | date:'medium'}} </span>
-      </p>
+
+    <mat-list-item *ngIf="!(blockchains | async)?.length && !isLoading; else loadBlockchain">
+        <h4 matLine>No record found!</h4>
     </mat-list-item>
-    <mat-list-item *ngIf="!(blockchains | async)?.length">
-        <h4 matLine>No chain recorded</h4>
-    </mat-list-item>
+
+    <ng-template #loadBlockchain>
+        <mat-list-item *ngFor="let blockchain of blockchains | async" (click)="onViewRecord(blockchain)">
+            <img matListAvatar src="../../../../assets/images/blocks-colored.png" alt="blocks">
+            <h3 matLine>{{blockchain.hash}}</h3>
+            <p matLine>
+                <span><b>nonce:</b> {{blockchain.nonce}} </span>
+                <span style="float: right;"> -- {{blockchain.timestamp | date:'medium'}} </span>
+            </p>
+        </mat-list-item>
+    </ng-template>
+
 </mat-list>
+<p *ngIf="isLoading">Loading...</p>

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BlockchainService } from 'src/app/shared/services/blockchain.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Blockchain } from 'src/app/shared/interfaces/blockchain';
 import { Observable } from 'rxjs';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { PatientRecordFormComponent } from '../patient-record-form/patient-record-form.component';
-import { ActivatedRoute, Router } from '@angular/router';
+
+import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { PatientsService } from '../../patients.service';
 
 @Component({
@@ -14,21 +13,17 @@ import { PatientsService } from '../../patients.service';
 })
 export class PatientRecordListComponent implements OnInit {
   public blockchains: Observable<Blockchain[]>;
-
-  public perPage: number;
-  public currentPage: number;
-
-  public patientId: string;
   public blockchain: Blockchain;
+  public patientId: string;
+
+  isLoading: boolean;
   constructor(
-    private dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private patientsService: PatientsService,
     private blockchainService: BlockchainService,
     private router: Router
   ) {
-    this.perPage = 10;
-    this.currentPage = 1;
+    this.isLoading = true;
   }
 
   ngOnInit() {
@@ -37,7 +32,8 @@ export class PatientRecordListComponent implements OnInit {
     // get patient Info
     this.patientsService.get(this.patientId).subscribe((user) => {
       // get patient blockchain
-      this.blockchains = this.blockchainService.getByUser(user.userId.privateKey);
+      this.blockchains = this.blockchainService.getByUser(user.userId.publicKey);
+      this.isLoading = false;
     });
   }
 

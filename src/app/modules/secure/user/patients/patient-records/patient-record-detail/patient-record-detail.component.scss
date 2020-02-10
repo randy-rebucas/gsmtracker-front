@@ -1,0 +1,14 @@
+mat-card ::ng-deep .mat-card-header-text {
+    /* CSS styles go here */
+    margin: 0px; // for example to remove the margin
+    width: 100%;
+}
+
+mat-card-header ::ng-deep .mat-card-header-text {
+    /* CSS styles go here */
+    margin: 0px; // for example to remove the margin
+}
+
+.hide {
+    display: none;
+}

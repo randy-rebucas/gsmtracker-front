@@ -19,7 +19,7 @@ export class AuthenticationService {
   private token: string;
   private userId: string;
   private userEmail: string;
-  private privateKey: string;
+  private publicKey: string;
   private authStatusListener = new Subject<boolean>();
 
   constructor(
@@ -46,8 +46,8 @@ export class AuthenticationService {
     return localStorage.getItem('userEmail');
   }
 
-  getPrivateKey() {
-    return localStorage.getItem('privateKey');
+  getPublicKey() {
+    return localStorage.getItem('publicKey');
   }
 
   getAuthStatusListener() {
@@ -69,7 +69,7 @@ export class AuthenticationService {
   }
 
   login(authData: any) {
-    this.http.post<{token: string, userEmail: string, userId: string, privateKey: string}>(
+    this.http.post<{token: string, userEmail: string, userId: string, publicKey: string}>(
       BACKEND_URL + '/login',
       authData
     )
@@ -81,7 +81,7 @@ export class AuthenticationService {
 
         this.userId = response.userId;
         this.userEmail = response.userEmail;
-        this.privateKey = response.privateKey;
+        this.publicKey = response.publicKey;
 
         this.authStatusListener.next(true);
 
@@ -91,7 +91,7 @@ export class AuthenticationService {
           this.cookieService.set('pass', authData.password );
         }
 
-        this.saveAuthData(token, this.userId, this.userEmail, this.privateKey);
+        this.saveAuthData(token, this.userId, this.userEmail, this.publicKey);
         this.userService.get(response.userId).subscribe(userData => {
           this.router.navigate(['/secure']);
         });
@@ -110,7 +110,7 @@ export class AuthenticationService {
 
     this.userId = authInformation.userId;
     this.userEmail = authInformation.userEmail;
-    this.privateKey = authInformation.privateKey;
+    this.publicKey = authInformation.publicKey;
     this.authStatusListener.next(true);
   }
 
@@ -118,36 +118,36 @@ export class AuthenticationService {
     this.token = null;
     this.userId = null;
     this.userEmail = null;
-    this.privateKey = null;
+    this.publicKey = null;
     this.authStatusListener.next(false);
     this.clearAuthData();
     this.router.navigate(['/auth/login']);
   }
 
-  private saveAuthData(token: string, userId: string, userEmail: string, privateKey: string) {
+  private saveAuthData(token: string, userId: string, userEmail: string, publicKey: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('userId', userId);
     localStorage.setItem('userEmail', userEmail);
-    localStorage.setItem('privateKey', privateKey);
+    localStorage.setItem('publicKey', publicKey);
   }
 
   private clearAuthData() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
-    localStorage.removeItem('privateKey');
+    localStorage.removeItem('publicKey');
   }
 
   private getAuthData() {
     const authToken = localStorage.getItem('token');
     const authUserId = localStorage.getItem('userId');
     const authUserEmail = localStorage.getItem('userEmail');
-    const authPrivateKey = localStorage.getItem('privateKey');
+    const authPublicKey = localStorage.getItem('publicKey');
     return {
       token: authToken,
       userId: authUserId,
       userEmail: authUserEmail,
-      privateKey: authPrivateKey
+      publicKey: authPublicKey
     };
   }
 }

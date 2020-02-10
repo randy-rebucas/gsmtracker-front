@@ -2,7 +2,6 @@ mat-form-field {
     width: 23%;
 }
 
-
 .form-field-block {
     display: flex;
     flex-direction: row;
@@ -31,14 +30,18 @@ mat-tab-group ::ng-deep .mat-tab-body-wrapper {
 }
 
 .form-group {
-  position: relative;
-  display: flex;
-  justify-content: space-around;
-  mat-form-field {
-    width: 20%;
-  }
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    mat-form-field {
+        width: 20%;
+    }
 }
 
 .filter-full-width {
-  width: 100%;
+    width: 100%;
+}
+
+.error .mat-list-item.mat-list-item-with-avatar {
+    height: 26px !important;
 }

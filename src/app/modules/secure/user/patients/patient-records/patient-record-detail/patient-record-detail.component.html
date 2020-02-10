@@ -1,1 +1,17 @@
-<p>{{blockchain.hash}}</p>
+<mat-card class="example-card">
+    <mat-card-header>
+        <mat-card-title>Hash: {{blockchain?.hash}}</mat-card-title>
+        <mat-card-subtitle>Previous Hash: {{blockchain?.previousHash}} <span style="float: right;">-{{blockchain?.timestamp | date:'medium'}}</span></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let item of blockchain?.transactions.data">
+                {{item.vitalSign}}
+            </mat-list-item>
+        </mat-list>
+
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button>SHARE</button>
+    </mat-card-actions>
+</mat-card>

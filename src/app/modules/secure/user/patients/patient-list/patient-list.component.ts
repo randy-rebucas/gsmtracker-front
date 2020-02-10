@@ -95,28 +95,28 @@ export class PatientListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userId = this.authenticationService.getUserId();
 
-      this.titleService.setTitle('Patients');
+    this.titleService.setTitle('Patients');
 
-      this.patientsService.getAll(this.perPage, this.currentPage);
-      this.usersSub = this.patientsService.getUpdateListener().subscribe((userData: {patients: any[], counts: number}) => {
-        this.isLoading = false;
-  
-        const newUsers = [];
-        userData.patients.forEach(user => {
-          user.physicians.filter((physician: Physicians) => {
-            const ownerShip = {
-              isOwned : physician.userId === this.userId
-            };
-            newUsers.push({...user, ...ownerShip});
-          });
+    this.patientsService.getAll(this.perPage, this.currentPage);
+    this.usersSub = this.patientsService.getUpdateListener().subscribe((userData: {patients: any[], counts: number}) => {
+      this.isLoading = false;
+
+      const newUsers = [];
+      userData.patients.forEach(user => {
+        user.physicians.filter((physician: Physicians) => {
+          const ownerShip = {
+            isOwned : physician.userId === this.userId
+          };
+          newUsers.push({...user, ...ownerShip});
         });
-     
-        this.dataSource = new MatTableDataSource(newUsers);
-        this.length = this.dataSource.data.length;
-
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
       });
+
+      this.dataSource = new MatTableDataSource(newUsers);
+      this.length = this.dataSource.data.length;
+
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
 
   }
 

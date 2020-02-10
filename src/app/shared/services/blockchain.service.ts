@@ -31,6 +31,7 @@ export class BlockchainService {
             timestamp: block.timestamp,
             transactions: block.transactions,
             previousHash: block.previousHash,
+            nonce: block.nonce,
             hash: block.hash,
           };
         })};
@@ -50,8 +51,8 @@ export class BlockchainService {
     return this.http.get<any>(BACKEND_URL + '/' + blockId);
   }
 
-  getByUser(privateKey: string): Observable<Blockchain[]> {
-    return this.http.get<Blockchain[]>(BACKEND_URL + '/user/' + privateKey);
+  getByUser(publicKey: string): Observable<Blockchain[]> {
+    return this.http.get<Blockchain[]>(BACKEND_URL + '/user/' + publicKey);
   }
 
   insert(newTransaction: any) {

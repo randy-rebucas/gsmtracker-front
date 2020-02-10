@@ -1,13 +1,23 @@
 <h3 class="mat-h3">Add New Record</h3>
 <form [formGroup]="form" (submit)="onSave()">
-   <mat-vertical-stepper [linear]="true">
+    <mat-vertical-stepper [linear]="true">
         <mat-step formGroupName="vitalSign" [stepControl]="form.get('vitalSign')">
             <ng-template matStepLabel>Vital Signs</ng-template>
             <div class="form-field-block" style="justify-content: space-around;">
                 <mat-form-field appearance="outline">
                     <mat-label>Temperature</mat-label>
-                    <input matInput placeholder="Temperature" formControlName="temperature">
+                    <input matInput placeholder="Temperature" formControlName="temperature" [errorStateMatcher]="matcher">
                     <span matSuffix>°C</span>
+                    <!-- <mat-error *ngIf="temperature.hasError('required')">
+                        Temperature is <strong>required</strong>
+                    </mat-error>
+                    <mat-error *ngIf="temperature.hasError('maxLength')">
+                        Temperature only accept <strong>4 character</strong>
+                    </mat-error>
+                    <mat-error *ngIf="temperature.errors.number && !temperature.hasError('required')">
+                        Please enter a number only
+                    </mat-error> -->
+
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Blood pressure</mat-label>
@@ -26,11 +36,11 @@
                 </mat-form-field>
             </div>
             <div>
-              <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
+                <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
             </div>
 
         </mat-step>
-        <mat-step  formGroupName="physicalExam" [stepControl]="form.get('physicalExam')">
+        <mat-step formGroupName="physicalExam" [stepControl]="form.get('physicalExam')">
             <ng-template matStepLabel>Physical Exam</ng-template>
             <div class="form-field-block" style="justify-content: flex-start;">
                 <mat-form-field appearance="outline" style="margin-right: 20px;">
@@ -45,38 +55,37 @@
                 </mat-form-field>
             </div>
             <div>
-              <button mat-flat-button matStepperPrevious type="button">Back</button>
-              <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-            </div>
-        </mat-step>
-        <mat-step  formGroupName="chiefCompliant" [stepControl]="form.get('chiefCompliant')">
-
-              <ng-template matStepLabel>Chief Complaint</ng-template>
-              <editor formControlName="chiefCompliant" [init]="{plugins: 'link', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-              <br/>
-              <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
+        </mat-step>
+        <mat-step formGroupName="chiefCompliant" [stepControl]="form.get('chiefCompliant')">
+
+            <ng-template matStepLabel>Chief Complaint</ng-template>
+            <editor formControlName="chiefCompliant" [init]="{plugins: 'link', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+            <br/>
+            <div>
+                <button mat-flat-button matStepperPrevious type="button">Back</button>
+                <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
+            </div>
 
         </mat-step>
-        <mat-step  formGroupName="prescriptions" [stepControl]="form.get('prescriptions')">
+        <mat-step formGroupName="prescriptions" [stepControl]="form.get('prescriptions')">
 
-              <ng-template matStepLabel>Prescription</ng-template>
-              <mat-form-field class="filter-full-width">
-                <input type="text" placeholder="Find Drugs"
-                aria-label="Drugs" matInput [formControl]="searchDrugsCtrl" [matAutocomplete]="auto">
+            <ng-template matStepLabel>Prescription</ng-template>
+            <mat-form-field class="filter-full-width">
+                <input type="text" placeholder="Find Drugs" aria-label="Drugs" matInput [formControl]="searchDrugsCtrl" [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getDrugs($event)">
-                  <mat-option *ngIf="preLoading" class="is-loading">Loading...</mat-option>
-                  <ng-container *ngIf="!preLoading">
-                    <mat-option *ngFor="let option of filteredOptions" [value]="option">
-                      <span>{{ option.name }}</span>
-                    </mat-option>
-                  </ng-container>
+                    <mat-option *ngIf="preLoading" class="is-loading">Loading...</mat-option>
+                    <ng-container *ngIf="!preLoading">
+                        <mat-option *ngFor="let option of filteredOptions" [value]="option">
+                            <span>{{ option.name }}</span>
+                        </mat-option>
+                    </ng-container>
                 </mat-autocomplete>
             </mat-form-field>
 
-              <div class="form-field-block" formArrayName="prescriptions" *ngFor="let group of prescriptionArray.controls; let i = index;" >
+            <div class="form-field-block" formArrayName="prescriptions" *ngFor="let group of prescriptionArray.controls; let i = index;">
                 <div [formGroupName]="i" class="form-group">
                     <mat-form-field appearance="outline">
                         <mat-label>Medicine</mat-label>
@@ -99,87 +108,87 @@
                         <button mat-icon-button color="warn" type="button" *ngIf="prescriptionArray.controls.length > 1" (click)="removePrescription(i)"><mat-icon>delete_outline</mat-icon></button>
                     </div>
                 </div>
-              </div>
-              <div>
+            </div>
+            <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
 
         </mat-step>
-       <mat-step  formGroupName="presentIllness" [stepControl]="form.get('presentIllness')" optional>
+        <mat-step formGroupName="presentIllness" [stepControl]="form.get('presentIllness')" optional>
 
-              <ng-template matStepLabel>Present Illness</ng-template>
-              <editor formControlName="presentIllness" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-              <br/>
-              <div>
+            <ng-template matStepLabel>Present Illness</ng-template>
+            <editor formControlName="presentIllness" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+            <br/>
+            <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
 
         </mat-step>
-        <mat-step  formGroupName="pastMedical" [stepControl]="form.get('pastMedical')" optional>
+        <mat-step formGroupName="pastMedical" [stepControl]="form.get('pastMedical')" optional>
 
-              <ng-template matStepLabel>Past Medical</ng-template>
-              <editor formControlName="pastMedical" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-              <br/>
-              <div>
+            <ng-template matStepLabel>Past Medical</ng-template>
+            <editor formControlName="pastMedical" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+            <br/>
+            <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
 
         </mat-step>
-        <mat-step  formGroupName="familyHistory" [stepControl]="form.get('familyHistory')" optional>
+        <mat-step formGroupName="familyHistory" [stepControl]="form.get('familyHistory')" optional>
 
-              <ng-template matStepLabel>Family History</ng-template>
-              <editor formControlName="familyHistory" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-              <br/>
-              <div>
+            <ng-template matStepLabel>Family History</ng-template>
+            <editor formControlName="familyHistory" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+            <br/>
+            <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
 
         </mat-step>
-        <mat-step  formGroupName="socialHistory" [stepControl]="form.get('socialHistory')" optional>
+        <mat-step formGroupName="socialHistory" [stepControl]="form.get('socialHistory')" optional>
 
-              <ng-template matStepLabel>Social History</ng-template>
-              <editor formControlName="socialHistory" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-              <br/>
-              <div>
+            <ng-template matStepLabel>Social History</ng-template>
+            <editor formControlName="socialHistory" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+            <br/>
+            <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
 
         </mat-step>
-        <mat-step  formGroupName="assessments" [stepControl]="form.get('assessments')" optional>
+        <mat-step formGroupName="assessments" [stepControl]="form.get('assessments')" optional>
 
-              <ng-template matStepLabel>Assessments</ng-template>
-              <editor formControlName="assessments" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-              <br/>
-              <div>
+            <ng-template matStepLabel>Assessments</ng-template>
+            <editor formControlName="assessments" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+            <br/>
+            <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
 
         </mat-step>
-        <mat-step  formGroupName="progressNotes" [stepControl]="form.get('progressNotes')" optional>
+        <mat-step formGroupName="progressNotes" [stepControl]="form.get('progressNotes')" optional>
 
-              <ng-template matStepLabel>Progress Notes</ng-template>
-              <editor formControlName="progressNotes" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-              <br/>
-              <div>
+            <ng-template matStepLabel>Progress Notes</ng-template>
+            <editor formControlName="progressNotes" [init]="{plugins: 'link',toolbar: 'undo redo | bold italic | bullist numlist outdent indent', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
+            <br/>
+            <div>
                 <button mat-flat-button matStepperPrevious type="button">Back</button>
                 <button mat-flat-button color="primary" matStepperNext type="button">Next</button>
-              </div>
+            </div>
 
         </mat-step>
         <mat-step>
-          <ng-template matStepLabel>Finish</ng-template>
-          <p>You are now done. Please cleck <b>Save</b> to print prescription.</p>
-          <div>
-            <button mat-flat-button matStepperPrevious type="button">Back</button>
-            <button mat-flat-button color="primary" type="submit">Save</button>
-          </div>
+            <ng-template matStepLabel>Finish</ng-template>
+            <p>You are now done. Please cleck <b>Save</b> to print prescription.</p>
+            <div>
+                <button mat-flat-button matStepperPrevious type="button">Back</button>
+                <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
+            </div>
         </mat-step>
     </mat-vertical-stepper>
 
-  </form>
+</form>

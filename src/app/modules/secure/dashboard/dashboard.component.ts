@@ -17,17 +17,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   public perPage: number;
   public currentPage: number;
+  isLoading: boolean;
   constructor(
     private breakpointObserver: BreakpointObserver,
     private blockchainService: BlockchainService
   ) {
     this.perPage = 10;
     this.currentPage = 1;
+    this.isLoading = true;
   }
 
   ngOnInit() {
     this.blockchainService.getChain(this.perPage, this.currentPage);
     this.blockchains = this.blockchainService.getChainListener();
+
+    this.blockchains.subscribe(() => {
+      this.isLoading = false;
+    });
       /** Based on the screen size, switch from standard to one column per row */
     this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
       map(({ matches }) => {
@@ -52,6 +58,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    
+
   }
 }
