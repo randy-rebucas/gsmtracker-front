@@ -8,8 +8,7 @@ export interface Blockchain {
 }
 
 export interface Transaction {
-  setFrom: string;
-  setTo: string;
-  message: string;
-  records: any[];
+  fromAddress: string;
+  toAddress: string;
+  data: any;
 }

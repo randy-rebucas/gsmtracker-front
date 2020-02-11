@@ -1,17 +1,33 @@
 <mat-card class="example-card">
-    <mat-card-header>
-        <mat-card-title>Hash: {{blockchain?.hash}}</mat-card-title>
-        <mat-card-subtitle>Previous Hash: {{blockchain?.previousHash}} <span style="float: right;">-{{blockchain?.timestamp | date:'medium'}}</span></mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <mat-list role="list">
-            <mat-list-item role="listitem" *ngFor="let item of blockchain?.transactions.data">
-                {{item.vitalSign}}
-            </mat-list-item>
-        </mat-list>
+  <mat-card-header>
+    <mat-card-title>Hash: {{blockchain?.hash}}</mat-card-title>
+    <mat-card-subtitle>Nonce: {{blockchain?.nonce}} <span style="float: right;">{{blockchain?.timestamp | date:'medium'}}</span></mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <h3 mat-subheader>Vital Sign</h3>
+      <mat-list-item>
+         <mat-icon mat-list-icon>folder</mat-icon>
+         <h4 mat-line>Temperature</h4>
+         <p mat-line>{{blockchain?.transactions.data.vitalSign.temperature}}</p>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>folder</mat-icon>
+        <h4 mat-line>Temperature</h4>
+        <p mat-line>{{blockchain?.transactions.data.vitalSign.temperature}}</p>
+     </mat-list-item>
+      <mat-divider></mat-divider>
+      <h3 mat-subheader>Physical Exam</h3>
+      <mat-list-item>
+         <mat-icon mat-list-icon>note</mat-icon>
+         <h4 mat-line>height</h4>
+         <p mat-line>{{blockchain?.transactions.data.vitalSign.Object}}</p>
+      </mat-list-item>
+   </mat-list>
 
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-button>SHARE</button>
-    </mat-card-actions>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button>LIKE</button>
+    <button mat-button>SHARE</button>
+  </mat-card-actions>
 </mat-card>

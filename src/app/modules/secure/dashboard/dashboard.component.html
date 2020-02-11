@@ -35,7 +35,7 @@
                         </mat-list-item>
 
                         <ng-template #loadBlockchain>
-                            <mat-list-item *ngFor="let blockchain of blockchains | async" (click)="onViewRecord(blockchain)">
+                            <mat-list-item *ngFor="let blockchain of blockchains | async">
                                 <img matListAvatar src="../../../../assets/images/blocks-colored.png" alt="blocks">
                                 <h3 matLine>{{blockchain.hash}}</h3>
                                 <p matLine>
