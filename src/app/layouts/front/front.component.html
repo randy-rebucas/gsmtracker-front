@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <button mat-button [routerLink]="['/']" routerLinkActive="accent">Clinicplus</button>
+        <span class="example-spacer"></span>
+        <button mat-button [routerLink]="['/page/about']" routerLinkActive="accent">
+            About
+        </button>
+        <button mat-button [routerLink]="['/page/contact']" routerLinkActive="accent">
+            Contact
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+<router-outlet></router-outlet>

@@ -26,6 +26,7 @@ import { MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
 
 import { CanDeactivateGuard } from './modules/secure/user/patients/can-deactivate.guard';
 import { DefaultModule } from './layouts/default/default.module';
+import { FrontComponent } from './layouts/front/front.component';
 
 // import { registerLocaleData } from '@angular/common';
 // import localeFr from '@angular/common/locales/fr';
@@ -37,7 +38,8 @@ import { DefaultModule } from './layouts/default/default.module';
   declarations: [
     AppComponent,
     ErrorComponent,
-    PromptDialogComponent
+    PromptDialogComponent,
+    FrontComponent
   ],
   imports: [
     BrowserModule,

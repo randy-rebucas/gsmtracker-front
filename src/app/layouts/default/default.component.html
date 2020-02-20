@@ -1,5 +1,5 @@
 <app-header (toggleSideBarForMe)="sideBarToggler($event)" (logout)="onLogout($event)"></app-header>
-<!-- <app-top-nav [ngClass]="(isHandset$ | async) ? 'hidden' : 'show'" [isAuthenticated]="userIsAuthenticated" (logout)="onLogout($event)"></app-top-nav> -->
+
 <mat-drawer-container>
     <mat-drawer mode="side" [opened]="sideBarOpen">
         <app-sidebar></app-sidebar>
