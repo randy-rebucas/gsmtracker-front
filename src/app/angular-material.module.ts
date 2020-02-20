@@ -23,6 +23,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [],
@@ -50,7 +51,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatTabsModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDividerModule
   ],
   exports: [
     MatFormFieldModule,
@@ -75,7 +77,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatTabsModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDividerModule
   ]
 })
 export class AngularMaterialModule { }

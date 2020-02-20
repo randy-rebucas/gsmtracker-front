@@ -1,145 +1,126 @@
-<div class="primary-header">
-    <h1>Patients</h1>
-</div>
-<div class="wrapper">
-    <button mat-fab color="primary" (click)="onCreate()" id="create-new"><mat-icon>add</mat-icon></button>
+<button mat-fab color="primary" (click)="onCreate()" id="create-new"><mat-icon>add</mat-icon></button>
 
-    <div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="auto 350px" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
-        <div class="area header" gdArea="header">
-
-        </div>
-
-        <div class="area content" gdArea="content">
-            <div class="search-div">
-                <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
-                </mat-form-field>
-                <div (click)="onScan()">
-                    <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
-                </div>
-            </div>
-            <!-- table -->
-            <mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
-
-                <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-                    <div *ngIf="column === 'image'">
-                        <mat-header-cell *matHeaderCellDef> &nbsp; </mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
-                            <ng-template #thenBlock>
-                                <img [src]="element.avatar" [alt]="element.name.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
-                            </ng-template>
-                            <ng-template #elseBlock>
-                                <app-avatar [firstname]="element.name.firstname" [lastname]="element.name.lastname"></app-avatar>
-                            </ng-template>
-                        </mat-cell>
-                    </div>
-                    <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
-                    <ng-template #thenBlockRow>
-                        <mat-header-cell *matHeaderCellDef style="text-align: right;">
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <ng-container *ngIf="element.isOwned">
-                                <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit" title="Edit">
-                                    <mat-icon>launch</mat-icon>
-                                  </button>
-                                <button mat-icon-button (click)="onDetail(element.id)" aria-label="View" title="View">
-                                    <mat-icon>visibility</mat-icon>
-                                  </button>
-                                <button mat-icon-button color="warn" (click)="onDelete(element.id)" aria-label="Delete" title="Delete">
-                                    <mat-icon>delete</mat-icon>
-                                  </button>
-                            </ng-container>
-
-                        </mat-cell>
-                    </ng-template>
-                    <ng-template #elseBlockRow>
-                        <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
-                        <div *ngIf="column === 'birthdate'; then thenBlockDate else elseBlockDate"></div>
-                        <ng-template #thenBlockDate>
-                            <mat-cell *matCellDef="let element"> {{ element[column] | date }}</mat-cell>
-                        </ng-template>
-                        <ng-template [ngIf]="column === 'age'">
-                            <mat-cell *matCellDef="let element"> {{ element.birthdate | birthday }}</mat-cell>
-                        </ng-template>
-                        <ng-template [ngIf]="column === 'fullname'">
-                            <mat-cell *matCellDef="let element"> {{ element.name.firstname }} {{ element.name.midlename }} {{ element.name.lastname }}</mat-cell>
-                        </ng-template>
-                        <ng-template #elseBlockDate>
-                            <mat-cell *matCellDef="let element"> {{ element[column] }}</mat-cell>
-                        </ng-template>
-                    </ng-template>
-
-                </ng-container>
-
-
-                <ng-container matColumnDef="expandedDetail">
-                    <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-                        <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                            <mat-card class="address-card">
-                                <mat-card-header>
-                                    <mat-card-title>Address</mat-card-title>
-                                    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-                                </mat-card-header>
-                                <mat-card-content>
-                                    <ng-container *ngFor="let address of element.address; let i = index;">
-                                        <p>
-                                            {{address.address1}} <br/>
-                                            <ng-container *ngIf="address.address2">
-                                                {{address.address2}} <br/>
-                                            </ng-container>
-                                            {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
-                                        </p>
-                                    </ng-container>
-                                </mat-card-content>
-                            </mat-card>
-                            <mat-card class="physicians-card">
-                                <mat-card-header>
-                                    <mat-card-title>Physicians</mat-card-title>
-                                    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-                                </mat-card-header>
-                                <mat-card-content>
-                                    <app-physicians [physicians]="element.physicians"></app-physicians>
-                                </mat-card-content>
-                            </mat-card>
-                            <mat-card class="record-card">
-                                <mat-card-header>
-                                    <mat-card-title>Record Chain</mat-card-title>
-                                    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-                                </mat-card-header>
-                                <mat-card-content>
-                                    <p>record chain</p>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
-                <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
-                </mat-row>
-                <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
-
-                <ng-container matColumnDef="loading">
-                    <mat-footer-cell *matFooterCellDef colspan="8">
-                        <p class="mat-body">Loading data...</p>
-                    </mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="noData">
-                    <mat-footer-cell *matFooterCellDef colspan="8">
-                        <p class="mat-body">No patient data.</p>
-                    </mat-footer-cell>
-                </ng-container>
-                <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource != null}"></mat-footer-row>
-                <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource != null && length == 0)}"></mat-footer-row>
-            </mat-table>
-            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>
-        </div>
-        <div class="area side" gdArea="side">
-            <app-birthdays></app-birthdays>
-        </div>
-        <div class="area footer" gdArea="footer">
-
-        </div>
+<div class="search-div">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+    </mat-form-field>
+    <div (click)="onScan()">
+        <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
     </div>
 </div>
+<!-- table -->
+<mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
+
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+        <div *ngIf="column === 'image'">
+            <mat-header-cell *matHeaderCellDef> &nbsp; </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
+                <ng-template #thenBlock>
+                    <img [src]="element.avatar" [alt]="element.name.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
+                </ng-template>
+                <ng-template #elseBlock>
+                    <app-avatar [firstname]="element.name.firstname" [lastname]="element.name.lastname"></app-avatar>
+                </ng-template>
+            </mat-cell>
+        </div>
+        <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
+        <ng-template #thenBlockRow>
+            <mat-header-cell *matHeaderCellDef style="text-align: right;">
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <ng-container *ngIf="element.isOwned">
+                    <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit" title="Edit">
+                                    <mat-icon>launch</mat-icon>
+                                  </button>
+                    <button mat-icon-button (click)="onDetail(element.id)" aria-label="View" title="View">
+                                    <mat-icon>visibility</mat-icon>
+                                  </button>
+                    <button mat-icon-button color="warn" (click)="onDelete(element.id)" aria-label="Delete" title="Delete">
+                                    <mat-icon>delete</mat-icon>
+                                  </button>
+                </ng-container>
+
+            </mat-cell>
+        </ng-template>
+        <ng-template #elseBlockRow>
+            <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
+            <div *ngIf="column === 'birthdate'; then thenBlockDate else elseBlockDate"></div>
+            <ng-template #thenBlockDate>
+                <mat-cell *matCellDef="let element"> {{ element[column] | date }}</mat-cell>
+            </ng-template>
+            <ng-template [ngIf]="column === 'age'">
+                <mat-cell *matCellDef="let element"> {{ element.birthdate | birthday }}</mat-cell>
+            </ng-template>
+            <ng-template [ngIf]="column === 'fullname'">
+                <mat-cell *matCellDef="let element"> {{ element.name.firstname }} {{ element.name.midlename }} {{ element.name.lastname }}</mat-cell>
+            </ng-template>
+            <ng-template #elseBlockDate>
+                <mat-cell *matCellDef="let element"> {{ element[column] }}</mat-cell>
+            </ng-template>
+        </ng-template>
+
+    </ng-container>
+
+
+    <ng-container matColumnDef="expandedDetail">
+        <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+            <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <mat-card class="address-card">
+                    <mat-card-header>
+                        <mat-card-title>Address</mat-card-title>
+                        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content>
+                        <ng-container *ngFor="let address of element.address; let i = index;">
+                            <p>
+                                {{address.address1}} <br/>
+                                <ng-container *ngIf="address.address2">
+                                    {{address.address2}} <br/>
+                                </ng-container>
+                                {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
+                            </p>
+                        </ng-container>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="physicians-card">
+                    <mat-card-header>
+                        <mat-card-title>Physicians</mat-card-title>
+                        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content>
+                        <app-physicians [physicians]="element.physicians"></app-physicians>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="record-card">
+                    <mat-card-header>
+                        <mat-card-title>Record Chain</mat-card-title>
+                        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>record chain</p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
+    </mat-row>
+    <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
+
+    <ng-container matColumnDef="loading">
+        <mat-footer-cell *matFooterCellDef colspan="8">
+            <p class="mat-body">Loading data...</p>
+        </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="noData">
+        <mat-footer-cell *matFooterCellDef colspan="8">
+            <p class="mat-body">No patient data.</p>
+        </mat-footer-cell>
+    </ng-container>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource != null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource != null && length == 0)}"></mat-footer-row>
+</mat-table>
+<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>

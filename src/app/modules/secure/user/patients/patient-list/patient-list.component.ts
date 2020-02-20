@@ -275,7 +275,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
       });
 
   }
-  
+
   ngOnDestroy() {
     // this.usersSub.unsubscribe();
   }

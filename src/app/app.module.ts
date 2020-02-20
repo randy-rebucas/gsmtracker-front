@@ -9,9 +9,6 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { NavbarComponent } from './navbar/navbar.component';
-import { TopNavComponent } from './modules/top-nav/top-nav.component';
-import { FooterComponent } from './footer/footer.component';
 import { ErrorComponent } from './modules/error/error.component';
 import { PromptDialogComponent } from './modules/prompt-dialog/prompt-dialog.component';
 import { AuthenticationInterceptor } from './modules/authentication/authentication-interceptor';
@@ -19,20 +16,16 @@ import { ErrorInterceptor } from './error-interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { AppConfigurationService } from './configs/app-configuration.service';
 import { AngularMaterialModule } from './angular-material.module';
-import {FlexLayoutModule} from '@angular/flex-layout';
+import { FlexLayoutModule } from '@angular/flex-layout';
 // import ngx-translate and the http loader
 import {TranslateLoader, TranslateModule, TranslateCompiler} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 // import ngx-translate-messageformat-compiler
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
-import { QueingComponent } from './shared/components/queing/queing.component';
-import { RxPadComponent } from './shared/components/rx-pad/rx-pad.component';
-import { EncounterComponent } from './shared/components/encounter/encounter.component';
-import { StatComponent } from './shared/components/stat/stat.component';
-import { QrCodeComponent } from './shared/components/qr-code/qr-code.component';
-import { PaymentsComponent } from './shared/components/payments/payments.component';
+
 import { CanDeactivateGuard } from './modules/secure/user/patients/can-deactivate.guard';
+import { DefaultModule } from './layouts/default/default.module';
 
 // import { registerLocaleData } from '@angular/common';
 // import localeFr from '@angular/common/locales/fr';
@@ -43,28 +36,16 @@ import { CanDeactivateGuard } from './modules/secure/user/patients/can-deactivat
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
-    TopNavComponent,
-    FooterComponent,
     ErrorComponent,
-    PromptDialogComponent,
-    QueingComponent,
-    RxPadComponent,
-    EncounterComponent,
-    StatComponent,
-    QrCodeComponent,
-    PaymentsComponent
+    PromptDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     CommonModule,
-    HttpClientModule,
-    LayoutModule,
-    FlexLayoutModule,
-    FormsModule,
-    ReactiveFormsModule,
+    DefaultModule,
+
     AngularMaterialModule,
     // ngx-translate and the loader module
     HttpClientModule,
@@ -73,13 +54,7 @@ import { CanDeactivateGuard } from './modules/secure/user/patients/can-deactivat
             provide: TranslateLoader,
             useFactory: HttpLoaderFactory,
             deps: [HttpClient]
-        },
-
-        // compiler configuration
-        // compiler: {
-        //   provide: TranslateCompiler,
-        //   useClass: TranslateMessageFormatCompiler
-        // }
+        }
     }),
   ],
   providers: [

@@ -1,58 +1,76 @@
-<div class="primary-header">
-    <h1>Dashboard</h1>
+<div>
+    <app-area [data]="bigChart"></app-area>
 </div>
 
-<mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let card of cards | async; index as i" [colspan]="card.cols" [rowspan]="card.rows">
-        <mat-card class="dashboard-card">
-            <mat-card-header>
-                <mat-card-title>
-                    {{card.title}}
-                    <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-                    <mat-menu #menu="matMenu" xPosition="before">
-                        <button mat-menu-item>Expand</button>
-                        <button mat-menu-item>Remove</button>
-                    </mat-menu>
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="dashboard-card-content">
-                <!-- Statistics here -->
-                <ng-container *ngIf="i == 0">
-                    <div>Statistics Content</div>
-                </ng-container>
-                <!-- Weather forcast -->
-                <ng-container *ngIf="i == 1">
-                    <div>Weather forcast Content</div>
-                </ng-container>
-                <!-- Record Chains -->
-                <ng-container *ngIf="i == 2">
-                    <mat-list>
+<br>
 
-                        <mat-list-item *ngIf="!(blockchains | async)?.length && !isLoading; else loadBlockchain">
-                            <h4 matLine>No record found!</h4>
-                        </mat-list-item>
+<mat-divider></mat-divider>
 
-                        <ng-template #loadBlockchain>
-                            <mat-list-item *ngFor="let blockchain of blockchains | async">
-                                <img matListAvatar src="../../../../assets/images/blocks-colored.png" alt="blocks">
-                                <h3 matLine>{{blockchain.hash}}</h3>
-                                <p matLine>
-                                    <span><b>nonce:</b> {{blockchain.nonce}} </span>
-                                    <span style="float: right;"> -- {{blockchain.timestamp | date:'medium'}} </span>
-                                </p>
-                            </mat-list-item>
-                        </ng-template>
+<br>
 
-                    </mat-list>
-                    <p *ngIf="isLoading">Loading...</p>
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" class="stats-cards">
+    <mat-card fxFlex="25">
+        <app-card label="New Users" total="12k" percentage="50" [data]="cards"></app-card>
+    </mat-card>
+    <mat-card fxFlex="25">
+        <app-card label="Users retention" total="10k" percentage="40" [data]="cards"></app-card>
+    </mat-card>
+    <mat-card fxFlex="25">
+        <app-card label="Users engagement" total="8k" percentage="30" [data]="cards"></app-card>
+    </mat-card>
+    <mat-card fxFlex="25">
+        <app-card label="Referral" total="6k" percentage="20" [data]="cards"></app-card>
+    </mat-card>
+</div>
+
+<br>
+
+<mat-divider></mat-divider>
+
+<br>
+
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+    <div fxFlex="60">
+        <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource">
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef> No. </th>
+                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
                 </ng-container>
-                <!-- Misc -->
-                <ng-container *ngIf="i == 3">
-                    <div>Ads Content</div>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                 </ng-container>
-            </mat-card-content>
-        </mat-card>
-    </mat-grid-tile>
-</mat-grid-list>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="weight">
+                    <th mat-header-cell *matHeaderCellDef> Weight </th>
+                    <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="symbol">
+                    <th mat-header-cell *matHeaderCellDef> Symbol </th>
+                    <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+        </div>
+
+    </div>
+    <div fxFlex="40">
+        <app-pie [data]="pieChart"></app-pie>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
