@@ -80,7 +80,9 @@ mat-paginator.mat-paginator {
   font-size: 16px;
   font-weight: 400;
 }
-
+.mat-card-subtitle {
+  margin-bottom: unset;
+}
 .element-detail mat-card {
   flex: 1 1 auto;
   border-radius: 0;
@@ -91,6 +93,22 @@ mat-paginator.mat-paginator {
   border-left: 1px solid #e0e0e0;
 }
 
+.mat-column-action {
+  padding-right: 24px;
+  justify-content: flex-end;
+  display: flex;
+}
+.mat-column-select {
+  max-width: 30px;
+}
+.address {
+  display: flex;
+  justify-content: space-between;
+}
+
+.address > div {
+  width: 45%;
+}
 button#create-new {
   position: fixed;
   right: 1%;

@@ -21,7 +21,7 @@ export class PatientsService {
   constructor(
     private http: HttpClient
   ) { }
-
+  // getRepoIssues(sort: string, order: string, page: number)
   getAll(perPage: number, currentPage: number) {
     const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, patients: any, counts: number }>(
@@ -32,7 +32,9 @@ export class PatientsService {
         return { patients: userData.patients.map(user => {
           return {
             id: user._id,
-            name: user.userId.name,
+            firstname: user.userId.name.firstname,
+            midlename: user.userId.name.midlename,
+            lastname: user.userId.name.lastname,
             contact: user.userId.contact,
             gender: user.userId.gender,
             birthdate: user.userId.birthdate,

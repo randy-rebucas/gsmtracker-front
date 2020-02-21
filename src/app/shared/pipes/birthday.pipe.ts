@@ -12,7 +12,12 @@ export class BirthdayPipe implements PipeTransform {
     }
 
     if (value.length > args) {
-      return moment().diff(value, 'years');
+      const diffYear = moment().diff(value, 'years');
+      let text = '';
+      if (diffYear > 0) {
+        text = (diffYear > 1) ? '(years old)' : '(year old)';
+      }
+      return diffYear + ' ' + text;
     }
 
   }

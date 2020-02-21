@@ -1,29 +1,18 @@
-<div class="primary-header">
-    <h1>Record of {{ user?.userId.name.firstname }} {{ user?.userId.name.midlename }} {{ user?.userId.name.lastname }}</h1>
-</div>
-<div class="wrapper">
+<section class="mat-typography">
+  <button mat-button aria-label="back" (click)="goBack()">
+    <mat-icon>keyboard_backspace</mat-icon> Go Back
+  </button>
+  <h1>Record of {{ user?.userId.name.firstname }} {{ user?.userId.name.midlename }} {{ user?.userId.name.lastname }}</h1>
 
-    <div gdAreas="header header | content side | footer footer" gdGap="10px" gdRows="auto auto auto" gdColumns="80% auto" gdAreas.lt-md="header | content | side | footer" gdRows.lt-md="auto auto auto auto" gdColumns.lt-md="auto">
-        <div class="area header" gdArea="header">
-            <button mat-icon-button aria-label="back" (click)="goBack()">
-              <mat-icon>keyboard_backspace</mat-icon> Go Back
-            </button>
-        </div>
-        <div class="area content" gdArea="content">
-            <router-outlet></router-outlet>
-        </div>
-        <div class="area side" gdArea="side">
-            <mat-card class="patient-detail-card">
+  <router-outlet></router-outlet>
+</section>
+            <!-- <mat-card class="patient-detail-card">
                 <mat-card-header>
                     <mat-card-title>{{ user?.userId.name.firstname }} {{ user?.userId.name.midlename }} {{ user?.userId.name.lastname }}</mat-card-title>
                     <mat-card-subtitle>Created: {{ user?.userId.createdAt | date }}</mat-card-subtitle>
                 </mat-card-header>
                 <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
                 <mat-card-content>
-                    <!-- <h2>Id: {{ user?._id }}</h2> -->
-                    <!-- <p>
-                    The Shiba Inu is the smallest
-                  </p> -->
                     <mat-list>
                         <mat-list-item>
                             <mat-icon matListIcon>cake</mat-icon> {{ user?.userId.birthdate | date }} <span>Age: 32</span></mat-list-item>
@@ -34,23 +23,17 @@
                     </mat-list>
                 </mat-card-content>
                 <mat-card-actions>
-                    <!-- <button mat-stroked-button color="primary" (click)="onCreate()"><mat-icon>add</mat-icon> New Record</button> -->
-                    <!-- <button mat-button>SHARE</button> -->
+                    <button mat-stroked-button color="primary" (click)="onCreate()"><mat-icon>add</mat-icon> New Record</button>
+                    <button mat-button>SHARE</button>
                 </mat-card-actions>
             </mat-card>
 
-            <!-- <mat-card class="patient-physicians-detail-card">
+            <mat-card class="patient-physicians-detail-card">
                 <mat-card-header>
                   <mat-card-title>Physicians</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <app-physicians [physicians]="user?.physicians"></app-physicians>
                 </mat-card-content>
-                
+
               </mat-card> -->
-        </div>
-        <div class="area footer" gdArea="footer">
-            <!-- footer -->
-        </div>
-    </div>
-</div>

@@ -61,7 +61,7 @@ export class PatientFormComponent implements OnInit {
         this.isLoading = true;
         this.patientsService.get(this.formId).subscribe(userData => {
           this.isLoading = false;
-
+          console.log(userData);
           this.form.patchValue({
             firstname: userData.userId.name.firstname,
             midlename: userData.userId.name.midlename,
@@ -143,19 +143,19 @@ export class PatientFormComponent implements OnInit {
           physician: this.authenticationService.getUserId()
         };
         this.patientsService.insert(newpatient).subscribe(() => {
-          this.onClose();
+          this.onClose('save');
         });
       });
     } else {
       this.userService.update(updatePatient).subscribe(() => {
-        this.onClose();
+        this.onClose('update');
       });
     }
   }
 
-  onClose() {
+  onClose(state?: string) {
     this.form.reset();
-    this.dialogRef.close();
+    this.dialogRef.close(state);
   }
 
 }

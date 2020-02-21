@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'page',
-    loadChildren: () => import('./modules/page/page.module').then(m => m.PageModule) 
+    loadChildren: () => import('./modules/page/page.module').then(m => m.PageModule)
   },
   {
     path: 'secure',

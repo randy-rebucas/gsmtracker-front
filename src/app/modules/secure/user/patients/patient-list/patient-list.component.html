@@ -9,24 +9,22 @@
     </div>
 </div>
 <!-- table -->
-<mat-table [dataSource]="dataSource" multiTemplateDataRows style="width: 100%;">
+<mat-table [dataSource]="dataSource" multiTemplateDataRows matSort style="width: 100%;">
 
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-        <div *ngIf="column === 'image'">
-            <mat-header-cell *matHeaderCellDef> &nbsp; </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <div *ngIf="element.avatar; then thenBlock else elseBlock"></div>
-                <ng-template #thenBlock>
-                    <img [src]="element.avatar" [alt]="element.name.firstname" style="width:40px; height:40px; vertical-align: middle;border-radius: 100%;" />
-                </ng-template>
-                <ng-template #elseBlock>
-                    <app-avatar [firstname]="element.name.firstname" [lastname]="element.name.lastname"></app-avatar>
-                </ng-template>
-            </mat-cell>
+        <div *ngIf="column === 'select'">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+              </mat-checkbox>
+          </mat-cell>
         </div>
         <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
         <ng-template #thenBlockRow>
-            <mat-header-cell *matHeaderCellDef style="text-align: right;">
+            <mat-header-cell *matHeaderCellDef>
             </mat-header-cell>
             <mat-cell *matCellDef="let element">
                 <ng-container *ngIf="element.isOwned">
@@ -44,7 +42,7 @@
             </mat-cell>
         </ng-template>
         <ng-template #elseBlockRow>
-            <mat-header-cell *matHeaderCellDef> {{column | titlecase}} </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{column | titlecase}} </mat-header-cell>
             <div *ngIf="column === 'birthdate'; then thenBlockDate else elseBlockDate"></div>
             <ng-template #thenBlockDate>
                 <mat-cell *matCellDef="let element"> {{ element[column] | date }}</mat-cell>
@@ -52,11 +50,8 @@
             <ng-template [ngIf]="column === 'age'">
                 <mat-cell *matCellDef="let element"> {{ element.birthdate | birthday }}</mat-cell>
             </ng-template>
-            <ng-template [ngIf]="column === 'fullname'">
-                <mat-cell *matCellDef="let element"> {{ element.name.firstname }} {{ element.name.midlename }} {{ element.name.lastname }}</mat-cell>
-            </ng-template>
             <ng-template #elseBlockDate>
-                <mat-cell *matCellDef="let element"> {{ element[column] }}</mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element[column] | titlecase }}</mat-cell>
             </ng-template>
         </ng-template>
 
@@ -66,13 +61,15 @@
     <ng-container matColumnDef="expandedDetail">
         <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
             <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
                 <mat-card class="address-card">
                     <mat-card-header>
                         <mat-card-title>Address</mat-card-title>
-                        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                        <mat-card-subtitle>(1) address recorded</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <ng-container *ngFor="let address of element.address; let i = index;">
+                        <div class="address">
+                      <div *ngFor="let address of element.address; let i = index;">
                             <p>
                                 {{address.address1}} <br/>
                                 <ng-container *ngIf="address.address2">
@@ -80,22 +77,23 @@
                                 </ng-container>
                                 {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
                             </p>
-                        </ng-container>
+                          </div>
+                        </div>
                     </mat-card-content>
                 </mat-card>
                 <mat-card class="physicians-card">
                     <mat-card-header>
                         <mat-card-title>Physicians</mat-card-title>
-                        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                        <mat-card-subtitle>(1) physician connected</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <app-physicians [physicians]="element.physicians"></app-physicians>
+                        <!-- <app-physicians [physicians]="element.physicians"></app-physicians> -->
                     </mat-card-content>
                 </mat-card>
                 <mat-card class="record-card">
                     <mat-card-header>
                         <mat-card-title>Record Chain</mat-card-title>
-                        <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+                        <mat-card-subtitle>(1) record found</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
                         <p>record chain</p>
@@ -124,3 +122,4 @@
     <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource != null && length == 0)}"></mat-footer-row>
 </mat-table>
 <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>
+

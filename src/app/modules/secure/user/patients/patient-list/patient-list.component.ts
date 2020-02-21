@@ -54,8 +54,10 @@ export class PatientListComponent implements OnInit, OnDestroy {
 
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
-    'image',
-    'fullname',
+    'select',
+    'firstname',
+    'midlename',
+    'lastname',
     'contact',
     'gender',
     'birthdate',
@@ -63,6 +65,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
     'action'
   ];
   public selection = new SelectionModel<any>(true, []);
+
   public expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -135,6 +138,26 @@ export class PatientListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    return this.selection.selected.length;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
@@ -159,9 +182,11 @@ export class PatientListComponent implements OnInit, OnDestroy {
       title: 'Create New',
       button: 'Save'
     };
-    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe(() => {
-      this.notificationService.success(':: Added successfully');
-      this.patientsService.getAll(this.perPage, this.currentPage);
+    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
+      if (result) {
+        this.notificationService.success(':: Added successfully');
+        this.patientsService.getAll(this.perPage, this.currentPage);
+      }
     });
   }
 
@@ -175,9 +200,11 @@ export class PatientListComponent implements OnInit, OnDestroy {
       title: 'Update',
       button: 'Update'
     };
-    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe(() => {
-      this.notificationService.success(':: Updated successfully');
-      this.patientsService.getAll(this.perPage, this.currentPage);
+    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
+      if (result) {
+        this.notificationService.success(':: Updated successfully');
+        this.patientsService.getAll(this.perPage, this.currentPage);
+      }
     });
   }
 

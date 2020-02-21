@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(authData);
 
     this.authenticationService.getAuthStatusListener().subscribe((res) => {
-      if(!res) {
+      if (!res) {
         this.isLoading = false;
       }
     });
