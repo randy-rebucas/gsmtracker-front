@@ -22,6 +22,10 @@ import { AvatarComponent } from './components/avatar/avatar.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BirthdaysComponent } from './components/birthdays/birthdays.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { HelpComponent } from './components/help/help.component';
+import { SettingComponent } from './components/setting/setting.component';
+import { ImportComponent } from './components/import/import.component';
 
 
 @NgModule({
@@ -39,7 +43,10 @@ import { BirthdaysComponent } from './components/birthdays/birthdays.component';
     AdsComponent,
     AvatarComponent,
     UploadComponent,
-    BirthdaysComponent
+    BirthdaysComponent,
+    HelpComponent,
+    SettingComponent,
+    ImportComponent
   ],
   imports: [
     CommonModule,
@@ -47,6 +54,7 @@ import { BirthdaysComponent } from './components/birthdays/birthdays.component';
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
+    MatTooltipModule,
     FlexLayoutModule,
     HighchartsChartModule
   ],

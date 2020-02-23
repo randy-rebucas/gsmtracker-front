@@ -1,4 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { HelpComponent } from '../help/help.component';
+import { SettingComponent } from '../setting/setting.component';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +16,9 @@ export class HeaderComponent implements OnInit {
 
   @Input() isAuthenticated: boolean;
 
-  constructor() { }
+  constructor(
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit() { }
 
@@ -24,6 +29,35 @@ export class HeaderComponent implements OnInit {
         new Event('resize')
       );
     }, 300);
+  }
+
+  onOpenDialog(targetEl: string) {
+    let componentEl;
+    let dialogTitle;
+    if (targetEl === 'help') {
+      dialogTitle = 'Help';
+      componentEl = HelpComponent;
+    } else {
+      dialogTitle = 'Setting';
+      componentEl = SettingComponent;
+    }
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: dialogTitle
+    };
+    this.dialog.open(componentEl, dialogConfig);
+  }
+
+  onHelp() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Help'
+    };
+    this.dialog.open(HelpComponent, dialogConfig);
   }
 
   onLogout() {

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/modules/secure/user/user.service';
 import { User } from 'src/app/modules/secure/user/user';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ImportComponent } from '../import/import.component';
 
 
 @Component({
@@ -15,7 +17,8 @@ export class SidebarComponent implements OnInit {
   user: User;
   constructor(
     private authenticationService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -23,8 +26,16 @@ export class SidebarComponent implements OnInit {
     this.userService.get(this.authenticationService.getUserId()).subscribe((user) => {
       this.user = user;
     });
+  }
 
-    console.log(this.user);
+  onImportOpen() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Import patients'
+    };
+    this.dialog.open(ImportComponent, dialogConfig);
   }
 
 }

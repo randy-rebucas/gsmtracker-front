@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { Subscription } from 'rxjs';
+import { Subscription, merge, Observable, of as observableOf } from 'rxjs';
+import { startWith, switchMap, map, catchError } from 'rxjs/operators';
 import { User } from '../../user';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -11,18 +12,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe } from '@angular/common';
-import { SettingsService } from '../../../settings/settings.service';
 
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { AuthenticationService } from '../../../../authentication/authentication.service';
-import { TypeService } from 'src/app/shared/services/type.service';
 import { PatientFormComponent } from '../patient-form/patient-form.component';
-import { UploadService } from 'src/app/shared/services/upload.service';
-import { UserService } from '../../user.service';
 import { PatientsService } from '../patients.service';
-import { Patients } from '../patients';
 import { Physicians } from '../../physicians/physicians';
 import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 
@@ -38,7 +34,7 @@ import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
     ]),
   ],
 })
-export class PatientListComponent implements OnInit, OnDestroy {
+export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   public length: number;
   public perPage: number;
   public currentPage: number;
@@ -66,12 +62,10 @@ export class PatientListComponent implements OnInit, OnDestroy {
     'action'
   ];
   public selection = new SelectionModel<any>(true, []);
-
   public expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  private userTypeId: string;
   public userId: string;
   public avatar: string;
 
@@ -84,13 +78,9 @@ export class PatientListComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private dialogService: DialogService,
     private notificationService: NotificationService,
-    private userService: UserService,
     private patientsService: PatientsService,
     private authenticationService: AuthenticationService,
-    private settingsService: SettingsService,
-    private typeService: TypeService,
     private dialog: MatDialog,
-    private uploadService: UploadService
   ) {
     this.length = 0;
     this.perPage = 10;
@@ -117,14 +107,44 @@ export class PatientListComponent implements OnInit, OnDestroy {
           newUsers.push({...user, ...ownerShip});
         });
       });
-
       this.dataSource = new MatTableDataSource(newUsers);
-      this.length = this.dataSource.data.length;
+      this.length = userData.counts;
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
 
+  }
+
+  ngAfterViewInit() {
+    // If the user changes the sort order, reset back to the first page.
+    // this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
+    // merge(this.sort.sortChange, this.paginator.page)
+    //   .pipe(
+    //     startWith({}),
+    //     switchMap(() => {
+    //       this.isLoading = true;
+    //       // return this.exampleDatabase!.getRepoIssues(this.sort.active, this.sort.direction, this.paginator.pageIndex);
+    //       return this.patientsService.getUpdateListener();
+    //     }),
+    //     map(data => {
+    //       // Flip flag to show that loading has finished.
+    //       this.isLoading = false;
+    //       // this.isRateLimitReached = false;
+    //       this.length = data.counts;
+
+    //       return data.patients;
+    //     }),
+    //     catchError(() => {
+    //       this.isLoading = false;
+    //       // Catch if the GitHub API has reached its rate limit. Return empty data.
+    //       // this.isRateLimitReached = true;
+    //       return observableOf([]);
+    //     })
+    //   ).subscribe(
+    //     data => this.dataSource = new MatTableDataSource(data)
+    //   );
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -161,38 +181,23 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.patientsService.getAll(this.perPage, this.currentPage);
   }
 
-  onCreate() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    dialogConfig.data = {
-      id: null,
-      title: 'Create New',
-      button: 'Save'
-    };
-    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
-      if (result) {
-        this.notificationService.success(':: Added successfully');
-        // this.dataSource._updateChangeSubscription();
-        this.patientsService.getAll(this.perPage, this.currentPage);
-      }
-    });
-  }
-
-  onEdit(patientId: string) {
+  onDialogOpen(targetEl: string, patientId?: string) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '50%';
     dialogConfig.data = {
       id: patientId,
-      title: 'Update',
-      button: 'Update'
+      title: targetEl === 'create' ? 'Create New' : 'Update',
+      button: targetEl === 'create' ? 'Save' : 'Update'
     };
     this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        this.notificationService.success(':: Updated successfully');
+        if (targetEl === 'create') {
+          this.notificationService.success(':: Added successfully');
+        } else {
+          this.notificationService.success(':: Updated successfully');
+        }
         this.patientsService.getAll(this.perPage, this.currentPage);
       }
     });
@@ -209,7 +214,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
   }
 
   onDetail(userId: string) {
-    this.router.navigate(['../', userId], {relativeTo: this.activatedRoute});
+    this.router.navigate(['./', userId], {relativeTo: this.activatedRoute});
   }
 
   onExport() {
@@ -417,8 +422,11 @@ export class PatientListComponent implements OnInit, OnDestroy {
   }
 
   trackById(index, item) {
-    console.log(index);
-    return index;
+    return item.id;
+  }
+
+  onRowClicked(row) {
+    console.log('Row clicked: ', row);
   }
 
   ngOnDestroy() {

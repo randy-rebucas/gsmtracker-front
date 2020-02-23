@@ -1,5 +1,5 @@
 <div fxLayout='row'>
-  <div class="search-div" fxFlex="60" fxFlex.sm="100%" fxFlex.md="60%">
+  <div class="search-div" fxFlex="75" fxFlex.sm="100%" fxFlex.md="75%">
       <mat-form-field>
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
       </mat-form-field>
@@ -7,25 +7,30 @@
           <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
       </div>
   </div>
-  <div class="action-button" fxFlex="60" fxFlex.sm="100%" fxFlex.md="60%">
-    <button mat-flat-button color="primary" (click)="onPrint()" [disabled]="!isAllSelected()">
-      <mat-icon>print</mat-icon> Print
+  <div class="action-button" fxFlex="25" fxFlex.sm="100%" fxFlex.md="25%">
+    <label *ngIf="isAllSelected()">{{this.selection.selected.length}} Selected</label>
+    <button mat-stroked-button color="primary" (click)="onPrint()" [disabled]="!isAllSelected()">
+      Print
     </button>
-    <button mat-flat-button color="primary" (click)="onExport()" [disabled]="!isAllSelected()">
-      <mat-icon>cloud_download</mat-icon> Export
+    <button mat-stroked-button color="primary" (click)="onExport()" [disabled]="!isAllSelected()">
+      Export
     </button>
-    <button mat-flat-button color="warn" (click)="onDelete()" [disabled]="!isAllSelected()">
-      <mat-icon>delete_sweep</mat-icon> Delete
+    <button mat-stroked-button color="warn" (click)="onDelete()" [disabled]="!isAllSelected()">
+      Delete
     </button>
   </div>
 </div>
 
 <mat-table [dataSource]="dataSource" multiTemplateDataRows matSort [trackBy]="trackById">
+  <!-- Item Description Column -->
+  <ng-container matColumnDef="patient-counts">
+    <mat-header-cell *matHeaderCellDef> Patients ({{length}}) </mat-header-cell>
+  </ng-container>
+
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
         <div *ngIf="column === 'select'">
           <mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-            </mat-checkbox>
+            <!-- <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox> -->
           </mat-header-cell>
           <mat-cell *matCellDef="let row">
               <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
@@ -37,7 +42,7 @@
             <mat-header-cell *matHeaderCellDef></mat-header-cell>
             <mat-cell *matCellDef="let element">
               <ng-container *ngIf="element.isOwned">
-                  <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit" matTooltip="Edit">
+                  <button mat-icon-button (click)="onDialogOpen('update', element.id)" aria-label="Edit" matTooltip="Edit">
                     <mat-icon>create</mat-icon>
                   </button>
                   <button mat-icon-button (click)="onDetail(element.id)" aria-label="Record" matTooltip="Record">
@@ -107,8 +112,9 @@
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
-    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
-    </mat-row>
+    <mat-header-row *matHeaderRowDef="['patient-counts']" class="sub-header"></mat-header-row>
+
+    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" (click)="onRowClicked(element)" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></mat-row>
     <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
 
     <ng-container matColumnDef="loading">
@@ -124,6 +130,11 @@
     <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource != null}"></mat-footer-row>
     <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource != null && length == 0)}"></mat-footer-row>
 </mat-table>
-<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>
+<mat-paginator
+[length]="length"
+[pageSize]="perPage"
+[pageSizeOptions]="pageSizeOptions"
+(page)="onChangedPage($event)"
+></mat-paginator>
 
-<button mat-fab color="primary" (click)="onCreate()" id="create-new"><mat-icon>add</mat-icon></button>
+<button mat-fab color="primary" (click)="onDialogOpen('create')" id="create-new"><mat-icon>add</mat-icon></button>

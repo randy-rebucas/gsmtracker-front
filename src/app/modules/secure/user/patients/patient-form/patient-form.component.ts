@@ -61,7 +61,6 @@ export class PatientFormComponent implements OnInit {
         this.isLoading = true;
         this.patientsService.get(this.formId).subscribe(userData => {
           this.isLoading = false;
-          console.log(userData);
           this.form.patchValue({
             firstname: userData.userId.name.firstname,
             midlename: userData.userId.name.midlename,

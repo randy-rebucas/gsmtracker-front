@@ -4,31 +4,24 @@
             <mat-icon>menu</mat-icon>
         </button>
 
-        <span> APP LOGO </span>
+        <span> Clinic+ </span>
 
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
                 <li>
-                    <button mat-icon-button>
+                    <button mat-icon-button matTooltip="Help" (click)="onOpenDialog('help')">
                         <mat-icon>help_outline</mat-icon>
                     </button>
                 </li>
                 <li>
-                  <button mat-icon-button routerLink="/secure/settings">
+                  <button mat-icon-button matTooltip="Settings"  (click)="onOpenDialog('setting')">
                       <mat-icon>settings</mat-icon>
                   </button>
                 </li>
                 <li>
-                    <button mat-button [matMenuTriggerFor]="menu">
-                        <mat-icon>person_outline</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="onLogout()">
-                            <mat-icon>exit_to_app</mat-icon>
-                            Signout
-                        </button>
-                    </mat-menu>
-
+                  <button mat-icon-button matTooltip="Logout" (click)="onLogout()">
+                    <mat-icon>exit_to_app</mat-icon>
+                  </button>
                 </li>
             </ul>
         </div>
