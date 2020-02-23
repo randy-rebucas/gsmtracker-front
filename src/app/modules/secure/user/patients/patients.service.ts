@@ -21,7 +21,7 @@ export class PatientsService {
   constructor(
     private http: HttpClient
   ) { }
-  // getRepoIssues(sort: string, order: string, page: number)
+
   getAll(perPage: number, currentPage: number) {
     const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, patients: any, counts: number }>(
@@ -42,8 +42,8 @@ export class PatientsService {
             created: user.userId.createdAt,
             updated: user.userId.updatedAt,
             physicians: user.physicians,
-            privateKey: user.userId.prikey,
-            publicKey: user.userId.pubkey
+            privateKey: user.userId.privateKey,
+            publicKey: user.userId.publicKey
           };
         }), max: userData.counts};
       })
@@ -75,5 +75,9 @@ export class PatientsService {
 
   delete(patientId: string) {
     return this.http.delete<{ message: string, id: string }>(BACKEND_URL + '/' + patientId);
+  }
+
+  deleteMany(patientIds: []) {
+    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + patientIds);
   }
 }

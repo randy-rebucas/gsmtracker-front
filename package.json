@@ -27,6 +27,7 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "@tinymce/tinymce-angular": "^3.4.0",
     "adminbsb-materialdesign": "^1.0.7",
+    "angular7-csv": "^0.2.12",
     "highcharts": "^8.0.0",
     "highcharts-angular": "^2.4.0",
     "html2canvas": "^1.0.0-rc.5",

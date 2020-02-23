@@ -1,16 +1,26 @@
-<button mat-fab color="primary" (click)="onCreate()" id="create-new"><mat-icon>add</mat-icon></button>
-
-<div class="search-div">
-    <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
-    </mat-form-field>
-    <div (click)="onScan()">
-        <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
-    </div>
+<div fxLayout='row'>
+  <div class="search-div" fxFlex="60" fxFlex.sm="100%" fxFlex.md="60%">
+      <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+      </mat-form-field>
+      <div (click)="onScan()">
+          <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
+      </div>
+  </div>
+  <div class="action-button" fxFlex="60" fxFlex.sm="100%" fxFlex.md="60%">
+    <button mat-flat-button color="primary" (click)="onPrint()" [disabled]="!isAllSelected()">
+      <mat-icon>print</mat-icon> Print
+    </button>
+    <button mat-flat-button color="primary" (click)="onExport()" [disabled]="!isAllSelected()">
+      <mat-icon>cloud_download</mat-icon> Export
+    </button>
+    <button mat-flat-button color="warn" (click)="onDelete()" [disabled]="!isAllSelected()">
+      <mat-icon>delete_sweep</mat-icon> Delete
+    </button>
+  </div>
 </div>
-<!-- table -->
-<mat-table [dataSource]="dataSource" multiTemplateDataRows matSort style="width: 100%;">
 
+<mat-table [dataSource]="dataSource" multiTemplateDataRows matSort [trackBy]="trackById">
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
         <div *ngIf="column === 'select'">
           <mat-header-cell *matHeaderCellDef>
@@ -24,21 +34,16 @@
         </div>
         <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
         <ng-template #thenBlockRow>
-            <mat-header-cell *matHeaderCellDef>
-            </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <ng-container *ngIf="element.isOwned">
-                    <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit" title="Edit">
-                                    <mat-icon>launch</mat-icon>
-                                  </button>
-                    <button mat-icon-button (click)="onDetail(element.id)" aria-label="View" title="View">
-                                    <mat-icon>visibility</mat-icon>
-                                  </button>
-                    <button mat-icon-button color="warn" (click)="onDelete(element.id)" aria-label="Delete" title="Delete">
-                                    <mat-icon>delete</mat-icon>
-                                  </button>
-                </ng-container>
-
+              <ng-container *ngIf="element.isOwned">
+                  <button mat-icon-button (click)="onEdit(element.id)" aria-label="Edit" matTooltip="Edit">
+                    <mat-icon>create</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="onDetail(element.id)" aria-label="Record" matTooltip="Record">
+                    <mat-icon>assignment_ind</mat-icon>
+                  </button>
+              </ng-container>
             </mat-cell>
         </ng-template>
         <ng-template #elseBlockRow>
@@ -54,9 +59,7 @@
                 <mat-cell *matCellDef="let element"> {{ element[column] | titlecase }}</mat-cell>
             </ng-template>
         </ng-template>
-
     </ng-container>
-
 
     <ng-container matColumnDef="expandedDetail">
         <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
@@ -123,3 +126,4 @@
 </mat-table>
 <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="perPage" [length]="length" (page)="onChangedPage($event)" showFirstLastButtons></mat-paginator>
 
+<button mat-fab color="primary" (click)="onCreate()" id="create-new"><mat-icon>add</mat-icon></button>

@@ -104,11 +104,11 @@ mat-paginator.mat-paginator {
 .address {
   display: flex;
   justify-content: space-between;
+  div {
+    width: 45%;
+  }
 }
 
-.address > div {
-  width: 45%;
-}
 button#create-new {
   position: fixed;
   right: 1%;

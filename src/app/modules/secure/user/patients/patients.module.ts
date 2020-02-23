@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { PatientListComponent } from './patient-list/patient-list.component';
 import { AngularMaterialModule } from 'src/app/angular-material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CanDeactivateGuard } from './can-deactivate.guard';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { CanDeactivateGuard } from './can-deactivate.guard';
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
+    MatTooltipModule,
     SharedModule,
     FlexLayoutModule,
     RouterModule.forChild([
@@ -39,6 +41,7 @@ import { CanDeactivateGuard } from './can-deactivate.guard';
       ] }
     ])
   ],
+  providers: [DatePipe],
   entryComponents: [
     PatientFormComponent
   ]

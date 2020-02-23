@@ -24,6 +24,7 @@ import { UserService } from '../../user.service';
 import { PatientsService } from '../patients.service';
 import { Patients } from '../patients';
 import { Physicians } from '../../physicians/physicians';
+import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 
 @Component({
   selector: 'app-patient-list',
@@ -74,9 +75,12 @@ export class PatientListComponent implements OnInit, OnDestroy {
   public userId: string;
   public avatar: string;
 
+  public patients: any;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private datePipe: DatePipe,
     private titleService: Title,
     private dialogService: DialogService,
     private notificationService: NotificationService,
@@ -121,21 +125,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
       this.dataSource.sort = this.sort;
     });
 
-  }
-
-  onDelete(patientId: string) {
-    this.dialogService.openConfirmDialog('Are you sure to delete this record ?')
-    .afterClosed().subscribe(dialogRes => {
-      if (dialogRes) {
-        this.patientsService.delete(patientId).subscribe((patientRes) => {
-          // delete related user data
-          this.userService.delete(patientRes.id).subscribe(() => {
-            this.patientsService.getAll(this.perPage, this.currentPage);
-            this.notificationService.warn('::' + patientRes.message);
-          });
-        });
-      }
-    });
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -185,6 +174,7 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
         this.notificationService.success(':: Added successfully');
+        // this.dataSource._updateChangeSubscription();
         this.patientsService.getAll(this.perPage, this.currentPage);
       }
     });
@@ -222,85 +212,213 @@ export class PatientListComponent implements OnInit, OnDestroy {
     this.router.navigate(['../', userId], {relativeTo: this.activatedRoute});
   }
 
-  onPrint() {
+  onExport() {
+    const csvOptions = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: 'Patients',
+      useBom: true,
+      noDownload: false,
+      headers: [
+        'Firstname',
+        'Midlename',
+        'Lastname',
+        'Contact',
+        'Gender',
+        'Birthdate',
+        'Created',
+        'Address',
+        'City',
+        'Province',
+        'Country',
+        'Postal'
+      ]
+    };
 
-    this.settingsService.getSetting(this.userId).toPromise()
-      .then((results) => {
-        const datePipe = new DatePipe('en-US');
-        const pdfDoc = new jsPDF('p', 'mm', 'a4');
-        const pageHeight = pdfDoc.internal.pageSize.height || pdfDoc.internal.pageSize.getHeight();
-        const pageWidth = pdfDoc.internal.pageSize.width || pdfDoc.internal.pageSize.getWidth();
+    const patientList = [];
+    for (const iterator of this.selection.selected) {
+      const dataObj = {
+        fullname: iterator.firstname,
+        midlename: iterator.midlename,
+        lastname: iterator.lastname,
+        contact: iterator.contact,
+        gender: iterator.gender,
+        birthdate: this.datePipe.transform(iterator.birthdate, 'yyyy-MM-dd'),
+        created: this.datePipe.transform(iterator.created, 'yyyy-MM-dd')
+      };
 
-        // clinic owner
-        pdfDoc.setFontSize(16);
-        pdfDoc.setFont('normal');
-        // this.uploadService.get(results._id).subscribe((res) => {
-        //   pdfDoc.addImage(res.image, 'PNG', 10, 10, 18, 18);
-        // });
-        pdfDoc.text(results.name, 10, 10, null, null, 'left');
-        pdfDoc.setFontSize(10);
-        pdfDoc.setFont('courier');
-        this.addresses = results.addresses;
-        this.addresses.forEach(element => {
-          pdfDoc.text(element.address1, 10, 14, null, null, 'left');
-          let gap = 0;
-          if (element.address2) {
-            gap = 4;
-            pdfDoc.text(element.address2, 10, 18, null, null, 'left');
+      let addressObj = {};
+      if (iterator.address.length > 1 ) {
+        iterator.address.forEach(el => {
+          if (el.current) {
+            addressObj = {
+              address: el.address1 + ' ' + el.address2,
+              city: el.city,
+              province: el.province,
+              country: el.country,
+              postalCode: el.postalCode
+            };
           }
-          pdfDoc.text('' + element.postalCode + '', 10, 18 + gap, null, null, 'left');
-          pdfDoc.text(element.province, 45, 18 + gap, null, null, 'left');
-          pdfDoc.text(element.city, 70, 18 + gap, null, null, 'left');
-          pdfDoc.text(element.country, 10, 22 + gap, null, null, 'left');
         });
+      } else {
+        addressObj = {
+          address: iterator.address[0].address1 + ' ' + iterator.address[0].address2,
+          city: iterator.address[0].city,
+          province: iterator.address[0].province,
+          country: iterator.address[0].country,
+          postalCode: iterator.address[0].postalCode
+        };
+      }
 
-        pdfDoc.text('Clinic hour', 125, 14, null, null, 'left');
-        this.hours = results.hours;
-        for (let index = 0; index < this.hours.length; index++) {
-          const element = this.hours[index];
-          pdfDoc.text(element.morningOpen + ' - ' + element.afternoonClose, 155, 14 + ( index * 4 ), null, null, 'left');
+      const mergeObj = {...dataObj, ...addressObj};
+
+      patientList.push(mergeObj);
+    }
+    // tslint:disable-next-line: no-unused-expression
+    new AngularCsv(patientList, 'Patients', csvOptions);
+  }
+
+  onPrint() {
+    const numSelected = this.selection.selected;
+    const datePipe = new DatePipe('en-US');
+    const pdfDoc = new jsPDF('p', 'mm', 'a4');
+    const pageHeight = pdfDoc.internal.pageSize.height || pdfDoc.internal.pageSize.getHeight();
+    const pageWidth = pdfDoc.internal.pageSize.width || pdfDoc.internal.pageSize.getWidth();
+
+    pdfDoc.line(10, 28, 200, 28);
+
+    pdfDoc.setFontSize(10);
+    pdfDoc.setFont('courier');
+    pdfDoc.text('Fullname', 10, 32, null, null, 'left');
+    pdfDoc.text('Contact', 125, 32, null, null, 'left');
+    pdfDoc.text('Gender', 155, 32, null, null, 'left');
+    pdfDoc.text('Birthdate', 175, 32, null, null, 'left');
+
+    pdfDoc.setFontSize(10);
+    pdfDoc.setFont('courier');
+
+    for (let index = 0; index < numSelected.length; index++) {
+      const element = numSelected[index];
+      pdfDoc.text(element.firstname + ' ' + element.midlename + ', ' + element.lastname, 10, 37 + (index * 8), null, null, 'left');
+      pdfDoc.text(element.contact, 125, 37 + (index * 8), null, null, 'left');
+      pdfDoc.text(element.gender, 155, 37 + (index * 8), null, null, 'left');
+      pdfDoc.text(datePipe.transform(element.birthdate, 'MMM dd, yyyy'), 175, 37 + (index * 8), null, null, 'left');
+      pdfDoc.text('Address: ', 15, 41 + (index * 8), null, null, 'left');
+      element.address.forEach(el => {
+        if (el.current) {
+          pdfDoc.text(el.address1 + '' + (el.address2) ? el.address2 : '' + ', ' +
+          el.postalCode +
+          el.province + el.city + el.country, 35, 41 + (index * 8), null, null, 'left');
         }
-
-        pdfDoc.text('Tel no: ', 125, 18, null, null, 'left');
-        this.contacts = results.phones;
-        for (let index = 0; index < this.contacts.length; index++) {
-          const element = this.contacts[index];
-          pdfDoc.text(element.contact, 155, 18 + ( index * 4 ), null, null, 'left');
-        }
-
-        pdfDoc.line(10, 28, 200, 28);
-
-        pdfDoc.setFontSize(10);
-        pdfDoc.setFont('courier');
-        pdfDoc.text('Patient Id', 10, 32, null, null, 'left');
-        pdfDoc.text('Fullname', 70, 32, null, null, 'left');
-        pdfDoc.text('Contact', 125, 32, null, null, 'left');
-        pdfDoc.text('Gender', 155, 32, null, null, 'left');
-        pdfDoc.text('Birthdate', 175, 32, null, null, 'left');
-
-        pdfDoc.setFontSize(10);
-        pdfDoc.setFont('courier');
-        const numSelected = this.selection.selected;
-        for (let index = 0; index < numSelected.length; index++) {
-          const element = numSelected[index];
-          pdfDoc.text(element.id, 10, 37 + (index * 8), null, null, 'left');
-          pdfDoc.text(element.firstname + ' ' + element.midlename + ', ' + element.lastname, 70, 37 + (index * 8), null, null, 'left');
-          pdfDoc.text(element.contact, 125, 37 + (index * 8), null, null, 'left');
-          pdfDoc.text(element.gender, 155, 37 + (index * 8), null, null, 'left');
-          pdfDoc.text(datePipe.transform(element.birthdate, 'MMM dd, yyyy'), 175, 37 + (index * 8), null, null, 'left');
-          pdfDoc.text('Address: ', 15, 41 + (index * 8), null, null, 'left');
-          element.address.forEach(el => {
-            if (el.current) {
-              pdfDoc.text(el.address1 + '' + (el.address2) ? el.address2 : '' + ', ' +
-              el.postalCode +
-              el.province + el.city + el.country, 35, 41 + (index * 8), null, null, 'left');
-            }
-          });
-        }
-        pdfDoc.autoPrint();
-        pdfDoc.output('dataurlnewwindow');
       });
+    }
+    pdfDoc.autoPrint();
+    pdfDoc.output('dataurlnewwindow');
+    // ----------------------------------------------
+    // this.settingsService.getSetting(this.userId).toPromise()
+    //   .then((results) => {
+    //     const datePipe = new DatePipe('en-US');
+    //     const pdfDoc = new jsPDF('p', 'mm', 'a4');
+    //     const pageHeight = pdfDoc.internal.pageSize.height || pdfDoc.internal.pageSize.getHeight();
+    //     const pageWidth = pdfDoc.internal.pageSize.width || pdfDoc.internal.pageSize.getWidth();
 
+    //     // clinic owner
+    //     pdfDoc.setFontSize(16);
+    //     pdfDoc.setFont('normal');
+    //     // this.uploadService.get(results._id).subscribe((res) => {
+    //     //   pdfDoc.addImage(res.image, 'PNG', 10, 10, 18, 18);
+    //     // });
+    //     pdfDoc.text(results.name, 10, 10, null, null, 'left');
+    //     pdfDoc.setFontSize(10);
+    //     pdfDoc.setFont('courier');
+    //     this.addresses = results.addresses;
+    //     this.addresses.forEach(element => {
+    //       pdfDoc.text(element.address1, 10, 14, null, null, 'left');
+    //       let gap = 0;
+    //       if (element.address2) {
+    //         gap = 4;
+    //         pdfDoc.text(element.address2, 10, 18, null, null, 'left');
+    //       }
+    //       pdfDoc.text('' + element.postalCode + '', 10, 18 + gap, null, null, 'left');
+    //       pdfDoc.text(element.province, 45, 18 + gap, null, null, 'left');
+    //       pdfDoc.text(element.city, 70, 18 + gap, null, null, 'left');
+    //       pdfDoc.text(element.country, 10, 22 + gap, null, null, 'left');
+    //     });
+
+    //     pdfDoc.text('Clinic hour', 125, 14, null, null, 'left');
+    //     this.hours = results.hours;
+    //     for (let index = 0; index < this.hours.length; index++) {
+    //       const element = this.hours[index];
+    //       pdfDoc.text(element.morningOpen + ' - ' + element.afternoonClose, 155, 14 + ( index * 4 ), null, null, 'left');
+    //     }
+
+    //     pdfDoc.text('Tel no: ', 125, 18, null, null, 'left');
+    //     this.contacts = results.phones;
+    //     for (let index = 0; index < this.contacts.length; index++) {
+    //       const element = this.contacts[index];
+    //       pdfDoc.text(element.contact, 155, 18 + ( index * 4 ), null, null, 'left');
+    //     }
+
+    //     pdfDoc.line(10, 28, 200, 28);
+
+    //     pdfDoc.setFontSize(10);
+    //     pdfDoc.setFont('courier');
+    //     pdfDoc.text('Patient Id', 10, 32, null, null, 'left');
+    //     pdfDoc.text('Fullname', 70, 32, null, null, 'left');
+    //     pdfDoc.text('Contact', 125, 32, null, null, 'left');
+    //     pdfDoc.text('Gender', 155, 32, null, null, 'left');
+    //     pdfDoc.text('Birthdate', 175, 32, null, null, 'left');
+
+    //     pdfDoc.setFontSize(10);
+    //     pdfDoc.setFont('courier');
+    //     const numSelected = this.selection.selected;
+    //     for (let index = 0; index < numSelected.length; index++) {
+    //       const element = numSelected[index];
+    //       pdfDoc.text(element.id, 10, 37 + (index * 8), null, null, 'left');
+    //       pdfDoc.text(element.firstname + ' ' + element.midlename + ', ' + element.lastname, 70, 37 + (index * 8), null, null, 'left');
+    //       pdfDoc.text(element.contact, 125, 37 + (index * 8), null, null, 'left');
+    //       pdfDoc.text(element.gender, 155, 37 + (index * 8), null, null, 'left');
+    //       pdfDoc.text(datePipe.transform(element.birthdate, 'MMM dd, yyyy'), 175, 37 + (index * 8), null, null, 'left');
+    //       pdfDoc.text('Address: ', 15, 41 + (index * 8), null, null, 'left');
+    //       element.address.forEach(el => {
+    //         if (el.current) {
+    //           pdfDoc.text(el.address1 + '' + (el.address2) ? el.address2 : '' + ', ' +
+    //           el.postalCode +
+    //           el.province + el.city + el.country, 35, 41 + (index * 8), null, null, 'left');
+    //         }
+    //       });
+    //     }
+    //     pdfDoc.autoPrint();
+    //     pdfDoc.output('dataurlnewwindow');
+    //   });
+
+  }
+
+  onDelete() {
+    const numSelected = this.selection.selected;
+    const plural = (numSelected.length > 1) ? '(s)' : '';
+    this.dialogService.openConfirmDialog('Are you sure to delete ' + numSelected.length +
+    ' item' + plural +
+    ' record ?')
+    .afterClosed().subscribe(dialogRes => {
+      if (dialogRes) {
+        numSelected.forEach(element => {
+          this.ids.push(element.id);
+        });
+        this.patientsService.deleteMany(this.ids).subscribe((res) => {
+          this.patientsService.getAll(this.perPage, this.currentPage);
+          this.notificationService.warn('::' + res.message);
+        });
+      }
+    });
+  }
+
+  trackById(index, item) {
+    console.log(index);
+    return index;
   }
 
   ngOnDestroy() {
