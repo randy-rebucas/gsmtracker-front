@@ -214,7 +214,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onDetail(userId: string) {
-    this.router.navigate(['./', userId], {relativeTo: this.activatedRoute});
+    this.router.navigate(['../', userId], {relativeTo: this.activatedRoute});
   }
 
   onExport() {
@@ -223,7 +223,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true,
-      showTitle: true,
+      showTitle: false,
       title: 'Patients',
       useBom: true,
       noDownload: false,

@@ -40,6 +40,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
   public filteredOptions: Drug[] = [];
   public form: FormGroup;
   selectedDrug: string;
+  isConfirmed: boolean;
 
   get prescriptionArray() {
     return this.form.get('prescriptions').get('prescriptions') as FormArray;
@@ -59,11 +60,12 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     private authenticationService: AuthenticationService,
   ) {
     this.preLoading = false;
+    this.isConfirmed = false;
   }
 
   ngOnInit() {
 
-    this.patientId = this.activatedRoute.snapshot.parent.parent.params.patientId;
+    this.patientId = this.activatedRoute.snapshot.parent.params.patientId;
     this.patientsService.get(this.patientId).subscribe((user) => {
       this.user = user;
     });
@@ -179,7 +181,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     if (this.form.invalid) {
       return;
     }
-
+    this.isConfirmed = true;
     const newTransaction = {
       from: this.authenticationService.getPublicKey(),
       to: this.user.userId.publicKey,
@@ -193,7 +195,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
 
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
 
-    if (this.form.dirty) {
+    if (this.form.dirty && !this.isConfirmed) {
       return confirm('Do you want to discard the changes?');
     }
 

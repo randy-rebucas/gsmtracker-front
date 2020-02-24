@@ -13,9 +13,11 @@ import { PatientRecordDetailComponent } from './patient-record-detail/patient-re
 import { CanDeactivateGuard } from '../can-deactivate.guard';
 import { HttpClientModule } from '@angular/common/http';
 import { MatStepperModule } from '@angular/material/stepper';
+import { PatientRecordsComponent } from './patient-records.component';
 
 @NgModule({
   declarations: [
+    PatientRecordsComponent,
     PatientRecordListComponent,
     PatientRecordDetailComponent,
     PatientRecordFormComponent
@@ -31,9 +33,12 @@ import { MatStepperModule } from '@angular/material/stepper';
     EditorModule,
     FlexLayoutModule,
     RouterModule.forChild([
-      { path: '', component: PatientRecordListComponent },
-      { path: 'form', component: PatientRecordFormComponent, canDeactivate: [CanDeactivateGuard] },
-      { path: ':blockId', component: PatientRecordDetailComponent },
+      { path: '', component: PatientRecordsComponent, children: [
+        { path: '', redirectTo: 'list', pathMatch: 'full' },
+        { path: 'list', component: PatientRecordListComponent },
+        { path: 'form', component: PatientRecordFormComponent, canDeactivate: [CanDeactivateGuard] },
+        { path: ':blockId', component: PatientRecordDetailComponent },
+      ] },
     ])
   ]
 })

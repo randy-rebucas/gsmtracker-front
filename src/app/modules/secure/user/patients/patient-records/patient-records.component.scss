@@ -1,41 +1,11 @@
-.wrapper {
-  max-width: 1200px;
-    margin: 0 auto;
-}
-
-.more-button {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
-.flex-row {
-  margin-bottom: 1em;
-}
-
-mat-card.card.mat-card {
-  border-radius: 0;
-  border: 1px solid #cccccc;
-  box-shadow: none;
-}
-
 ::ng-deep .mat-card-header-text {
   /* CSS styles go here */
   margin: 0px !important; // for example to remove the margin
 }
 
-.mat-form-field {
-  margin-right: 1em;
+::ng-deep{
+  .mat-list-item-content{
+    cursor: pointer;
+  }
 }
 
-.form-field-block {
-  position: relative;
-}
-
-.form-field-block .action-btn {
-  float: right;
-}

@@ -28,7 +28,7 @@ export class PatientRecordListComponent implements OnInit {
 
   ngOnInit() {
     // get patientid parameter
-    this.patientId = this.activatedRoute.snapshot.parent.parent.params.patientId;
+    this.patientId = this.activatedRoute.snapshot.parent.params.patientId;
     // get patient Info
     this.patientsService.get(this.patientId).subscribe((user) => {
       // get patient blockchain

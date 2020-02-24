@@ -7,7 +7,7 @@ import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
   styleUrls: ['./import.component.scss']
 })
 export class ImportComponent implements OnInit {
-
+  fileReaded: File;
   form: FormGroup;
   constructor() { }
 
@@ -26,4 +26,6 @@ export class ImportComponent implements OnInit {
     console.log(this.form.value.file);
     // this.form.value.file;
   }
+// csvtojson
+// jsontocsv
 }

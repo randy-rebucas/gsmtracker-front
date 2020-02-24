@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PatientsComponent } from './patients.component';
 import { PatientFormComponent } from './patient-form/patient-form.component';
-import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 
 import { AngularMaterialModule } from 'src/app/angular-material.module';
@@ -18,8 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [
     PatientsComponent,
     PatientListComponent,
-    PatientFormComponent,
-    PatientDetailComponent
+    PatientFormComponent
   ],
   imports: [
     CommonModule,
@@ -42,10 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         { path: '', redirectTo: 'list', pathMatch: 'full' },
         { path: 'list', component: PatientListComponent },
         { path: 'form', component: PatientFormComponent, canDeactivate: [CanDeactivateGuard] },
-        { path: ':patientId', component: PatientDetailComponent, children: [
-          { path: '', redirectTo: 'records', pathMatch: 'full' },
-          { path: 'records', loadChildren: () => import('./patient-records/patient-records.module').then(m => m.PatientRecordsModule) },
-        ] },
+        { path: ':patientId', loadChildren: () => import('./patient-records/patient-records.module').then(m => m.PatientRecordsModule) },
       ] }
     ])
   ],
