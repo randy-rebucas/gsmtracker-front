@@ -17,7 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [
     PatientsComponent,
     PatientListComponent,
-    PatientFormComponent
+    PatientFormComponent,
   ],
   imports: [
     CommonModule,
@@ -27,14 +27,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
     SharedModule,
     FlexLayoutModule,
-    // RouterModule.forChild([
-    //   { path: '', component: PatientsComponent, children: [
-    //     { path: '', redirectTo: 'My-patients', pathMatch: 'full' },
-    //     { path: ':type', component: PatientListComponent, children: [
-    //       { path: ':patientId', component: PatientDetailComponent }
-    //     ] },
-    //   ] }
-    // ])
     RouterModule.forChild([
       { path: '', component: PatientsComponent, children: [
         { path: '', redirectTo: 'list', pathMatch: 'full' },

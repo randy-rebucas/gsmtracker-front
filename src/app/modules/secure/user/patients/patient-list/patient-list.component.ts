@@ -91,10 +91,11 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.userId = this.authenticationService.getUserId();
-    this.titleService.setTitle('Patients');
-
     this.option = this.activatedRoute.snapshot.url[0].path;
+
+    this.userId = this.authenticationService.getUserId();
+    this.titleService.setTitle(this.option === 'list' ? 'My Patients' : 'All Patients');
+
     this.getQuery(this.perPage, this.currentPage);
   }
 
@@ -133,8 +134,10 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-      this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+    this.selection.clear() :
+    this.dataSource.data.forEach(
+      row => this.selection.select(row)
+    );
   }
 
   /** The label for the checkbox on the passed row */
@@ -405,25 +408,31 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onDelete() {
     const numSelected = this.selection.selected;
-    const plural = (numSelected.length > 1) ? '(s)' : '';
-    this.dialogService.openConfirmDialog('Are you sure to delete ' + numSelected.length +
-    ' item' + plural +
-    ' record ?')
-    .afterClosed().subscribe(dialogRes => {
-      if (dialogRes) {
-        numSelected.forEach(element => {
-          this.ids.push(element.id);
-        });
-        this.patientsService.deleteMany(this.ids).subscribe((res) => {
-          this.getQuery(this.perPage, this.currentPage);
-          this.notificationService.warn('::' + res.message);
-        });
-      }
+    // filter only owned record
+    const allowedSelection = numSelected.filter((select) => {
+      return select.isOwned === true;
     });
-  }
+    // check for allowed record lenght
+    if (allowedSelection.length) {
+      const plural = (allowedSelection.length > 1) ? '(s)' : '';
+      this.dialogService.openConfirmDialog('Are you sure to delete ' + allowedSelection.length +
+      ' item' + plural +
+      ' record ?')
+      .afterClosed().subscribe(dialogRes => {
+        if (dialogRes) {
 
-  trackById(index, item) {
-    return item.id;
+          allowedSelection.forEach(element => {
+            this.ids.push(element.id);
+          });
+          this.patientsService.deleteMany(this.ids).subscribe((res) => {
+            this.getQuery(this.perPage, this.currentPage);
+            this.notificationService.warn('::' + res.message);
+          });
+        }
+      });
+    } else {
+      this.notificationService.success(':: You are not permitted to take this action!');
+    }
   }
 
   onRowClicked(row) {

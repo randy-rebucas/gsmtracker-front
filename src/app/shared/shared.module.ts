@@ -26,6 +26,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HelpComponent } from './components/help/help.component';
 import { SettingComponent } from './components/setting/setting.component';
 import { ImportComponent } from './components/import/import.component';
+import { PhysicianComponent } from './components/physician/physician.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { ImportComponent } from './components/import/import.component';
     BirthdaysComponent,
     HelpComponent,
     SettingComponent,
-    ImportComponent
+    ImportComponent,
+    PhysicianComponent
   ],
   imports: [
     CommonModule,
@@ -73,7 +75,8 @@ import { ImportComponent } from './components/import/import.component';
     AdsComponent,
     AvatarComponent,
     UploadComponent,
-    BirthdaysComponent
+    BirthdaysComponent,
+    PhysicianComponent
   ]
 })
 export class SharedModule { }
