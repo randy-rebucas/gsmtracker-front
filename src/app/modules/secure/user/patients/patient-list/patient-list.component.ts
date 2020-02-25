@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Subscription, merge, Observable, of as observableOf } from 'rxjs';
-import { startWith, switchMap, map, catchError } from 'rxjs/operators';
+import { startWith, switchMap, map, catchError, tap } from 'rxjs/operators';
 import { User } from '../../user';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -71,6 +71,8 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public patients: any;
 
+  query: any;
+  option: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -83,68 +85,45 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
   ) {
     this.length = 0;
-    this.perPage = 10;
+    this.perPage = 2;
     this.currentPage = 1;
-    this.pageSizeOptions = [5, 10, 25, 100];
+    this.pageSizeOptions = [2, 10, 25, 100];
     this.isLoading = true;
   }
 
   ngOnInit() {
     this.userId = this.authenticationService.getUserId();
-
     this.titleService.setTitle('Patients');
 
-    this.patientsService.getAll(this.perPage, this.currentPage);
-    this.usersSub = this.patientsService.getUpdateListener().subscribe((userData: {patients: any[], counts: number}) => {
-      this.isLoading = false;
-
-      const newUsers = [];
-      userData.patients.forEach(user => {
-        user.physicians.filter((physician: Physicians) => {
-          const ownerShip = {
-            isOwned : physician.userId === this.userId
-          };
-          newUsers.push({...user, ...ownerShip});
-        });
-      });
-      this.dataSource = new MatTableDataSource(newUsers);
-      this.length = userData.counts;
-
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
-
+    this.option = this.activatedRoute.snapshot.url[0].path;
+    this.getQuery(this.perPage, this.currentPage);
   }
 
   ngAfterViewInit() {
     // If the user changes the sort order, reset back to the first page.
-    // this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    // merge(this.sort.sortChange, this.paginator.page)
-    //   .pipe(
-    //     startWith({}),
-    //     switchMap(() => {
-    //       this.isLoading = true;
-    //       // return this.exampleDatabase!.getRepoIssues(this.sort.active, this.sort.direction, this.paginator.pageIndex);
-    //       return this.patientsService.getUpdateListener();
-    //     }),
-    //     map(data => {
-    //       // Flip flag to show that loading has finished.
-    //       this.isLoading = false;
-    //       // this.isRateLimitReached = false;
-    //       this.length = data.counts;
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoading = true;
+          return this.patientsService.getUpdateListener();
+        }),
+        map(data => {
+          // Flip flag to show that loading has finished.
+          this.isLoading = false;
+          this.length = data.counts;
 
-    //       return data.patients;
-    //     }),
-    //     catchError(() => {
-    //       this.isLoading = false;
-    //       // Catch if the GitHub API has reached its rate limit. Return empty data.
-    //       // this.isRateLimitReached = true;
-    //       return observableOf([]);
-    //     })
-    //   ).subscribe(
-    //     data => this.dataSource = new MatTableDataSource(data)
-    //   );
+          return data.patients;
+        }),
+        catchError(() => {
+          this.isLoading = false;
+          return observableOf([]);
+        })
+      ).subscribe(
+        data => this.dataSource = new MatTableDataSource(this.setOwnerShip(data))
+      );
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -174,11 +153,33 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  setOwnerShip(data) {
+    const newUsers = [];
+    data.forEach(user => {
+      user.physicians.filter((physician: Physicians) => {
+        const ownerShip = {
+          isOwned : physician.userId === this.userId
+        };
+        newUsers.push({...user, ...ownerShip});
+      });
+    });
+    return newUsers;
+  }
+
+  getQuery(perPage, currentPage) {
+    if (this.option === 'list') {
+      this.patientsService.getMyPatient(this.userId, perPage, currentPage);
+    } else {
+      this.patientsService.getAll(perPage, currentPage);
+    }
+  }
+
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
-    this.patientsService.getAll(this.perPage, this.currentPage);
+    this.length = pageData.length;
+    this.getQuery(this.perPage, this.currentPage);
   }
 
   onDialogOpen(targetEl: string, patientId?: string) {
@@ -198,7 +199,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.notificationService.success(':: Updated successfully');
         }
-        this.patientsService.getAll(this.perPage, this.currentPage);
+        this.getQuery(this.perPage, this.currentPage);
       }
     });
   }
@@ -414,7 +415,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.ids.push(element.id);
         });
         this.patientsService.deleteMany(this.ids).subscribe((res) => {
-          this.patientsService.getAll(this.perPage, this.currentPage);
+          this.getQuery(this.perPage, this.currentPage);
           this.notificationService.warn('::' + res.message);
         });
       }

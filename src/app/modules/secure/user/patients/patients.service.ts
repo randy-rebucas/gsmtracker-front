@@ -22,6 +22,20 @@ export class PatientsService {
     private http: HttpClient
   ) { }
 
+  getMyPatient(userId: string, perPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}&userId=${userId}`;
+    this.http.get<{message: string, patients: any, counts: number }>(
+      BACKEND_URL + queryParams
+    )
+    .pipe(
+      map(userData => {
+        return this.getMap(userData);
+      })
+    ).subscribe((transformData) => {
+      this.patientSub(transformData);
+    });
+  }
+
   getAll(perPage: number, currentPage: number) {
     const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
     this.http.get<{message: string, patients: any, counts: number }>(
@@ -29,34 +43,42 @@ export class PatientsService {
     )
     .pipe(
       map(userData => {
-        return { patients: userData.patients.map(user => {
-          return {
-            id: user._id,
-            firstname: user.userId.name.firstname,
-            midlename: user.userId.name.midlename,
-            lastname: user.userId.name.lastname,
-            contact: user.userId.contact,
-            gender: user.userId.gender,
-            birthdate: user.userId.birthdate,
-            address: user.userId.addresses,
-            created: user.userId.createdAt,
-            updated: user.userId.updatedAt,
-            physicians: user.physicians,
-            privateKey: user.userId.privateKey,
-            publicKey: user.userId.publicKey
-          };
-        }), max: userData.counts};
+        return this.getMap(userData);
       })
     )
     .subscribe((transformData) => {
-      this.patients = transformData.patients;
-      this.patientsUpdated.next({
-        patients: [...this.patients],
-        counts: transformData.max
-      });
+      this.patientSub(transformData);
     });
   }
 
+  patientSub(transformData) {
+    this.patients = transformData.patients;
+    this.patientsUpdated.next({
+      patients: [...this.patients],
+      counts: transformData.max
+    });
+  }
+
+  getMap(userData) {
+    return { patients: userData.patients.map(user => {
+      return {
+        id: user._id,
+        firstname: user.userId.name.firstname,
+        midlename: user.userId.name.midlename,
+        lastname: user.userId.name.lastname,
+        contact: user.userId.contact,
+        gender: user.userId.gender,
+        birthdate: user.userId.birthdate,
+        address: user.userId.addresses,
+        created: user.userId.createdAt,
+        updated: user.userId.updatedAt,
+        physicians: user.physicians,
+        privateKey: user.userId.privateKey,
+        publicKey: user.userId.publicKey
+      };
+    }), max: userData.counts};
+
+  }
   getUpdateListener() {
     return this.patientsUpdated.asObservable();
   }

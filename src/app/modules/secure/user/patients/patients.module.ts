@@ -39,6 +39,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: '', component: PatientsComponent, children: [
         { path: '', redirectTo: 'list', pathMatch: 'full' },
         { path: 'list', component: PatientListComponent },
+        { path: 'all', component: PatientListComponent },
         { path: 'form', component: PatientFormComponent, canDeactivate: [CanDeactivateGuard] },
         { path: ':patientId', loadChildren: () => import('./patient-records/patient-records.module').then(m => m.PatientRecordsModule) },
       ] }

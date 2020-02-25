@@ -4,6 +4,7 @@ import { UserService } from 'src/app/modules/secure/user/user.service';
 import { User } from 'src/app/modules/secure/user/user';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ImportComponent } from '../import/import.component';
+import { NotificationService } from '../../services/notification.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class SidebarComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -29,13 +31,13 @@ export class SidebarComponent implements OnInit {
   }
 
   onImportOpen() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      title: 'Import patients'
-    };
-    this.dialog.open(ImportComponent, dialogConfig);
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+    // dialogConfig.autoFocus = true;
+    // dialogConfig.data = {
+    //   title: 'Import patients'
+    // };
+    // this.dialog.open(ImportComponent, dialogConfig);
   }
 
 }
