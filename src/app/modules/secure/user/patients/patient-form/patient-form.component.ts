@@ -142,8 +142,7 @@ export class PatientFormComponent implements OnInit {
           physician: this.authenticationService.getUserId()
         };
         this.patientsService.insert(newpatient).subscribe((response) => {
-          // console.log(response.patient);
-          this.onClose('save');
+          this.onClose(response.patientId);
         });
       });
     } else {

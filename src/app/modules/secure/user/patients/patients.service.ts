@@ -88,7 +88,7 @@ export class PatientsService {
   }
 
   insert(newPatient: any) {
-    return this.http.post<{ message: string, patient: Patients }>(BACKEND_URL, newPatient);
+    return this.http.post<{ message: string, patientId: string }>(BACKEND_URL, newPatient);
   }
 
   update(updatedPatient: any) {

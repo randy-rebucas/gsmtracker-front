@@ -1,5 +1,5 @@
-<div fxLayout='row'>
-  <div class="search-div" fxFlex="75" fxFlex.sm="100%" fxFlex.md="75%">
+
+  <div class="search-div">
       <mat-form-field>
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
       </mat-form-field>
@@ -7,8 +7,9 @@
           <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
       </div>
   </div>
-  <div class="action-button" fxFlex="25" fxFlex.sm="100%" fxFlex.md="25%">
-    <label *ngIf="isAllSelected()">{{this.selection.selected.length}} Selected</label>
+
+<div fxLayout='row'>
+  <div class="action-button" fxFlex="75" fxFlex.sm="100%" fxFlex.md="75%">
     <button mat-stroked-button color="primary" (click)="onPrint()" [disabled]="!isAllSelected()">
       Print
     </button>
@@ -19,8 +20,10 @@
       Delete
     </button>
   </div>
+  <div fxFlex="25" fxFlex.sm="100%" fxFlex.md="25%" style="text-align: right;">
+    <label *ngIf="isAllSelected()">{{this.selection.selected.length}} Selected</label>
+  </div>
 </div>
-
 <mat-table [dataSource]="dataSource" multiTemplateDataRows matSort [trackBy]="trackById">
   <!-- Item Description Column -->
   <ng-container matColumnDef="patient-counts">
@@ -30,7 +33,7 @@
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
         <div *ngIf="column === 'select'">
           <mat-header-cell *matHeaderCellDef>
-            <!-- <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox> -->
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox>
           </mat-header-cell>
           <mat-cell *matCellDef="let row">
               <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
@@ -39,7 +42,7 @@
         </div>
         <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
         <ng-template #thenBlockRow>
-            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
             <mat-cell *matCellDef="let element">
               <ng-container *ngIf="element.isOwned">
                   <button mat-icon-button (click)="onDialogOpen('update', element.id)" aria-label="Edit" matTooltip="Edit">
@@ -136,5 +139,4 @@
 [pageSizeOptions]="pageSizeOptions"
 (page)="onChangedPage($event)"
 ></mat-paginator>
-
-<button mat-fab color="primary" (click)="onDialogOpen('create')" id="create-new"><mat-icon>add</mat-icon></button>
+<!-- <button mat-fab color="primary" (click)="onDialogOpen('create')" id="create-new"><mat-icon>add</mat-icon></button> -->

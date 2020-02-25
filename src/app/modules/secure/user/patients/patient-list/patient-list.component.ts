@@ -71,7 +71,6 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public patients: any;
 
-  query: any;
   option: string;
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -85,9 +84,9 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
   ) {
     this.length = 0;
-    this.perPage = 2;
+    this.perPage = 10;
     this.currentPage = 1;
-    this.pageSizeOptions = [2, 10, 25, 100];
+    this.pageSizeOptions = [10, 20, 40, 80, 150, 300];
     this.isLoading = true;
   }
 
@@ -196,6 +195,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
       if (result) {
         if (targetEl === 'create') {
           this.notificationService.success(':: Added successfully');
+          this.router.navigate(['../', result, 'form'], {relativeTo: this.activatedRoute});
         } else {
           this.notificationService.success(':: Updated successfully');
         }
