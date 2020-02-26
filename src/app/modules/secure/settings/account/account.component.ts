@@ -70,7 +70,7 @@ export class AccountComponent implements OnInit {
       this.gender = user.gender;
       this.createdAt = user.createdAt;
       this.updatedAt = user.updatedAt;
-      this.address = user.address;
+      this.address = user.addresses;
       // this.metas = user.metas;
 
       this.publicKey = user.publicKey;
@@ -85,7 +85,7 @@ export class AccountComponent implements OnInit {
         gender: user.gender
       });
       const addressControl = this.form.controls.addresses as FormArray;
-      const address = user.address;
+      const address = user.addresses;
       for (let i = 1; i < address.length; i++) {
         addressControl.push(this.addAddressGroup());
       }

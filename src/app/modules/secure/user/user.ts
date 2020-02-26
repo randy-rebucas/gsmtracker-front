@@ -6,13 +6,14 @@ export interface User {
   contact: string;
   createdAt: Date;
   updatedAt: Date;
-  address: Address[];
+  addresses: Address[];
   age: number;
   publicKey: string;
   privateKey: string;
 }
 
 export interface Address {
+  current: boolean;
   address1: string;
   address2: string;
   city: string;

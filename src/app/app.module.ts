@@ -1,9 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LayoutModule } from '@angular/cdk/layout';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,10 +14,9 @@ import { ErrorInterceptor } from './error-interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { AppConfigurationService } from './configs/app-configuration.service';
 import { AngularMaterialModule } from './angular-material.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 // import ngx-translate and the http loader
-import {TranslateLoader, TranslateModule, TranslateCompiler} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule, TranslateCompiler } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // import ngx-translate-messageformat-compiler
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
@@ -28,11 +25,19 @@ import { CanDeactivateGuard } from './modules/secure/user/patients/can-deactivat
 import { DefaultModule } from './layouts/default/default.module';
 import { FrontComponent } from './layouts/front/front.component';
 
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+
 // import { registerLocaleData } from '@angular/common';
 // import localeFr from '@angular/common/locales/fr';
 // import localeFrExtra from '@angular/common/locales/extra/fr';
 
 // registerLocaleData(localeFr, 'fr-FR', localeFrExtra)
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   declarations: [
@@ -48,6 +53,7 @@ import { FrontComponent } from './layouts/front/front.component';
     CommonModule,
     DefaultModule,
 
+    PerfectScrollbarModule,
     AngularMaterialModule,
     // ngx-translate and the loader module
     HttpClientModule,
@@ -63,6 +69,10 @@ import { FrontComponent } from './layouts/front/front.component';
     CookieService,
     CanDeactivateGuard,
     // app-configuration
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    },
     AppConfigurationService,
     {
       provide: APP_INITIALIZER,

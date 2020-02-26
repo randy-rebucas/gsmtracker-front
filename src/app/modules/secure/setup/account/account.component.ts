@@ -76,7 +76,7 @@ export class AccountComponent implements OnInit {
         contact: userData.contact,
       });
       const addressControl = this.form.controls.addresses as FormArray;
-      const address = userData.address;
+      const address = userData.addresses;
       for (let i = 1; i < address.length; i++) {
         addressControl.push(this.addAddressGroup());
       }

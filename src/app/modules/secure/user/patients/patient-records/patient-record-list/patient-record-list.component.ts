@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { PatientsService } from '../../patients.service';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { PrescriptionComponent } from 'src/app/shared/components/prescription/prescription.component';
 
 @Component({
   selector: 'app-patient-record-list',
@@ -21,7 +23,8 @@ export class PatientRecordListComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private patientsService: PatientsService,
     private blockchainService: BlockchainService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.isLoading = true;
   }
@@ -35,6 +38,26 @@ export class PatientRecordListComponent implements OnInit {
       this.blockchains = this.blockchainService.getByUser(user.userId.publicKey);
       this.isLoading = false;
     });
+  }
+
+  onViewPrint(blockchain: Blockchain) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '40%';
+    dialogConfig.data = {
+      block: blockchain,
+      title: 'Preview Print'
+    };
+    this.dialog.open(PrescriptionComponent, dialogConfig)
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          // this.notificationService.success(':: Updated successfully');
+          // this.getQuery(this.perPage, this.currentPage);
+        }
+      }
+    );
   }
 
   onCreate() {

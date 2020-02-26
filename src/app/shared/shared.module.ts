@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { EllipsisPipe } from './pipes/ellipsis.pipe';
 import { BirthdayPipe } from './pipes/birthday.pipe';
@@ -28,7 +29,9 @@ import { SettingComponent } from './components/setting/setting.component';
 import { ImportComponent } from './components/import/import.component';
 import { PhysicianComponent } from './components/physician/physician.component';
 import { BlocksComponent } from './components/blocks/blocks.component';
-
+import { PrescriptionComponent } from './components/prescription/prescription.component';
+import { QrWriterComponent } from './components/qr-writer/qr-writer.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,9 @@ import { BlocksComponent } from './components/blocks/blocks.component';
     SettingComponent,
     ImportComponent,
     PhysicianComponent,
-    BlocksComponent
+    BlocksComponent,
+    PrescriptionComponent,
+    QrWriterComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +65,9 @@ import { BlocksComponent } from './components/blocks/blocks.component';
     AngularMaterialModule,
     MatTooltipModule,
     FlexLayoutModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    PerfectScrollbarModule,
+    QRCodeModule
   ],
   exports: [
     PromptModule,
@@ -79,7 +86,9 @@ import { BlocksComponent } from './components/blocks/blocks.component';
     UploadComponent,
     BirthdaysComponent,
     PhysicianComponent,
-    BlocksComponent
+    BlocksComponent,
+    PrescriptionComponent,
+    QrWriterComponent
   ]
 })
 export class SharedModule { }

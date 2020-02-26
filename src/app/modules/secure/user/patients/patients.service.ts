@@ -87,6 +87,10 @@ export class PatientsService {
     return this.http.get<any>(BACKEND_URL + '/' + patientId);
   }
 
+  getByKey(publicKey: string) {
+    return this.http.get<any>(BACKEND_URL + '/getByKey/' + publicKey);
+  }
+
   insert(newPatient: any) {
     return this.http.post<{ message: string, patientId: string }>(BACKEND_URL, newPatient);
   }
