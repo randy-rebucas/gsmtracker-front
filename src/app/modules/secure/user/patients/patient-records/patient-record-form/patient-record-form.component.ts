@@ -179,10 +179,13 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
   }
 
   onSave() {
+
     if (this.form.invalid) {
       return;
     }
+
     this.isConfirmed = true;
+
     const newTransaction = {
       from: this.authenticationService.getPublicKey(),
       to: this.user.userId.publicKey,
@@ -190,10 +193,12 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     };
 
     this.blockchainService.insert(newTransaction).subscribe(() => {
-
       // check if physicians listed
-      this.patientsService.checkPhysician(this.authenticationService.getUserId(), this.user._id).subscribe();
-      // this.router.navigate(['../'], {relativeTo: this.activatedRoute });
+      this.patientsService.checkPhysician(this.authenticationService.getUserId(), this.user._id).subscribe(() => {
+        // print prescription
+        // redirect to record list
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute });
+      });
     });
   }
 
