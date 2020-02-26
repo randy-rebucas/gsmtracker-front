@@ -1,57 +1,56 @@
+<div class="search-div">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+    </mat-form-field>
+    <div (click)="onScan()">
+        <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
+    </div>
+</div>
 
-  <div class="search-div">
-      <mat-form-field>
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
-      </mat-form-field>
-      <div (click)="onScan()">
-          <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
-      </div>
-  </div>
-
-<div fxLayout='row'>
-  <div class="action-button" fxFlex="75" fxFlex.sm="100%" fxFlex.md="75%">
-    <button mat-stroked-button color="primary" (click)="onPrint()" [disabled]="!isAllSelected()">
+<div fxLayout='row' style="margin-bottom: 1em;">
+    <div class="action-button" fxFlex="75" fxFlex.sm="100%" fxFlex.md="75%">
+        <button mat-stroked-button color="primary" (click)="onPrint()" [disabled]="!isAllSelected()">
       Print
     </button>
-    <button mat-stroked-button color="primary" (click)="onExport()" [disabled]="!isAllSelected()">
+        <button mat-stroked-button color="primary" (click)="onExport()" [disabled]="!isAllSelected()">
       Export
     </button>
-    <button mat-stroked-button color="warn" (click)="onDelete()" [disabled]="!isAllSelected()">
+        <button mat-stroked-button color="warn" (click)="onDelete()" [disabled]="!isAllSelected()">
       Delete
     </button>
-  </div>
-  <div fxFlex="25" fxFlex.sm="100%" fxFlex.md="25%" style="text-align: right;">
-    <label *ngIf="isAllSelected()">{{this.selection.selected.length}} Selected</label>
-  </div>
+    </div>
+    <div fxFlex="25" fxFlex.sm="100%" fxFlex.md="25%" style="text-align: right; align-self: center;">
+        <label *ngIf="isAllSelected()"><b>{{this.selection.selected.length}}</b> Selected</label>
+    </div>
 </div>
 <mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
-  <!-- Item Description Column -->
-  <ng-container matColumnDef="patient-counts">
-    <mat-header-cell *matHeaderCellDef> Patients ({{length}}) </mat-header-cell>
-  </ng-container>
+    <!-- Item Description Column -->
+    <ng-container matColumnDef="patient-counts">
+        <mat-header-cell *matHeaderCellDef> Patients ({{length}}) </mat-header-cell>
+    </ng-container>
 
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
         <div *ngIf="column === 'select'">
-          <mat-header-cell *matHeaderCellDef>
-            <!-- <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox> -->
-          </mat-header-cell>
-          <mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-              </mat-checkbox>
-          </mat-cell>
+            <mat-header-cell *matHeaderCellDef>
+                <!-- <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox> -->
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+            </mat-cell>
         </div>
         <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
         <ng-template #thenBlockRow>
             <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
             <mat-cell *matCellDef="let element">
-              <ng-container>
-                  <button mat-icon-button (click)="onDialogOpen('update', element.id)" aria-label="Edit" matTooltip="Edit" *ngIf="element.isOwned">
+                <ng-container>
+                    <button mat-icon-button (click)="onUpdate(element.id)" aria-label="Edit" matTooltip="Edit" *ngIf="element.isOwned">
                     <mat-icon>create</mat-icon>
                   </button>
-                  <button mat-icon-button (click)="onDetail(element.id)" aria-label="Record" matTooltip="Record">
+                    <button mat-icon-button (click)="onDetail(element.id)" aria-label="Record" matTooltip="Record">
                     <mat-icon>assignment_ind</mat-icon>
                   </button>
-              </ng-container>
+                </ng-container>
             </mat-cell>
         </ng-template>
         <ng-template #elseBlockRow>
@@ -80,15 +79,15 @@
                     </mat-card-header>
                     <mat-card-content>
                         <div class="address">
-                      <div *ngFor="let address of element.address; let i = index;">
-                            <p>
-                                {{address.address1}} <br/>
-                                <ng-container *ngIf="address.address2">
-                                    {{address.address2}} <br/>
-                                </ng-container>
-                                {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
-                            </p>
-                          </div>
+                            <div *ngFor="let address of element.address; let i = index;">
+                                <p>
+                                    {{address.address1}} <br/>
+                                    <ng-container *ngIf="address.address2">
+                                        {{address.address2}} <br/>
+                                    </ng-container>
+                                    {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
+                                </p>
+                            </div>
                         </div>
                     </mat-card-content>
                 </mat-card>
@@ -98,7 +97,7 @@
                         <mat-card-subtitle>({{element.physicians.length}}) physician connected</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <app-physician [physicians]="element.physicians"></app-physician>
+                        <app-physician *ngFor="let physician of element.physicians" [physician]="physician.userId"></app-physician>
                     </mat-card-content>
                 </mat-card>
                 <mat-card class="record-card">
@@ -107,7 +106,7 @@
                         <mat-card-subtitle>(1) record found</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <p>record chain</p>
+                        <app-blocks [patientAddress]="element.publicKey"></app-blocks>
                     </mat-card-content>
                 </mat-card>
             </div>
@@ -133,10 +132,4 @@
     <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource != null}"></mat-footer-row>
     <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource != null && length == 0)}"></mat-footer-row>
 </mat-table>
-<mat-paginator
-[length]="length"
-[pageSize]="perPage"
-[pageSizeOptions]="pageSizeOptions"
-(page)="onChangedPage($event)"
-></mat-paginator>
-<!-- <button mat-fab color="primary" (click)="onDialogOpen('create')" id="create-new"><mat-icon>add</mat-icon></button> -->
+<mat-paginator [length]="length" [pageSize]="perPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"></mat-paginator>

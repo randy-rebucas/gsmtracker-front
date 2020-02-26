@@ -67,6 +67,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
 
     this.patientId = this.activatedRoute.snapshot.parent.params.patientId;
     this.patientsService.get(this.patientId).subscribe((user) => {
+      console.log(user);
       this.user = user;
     });
 
@@ -189,7 +190,10 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     };
 
     this.blockchainService.insert(newTransaction).subscribe(() => {
-      this.router.navigate(['../'], {relativeTo: this.activatedRoute });
+
+      // check if physicians listed
+      this.patientsService.checkPhysician(this.authenticationService.getUserId(), this.user._id).subscribe();
+      // this.router.navigate(['../'], {relativeTo: this.activatedRoute });
     });
   }
 

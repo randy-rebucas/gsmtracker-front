@@ -9,7 +9,7 @@ import { User } from 'src/app/modules/secure/user/user';
   styleUrls: ['./physician.component.scss']
 })
 export class PhysicianComponent implements OnInit {
-  @Input() physicians: [Physicians];
+  @Input() physician: string;
 
   user: User;
   constructor(
@@ -17,10 +17,8 @@ export class PhysicianComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    for (const iterator of this.physicians) {
-      this.userService.get(iterator.userId).subscribe((user) => {
-        this.user = user;
-      });
-    }
+    this.userService.get(this.physician).subscribe((user) => {
+      this.user = user;
+    });
   }
 }

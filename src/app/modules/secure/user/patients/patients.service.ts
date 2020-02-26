@@ -77,8 +77,8 @@ export class PatientsService {
         publicKey: user.userId.publicKey
       };
     }), max: userData.counts};
-
   }
+
   getUpdateListener() {
     return this.patientsUpdated.asObservable();
   }
@@ -101,5 +101,9 @@ export class PatientsService {
 
   deleteMany(patientIds: []) {
     return this.http.delete<{ message: string }>(BACKEND_URL + '/' + patientIds);
+  }
+
+  checkPhysician(physicianId: string, patientId: string) {
+    return this.http.get<any>(BACKEND_URL + '/checkPhysicianExist/' + physicianId + '/' + patientId);
   }
 }

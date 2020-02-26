@@ -21,6 +21,7 @@ import { PatientFormComponent } from '../patient-form/patient-form.component';
 import { PatientsService } from '../patients.service';
 import { Physicians } from '../../physicians/physicians';
 import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
+import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -82,6 +83,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     private patientsService: PatientsService,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
+    private blockchainService: BlockchainService
   ) {
     this.length = 0;
     this.perPage = 10;
@@ -184,24 +186,19 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getQuery(this.perPage, this.currentPage);
   }
 
-  onDialogOpen(targetEl: string, patientId?: string) {
+  onUpdate(patientId: string) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '50%';
     dialogConfig.data = {
       id: patientId,
-      title: targetEl === 'create' ? 'Create New' : 'Update',
-      button: targetEl === 'create' ? 'Save' : 'Update'
+      title: 'Update',
+      button: 'Update'
     };
     this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        if (targetEl === 'create') {
-          this.notificationService.success(':: Added successfully');
-          this.router.navigate(['../', result, 'form'], {relativeTo: this.activatedRoute});
-        } else {
-          this.notificationService.success(':: Updated successfully');
-        }
+        this.notificationService.success(':: Updated successfully');
         this.getQuery(this.perPage, this.currentPage);
       }
     });

@@ -1,24 +1,47 @@
-
 button#create-new {
-  position: fixed;
-  right: 1%;
-  bottom: 8%;
+    position: fixed;
+    right: 1%;
+    bottom: 8%;
 }
 
 section.mat-typography {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90%;
+}
+
+mat-card {
+    margin-bottom: 1em;
 }
 
 mat-card ::ng-deep .mat-card-header-text {
-  /* CSS styles go here */
-  margin: 0px; // for example to remove the margin
-  width: 100%;
+    /* CSS styles go here */
+    margin: 0px; // for example to remove the margin
+    width: 100%;
 }
 
 mat-card-header ::ng-deep .mat-card-header-text {
-  /* CSS styles go here */
-  margin: 0px; // for example to remove the margin
+    /* CSS styles go here */
+    margin: 0px; // for example to remove the margin
+}
+
+.records {
+    display: flex;
+    justify-items: flex-start;
+    flex-direction: row;
+}
+
+.records .mat-card:not(:first-child) {
+    margin-left: 1em;
+}
+
+.records .mat-card {
+    width: 30%;
+}
+
+mat-card-content p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

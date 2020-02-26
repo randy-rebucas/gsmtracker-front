@@ -1,0 +1,8 @@
+<ul>
+    <li *ngFor="let blockchain of (blockchains | async); let i = index">
+        {{blockchain.timestamp | date:'medium'}} <span style="float: right;"><b>nonce:</b> {{blockchain.nonce}}</span>
+    </li>
+</ul>
+<ng-container *ngIf="!(blockchains | async)?.length">
+    <p>no record</p>
+</ng-container>

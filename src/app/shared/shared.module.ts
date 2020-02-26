@@ -27,6 +27,7 @@ import { HelpComponent } from './components/help/help.component';
 import { SettingComponent } from './components/setting/setting.component';
 import { ImportComponent } from './components/import/import.component';
 import { PhysicianComponent } from './components/physician/physician.component';
+import { BlocksComponent } from './components/blocks/blocks.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { PhysicianComponent } from './components/physician/physician.component';
     HelpComponent,
     SettingComponent,
     ImportComponent,
-    PhysicianComponent
+    PhysicianComponent,
+    BlocksComponent
   ],
   imports: [
     CommonModule,
@@ -76,7 +78,8 @@ import { PhysicianComponent } from './components/physician/physician.component';
     AvatarComponent,
     UploadComponent,
     BirthdaysComponent,
-    PhysicianComponent
+    PhysicianComponent,
+    BlocksComponent
   ]
 })
 export class SharedModule { }
