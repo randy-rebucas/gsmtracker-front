@@ -116,7 +116,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
           // Flip flag to show that loading has finished.
           this.isLoading = false;
           this.length = data.counts;
-
+          console.log(this.setOwnerShip(data.patients));
           return data.patients;
         }),
         catchError(() => {
@@ -160,12 +160,10 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   setOwnerShip(data) {
     const newUsers = [];
     data.forEach(user => {
-      user.physicians.filter((physician: Physicians) => {
-        const ownerShip = {
-          isOwned : physician.userId === this.userId
-        };
-        newUsers.push({...user, ...ownerShip});
-      });
+      const ownerShip = {
+        isOwned : user.physicians.some(e => e.userId === this.userId)
+      };
+      newUsers.push({...user, ...ownerShip});
     });
     return newUsers;
   }
