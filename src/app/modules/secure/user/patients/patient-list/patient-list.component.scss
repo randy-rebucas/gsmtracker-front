@@ -75,6 +75,10 @@ mat-paginator.mat-paginator {
     width: 30%;
 }
 
+.detail-row mat-cell {
+    padding: unset;
+}
+
 .mat-card-header .mat-card-title {
     font-size: 16px;
     font-weight: 400;

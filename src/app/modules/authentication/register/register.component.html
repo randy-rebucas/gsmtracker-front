@@ -21,16 +21,6 @@
                 </mat-form-field>
             </div>
 
-            <!-- <div>
-              <mat-form-field class="w-100">
-                <mat-select name="practice" ngModel #practiceInput="ngModel" placeholder="{{ 'authentication.practice' | translate }}">
-                  <mat-option *ngFor="let practice of practices" [value]="practice.value">
-                    {{practice.viewValue}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div> -->
-
             <div>
                 <mat-form-field class="w-100">
                     <input matInput name="email" type="email" ngModel placeholder="{{ 'authentication.email' | translate }}" #emailInput="ngModel" required email>

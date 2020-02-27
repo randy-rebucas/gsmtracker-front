@@ -23,7 +23,6 @@ import { AvatarComponent } from './components/avatar/avatar.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BirthdaysComponent } from './components/birthdays/birthdays.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { HelpComponent } from './components/help/help.component';
 import { SettingComponent } from './components/setting/setting.component';
 import { ImportComponent } from './components/import/import.component';
@@ -63,7 +62,6 @@ import { QRCodeModule } from 'angularx-qrcode';
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    MatTooltipModule,
     FlexLayoutModule,
     HighchartsChartModule,
     PerfectScrollbarModule,
