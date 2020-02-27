@@ -10,6 +10,10 @@ export interface Practices {
   value: string;
   viewValue: string;
 }
+interface TimeSet {
+  value: string;
+  viewValue: string;
+}
 @Component({
   selector: 'app-general',
   templateUrl: './general.component.html',
@@ -65,6 +69,8 @@ export class GeneralComponent implements OnInit {
     {value: 'UROLOGY', viewValue: 'UROLOGY'}
   ];
 
+  times = [];
+
   constructor(
     private titleService: Title,
     private settingsService: SettingsService,
@@ -74,6 +80,7 @@ export class GeneralComponent implements OnInit {
     private uploadService: UploadService
   ) {
     this.isLoading = false;
+
     // this.settingId = null;
   }
 
@@ -81,76 +88,75 @@ export class GeneralComponent implements OnInit {
     this.titleService.setTitle('Settings - General');
     this.userId = this.authenticationService.getUserId();
 
+    const quarterHours = ['00', '15', '30', '45'];
+
+    for (let i = 0; i < 24; i++) {
+      for (let j = 0; j < 4; j++) {
+        // Using slice() with negative index => You get always (the last) two digit numbers.
+        this.times.push( ('0' + i).slice(-2) + ':' + quarterHours[j] );
+      }
+    }
+    console.log(this.times);
+
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       owner: ['', [Validators.required]],
-      practice: ['', [Validators.required]],
       email: [''],
-      prc: ['', [Validators.required]],
-      ptr: [''],
-      s2: [''],
       nobreak: [''],
       addresses: this.fb.array([this.addAddressGroup()]),
       phones: this.fb.array([this.addClinicContactGroup()]),
       hours: this.fb.array([this.addClinicHourGroup()])
     });
 
-    this.settingsService.getSetting(this.userId)
-    .subscribe(settingData => {
+    // this.settingsService.getSetting(this.userId)
+    // .subscribe(settingData => {
+    //   console.log(settingData);
 
-      this.isLoading = false;
+    //   this.isLoading = false;
 
-      if (settingData) {
-        const general = settingData.general;
+    //   if (settingData) {
+    //     const general = settingData.general;
 
-        this.settingId = settingData.settingId;
-        this.uploadService.get(this.settingId).subscribe((res) => {
-          this.imagePath = res.image;
-        });
+    //     this.settingId = settingData.settingId;
+    //     this.uploadService.get(this.settingId).subscribe((res) => {
+    //       this.imagePath = res.image;
+    //     });
 
-        this.name = (general.length) ? general[0].name : null;
-        this.owner = (general.length) ? general[0].owner : null;
-        this.practice = (general.length) ? general[0].practice : null;
-        this.email = (general.length) ? general[0].email : null;
-        this.prc = (general.length) ? general[0].prc : null;
-        this.ptr = (general.length) ? general[0].ptr : null;
-        this.s2 = (general.length) ? general[0].s2 : null;
-        this.nobreak = (general.length) ? general[0].nobreak : null;
+    //     this.name = (general.length) ? general[0].name : null;
+    //     this.owner = (general.length) ? general[0].owner : null;
+    //     this.email = (general.length) ? general[0].email : null;
+    //     this.nobreak = (general.length) ? general[0].nobreak : null;
 
-        this.form.patchValue({
-          name: this.name,
-          owner: this.owner,
-          practice: this.practice,
-          email: this.email,
-          prc: this.prc,
-          ptr: this.ptr,
-          s2: this.s2,
-          nobreak: this.nobreak
-        });
+    //     this.form.patchValue({
+    //       name: this.name,
+    //       owner: this.owner,
+    //       email: this.email,
+    //       nobreak: this.nobreak
+    //     });
 
-        const addressControl = this.form.controls.addresses as FormArray;
-        const address = (general.length) ? general[0].addresses : [];
-        for (let i = 1; i < address.length; i++) {
-          addressControl.push(this.addAddressGroup());
-        }
-        this.form.patchValue({addresses: address});
+    //     const addressControl = this.form.controls.addresses as FormArray;
+    //     const address = (general.length) ? general[0].addresses : [];
+    //     for (let i = 1; i < address.length; i++) {
+    //       addressControl.push(this.addAddressGroup());
+    //     }
+    //     this.form.patchValue({addresses: address});
 
-        const contactControl = this.form.controls.phones as FormArray;
-        const contacts = (general.length) ? general[0].phones : [];
-        for (let i = 1; i < contacts.length; i++) {
-          contactControl.push(this.addClinicContactGroup());
-        }
-        this.form.patchValue({phones: contacts});
+    //     const contactControl = this.form.controls.phones as FormArray;
+    //     const contacts = (general.length) ? general[0].phones : [];
+    //     for (let i = 1; i < contacts.length; i++) {
+    //       contactControl.push(this.addClinicContactGroup());
+    //     }
+    //     this.form.patchValue({phones: contacts});
 
-        const timesControl = this.form.controls.hours as FormArray;
-        const times = (general.length) ? general[0].hours : [];
-        for (let i = 1; i < times.length; i++) {
-          timesControl.push(this.addClinicHourGroup());
-        }
-        this.form.patchValue({hours: times});
-      }
+    //     const timesControl = this.form.controls.hours as FormArray;
+    //     const times = (general.length) ? general[0].hours : [];
+    //     for (let i = 1; i < times.length; i++) {
+    //       timesControl.push(this.addClinicHourGroup());
+    //     }
+    //     this.form.patchValue({hours: times});
+    //   }
 
-    });
+    // });
   }
 
   addAddressGroup() {
@@ -221,12 +227,8 @@ export class GeneralComponent implements OnInit {
       userId: this.userId,
       name: this.form.value.name,
       owner: this.form.value.owner,
-      practice: this.form.value.practice,
       addresses: this.form.value.addresses,
       email: this.form.value.email,
-      prc: this.form.value.prc,
-      ptr: this.form.value.ptr,
-      s2: this.form.value.s2,
       nobreak: this.form.value.nobreak,
       phones: this.form.value.phones,
       hours: this.form.value.hours

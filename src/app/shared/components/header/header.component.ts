@@ -31,29 +31,11 @@ export class HeaderComponent implements OnInit {
     }, 300);
   }
 
-  onOpenDialog(targetEl: string) {
-    let componentEl;
-    let dialogTitle;
-    if (targetEl === 'help') {
-      dialogTitle = 'Help';
-      componentEl = HelpComponent;
-    } else {
-      dialogTitle = 'Setting';
-      componentEl = SettingComponent;
-    }
+  onOpenHelp() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      title: dialogTitle
-    };
-    this.dialog.open(componentEl, dialogConfig);
-  }
-
-  onHelp() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
+    dialogConfig.width = '40%';
     dialogConfig.data = {
       title: 'Help'
     };

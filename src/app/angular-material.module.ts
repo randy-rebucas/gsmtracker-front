@@ -24,6 +24,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [],
@@ -52,7 +54,9 @@ import { MatDividerModule } from '@angular/material/divider';
     MatToolbarModule,
     MatSidenavModule,
     MatSnackBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatRadioModule,
+    MatSlideToggleModule
   ],
   exports: [
     MatFormFieldModule,
@@ -78,7 +82,9 @@ import { MatDividerModule } from '@angular/material/divider';
     MatToolbarModule,
     MatSidenavModule,
     MatSnackBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatRadioModule,
+    MatSlideToggleModule
   ]
 })
 export class AngularMaterialModule { }

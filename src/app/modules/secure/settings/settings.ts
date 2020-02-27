@@ -4,9 +4,6 @@ export interface Settings {
   name: string;
   owner: string;
   email: string;
-  prc: number;
-  ptr: number;
-  s2: number;
   nobreak: boolean;
   addresses: Address[];
   phones: Contact[];

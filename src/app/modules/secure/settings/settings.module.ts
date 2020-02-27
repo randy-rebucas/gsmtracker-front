@@ -13,7 +13,6 @@ import { PaymentComponent } from './payment/payment.component';
 import { PlanComponent } from './plan/plan.component';
 import { NotificationComponent } from './notification/notification.component';
 
-
 @NgModule({
   declarations: [
     SettingsComponent,

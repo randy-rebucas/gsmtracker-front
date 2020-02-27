@@ -1,9 +1,25 @@
 <h2 mat-dialog-title>Settings</h2>
 <mat-dialog-content class="mat-typography">
-  <h3>Develop across all platforms</h3>
-  <p>Learn one way to build applications with Angular and reuse your code and abilities to build
-    apps for any deployment target. For web, mobile web, native mobile and native desktop.</p>
+    <form [formGroup]="form" class="normal-form" (submit)="onUpdateSetting()">
+        <h3>RxPad</h3>
+        <mat-form-field>
+            <mat-slide-toggle formControlName="rxheader">Hide header</mat-slide-toggle>
+        </mat-form-field>
+        <!-- 
+        <h3>Language</h3>
+        <mat-radio-group formControlName="language" aria-label="Select an language" class="radio-group">
+            <mat-radio-button value="en" class="radio-button">English</mat-radio-button>
+            <mat-radio-button value="de" class="radio-button">Deutsch(German)</mat-radio-button>
+            <mat-radio-button value="ar" class="radio-button">Arabic</mat-radio-button>
+        </mat-radio-group> -->
+
+        <h3>Notifications (notify me once)</h3>
+        <mat-form-field>
+            <mat-slide-toggle formControlName="appointments" class="toggle">New/Canceled Appointment</mat-slide-toggle>
+            <mat-slide-toggle formControlName="updates" class="toggle">Updates/Features</mat-slide-toggle>
+        </mat-form-field>
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+    <button mat-button mat-dialog-close cdkFocusInitial>Update</button>
 </mat-dialog-actions>
