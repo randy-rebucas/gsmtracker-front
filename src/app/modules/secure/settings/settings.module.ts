@@ -10,17 +10,13 @@ import { SettingsComponent } from './settings.component';
 import { AccountComponent } from './account/account.component';
 import { GeneralComponent } from './general/general.component';
 import { PaymentComponent } from './payment/payment.component';
-import { PlanComponent } from './plan/plan.component';
-import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
   declarations: [
     SettingsComponent,
     AccountComponent,
     GeneralComponent,
-    PaymentComponent,
-    PlanComponent,
-    NotificationComponent
+    PaymentComponent
   ],
   imports: [
     CommonModule,
@@ -34,9 +30,7 @@ import { NotificationComponent } from './notification/notification.component';
         { path: '', redirectTo: 'general', pathMatch: 'full' },
         { path: 'general', component: GeneralComponent },
         { path: 'account', component: AccountComponent },
-        { path: 'payment', component: PaymentComponent },
-        { path: 'plan', component: PlanComponent },
-        { path: 'notification', component: NotificationComponent }
+        { path: 'payment', component: PaymentComponent }
       ] }
     ])
   ]

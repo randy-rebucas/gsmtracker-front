@@ -1,14 +1,26 @@
 export interface Settings {
-  _id: string;
+  id: string;
   userId: string;
-  name: string;
-  owner: string;
-  email: string;
-  nobreak: boolean;
-  addresses: Address[];
-  phones: Contact[];
-  hours: Hour[];
+  rxHeaderOption: boolean;
+  rxFooterOption: boolean;
+  prescription: Prescription;
+  appointments: boolean;
+  language: string;
+  updates: boolean;
   imagePath: string;
+}
+
+export interface Prescription {
+  rxTitle: string;
+  rxSubTitle: string;
+  rxNoNoonBreak: boolean;
+  rxAddresses: Address[];
+  rxPhones: Phones[];
+  rxHours: Hour[];
+}
+
+export interface Phones {
+  contact: number;
 }
 
 export interface Address {
@@ -20,20 +32,8 @@ export interface Address {
   country: string;
 }
 
-export interface Contact {
-  contact: string;
-}
-
 export interface Hour {
   morningOpen: string;
-  morningClose: string;
-  afternoonOpen: string;
   afternoonClose: string;
 }
 
-export interface Subscription {
-  settingId: string;
-  general: any;
-  notification: any;
-  subscription: string;
-}

@@ -60,7 +60,7 @@ export class UserService {
   }
 
   get(userId: string) {
-    return this.http.get<User>(BACKEND_URL + '/' + userId);
+    return this.http.get<any>(BACKEND_URL + '/' + userId);
   }
 
   insert(newUser: any) {

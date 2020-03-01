@@ -25,42 +25,13 @@ export class SettingsService {
     private http: HttpClient
   ) { }
 
+
   get(userId: string) {
-    this.http.get<{message: string, settings: any }>(
-      BACKEND_URL + '/my-settings/' + userId
-    )
-    .pipe(
-      map(settingData => {
-        return { settings: [settingData.settings] };
-      })
-    )
-    .subscribe((transformData) => {
-      this.settings = transformData.settings;
-      this.settingsUpdated.next({
-        settings: [...this.settings]
-      });
-    });
+   return this.http.get<any>(BACKEND_URL + '/' + userId);
   }
 
-  getSetting(userId: string) {
-   return this.http.get<any>(
-      BACKEND_URL + '/' + userId
-    );
+  update(updatedSetting: any) {
+    return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedSetting.userId, updatedSetting);
   }
 
-  getUpdateListener() {
-    return this.settingsUpdated.asObservable();
-  }
-
-  updateGeneral(updatedSetting: any) {
-    return this.http.put<{message: string}>(BACKEND_URL + '/general', updatedSetting);
-  }
-
-  updateNotificaiton(updatedNotification: any) {
-    return this.http.put<{message: string}>(BACKEND_URL + '/notification', updatedNotification);
-  }
-
-  updateSubscription(updatedSubscription: any) {
-    return this.http.put<{message: string}>(BACKEND_URL + '/subscription', updatedSubscription);
-  }
 }

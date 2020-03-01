@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { Patients } from './patients';
+import { User } from '../user';
 
 
 const BACKEND_URL = environment.apiUrl + '/patients';

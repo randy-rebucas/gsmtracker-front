@@ -1,6 +1,6 @@
 .wrapper {
     flex-grow: 1;
-    margin: 1em 2em;
+    margin: 1em 0 3em;
 }
 
 .arrayGroup {
@@ -163,4 +163,24 @@ div#general-wrapper>div {
 
 .rxpad-output .rxbody table tr td:last-child {
     text-align: right;
+}
+//-----------
+.radio-group, .toggle-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.radio-button {
+  margin: 5px;
+}
+
+mat-slide-toggle {
+  margin: 5px;
+}
+
+.rx-block-wrapper {
+  width: 60%;
+  background: #efefef;
+  padding: 1em;
 }

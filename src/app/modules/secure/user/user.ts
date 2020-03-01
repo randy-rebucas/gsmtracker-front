@@ -10,6 +10,8 @@ export interface User {
   age: number;
   publicKey: string;
   privateKey: string;
+  avatar?: string;
+  // setting?: Settings[];
 }
 
 export interface Address {
@@ -27,3 +29,25 @@ export interface Name {
   midlename: string;
   lastname: string;
 }
+
+// export interface Settings {
+//   general: General;
+// }
+
+// export interface General {
+//   name: string;
+//   owner: string;
+//   addresses: Address[];
+//   email: string;
+//   nobreak: boolean;
+//   phones: Phone[];
+//   hours: Hour[];
+// }
+
+// export interface Phone {
+//   phones: string;
+// }
+
+// export interface Hour {
+//   hours: string;
+// }

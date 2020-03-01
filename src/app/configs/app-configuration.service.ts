@@ -5,8 +5,10 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AppConfigurationService {
-
-  constructor(private httpClient: HttpClient) { }
+  title: string;
+  constructor(
+    private httpClient: HttpClient
+  ) { }
 
   /**
    * Application configurations
@@ -22,7 +24,7 @@ export class AppConfigurationService {
       };
       Object.assign(this, content);
       r(content);
-
+      console.log('Response 1 - ', content);
       // real code
       /*
       this.httpClient.get("./config/config.json")
