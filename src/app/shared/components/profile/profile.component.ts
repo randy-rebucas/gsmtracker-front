@@ -7,6 +7,11 @@ import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { forkJoin, Observable } from 'rxjs';
 
+export interface Practices {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -20,6 +25,28 @@ export class ProfileComponent implements OnInit {
   public imagePath: any;
   public form: FormGroup;
   public startDate = new Date(1990, 0, 1);
+
+  practices: Practices[] = [
+    {value: 'ALLERGY & IMMUNOLOGY', viewValue: 'ALLERGY & IMMUNOLOGY'},
+    {value: 'ANESTHESIOLOGY', viewValue: 'ANESTHESIOLOGY'},
+    {value: 'DERMATOLOGY', viewValue: 'DERMATOLOGY'},
+    {value: 'DIAGNOSTIC RADIOLOGY', viewValue: 'DIAGNOSTIC RADIOLOGY'},
+    {value: 'EMERGENCY MEDICINE', viewValue: 'EMERGENCY MEDICINE'},
+    {value: 'FAMILY MEDICINE', viewValue: 'FAMILY MEDICINE'},
+    {value: 'INTERNAL MEDICINE', viewValue: 'INTERNAL MEDICINE'},
+    {value: 'MEDICAL GENETICS', viewValue: 'MEDICAL GENETICS'},
+    {value: 'NEUROLOGY', viewValue: 'NEUROLOGY'},
+    {value: 'NUCLEAR MEDICINE', viewValue: 'NUCLEAR MEDICINE'},
+    {value: 'OBSTETRICS AND GYNECOLOGY', viewValue: 'OBSTETRICS AND GYNECOLOGY'},
+    {value: 'PATHOLOGY', viewValue: 'PATHOLOGY'},
+    {value: 'PEDIATRICS', viewValue: 'PEDIATRICS'},
+    {value: 'PHYSICAL MEDICINE & REHABILITATION', viewValue: 'PHYSICAL MEDICINE & REHABILITATION'},
+    {value: 'PREVENTIVE MEDICINE', viewValue: 'PREVENTIVE MEDICINE'},
+    {value: 'PSYCHIATRY', viewValue: 'PSYCHIATRY'},
+    {value: 'RADIATION ONCOLOGY', viewValue: 'RADIATION ONCOLOGY'},
+    {value: 'SURGERY', viewValue: 'SURGERY'},
+    {value: 'UROLOGY', viewValue: 'UROLOGY'}
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -43,7 +70,9 @@ export class ProfileComponent implements OnInit {
       contact: ['', [Validators.required]],
       gender: ['', [Validators.required]],
       birthdate: ['', [Validators.required]],
-      addresses: this.fb.array([this.addAddressGroup()])
+      addresses: this.fb.array([this.addAddressGroup()]),
+      bio: ['', [Validators.required]],
+      practices: this.fb.array([this.practicesGroup()])
     });
 
     this.getData(this.userId).subscribe((resData) => {
@@ -86,8 +115,19 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  practicesGroup() {
+    return this.fb.group({
+      practice: ['', [Validators.required]],
+      practiceYearExperience: ['', [Validators.required]]
+    });
+  }
+
   addAddress() {
     this.addressArray.push(this.addAddressGroup());
+  }
+
+  addParactice() {
+    this.practiceArray.push(this.practicesGroup());
   }
 
   removeAddress(index: number) {
@@ -96,8 +136,18 @@ export class ProfileComponent implements OnInit {
     this.addressArray.markAsTouched();
   }
 
+  removePractice(index: number) {
+    this.practiceArray.removeAt(index);
+    this.practiceArray.markAsDirty();
+    this.practiceArray.markAsTouched();
+  }
+
   get addressArray() {
     return this.form.get('addresses') as FormArray;
+  }
+
+  get practiceArray() {
+    return this.form.get('practices') as FormArray;
   }
 
   onSubmit() {
