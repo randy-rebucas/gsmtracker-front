@@ -15,6 +15,7 @@ export class UploadComponent implements OnInit {
   @Input() sourceId: string;
   @Input() imagePreview: ArrayBuffer | any;
   @Input() defaultImage: string;
+  @Input() size: number;
 
   form: FormGroup;
   loadingPic: boolean;
@@ -32,7 +33,9 @@ export class UploadComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    if (!this.size) {
+      this.size = 200;
+    }
     this.form = new FormGroup({
       image: new FormControl(null, {
         validators: [Validators.required],

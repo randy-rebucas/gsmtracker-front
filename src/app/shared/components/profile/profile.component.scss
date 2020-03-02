@@ -1,0 +1,26 @@
+.profile-wrapper {
+    display: flex;
+    flex-flow: row;
+}
+
+.profile-wrapper .profile-picture {
+    margin-right: 1em;
+}
+
+.form-field-block {
+    display: flex;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.addressGroup {
+    position: relative;
+}
+
+.action {
+    position: absolute;
+    top: 20%;
+    right: 0;
+}

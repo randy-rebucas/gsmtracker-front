@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { HelpComponent } from '../help/help.component';
 import { SettingComponent } from '../setting/setting.component';
+import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    public appConfigurationService: AppConfigurationService
   ) { }
 
   ngOnInit() { }
@@ -31,15 +33,18 @@ export class HeaderComponent implements OnInit {
     }, 300);
   }
 
-  onOpenHelp() {
+  onOpenDialog(type: string) {
+    const dialogTitle = (type === 'help') ? 'Help' : 'Settings';
+    const targetEl = (type === 'help') ? HelpComponent : SettingComponent;
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '40%';
     dialogConfig.data = {
-      title: 'Help'
+      title: dialogTitle
     };
-    this.dialog.open(HelpComponent, dialogConfig);
+    this.dialog.open(targetEl, dialogConfig);
   }
 
   onLogout() {

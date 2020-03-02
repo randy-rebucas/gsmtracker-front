@@ -1,117 +1,108 @@
 <div class="mat-typography wrapper">
-  <h1>Settings</h1>
-  <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
-    <h3>Prescription Pad (option)</h3>
-    <div class="toggle-group">
-      <mat-slide-toggle formControlName="rxFooterOption"  class="toggle">Remove footer</mat-slide-toggle>
-      <mat-slide-toggle formControlName="rxHeaderOption"  class="toggle" (change)="onToggleHeader($event)">Show header</mat-slide-toggle>
-    </div>
-    <ng-container *ngIf="isShowHeader">
-      <div class="rx-block-wrapper" formGroupName="prescription">
-        <div class="form-field-block">
-            <mat-form-field>
-                <input matInput type="text" formControlName="rxTitle" placeholder="Title">
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput type="text" formControlName="rxSubTitle" placeholder="Sub title">
-            </mat-form-field>
+    <h1>Settings</h1>
+    <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
+        <h3>Prescription Pad (option)</h3>
+        <div class="toggle-group">
+            <mat-slide-toggle formControlName="rxFooterOption" class="toggle">Remove footer</mat-slide-toggle>
+            <mat-slide-toggle formControlName="rxHeaderOption" class="toggle" (change)="onToggleHeader($event)">Show header</mat-slide-toggle>
         </div>
+        <ng-container *ngIf="isShowHeader">
+            <div class="rx-block-wrapper" formGroupName="prescription">
+                <div class="form-field-block">
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="rxTitle" placeholder="Title">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="rxSubTitle" placeholder="Sub title">
+                    </mat-form-field>
+                </div>
 
-        <ng-container formArrayName="rxAddresses" *ngIf="addressArray.length > 0">
-            <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+                <ng-container formArrayName="rxAddresses" *ngIf="addressArray.length > 0">
+                    <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
 
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="address1" placeholder="Street Address">
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="city" placeholder="City">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="province" placeholder="Province">
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput #postalCode maxlength="5" type="number" formControlName="postalCode" placeholder="Postal Code">
+                                <mat-hint>{{postalCode.value.length}} / 5</mat-hint>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="country" placeholder="Country">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container formArrayName="rxPhones" *ngIf="contactArray.length > 0">
+                    <div class="form-field-block form-field-contact" *ngFor="let contact of contactArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
+                        <mat-form-field class="contact">
+                            <input matInput type="text" formControlName="contact" placeholder="Contact">
+                        </mat-form-field>
+                        <div class="action-button">
+                            <button mat-icon-button *ngIf="contactArray.controls.length < 3" (click)="addContact()" type="button"><mat-icon>add</mat-icon></button>
+                            <button mat-icon-button color="warn" *ngIf="contactArray.controls.length > 1" (click)="removeContact(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container formArrayName="rxHours">
+                    <div class="form-field-block form-field-hour" *ngFor="let hour of hourArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
+                        <mat-form-field class="time">
+                            <mat-label>Pick time</mat-label>
+                            <mat-select formControlName="morningOpen">
+                                <mat-option *ngFor="let time of times" [value]="time">
+                                    {{time}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="time">
+                            <mat-label>Pick time</mat-label>
+                            <mat-select formControlName="afternoonClose">
+                                <mat-option *ngFor="let time of times" [value]="time">
+                                    {{time}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="action-button">
+                            <button mat-icon-button *ngIf="hourArray.controls.length < 3" (click)="addHour()" type="button"><mat-icon>add</mat-icon></button>
+                            <button mat-icon-button color="warn" *ngIf="hourArray.controls.length > 1" (click)="removeHour(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                        </div>
+                    </div>
+                </ng-container>
                 <div class="form-field-block">
-                    <mat-form-field>
-                        <input matInput type="text" formControlName="address1" placeholder="Street Address">
-                    </mat-form-field>
-                </div>
-                <div class="form-field-block">
-                    <mat-form-field>
-                        <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
-                    </mat-form-field>
-                </div>
-                <div class="form-field-block">
-                    <mat-form-field>
-                        <input matInput type="text" formControlName="city" placeholder="City">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput type="text" formControlName="province" placeholder="Province">
-                    </mat-form-field>
-                </div>
-                <div class="form-field-block">
-                    <mat-form-field>
-                        <input matInput #postalCode maxlength="5" type="number" formControlName="postalCode" placeholder="Postal Code">
-                        <mat-hint>{{postalCode.value.length}} / 5</mat-hint>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput type="text" formControlName="country" placeholder="Country">
-                    </mat-form-field>
+                    <mat-slide-toggle formControlName="rxNoNoonBreak" color="primary">No Noon Break </mat-slide-toggle>
                 </div>
             </div>
         </ng-container>
 
-        <ng-container formArrayName="rxPhones" *ngIf="contactArray.length > 0">
-            <div class="form-field-block form-field-contact" *ngFor="let contact of contactArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
-                <mat-form-field class="contact">
-                    <input matInput type="text" formControlName="contact" placeholder="Contact">
-                </mat-form-field>
-                <div class="action-button">
-                    <button mat-icon-button *ngIf="contactArray.controls.length < 3" (click)="addContact()" type="button"><mat-icon>add</mat-icon></button>
-                    <button mat-icon-button color="warn" *ngIf="contactArray.controls.length > 1" (click)="removeContact(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-                </div>
-            </div>
-        </ng-container>
-        <ng-container formArrayName="rxHours">
-            <div class="form-field-block form-field-hour" *ngFor="let hour of hourArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
-                <mat-form-field class="time">
-                    <mat-label>Pick time</mat-label>
-                    <mat-select formControlName="morningOpen">
-                        <mat-option *ngFor="let time of times" [value]="time">
-                            {{time}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field class="time">
-                    <mat-label>Pick time</mat-label>
-                    <mat-select formControlName="afternoonClose">
-                        <mat-option *ngFor="let time of times" [value]="time">
-                            {{time}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <div class="action-button">
-                    <button mat-icon-button *ngIf="hourArray.controls.length < 3" (click)="addHour()" type="button"><mat-icon>add</mat-icon></button>
-                    <button mat-icon-button color="warn" *ngIf="hourArray.controls.length > 1" (click)="removeHour(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-                </div>
-            </div>
-        </ng-container>
-        <div class="form-field-block">
-          <mat-slide-toggle formControlName="rxNoNoonBreak" color="primary">No Noon Break </mat-slide-toggle>
+        <h3>Language</h3>
+        <mat-radio-group formControlName="language" aria-label="Select an language" class="radio-group">
+            <mat-radio-button value="en" class="radio-button">English</mat-radio-button>
+            <mat-radio-button value="de" class="radio-button">Deutsch(German)</mat-radio-button>
+            <mat-radio-button value="ar" class="radio-button">Arabic</mat-radio-button>
+        </mat-radio-group>
+
+        <h3>Notifications (notify me once)</h3>
+        <div class="toggle-group">
+            <mat-slide-toggle formControlName="appointments" class="toggle">New/Canceled Appointment</mat-slide-toggle>
+            <mat-slide-toggle formControlName="updates" class="toggle">Updates/Features</mat-slide-toggle>
         </div>
-      </div>
-    </ng-container>
-
-
-    <h3>Language</h3>
-    <!-- <mat-form-field>
-      <mat-label>Select language</mat-label>
-      <mat-select formControlName="language">
-        <mat-option value="en">English</mat-option>
-        <mat-option value="de">Deutsch(German)</mat-option>
-        <mat-option value="ar">Arabic</mat-option>
-      </mat-select>
-    </mat-form-field> -->
-    <mat-radio-group formControlName="language" aria-label="Select an language" class="radio-group">
-        <mat-radio-button value="en" class="radio-button">English</mat-radio-button>
-        <mat-radio-button value="de" class="radio-button">Deutsch(German)</mat-radio-button>
-        <mat-radio-button value="ar" class="radio-button">Arabic</mat-radio-button>
-    </mat-radio-group>
-
-    <h3>Notifications (notify me once)</h3>
-    <div class="toggle-group">
-      <mat-slide-toggle formControlName="appointments" class="toggle">New/Canceled Appointment</mat-slide-toggle>
-      <mat-slide-toggle formControlName="updates" class="toggle">Updates/Features</mat-slide-toggle>
-    </div>
-    <button mat-raised-button color="primary" type="submit">Update</button>
-  </form>
+        <button mat-raised-button color="primary" type="submit">Update</button>
+    </form>
 </div>

@@ -31,6 +31,7 @@ import { BlocksComponent } from './components/blocks/blocks.component';
 import { PrescriptionComponent } from './components/prescription/prescription.component';
 import { QrWriterComponent } from './components/qr-writer/qr-writer.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { QRCodeModule } from 'angularx-qrcode';
     PhysicianComponent,
     BlocksComponent,
     PrescriptionComponent,
-    QrWriterComponent
+    QrWriterComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,

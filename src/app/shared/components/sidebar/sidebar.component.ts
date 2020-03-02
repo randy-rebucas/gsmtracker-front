@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/modules/secure/user/user.service';
 import { User } from 'src/app/modules/secure/user/user';
@@ -8,6 +8,8 @@ import { NotificationService } from '../../services/notification.service';
 import { PatientFormComponent } from 'src/app/modules/secure/user/patients/patient-form/patient-form.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
+import { ProfileComponent } from '../profile/profile.component';
+import { UploadService } from '../../services/upload.service';
 
 
 @Component({
@@ -15,16 +17,18 @@ import { PatientsService } from 'src/app/modules/secure/user/patients/patients.s
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterContentInit {
   public perPage: number;
   public currentPage: number;
-
+  public imagePath: any;
+  defaultImage: any;
   email: string;
-  user: User;
+  user: any;
 
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
+    private uploadService: UploadService,
     private dialog: MatDialog,
     private notificationService: NotificationService,
     private router: Router,
@@ -32,13 +36,36 @@ export class SidebarComponent implements OnInit {
   ) {
     this.perPage = 10;
     this.currentPage = 1;
+    this.defaultImage = './../../../../assets/images/blank.png';
   }
 
   ngOnInit(): void {
     this.email = this.authenticationService.getUserEmail();
     this.userService.get(this.authenticationService.getUserId()).subscribe((user) => {
       this.user = user;
+      this.uploadService.get(this.user._id).subscribe((res) => {
+        this.imagePath = res.image;
+      });
     });
+  }
+
+  ngAfterContentInit(): void {
+    this.uploadService.get(this.user?._id).subscribe((res) => {
+      console.log(res);
+      this.imagePath = res.image;
+    });
+  }
+
+  onOpenProfile() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '40%';
+    dialogConfig.data = {
+      title: 'Profile',
+      id: this.authenticationService.getUserId()
+    };
+    this.dialog.open(ProfileComponent, dialogConfig);
   }
 
   onImportOpen() {

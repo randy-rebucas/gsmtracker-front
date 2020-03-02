@@ -9,7 +9,7 @@
             <img [src]="imagePreview">
         </ng-template>
         <ng-template #elseBlock>
-            <app-avatar [src]="defaultImage" [size]="'200'"></app-avatar>
+            <app-avatar [src]="defaultImage" [size]="size"></app-avatar>
         </ng-template>
     </div>
     <div *ngIf="loadingPic">

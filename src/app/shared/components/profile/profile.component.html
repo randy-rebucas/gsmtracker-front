@@ -1,0 +1,131 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="profile-wrapper">
+        <div class="profile-picture">
+            <app-upload [sourceId]="userId" [imagePreview]="imagePath" [size]="100"></app-upload>
+        </div>
+        <div class="profile-detail">
+            <h2 class="mat-subheading-2">Blockchain Info<br/>
+                <small class="mat-caption">Your blockchain private and public key are very usefull in any instance.Use this to recieve/send token also for persmissions.</small>
+            </h2>
+            <mat-list>
+                <mat-list-item>
+                    <span>Private Key: </span>
+                    <span>
+                        <mat-form-field class="example-full-width">
+                            <input matInput value="{{user?.privateKey}}" #private readonly>
+                        </mat-form-field>
+                    </span>
+                    <button mat-icon-button aria-label="Copy" (click)="onCopy(private)">
+                      <mat-icon>file_copy</mat-icon>
+                    </button>
+                </mat-list-item>
+                <mat-list-item>
+                    <span>Public Key: </span>
+                    <span>
+                        <mat-form-field class="example-full-width">
+                            <input matInput value="{{user?.publicKey}}" #public readonly>
+                        </mat-form-field>
+                    </span>
+                    <button mat-icon-button aria-label="Copy" (click)="onCopy(public)">
+                      <mat-icon>file_copy</mat-icon>
+                    </button>
+                </mat-list-item>
+                <mat-list-item>
+                    <span>Email: </span>
+                    <span>{{authenticationService.getUserEmail()}} </span>
+
+                    <!-- <button mat-icon-button aria-label="Change" (click)="onChangeEmail()">
+                      <mat-icon>edit</mat-icon>
+                    </button> -->
+                </mat-list-item>
+                <mat-list-item>
+                    <span>Password: </span>
+                    <span>***** </span>
+                    <!-- <button mat-icon-button aria-label="Change" (click)="onChangePass()">
+                      <mat-icon>edit</mat-icon>
+                    </button> -->
+                </mat-list-item>
+            </mat-list>
+            <hr/>
+            <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
+                <h2 class="mat-subheading-2">Basic Information <br/>
+                    <small class="mat-caption">Your profile info will be used in invoices. Also we will use your Name to address you with our interactive chat messages and emails.</small>
+                </h2>
+                <div class="form-field-block">
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="midlename" placeholder="Midlename">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="lastname" placeholder="Lastname">
+                    </mat-form-field>
+                </div>
+                <div class="form-field-block">
+                    <mat-form-field>
+                        <input matInput type="number" formControlName="contact" placeholder="Contact">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select formControlName="gender" placeholder="Gender">
+                            <mat-option value="Male">Male</mat-option>
+                            <mat-option value="Female">Female</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput readonly [matDatepicker]="picker" formControlName="birthdate" placeholder="Birthdate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
+                    <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+                        <h2 class="mat-subheading-2">Address <br/>
+                            <small class="mat-caption">This is your home address.</small>
+                        </h2>
+
+                        <div class="form-field-block">
+                            <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
+                        </div>
+
+
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address1" placeholder="Street Address">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput type="text" formControlName="address2" placeholder="Street Address Line 2">
+                        </mat-form-field>
+
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="city" placeholder="City">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="province" placeholder="Province">
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field-block">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="postalCode" placeholder="Postal Code">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="country" placeholder="Country">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="action">
+                            <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                            <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                        </div>
+                    </div>
+                </ng-container>
+            </form>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="onSubmit()" cdkFocusInitial>Update</button>
+</mat-dialog-actions>

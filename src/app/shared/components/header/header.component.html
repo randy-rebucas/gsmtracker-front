@@ -4,17 +4,17 @@
             <mat-icon>menu</mat-icon>
         </button>
 
-        <span> Clinic+ </span>
+        <span> {{appConfigurationService.title}} </span>
 
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
                 <li>
-                    <button mat-icon-button matTooltip="Help" (click)="onOpenHelp()">
+                    <button mat-icon-button matTooltip="Help" (click)="onOpenDialog('help')">
                         <mat-icon>help_outline</mat-icon>
                     </button>
                 </li>
                 <li>
-                    <button mat-icon-button matTooltip="Settings" [routerLink]="['/secure/settings/general']" routerLinkActive="active">
+                    <button mat-icon-button matTooltip="Settings" (click)="onOpenDialog('setting')">
                       <mat-icon>settings</mat-icon>
                   </button>
                 </li>
