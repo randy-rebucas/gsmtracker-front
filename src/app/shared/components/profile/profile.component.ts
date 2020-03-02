@@ -5,6 +5,7 @@ import { UserService } from 'src/app/modules/secure/user/user.service';
 import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -33,6 +34,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.form = this.fb.group({
       firstname: ['', [Validators.required]],
       midlename: ['', [Validators.required]],
@@ -43,29 +45,31 @@ export class ProfileComponent implements OnInit {
       addresses: this.fb.array([this.addAddressGroup()])
     });
 
-    this.uploadService.get(this.userId).subscribe((res) => {
-      this.imagePath = res.image;
-    });
-
-    this.userService.get(this.userId).subscribe((user) => {
-      this.user = user;
-      console.log(user);
+    this.getData(this.userId).subscribe((resData) => {
+      const merge = {...resData[0], ...resData[1]};
+      console.log(merge);
+      this.user = merge;
       this.form.patchValue({
-        firstname: user.name.firstname,
-        midlename: user.name.midlename,
-        lastname: user.name.lastname,
-        birthdate: user.birthdate,
-        contact: user.contact,
-        gender: user.gender
+        firstname: merge.name.firstname,
+        midlename: merge.name.midlename,
+        lastname: merge.name.lastname,
+        birthdate: merge.birthdate,
+        contact: merge.contact,
+        gender: merge.gender
       });
       const addressControl = this.form.controls.addresses as FormArray;
-      const address = user.addresses;
+      const address = merge.addresses;
       for (let i = 1; i < address.length; i++) {
         addressControl.push(this.addAddressGroup());
       }
       this.form.patchValue({addresses: address});
-
     });
+  }
+
+  getData(userId): Observable<any> {
+    const images = this.uploadService.get(userId);
+    const users = this.userService.get(userId);
+    return forkJoin([images, users]);
   }
 
   addAddressGroup() {

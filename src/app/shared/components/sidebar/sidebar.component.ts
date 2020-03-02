@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/modules/secure/user/user.service';
 import { User } from 'src/app/modules/secure/user/user';
@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { UploadService } from '../../services/upload.service';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -17,12 +18,13 @@ import { UploadService } from '../../services/upload.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit, AfterContentInit {
+export class SidebarComponent implements OnInit {
   public perPage: number;
   public currentPage: number;
   public imagePath: any;
   defaultImage: any;
   email: string;
+  userData: any;
   user: any;
 
   constructor(
@@ -41,18 +43,15 @@ export class SidebarComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     this.email = this.authenticationService.getUserEmail();
-    this.userService.get(this.authenticationService.getUserId()).subscribe((user) => {
-      this.user = user;
-      this.uploadService.get(this.user._id).subscribe((res) => {
-        this.imagePath = res.image;
-      });
-    });
-  }
-
-  ngAfterContentInit(): void {
-    this.uploadService.get(this.user?._id).subscribe((res) => {
-      console.log(res);
-      this.imagePath = res.image;
+    this.userService.get(this.authenticationService.getUserId())
+    .pipe(
+      switchMap((userData) => {
+        this.userData = userData;
+        return this.uploadService.get(userData._id);
+      })
+    )
+    .subscribe((transformedUser) => {
+      this.user = { ...this.userData, ...transformedUser};
     });
   }
 

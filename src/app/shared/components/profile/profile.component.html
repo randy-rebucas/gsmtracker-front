@@ -2,56 +2,44 @@
 <mat-dialog-content class="mat-typography">
     <div class="profile-wrapper">
         <div class="profile-picture">
-            <app-upload [sourceId]="userId" [imagePreview]="imagePath" [size]="100"></app-upload>
+            <app-upload [sourceId]="user?._id" [imagePreview]="user?.image" [size]="100"></app-upload>
         </div>
         <div class="profile-detail">
-            <h2 class="mat-subheading-2">Blockchain Info<br/>
-                <small class="mat-caption">Your blockchain private and public key are very usefull in any instance.Use this to recieve/send token also for persmissions.</small>
-            </h2>
-            <mat-list>
-                <mat-list-item>
-                    <span>Private Key: </span>
-                    <span>
-                        <mat-form-field class="example-full-width">
-                            <input matInput value="{{user?.privateKey}}" #private readonly>
-                        </mat-form-field>
-                    </span>
-                    <button mat-icon-button aria-label="Copy" (click)="onCopy(private)">
-                      <mat-icon>file_copy</mat-icon>
-                    </button>
-                </mat-list-item>
-                <mat-list-item>
-                    <span>Public Key: </span>
-                    <span>
-                        <mat-form-field class="example-full-width">
-                            <input matInput value="{{user?.publicKey}}" #public readonly>
-                        </mat-form-field>
-                    </span>
-                    <button mat-icon-button aria-label="Copy" (click)="onCopy(public)">
-                      <mat-icon>file_copy</mat-icon>
-                    </button>
-                </mat-list-item>
-                <mat-list-item>
-                    <span>Email: </span>
-                    <span>{{authenticationService.getUserEmail()}} </span>
+            <h2 class="mat-subheading-2">Blockchain Info</h2>
 
-                    <!-- <button mat-icon-button aria-label="Change" (click)="onChangeEmail()">
-                      <mat-icon>edit</mat-icon>
-                    </button> -->
-                </mat-list-item>
-                <mat-list-item>
-                    <span>Password: </span>
-                    <span>***** </span>
-                    <!-- <button mat-icon-button aria-label="Change" (click)="onChangePass()">
-                      <mat-icon>edit</mat-icon>
-                    </button> -->
-                </mat-list-item>
-            </mat-list>
-            <hr/>
+            <mat-form-field class="custom-width">
+                <mat-label>Private Key: </mat-label>
+                <input matInput value="{{user?.privateKey}}" #private readonly>
+                <button mat-icon-button aria-label="Copy" class="btn-action" (click)="onCopy(private)">
+                              <mat-icon>file_copy</mat-icon>
+                            </button>
+            </mat-form-field>
+
+            <mat-form-field class="custom-width">
+                <mat-label>Public Key: </mat-label>
+                <input matInput value="{{user?.publicKey}}" #public readonly>
+                <button mat-icon-button aria-label="Copy" class="btn-action" (click)="onCopy(public)">
+                              <mat-icon>file_copy</mat-icon>
+                            </button>
+            </mat-form-field>
+
+            <mat-form-field class="custom-width">
+                <mat-label>Email: </mat-label>
+                <input matInput value="{{authenticationService.getUserEmail()}}" readonly>
+                <button mat-icon-button aria-label="Change email" class="btn-action" (click)="onChangeEmail()">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+            </mat-form-field>
+            <mat-form-field class="custom-width">
+                <mat-label>Password: </mat-label>
+                <input matInput value="********" readonly>
+                <button mat-icon-button aria-label="Change pass" class="btn-action" (click)="onChangePass()">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+            </mat-form-field>
+
             <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
-                <h2 class="mat-subheading-2">Basic Information <br/>
-                    <small class="mat-caption">Your profile info will be used in invoices. Also we will use your Name to address you with our interactive chat messages and emails.</small>
-                </h2>
+                <h2 class="mat-subheading-2">Basic Information </h2>
                 <div class="form-field-block">
                     <mat-form-field>
                         <input matInput type="text" formControlName="firstname" placeholder="Firstname" uppercase>
@@ -81,15 +69,9 @@
                 </div>
                 <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
                     <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
-                        <h2 class="mat-subheading-2">Address <br/>
-                            <small class="mat-caption">This is your home address.</small>
-                        </h2>
-
                         <div class="form-field-block">
                             <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
                         </div>
-
-
                         <mat-form-field>
                             <input matInput type="text" formControlName="address1" placeholder="Street Address">
                         </mat-form-field>
@@ -121,6 +103,8 @@
                         </div>
                     </div>
                 </ng-container>
+
+                <h2 class="mat-subheading-2">Additional Information </h2>
             </form>
         </div>
     </div>

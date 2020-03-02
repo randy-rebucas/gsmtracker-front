@@ -1,6 +1,6 @@
 <mat-nav-list>
     <div class="profile-card" (click)="onOpenProfile()">
-        <img [src]="imagePath ? imagePath : defaultImage" alt="Soufiane FADIL">
+        <img [src]="user?.image ? user?.image : defaultImage" alt="{{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}">
         <div class="info">
             <h2>{{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}</h2>
             <h4>{{email}}</h4>
