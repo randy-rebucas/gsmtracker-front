@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
   title: string;
   userId: string;
   user: any;
+  isLoading: boolean;
   public imagePath: any;
   public form: FormGroup;
   public startDate = new Date(1990, 0, 1);
@@ -34,7 +35,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.isLoading = true;
     this.form = this.fb.group({
       firstname: ['', [Validators.required]],
       midlename: ['', [Validators.required]],
@@ -48,6 +49,7 @@ export class ProfileComponent implements OnInit {
     this.getData(this.userId).subscribe((resData) => {
       const merge = {...resData[0], ...resData[1]};
       console.log(merge);
+      this.isLoading = false;
       this.user = merge;
       this.form.patchValue({
         firstname: merge.name.firstname,

@@ -1,11 +1,7 @@
-<h2 mat-dialog-title>{{ formTitle | titlecase }}
-    <button mat-icon-button aria-label="close" (click)="onClose()" tabIndex="-1">
-      <mat-icon>clear</mat-icon>
-    </button>
-</h2>
+<h2 mat-dialog-title>{{ formTitle | titlecase }}</h2>
 <mat-dialog-content class="mat-typography" style="min-height: 300px;">
     <div *ngIf="isLoading" class="loading">
-        <mat-spinner [diameter]="25"></mat-spinner>
+        <mat-spinner [diameter]="50">Loading...</mat-spinner>
     </div>
     <form [formGroup]="form" class="normal-form" (submit)="onSavePatient()" *ngIf="!isLoading">
         <h4 subheading-1>Basic Information</h4>
@@ -40,9 +36,9 @@
             <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
                 <h4 subheading-1>Address</h4>
 
-                  <div class="form-field-block">
-                      <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
-                  </div>
+                <div class="form-field-block">
+                    <mat-checkbox formControlName="current">Use as Current</mat-checkbox>
+                </div>
 
 
                 <div class="form-field-block">
@@ -80,6 +76,7 @@
         </ng-container>
     </form>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="onSavePatient()">{{formButtontext}}</button>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="onSavePatient()" cdkFocusInitial>Update</button>
 </mat-dialog-actions>

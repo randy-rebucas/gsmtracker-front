@@ -1,6 +1,9 @@
 <h2 mat-dialog-title>{{title}}</h2>
-<mat-dialog-content class="mat-typography">
-    <div class="profile-wrapper">
+<mat-dialog-content class="mat-typography" style="min-height: 300px;">
+    <div *ngIf="isLoading" class="loading">
+        <mat-spinner [diameter]="50">Loading...</mat-spinner>
+    </div>
+    <div class="profile-wrapper" *ngIf="!isLoading">
         <div class="profile-picture">
             <app-upload [sourceId]="user?._id" [imagePreview]="user?.image" [size]="100"></app-upload>
         </div>

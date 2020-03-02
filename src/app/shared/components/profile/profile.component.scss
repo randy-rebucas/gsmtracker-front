@@ -21,7 +21,7 @@ mat-form-field {
 
 .action {
     position: absolute;
-    top: 20%;
+    top: 0;
     right: 0;
 }
 
@@ -35,4 +35,8 @@ mat-form-field.mat-form-field.custom-width {
     top: -12px;
     background: #fff;
     z-index: 999;
+}
+
+mat-spinner {
+    margin: 16% auto;
 }
