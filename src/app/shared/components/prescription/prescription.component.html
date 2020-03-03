@@ -1,130 +1,140 @@
 <h2 mat-dialog-title>{{title}}</h2>
 <mat-dialog-content class="mat-typography" id="content">
-        <table id="rxpad">
-            <thead>
-                <!-- <tr>
-                    <th colspan="4">
-                        <h2>{{clinicOwner}}</h2>
-                    </th>
-                </tr>
-                <tr>
-                    <th colspan="4">
-                        <h5>{{clinicName}}</h5>
-                    </th>
-                </tr>
-                <tr>
-                    <th colspan="2">
-                        <ng-container *ngFor="let address of clinicAddress; let i = index;">
+    <table id="rxpad">
+        <thead>
+            <tr *ngIf="setting?.rxHeaderOption">
+                <th colspan="4">
+                    <h2>{{setting?.prescription.rxTitle}}</h2>
+                </th>
+            </tr>
+            <tr *ngIf="setting?.rxHeaderOption">
+                <th colspan="4">
+                    <h5>{{setting?.prescription.rxSubTitle}}</h5>
+                </th>
+            </tr>
+            <tr *ngIf="setting?.rxHeaderOption">
+                <th rowspan="4" colspan="2">
+                    <ng-container *ngFor="let address of setting?.prescription.rxAddresses; let i = index;">
+                        {{address.address1}}<br/>
+                        <ng-container *ngIf="address.address2">
+                            {{address.address2}} <br/>
+                        </ng-container>
+                        {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
+                    </ng-container>
+                </th>
+                <th colspan="2">Clinic Hours:</th>
+            </tr>
+            <tr *ngIf="setting?.rxHeaderOption">
+                <th colspan="2"><span *ngFor="let hour of setting?.prescription.rxHours; let o = index;">{{hour.morningOpen}} - {{hour.afternoonClose}}</span></th>
+            </tr>
+            <tr *ngIf="setting?.rxHeaderOption">
+                <th colspan="2">Tel no <span *ngFor="let phone of setting?.prescription.rxPhones; let i = index;">{{phone.contact}} <span *ngIf="i < 1">/</span> </span>
+                </th>
+            </tr>
+            <tr *ngIf="setting?.rxHeaderOption">
+                <th colspan="2"><span *ngIf="etting?.prescription.rxNoNoonBreak">No Noon Break</span></th>
+            </tr>
+            <tr>
+                <th colspan="4">
+                    <hr/>
+                </th>
+            </tr>
+            <tr>
+                <th>Name: </th>
+                <th>
+                    {{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}
+                </th>
+                <th>Birthdate:</th>
+                <th> {{user?.birthdate | date}}</th>
+            </tr>
+            <tr>
+                <th>Age: </th>
+                <th>{{this.getAge(user?.birthdate)}}</th>
+                <th>Gender: </th>
+                <th>{{user?.gender}}</th>
+            </tr>
+            <tr class="address">
+                <th>Address:</th>
+                <th colspan="3">
+                    <ng-container *ngFor="let address of user?.addresses; let i = index;">
+                        <ng-container *ngIf="address.current">
                             {{address.address1}}<br/>
                             <ng-container *ngIf="address.address2">
                                 {{address.address2}} <br/>
                             </ng-container>
                             {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
                         </ng-container>
-                    </th>
-                    <th colspan="2">Clinic Hours:</th>
-                </tr>
-                <tr>
-                    <th colspan="2">Tel no <span *ngFor="let phone of clinicPhone; let i = index;">{{phone.contact}} <span *ngIf="i < 1">/</span> </span>
-                    </th>
-                    <th colspan="2"><span *ngFor="let hour of clinicHours; let o = index;">{{hour.morningOpen}} - {{hour.afternoonClose}}</span></th>
-                </tr>
-                <tr>
-                    <th colspan="2"></th>
-                    <th colspan="2"><span *ngIf="noBreak">No Noon Break</span></th>
-                </tr> -->
-                <tr>
-                    <th colspan="4">
-                        <hr/>
-                    </th>
-                </tr>
-                <tr>
-                    <th>Name: </th>
-                    <th>
-                        {{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}
-                    </th>
-                    <th>Birthdate:</th>
-                    <th> {{user?.birthdate | date}}</th>
-                </tr>
-                <tr>
-                    <th>Age: </th>
-                    <th>{{this.getAge(user?.birthdate)}}</th>
-                    <th>Gender: </th>
-                    <th>{{user?.gender}}</th>
-                </tr>
-                <tr class="address">
-                    <th>Address:</th>
-                    <th colspan="3">
-                        <ng-container *ngFor="let address of user?.addresses; let i = index;">
-                            <ng-container *ngIf="address.current">
-                                {{address.address1}}<br/>
-                                <ng-container *ngIf="address.address2">
-                                    {{address.address2}} <br/>
-                                </ng-container>
-                                {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
-                            </ng-container>
-                        </ng-container>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="4">
-                        <img src="../../../../assets/images/rx.png" alt="rx" style="width: 100px;" />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <table id="prescriptions">
-                            <tr *ngFor="let prescription of prescriptions; let i = index;">
-                                <td>{{i+1}}</td>
-                                <td> {{prescription.medicine}} {{prescription.preparation}} <br/>
-                                    <span>sig: {{prescription.sig}}</span></td>
-                                <td> # {{prescription.quantity}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td rowspan="4">
+                    </ng-container>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="4">
+                    <img src="../../../../assets/images/rx.png" alt="rx" style="width: 100px;" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <table id="prescriptions">
+                        <tr *ngFor="let prescription of prescriptions; let i = index;">
+                            <td>{{i+1}}</td>
+                            <td> {{prescription.medicine}} {{prescription.preparation}} <br/>
+                                <span>sig: {{prescription.sig}}</span></td>
+                            <td> # {{prescription.quantity}}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td rowspan="4">
 
-                    </td>
-                    <td colspan="3">
-                        <!-- {{clinicOwner}} -->
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        License No :
-                    </td>
-                    <td>
-                        <!-- {{prc}} -->
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        PTR No :
-                    </td>
-                    <td>
-                        <!-- {{ptr}} -->
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        S2 No :
-                    </td>
-                    <td>
-                        <!-- {{s2}} -->
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                </td>
+                <td colspan="3">
+                    {{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}} M.D
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    License No :
+                </td>
+                <td>
+                    {{setting?.prc}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    PTR No :
+                </td>
+                <td>
+                    {{setting?.ptr}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    S2 No :
+                </td>
+                <td>
+                    {{setting?.s2}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <hr/>
+                </td>
+            </tr>
+            <tr *ngIf="setting?.rxFooterOption">
+                <td colspan="4" style="text-align: left;">
+                    https://www.linkedin.com/in/randy-rebucas-1a896943/
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button (click)="onPrint()" cdkFocusInitial>Print</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="onPrint()" cdkFocusInitial>Print</button>
 </mat-dialog-actions>
-

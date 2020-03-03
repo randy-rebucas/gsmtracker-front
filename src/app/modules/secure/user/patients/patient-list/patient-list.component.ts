@@ -116,7 +116,6 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
           // Flip flag to show that loading has finished.
           this.isLoading = false;
           this.length = data.counts;
-          console.log(this.setOwnerShip(data.patients));
           return data.patients;
         }),
         catchError(() => {

@@ -8,6 +8,8 @@ import { User } from 'src/app/modules/secure/user/user';
 import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { Observable, forkJoin } from 'rxjs';
+import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 
 @Component({
   selector: 'app-prescription',
@@ -19,16 +21,23 @@ export class PrescriptionComponent implements OnInit {
   block: Blockchain;
   prescriptions: any[];
   user: any;
-
+  setting: any;
   constructor(
     private settingsService: SettingsService,
     private patientService: PatientsService,
+    private physiciansService: PhysiciansService,
     private authenticationService: AuthenticationService,
     public dialogRef: MatDialogRef < PrescriptionComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.block = data.block;
     this.title = data.title;
+  }
+
+  getData(userId): Observable<any> {
+    const setting = this.settingsService.get(userId);
+    const physicians = this.physiciansService.get(userId);
+    return forkJoin([setting, physicians]);
   }
 
   ngOnInit(): void {
@@ -46,6 +55,12 @@ export class PrescriptionComponent implements OnInit {
       this.user = user;
     });
 
+    this.getData(this.authenticationService.getUserId())
+    .subscribe((res) => {
+      const setting = {...res[0], ...res[1]};
+      this.setting = setting;
+    });
+
     this.prescriptions = this.block.transactions.data.prescriptions.prescriptions;
   }
 
@@ -61,20 +76,10 @@ export class PrescriptionComponent implements OnInit {
   }
 
   onPrint() {
-    this.settingsService.get(this.authenticationService.getUserId())
-    .pipe(
-      map(settingData => {
-        if (settingData) {
-          return {
-            id: settingData._id,
-            prescription: settingData.prescription,
-            rxHeaderOption: settingData.rxHeaderOption,
-            rxFooterOption: settingData.rxFooterOption
-          };
-        }
-        return null;
-      })
-    ).subscribe((setting) => {
+    this.getData(this.authenticationService.getUserId())
+    .subscribe((res) => {
+      const setting = {...res[0], ...res[1]};
+      console.log(setting);
       const datePipe = new DatePipe('en-US');
       const pdfDoc = new jsPDF('p', 'mm', 'a5');
       const pageHeight = pdfDoc.internal.pageSize.height || pdfDoc.internal.pageSize.getHeight();
@@ -260,7 +265,7 @@ export class PrescriptionComponent implements OnInit {
       pdfDoc.setFont('courier');
       pdfDoc.setFontType('regular');
       pdfDoc.setTextColor(0, 0, 0);
-      // pdfDoc.text(this.user.prc, 135, 185, null, null, 'right');
+      pdfDoc.text(setting.prc, 135, 185, null, null, 'right');
       // ptr label
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
@@ -272,7 +277,7 @@ export class PrescriptionComponent implements OnInit {
       pdfDoc.setFont('courier');
       pdfDoc.setFontType('regular');
       pdfDoc.setTextColor(0, 0, 0);
-      // pdfDoc.text(this.ptr, 135, 190, null, null, 'right');
+      pdfDoc.text(setting.ptr, 135, 190, null, null, 'right');
       // s2 label
       pdfDoc.setFontSize(10);
       pdfDoc.setFont('courier');
@@ -284,7 +289,7 @@ export class PrescriptionComponent implements OnInit {
       pdfDoc.setFont('courier');
       pdfDoc.setFontType('regular');
       pdfDoc.setTextColor(0, 0, 0);
-      // pdfDoc.text(this.s2, 135, 195, null, null, 'right');
+      pdfDoc.text(setting.s2, 135, 195, null, null, 'right');
       // line
       pdfDoc.line(10, 198, 135, 198);
 
@@ -299,6 +304,7 @@ export class PrescriptionComponent implements OnInit {
 
       pdfDoc.autoPrint();
       pdfDoc.output('dataurlnewwindow');
+      this.dialogRef.close('true');
     });
 
     // this.encountersService.update(2, this.patientId).subscribe(() => {
@@ -309,4 +315,5 @@ export class PrescriptionComponent implements OnInit {
     // });
 
   }
+
 }

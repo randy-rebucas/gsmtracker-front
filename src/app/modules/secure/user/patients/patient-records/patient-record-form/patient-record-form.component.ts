@@ -13,6 +13,8 @@ import { PatientsService } from '../../patients.service';
 import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { numberValidator } from 'src/app/validators/number-validator';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { PrescriptionComponent } from 'src/app/shared/components/prescription/prescription.component';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 export interface Drug {
   id: string;
@@ -56,6 +58,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     private activatedRoute: ActivatedRoute,
     private patientsService: PatientsService,
     private blockchainService: BlockchainService,
+    private notificationService: NotificationService,
     private dialog: MatDialog,
     private authenticationService: AuthenticationService,
   ) {
@@ -192,12 +195,27 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
       transactions: this.form.value
     };
 
-    this.blockchainService.insert(newTransaction).subscribe(() => {
+    this.blockchainService.insert(newTransaction).subscribe((blockchainRes) => {
+      console.log(blockchainRes.blocks._doc);
       // check if physicians listed
-      this.patientsService.checkPhysician(this.authenticationService.getUserId(), this.user._id).subscribe(() => {
+      this.patientsService.checkPhysician(this.authenticationService.getUserId(), this.user._id).subscribe((res) => {
         // print prescription
-        // redirect to record list
-        this.router.navigate(['../'], {relativeTo: this.activatedRoute });
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.width = '40%';
+        dialogConfig.data = {
+          block: blockchainRes.blocks._doc,
+          title: 'Preview Print'
+        };
+        this.dialog.open(PrescriptionComponent, dialogConfig)
+          .afterClosed()
+          .subscribe((result) => {
+            console.log(result);
+            this.notificationService.success(res.message);
+            this.router.navigate(['../'], {relativeTo: this.activatedRoute });
+          }
+        );
       });
     });
   }

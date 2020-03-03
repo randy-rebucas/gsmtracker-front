@@ -1,1 +1,9 @@
-<p>{{user?.name.firstname}}, {{user?.name.lastname}}</p>
+<div class="practitioner-item">
+    <img [src]="user?.image" alt="{{user?.name.firstname}}, {{user?.name.lastname}}" />
+    <p>{{user?.name.firstname}}, {{user?.name.lastname}}<br/>
+        <span>PRC Liense: <b>{{user?.prc}}</b></span>
+    </p>
+    <ul>
+        <li *ngFor="let practice of user?.practices">{{practice.practice}}</li>
+    </ul>
+</div>

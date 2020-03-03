@@ -144,3 +144,9 @@ mat-row:hover {
 .selected-item {
     visibility: hidden;
 }
+
+.practitioners {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1em;
+}

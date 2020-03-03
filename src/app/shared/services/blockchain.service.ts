@@ -56,7 +56,7 @@ export class BlockchainService {
   }
 
   insert(newTransaction: any) {
-    return this.http.post<{ message: string, chain: Blockchain }>(BACKEND_URL, newTransaction);
+    return this.http.post<{ message: string, blocks: any }>(BACKEND_URL, newTransaction);
   }
 
 }

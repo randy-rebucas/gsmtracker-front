@@ -6,6 +6,7 @@ import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { forkJoin, Observable } from 'rxjs';
+import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 
 export interface Practices {
   value: string;
@@ -51,6 +52,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private physiciansService: PhysiciansService,
     private uploadService: UploadService,
     private notificationService: NotificationService,
     public authenticationService: AuthenticationService,
@@ -63,6 +65,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
+
     this.form = this.fb.group({
       firstname: ['', [Validators.required]],
       midlename: ['', [Validators.required]],
@@ -72,11 +75,15 @@ export class ProfileComponent implements OnInit {
       birthdate: ['', [Validators.required]],
       addresses: this.fb.array([this.addAddressGroup()]),
       bio: ['', [Validators.required]],
-      practices: this.fb.array([this.practicesGroup()])
+      practices: this.fb.array([this.practicesGroup()]),
+      prc: ['', [Validators.required]],
+      ptr: [''],
+      s2: [''],
+      professionalFee: ['', [Validators.required]]
     });
 
     this.getData(this.userId).subscribe((resData) => {
-      const merge = {...resData[0], ...resData[1]};
+      const merge = {...resData[0], ...resData[1], ...resData[2]};
       console.log(merge);
       this.isLoading = false;
       this.user = merge;
@@ -86,7 +93,12 @@ export class ProfileComponent implements OnInit {
         lastname: merge.name.lastname,
         birthdate: merge.birthdate,
         contact: merge.contact,
-        gender: merge.gender
+        gender: merge.gender,
+        bio: merge.description,
+        prc: merge.prc,
+        ptr: merge.ptr,
+        s2: merge.s2,
+        professionalFee: merge.professionalFee
       });
       const addressControl = this.form.controls.addresses as FormArray;
       const address = merge.addresses;
@@ -94,13 +106,21 @@ export class ProfileComponent implements OnInit {
         addressControl.push(this.addAddressGroup());
       }
       this.form.patchValue({addresses: address});
+
+      const practiceControl = this.form.controls.practices as FormArray;
+      const practice = merge.practices;
+      for (let i = 1; i < practice.length; i++) {
+        practiceControl.push(this.practicesGroup());
+      }
+      this.form.patchValue({practices: practice});
     });
   }
 
   getData(userId): Observable<any> {
     const images = this.uploadService.get(userId);
     const users = this.userService.get(userId);
-    return forkJoin([images, users]);
+    const physicians = this.physiciansService.get(userId);
+    return forkJoin([images, users, physicians]);
   }
 
   addAddressGroup() {
@@ -156,7 +176,7 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    const updatePatient = {
+    const updateUser = {
       _id: this.userId,
       name: {
         firstname: this.form.value.firstname,
@@ -169,9 +189,20 @@ export class ProfileComponent implements OnInit {
       addresses: this.form.value.addresses
     };
 
-    this.userService.update(updatePatient).subscribe(() => {
+    this.userService.update(updateUser).subscribe(() => {
       this.notificationService.success(':: Updated successfully');
-      this.dialogRef.close();
+      const updatePhysician = {
+        _id: this.user._id,
+        practices: this.form.value.practices,
+        description: this.form.value.bio,
+        prc: this.form.value.prc,
+        ptr: this.form.value.ptr,
+        s2: this.form.value.s2,
+        professionalFee: this.form.value.professionalFee
+      };
+      this.physiciansService.update(updatePhysician).subscribe(() => {
+        this.dialogRef.close();
+      });
     });
 
   }

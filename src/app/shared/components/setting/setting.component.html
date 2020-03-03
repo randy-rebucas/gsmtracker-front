@@ -3,7 +3,7 @@
     <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
         <h3>Prescription Pad (option)</h3>
         <div class="toggle-group">
-            <mat-slide-toggle formControlName="rxFooterOption" class="toggle">Remove footer</mat-slide-toggle>
+            <mat-slide-toggle formControlName="rxFooterOption" class="toggle">Show footer</mat-slide-toggle>
             <mat-slide-toggle formControlName="rxHeaderOption" class="toggle" (change)="onToggleHeader($event)">Show header</mat-slide-toggle>
         </div>
         <ng-container *ngIf="isShowHeader">

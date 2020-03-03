@@ -109,30 +109,45 @@
 
                 <h2 class="mat-subheading-2">Additional Information </h2>
                 <mat-form-field>
-                  <mat-label>Bio</mat-label>
-                  <textarea matInput formControlName="bio"></textarea>
+                    <mat-label>Bio</mat-label>
+                    <textarea matInput formControlName="bio"></textarea>
                 </mat-form-field>
                 <ng-container formArrayName="practices" *ngIf="practiceArray.length > 0">
-                  <div *ngFor="let address of practiceArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
-                      <div class="form-field-block" style="width: 90%;">
-                          <mat-form-field>
-                            <mat-label>Select Practices</mat-label>
-                            <mat-select formControlName="practice">
-                              <mat-option *ngFor="let practice of practices" [value]="practice.value">
-                                {{practice.viewValue}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <mat-form-field>
-                              <input matInput type="text" formControlName="practiceYearExperience" placeholder="Year of experience">
-                          </mat-form-field>
-                      </div>
-                      <div class="action">
-                          <button mat-icon-button *ngIf="practiceArray.controls.length < 5" (click)="addParactice()" type="button"><mat-icon>add</mat-icon></button>
-                          <button mat-icon-button color="warn" *ngIf="practiceArray.controls.length > 1" (click)="removePractice(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-                      </div>
-                  </div>
-              </ng-container>
+                    <div *ngFor="let address of practiceArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
+                        <div class="form-field-block" style="width: 90%;">
+                            <mat-form-field>
+                                <mat-label>Select Practices</mat-label>
+                                <mat-select formControlName="practice">
+                                    <mat-option *ngFor="let practice of practices" [value]="practice.value">
+                                        {{practice.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="practiceYearExperience" placeholder="Year of experience">
+                            </mat-form-field>
+                        </div>
+                        <div class="action">
+                            <button mat-icon-button *ngIf="practiceArray.controls.length < 5" (click)="addParactice()" type="button"><mat-icon>add</mat-icon></button>
+                            <button mat-icon-button color="warn" *ngIf="practiceArray.controls.length > 1" (click)="removePractice(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="form-field-block">
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="prc" placeholder="PRC">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="ptr" placeholder="PTR">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" formControlName="s2" placeholder="S2">
+                    </mat-form-field>
+                </div>
+                <mat-form-field>
+                    <input matInput type="text" formControlName="professionalFee" placeholder="Professional Fee">
+                </mat-form-field>
+
             </form>
         </div>
     </div>

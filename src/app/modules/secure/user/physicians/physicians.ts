@@ -1,11 +1,15 @@
 export interface Physicians {
     userId: string;
-    practice: string;
-    yearsExperience: string;
+    practices: Practices[];
     description: string;
     prc: string;
     ptr: string;
     s2: string;
-    profesionalFee: number;
+    professionalFee: string;
     isVerified: boolean;
 }
+
+export interface Practices {
+    practice: string;
+    practiceYearExperience: number;
+  }

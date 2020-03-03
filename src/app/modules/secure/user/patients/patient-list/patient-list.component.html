@@ -97,7 +97,12 @@
                         <mat-card-subtitle>({{element.physicians.length}}) physician connected</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <app-physician *ngFor="let physician of element.physicians" [physician]="physician.userId"></app-physician>
+                        <div class="practitioners">
+                            <app-physician *ngFor="let physician of element.physicians | slice:0:2;" [physician]="physician.userId"></app-physician>
+                            <ng-container *ngIf="element.physicians.length > 2">
+                                {{element.physicians.length - 2}} more...
+                            </ng-container>
+                        </div>
                     </mat-card-content>
                 </mat-card>
                 <mat-card class="record-card">
