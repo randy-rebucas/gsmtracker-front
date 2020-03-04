@@ -22,6 +22,8 @@ import { PatientsService } from '../patients.service';
 import { Physicians } from '../../physicians/physicians';
 import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 import { BlockchainService } from 'src/app/shared/services/blockchain.service';
+import { LabelComponent } from 'src/app/shared/components/label/label.component';
+import { LabelsService } from 'src/app/shared/services/labels.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -50,6 +52,16 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   private hours: any[] = [];
   private addresses: any[];
 
+  public userId: string;
+  public avatar: string;
+
+  public patients: any;
+
+  option: string;
+  labelSelected: any[];
+  labels: any[];
+  labelsSub: Subscription;
+
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
     'select',
@@ -67,12 +79,6 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  public userId: string;
-  public avatar: string;
-
-  public patients: any;
-
-  option: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -82,14 +88,15 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     private notificationService: NotificationService,
     private patientsService: PatientsService,
     private authenticationService: AuthenticationService,
-    private dialog: MatDialog,
-    private blockchainService: BlockchainService
+    private labelsService: LabelsService,
+    private dialog: MatDialog
   ) {
     this.length = 0;
     this.perPage = 10;
     this.currentPage = 1;
     this.pageSizeOptions = [10, 20, 40, 80, 150, 300];
     this.isLoading = true;
+    this.labelSelected = [];
   }
 
   ngOnInit() {
@@ -99,6 +106,12 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.titleService.setTitle(this.option === 'list' ? 'My Patients' : 'All Patients');
 
     this.getQuery(this.perPage, this.currentPage);
+
+    this.labelsService.getAll(this.authenticationService.getUserId());
+    this.labelsSub = this.labelsService.getLabels()
+      .subscribe((res) => {
+      this.labels = res.labels;
+    });
   }
 
   ngAfterViewInit() {
@@ -139,6 +152,16 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource.data.forEach(
       row => this.selection.select(row)
     );
+  }
+
+  onToggleSelect(option: string) {
+    if (option === 'all') {
+      this.dataSource.data.forEach(
+        row => this.selection.select(row)
+      );
+    } else {
+      this.selection.clear();
+    }
   }
 
   /** The label for the checkbox on the passed row */
@@ -320,102 +343,25 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     pdfDoc.autoPrint();
     pdfDoc.output('dataurlnewwindow');
-    // ----------------------------------------------
-    // this.settingsService.getSetting(this.userId).toPromise()
-    //   .then((results) => {
-    //     const datePipe = new DatePipe('en-US');
-    //     const pdfDoc = new jsPDF('p', 'mm', 'a4');
-    //     const pageHeight = pdfDoc.internal.pageSize.height || pdfDoc.internal.pageSize.getHeight();
-    //     const pageWidth = pdfDoc.internal.pageSize.width || pdfDoc.internal.pageSize.getWidth();
+  }
 
-    //     // clinic owner
-    //     pdfDoc.setFontSize(16);
-    //     pdfDoc.setFont('normal');
-    //     // this.uploadService.get(results._id).subscribe((res) => {
-    //     //   pdfDoc.addImage(res.image, 'PNG', 10, 10, 18, 18);
-    //     // });
-    //     pdfDoc.text(results.name, 10, 10, null, null, 'left');
-    //     pdfDoc.setFontSize(10);
-    //     pdfDoc.setFont('courier');
-    //     this.addresses = results.addresses;
-    //     this.addresses.forEach(element => {
-    //       pdfDoc.text(element.address1, 10, 14, null, null, 'left');
-    //       let gap = 0;
-    //       if (element.address2) {
-    //         gap = 4;
-    //         pdfDoc.text(element.address2, 10, 18, null, null, 'left');
-    //       }
-    //       pdfDoc.text('' + element.postalCode + '', 10, 18 + gap, null, null, 'left');
-    //       pdfDoc.text(element.province, 45, 18 + gap, null, null, 'left');
-    //       pdfDoc.text(element.city, 70, 18 + gap, null, null, 'left');
-    //       pdfDoc.text(element.country, 10, 22 + gap, null, null, 'left');
-    //     });
-
-    //     pdfDoc.text('Clinic hour', 125, 14, null, null, 'left');
-    //     this.hours = results.hours;
-    //     for (let index = 0; index < this.hours.length; index++) {
-    //       const element = this.hours[index];
-    //       pdfDoc.text(element.morningOpen + ' - ' + element.afternoonClose, 155, 14 + ( index * 4 ), null, null, 'left');
-    //     }
-
-    //     pdfDoc.text('Tel no: ', 125, 18, null, null, 'left');
-    //     this.contacts = results.phones;
-    //     for (let index = 0; index < this.contacts.length; index++) {
-    //       const element = this.contacts[index];
-    //       pdfDoc.text(element.contact, 155, 18 + ( index * 4 ), null, null, 'left');
-    //     }
-
-    //     pdfDoc.line(10, 28, 200, 28);
-
-    //     pdfDoc.setFontSize(10);
-    //     pdfDoc.setFont('courier');
-    //     pdfDoc.text('Patient Id', 10, 32, null, null, 'left');
-    //     pdfDoc.text('Fullname', 70, 32, null, null, 'left');
-    //     pdfDoc.text('Contact', 125, 32, null, null, 'left');
-    //     pdfDoc.text('Gender', 155, 32, null, null, 'left');
-    //     pdfDoc.text('Birthdate', 175, 32, null, null, 'left');
-
-    //     pdfDoc.setFontSize(10);
-    //     pdfDoc.setFont('courier');
-    //     const numSelected = this.selection.selected;
-    //     for (let index = 0; index < numSelected.length; index++) {
-    //       const element = numSelected[index];
-    //       pdfDoc.text(element.id, 10, 37 + (index * 8), null, null, 'left');
-    //       pdfDoc.text(element.firstname + ' ' + element.midlename + ', ' + element.lastname, 70, 37 + (index * 8), null, null, 'left');
-    //       pdfDoc.text(element.contact, 125, 37 + (index * 8), null, null, 'left');
-    //       pdfDoc.text(element.gender, 155, 37 + (index * 8), null, null, 'left');
-    //       pdfDoc.text(datePipe.transform(element.birthdate, 'MMM dd, yyyy'), 175, 37 + (index * 8), null, null, 'left');
-    //       pdfDoc.text('Address: ', 15, 41 + (index * 8), null, null, 'left');
-    //       element.address.forEach(el => {
-    //         if (el.current) {
-    //           pdfDoc.text(el.address1 + '' + (el.address2) ? el.address2 : '' + ', ' +
-    //           el.postalCode +
-    //           el.province + el.city + el.country, 35, 41 + (index * 8), null, null, 'left');
-    //         }
-    //       });
-    //     }
-    //     pdfDoc.autoPrint();
-    //     pdfDoc.output('dataurlnewwindow');
-    //   });
-
+  filterSelection() {
+    return this.selection.selected.filter((select) => {
+      return select.isOwned === true;
+    });
   }
 
   onDelete() {
-    const numSelected = this.selection.selected;
-    // filter only owned record
-    const allowedSelection = numSelected.filter((select) => {
-      return select.isOwned === true;
-    });
     // check for allowed record lenght
-    if (allowedSelection.length) {
-      const plural = (allowedSelection.length > 1) ? '(s)' : '';
-      this.dialogService.openConfirmDialog('Are you sure to delete ' + allowedSelection.length +
+    if (this.filterSelection().length) {
+      const plural = (this.filterSelection().length > 1) ? '(s)' : '';
+      this.dialogService.openConfirmDialog('Are you sure to delete ' + this.filterSelection().length +
       ' item' + plural +
       ' record ?')
       .afterClosed().subscribe(dialogRes => {
         if (dialogRes) {
 
-          allowedSelection.forEach(element => {
+          this.filterSelection().forEach(element => {
             this.ids.push(element.id);
           });
           this.patientsService.deleteMany(this.ids).subscribe((res) => {
@@ -433,8 +379,53 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('Row clicked: ', row);
   }
 
+  onCreateLabel(labelId?: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: (labelId) ? 'Update label' : 'Create label',
+      id: labelId
+    };
+    this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
+      if (result) {
+        const msg = (result === 'update') ? ':: Updated successfully' : ':: Added successfully';
+        this.notificationService.success(msg);
+        this.labelsService.getAll(this.authenticationService.getUserId());
+      }
+    });
+  }
+
+  onSelectLabel(e: any, labelId: string) {
+    e.stopPropagation();
+    if (!this.checkLabel(labelId)) {
+      this.labelSelected.push(labelId);
+    } else {
+      this.labelSelected = this.labelSelected.filter(value => {
+         return value !== labelId;
+      });
+    }
+  }
+
+  onApplySelectedLabel() {
+    this.filterSelection().forEach(element => {
+      this.patientsService.setLabel(element.id, this.labelSelected).subscribe((res) => {
+        console.log(res);
+        this.getQuery(this.perPage, this.currentPage);
+        this.notificationService.warn('::' + res.message);
+        this.labelSelected = [];
+        this.selection.clear();
+      });
+    });
+  }
+
+  checkLabel(labelId: string) {
+    return this.labelSelected.find(x => x === labelId);
+  }
+
   ngOnDestroy() {
     // this.usersSub.unsubscribe();
+    this.labelsSub.unsubscribe();
   }
 
 }

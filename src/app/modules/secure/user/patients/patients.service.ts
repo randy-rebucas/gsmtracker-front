@@ -62,6 +62,7 @@ export class PatientsService {
 
   getMap(userData) {
     return { patients: userData.patients.map(user => {
+      console.log(user);
       return {
         id: user._id,
         firstname: user.userId.name.firstname,
@@ -74,6 +75,7 @@ export class PatientsService {
         created: user.userId.createdAt,
         updated: user.userId.updatedAt,
         physicians: user.physicians,
+        labels: user.labels,
         privateKey: user.userId.privateKey,
         publicKey: user.userId.publicKey
       };
@@ -110,5 +112,9 @@ export class PatientsService {
 
   checkPhysician(physicianId: string, patientId: string) {
     return this.http.get<any>(BACKEND_URL + '/checkPhysicianExist/' + physicianId + '/' + patientId);
+  }
+
+  setLabel(patientId: string, labels: any[]) {
+    return this.http.get<any>(BACKEND_URL + '/setLabel/' + patientId + '/' + labels);
   }
 }

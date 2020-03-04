@@ -75,6 +75,22 @@ mat-paginator.mat-paginator {
     width: 30%;
 }
 
+// .element-detail mat-card:nth-child(2) {
+//   width: 10%;
+// }
+
+// .element-detail mat-card:first-child {
+//   width: 30%;
+// }
+
+// .element-detail mat-card:nth-child(3) {
+//   width: 30%;
+// }
+
+// .element-detail mat-card:last-child {
+//   width: 30%;
+// }
+
 .detail-row mat-cell {
     padding: unset;
 }
@@ -149,4 +165,8 @@ mat-row:hover {
     display: flex;
     flex-direction: column;
     padding-top: 1em;
+}
+
+.header-row {
+  display: none;
 }
