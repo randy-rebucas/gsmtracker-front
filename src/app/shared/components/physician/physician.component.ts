@@ -22,7 +22,6 @@ export class PhysicianComponent implements OnInit {
   ngOnInit(): void {
     this.getData(this.physician).subscribe((resData) => {
       const merge = {...resData[0], ...resData[1], ...resData[2]};
-      console.log(merge);
       this.user = merge;
     });
   }

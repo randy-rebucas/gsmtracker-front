@@ -32,6 +32,7 @@ import { PrescriptionComponent } from './components/prescription/prescription.co
 import { QrWriterComponent } from './components/qr-writer/qr-writer.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { ProfileComponent } from './components/profile/profile.component';
+import { LabelComponent } from './components/label/label.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     BlocksComponent,
     PrescriptionComponent,
     QrWriterComponent,
-    ProfileComponent
+    ProfileComponent,
+    LabelComponent,
   ],
   imports: [
     CommonModule,
@@ -88,7 +90,9 @@ import { ProfileComponent } from './components/profile/profile.component';
     PhysicianComponent,
     BlocksComponent,
     PrescriptionComponent,
-    QrWriterComponent
+    QrWriterComponent,
+    ProfileComponent,
+    LabelComponent
   ]
 })
 export class SharedModule { }

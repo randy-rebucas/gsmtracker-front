@@ -28,3 +28,19 @@
         }
     }
 }
+
+.arrow-up mat-icon {
+  transform: rotateZ(-180deg);
+}
+
+mat-icon {
+  transition: .15s transform;
+}
+a.mat-list-item span {
+  flex-grow: 2;
+}
+.action {
+  flex-grow: 1;
+  text-align: right;
+}
+

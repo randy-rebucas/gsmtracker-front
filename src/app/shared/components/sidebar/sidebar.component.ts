@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/modules/secure/user/user.service';
 import { User } from 'src/app/modules/secure/user/user';
@@ -11,14 +11,22 @@ import { PatientsService } from 'src/app/modules/secure/user/patients/patients.s
 import { ProfileComponent } from '../profile/profile.component';
 import { UploadService } from '../../services/upload.service';
 import { switchMap } from 'rxjs/operators';
+import { trigger } from '@angular/animations';
+import { fadeIn, fadeOut } from '../../animations/animation';
+import { LabelComponent } from '../label/label.component';
+import { LabelsService } from '../../services/labels.service';
+import { Observable, Subscription } from 'rxjs';
 
+export interface Label {
+  label: string;
+}
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   public perPage: number;
   public currentPage: number;
   public imagePath: any;
@@ -26,11 +34,15 @@ export class SidebarComponent implements OnInit {
   email: string;
   userData: any;
   user: any;
+  showLabel: boolean;
+  labels: any[];
+  labelsSub: Subscription;
 
   constructor(
-    private authenticationService: AuthenticationService,
+    public authenticationService: AuthenticationService,
     private userService: UserService,
     private uploadService: UploadService,
+    private labelsService: LabelsService,
     private dialog: MatDialog,
     private notificationService: NotificationService,
     private router: Router,
@@ -42,6 +54,13 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.labelsService.getAll(this.authenticationService.getUserId());
+    this.labelsSub = this.labelsService.getLabels()
+      .subscribe((res) => {
+      this.labels = res.labels;
+    });
+
     this.email = this.authenticationService.getUserEmail();
     this.userService.get(this.authenticationService.getUserId())
     .pipe(
@@ -67,14 +86,32 @@ export class SidebarComponent implements OnInit {
     this.dialog.open(ProfileComponent, dialogConfig);
   }
 
-  onImportOpen() {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.data = {
-    //   title: 'Import patients'
-    // };
-    // this.dialog.open(ImportComponent, dialogConfig);
+  onToogleLabel() {
+    this.showLabel = !this.showLabel;
+  }
+
+  onCreateLabel(labelId?: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: (labelId) ? 'Update label' : 'Create label',
+      id: labelId
+    };
+    this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
+      if (result) {
+        const msg = (result === 'update') ? ':: Updated successfully' : ':: Added successfully';
+        this.notificationService.success(msg);
+        this.labelsService.getAll(this.authenticationService.getUserId());
+      }
+    });
+  }
+
+  onDeleteLabel(labelId?: string) {
+    this.labelsService.delete(labelId).subscribe((res) => {
+      this.notificationService.success(res.message);
+      this.labelsService.getAll(this.authenticationService.getUserId());
+    });
   }
 
   onDialogOpen() {
@@ -94,5 +131,19 @@ export class SidebarComponent implements OnInit {
         this.patientsService.getMyPatient(this.authenticationService.getUserId(), this.perPage, this.currentPage);
       }
     });
+  }
+
+  onImportOpen() {
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+    // dialogConfig.autoFocus = true;
+    // dialogConfig.data = {
+    //   title: 'Import patients'
+    // };
+    // this.dialog.open(ImportComponent, dialogConfig);
+  }
+
+  ngOnDestroy() {
+    this.labelsSub.unsubscribe();
   }
 }

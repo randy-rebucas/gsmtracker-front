@@ -5,7 +5,7 @@
     </div>
     <div class="profile-wrapper" *ngIf="!isLoading">
         <div class="profile-picture">
-            <app-upload [sourceId]="user?._id" [imagePreview]="user?.image" [size]="100"></app-upload>
+            <app-upload [sourceId]="userId" [imagePreview]="user?.image" [size]="100"></app-upload>
         </div>
         <div class="profile-detail">
             <h2 class="mat-subheading-2">Blockchain Info</h2>
@@ -153,6 +153,6 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button mat-dialog-close>Close</button>
     <button mat-button (click)="onSubmit()" cdkFocusInitial>Update</button>
 </mat-dialog-actions>

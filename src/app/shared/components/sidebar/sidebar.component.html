@@ -9,7 +9,7 @@
     <button mat-stroked-button style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">Create patient</button>
     <mat-divider></mat-divider>
 
-    <h2 matSubheader>Pages</h2>
+    <!-- <h2 matSubheader>Pages</h2> -->
 
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/dashboard">
         <mat-icon>dashboard</mat-icon>
@@ -20,6 +20,30 @@
         My Patients
     </a>
     <!-- <a mat-list-item routerLinkActive="list-item-active" routerLink="/articles">Articles</a> -->
+    <mat-divider></mat-divider>
+    <a mat-list-item (click)="onToogleLabel()" [ngClass]="{'arrow-up': showLabel==true}">
+      <mat-icon>keyboard_arrow_down</mat-icon>
+      <!-- <mat-icon *ngIf="showLabel">keyboard_arrow_up</mat-icon> -->
+      Labels
+  </a>
+  <ng-container *ngIf="showLabel">
+    <a mat-list-item *ngFor="let label of labels">
+      <mat-icon>label</mat-icon>
+      <span  routerLink="/secure/label/43234324">{{label.label}}</span>
+      <div class="action">
+        <button mat-icon-button (click)="onCreateLabel(label.id)">
+          <mat-icon style="margin: unset;">create</mat-icon>
+        </button>
+        <button mat-icon-button (click)="onDeleteLabel(label.id)">
+          <mat-icon style="margin: unset;">delete_outline</mat-icon>
+        </button>
+      </div>
+    </a>
+    <a mat-list-item (click)="onCreateLabel()">
+        <mat-icon>add</mat-icon>
+        Create label
+    </a>
+  </ng-container>
     <!--
     <mat-divider></mat-divider>
     <h2 matSubheader>Tools</h2> -->
@@ -38,7 +62,6 @@
         Print
     </a> -->
     <mat-divider></mat-divider>
-    <h2 matSubheader>More</h2>
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/users/patients/all">
         <mat-icon>supervisor_account</mat-icon>
         All patients
