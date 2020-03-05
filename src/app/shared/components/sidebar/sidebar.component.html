@@ -1,16 +1,31 @@
 <mat-nav-list>
-    <div class="profile-card" (click)="onOpenProfile()">
+    <div class="profile-card" *ngIf="isLoading">
+        <svg height="50" width="20%" class="loading">
+          <circle cx="25" cy="25" r="25" fill="#d8d5d1" />
+        </svg>
+        <div class="info">
+            <h2>
+                <svg height="23px" width="100%" class="loading">
+                <rect width="100%" height="100%" rx="5px" ry="5px" style="fill:#d8d5d1;" />
+              </svg>
+            </h2>
+            <h4>
+                <svg height="18px" width="100%" class="loading">
+                <rect width="80%" height="100%" rx="5px" ry="5px" style="fill:#d8d5d1;" />
+              </svg>
+            </h4>
+        </div>
+    </div>
+    <div class="profile-card" (click)="onOpenProfile()" *ngIf="!isLoading">
         <img [src]="user?.image ? user?.image : defaultImage" alt="{{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}">
         <div class="info">
             <h2>{{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}</h2>
             <h4>{{email}}</h4>
         </div>
     </div>
+
     <button mat-stroked-button style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">Create patient</button>
     <mat-divider></mat-divider>
-
-    <!-- <h2 matSubheader>Pages</h2> -->
-
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/dashboard">
         <mat-icon>dashboard</mat-icon>
         Dashboard
@@ -19,31 +34,30 @@
         <mat-icon>assignment_ind</mat-icon>
         My Patients
     </a>
-    <!-- <a mat-list-item routerLinkActive="list-item-active" routerLink="/articles">Articles</a> -->
+
     <mat-divider></mat-divider>
     <a mat-list-item (click)="onToogleLabel()" [ngClass]="{'arrow-up': showLabel==true}">
-      <mat-icon>keyboard_arrow_down</mat-icon>
-      <!-- <mat-icon *ngIf="showLabel">keyboard_arrow_up</mat-icon> -->
-      Labels
-  </a>
-  <ng-container *ngIf="showLabel">
-    <a mat-list-item *ngFor="let label of labels">
-      <mat-icon>label</mat-icon>
-      <span  routerLink="/secure/label/43234324">{{label.label}}</span>
-      <div class="action">
-        <button mat-icon-button (click)="onCreateLabel(label.id)">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+        Labels
+    </a>
+    <ng-container *ngIf="showLabel">
+        <a mat-list-item *ngFor="let label of labels">
+            <mat-icon>label</mat-icon>
+            <span (click)="onFilterLabel(label.id)">{{label.label}}</span>
+            <div class="action">
+                <button mat-icon-button (click)="onCreateLabel(label.id)">
           <mat-icon style="margin: unset;">create</mat-icon>
         </button>
-        <button mat-icon-button (click)="onDeleteLabel(label.id)">
+                <button mat-icon-button (click)="onDeleteLabel(label.id)">
           <mat-icon style="margin: unset;">delete_outline</mat-icon>
         </button>
-      </div>
-    </a>
-    <a mat-list-item (click)="onCreateLabel()">
-        <mat-icon>add</mat-icon>
-        Create label
-    </a>
-  </ng-container>
+            </div>
+        </a>
+        <a mat-list-item (click)="onCreateLabel()">
+            <mat-icon>add</mat-icon>
+            Create label
+        </a>
+    </ng-container>
     <!--
     <mat-divider></mat-divider>
     <h2 matSubheader>Tools</h2> -->

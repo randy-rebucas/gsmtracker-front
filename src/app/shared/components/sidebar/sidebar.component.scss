@@ -30,17 +30,32 @@
 }
 
 .arrow-up mat-icon {
-  transform: rotateZ(-180deg);
+    transform: rotateZ(-180deg);
 }
 
 mat-icon {
-  transition: .15s transform;
-}
-a.mat-list-item span {
-  flex-grow: 2;
-}
-.action {
-  flex-grow: 1;
-  text-align: right;
+    transition: .15s transform;
 }
 
+a.mat-list-item span {
+    flex-grow: 2;
+}
+
+.action {
+    flex-grow: 1;
+    text-align: right;
+}
+
+.loading {
+    animation: progress 2s ease-in-out infinite;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .2), transparent);
+}
+
+@keyframes progress {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}

@@ -1,13 +1,21 @@
-<ul>
-    <li *ngFor="let blockchain of (blockchains | async) | slice:0:3; let i = index">
-        {{blockchain.timestamp | date:'medium'}} <span style="float: right;"><b>nonce:</b> {{blockchain.nonce}}</span>
-    </li>
-</ul>
+<mat-list *ngIf="!isLoading">
+    <mat-list-item *ngFor="let blockchain of blockchains | slice:0:3; let i = index" style="height: 30px;">
+        {{blockchain.timestamp | date:'medium'}} <span style="flex: 1 1 auto;text-align: right;"><b>nonce:</b> {{blockchain.nonce}}</span>
+    </mat-list-item>
+</mat-list>
 
-<ng-container *ngIf="(blockchains | async)?.length > 3">
-    {{(blockchains | async)?.length - 3}} more...
+<mat-list *ngIf="isLoading">
+    <mat-list-item *ngFor="let blockchain of blockchains | slice:0:3; let i = index" style="height: 30px;">
+        <svg height="18px" width="100%" class="loading" *ngIf="isLoading">
+            <rect width="100%" height="100%" rx="5px" ry="5px" style="fill:#d8d5d1;" />
+        </svg>
+    </mat-list-item>
+</mat-list>
+
+<ng-container *ngIf="blockchains?.length > 3">
+    {{blockchains?.length - 3}} more...
 </ng-container>
 
-<ng-container *ngIf="!(blockchains | async)?.length">
+<ng-container *ngIf="!blockchains?.length">
     <p>no record</p>
 </ng-container>

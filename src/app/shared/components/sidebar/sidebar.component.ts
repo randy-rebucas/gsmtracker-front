@@ -1,21 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/modules/secure/user/user.service';
-import { User } from 'src/app/modules/secure/user/user';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ImportComponent } from '../import/import.component';
 import { NotificationService } from '../../services/notification.service';
 import { PatientFormComponent } from 'src/app/modules/secure/user/patients/patient-form/patient-form.component';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { UploadService } from '../../services/upload.service';
 import { switchMap } from 'rxjs/operators';
-import { trigger } from '@angular/animations';
-import { fadeIn, fadeOut } from '../../animations/animation';
 import { LabelComponent } from '../label/label.component';
 import { LabelsService } from '../../services/labels.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 export interface Label {
   label: string;
@@ -27,6 +23,7 @@ export interface Label {
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+
   public perPage: number;
   public currentPage: number;
   public imagePath: any;
@@ -37,6 +34,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   showLabel: boolean;
   labels: any[];
   labelsSub: Subscription;
+
+  isLoading: boolean;
 
   constructor(
     public authenticationService: AuthenticationService,
@@ -51,6 +50,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.perPage = 10;
     this.currentPage = 1;
     this.defaultImage = './../../../../assets/images/blank.png';
+    this.isLoading = true;
   }
 
   ngOnInit(): void {
@@ -70,6 +70,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe((transformedUser) => {
+      this.isLoading = false;
       this.user = { ...this.userData, ...transformedUser};
     });
   }
@@ -141,6 +142,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     //   title: 'Import patients'
     // };
     // this.dialog.open(ImportComponent, dialogConfig);
+  }
+
+  onFilterLabel(labelId: string) {
+    this.labelsService.setSelectedLabel(labelId);
   }
 
   ngOnDestroy() {

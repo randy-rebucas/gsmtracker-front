@@ -1,1 +1,18 @@
-<p>qr-writer works!</p>
+<h2 mat-dialog-title style="display: flex;justify-content: space-between;">{{title}}
+    <button mat-icon-button mat-dialog-close align="end">
+        <mat-icon>close</mat-icon>
+    </button>
+</h2>
+<mat-dialog-content class="mat-typography">
+    <p>Bring this QR anyware you go for refference. <a href="/page/learn-more#qr-code" target="_blank">Learn more</a></p>
+    <qrcode [qrdata]="id" [size]="256" [width]="256" [level]="'M'"></qrcode>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+
+    <button mat-button (click)="onDownload()">
+        Download
+    </button>
+    <button mat-button (click)="onShare()" cdkFocusInitial>
+        Share
+    </button>
+</mat-dialog-actions>

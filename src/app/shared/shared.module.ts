@@ -31,9 +31,12 @@ import { BlocksComponent } from './components/blocks/blocks.component';
 import { PrescriptionComponent } from './components/prescription/prescription.component';
 import { QrWriterComponent } from './components/qr-writer/qr-writer.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LabelComponent } from './components/label/label.component';
 import { ItemsComponent } from './components/label/items/items.component';
+import { QrReaderComponent } from './components/qr-reader/qr-reader.component';
+
 
 @NgModule({
   declarations: [
@@ -61,6 +64,7 @@ import { ItemsComponent } from './components/label/items/items.component';
     ProfileComponent,
     LabelComponent,
     ItemsComponent,
+    QrReaderComponent,
   ],
   imports: [
     CommonModule,
@@ -71,7 +75,8 @@ import { ItemsComponent } from './components/label/items/items.component';
     FlexLayoutModule,
     HighchartsChartModule,
     PerfectScrollbarModule,
-    QRCodeModule
+    QRCodeModule,
+    ZXingScannerModule
   ],
   exports: [
     PromptModule,

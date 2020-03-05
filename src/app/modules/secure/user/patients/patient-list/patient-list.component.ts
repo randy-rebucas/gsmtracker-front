@@ -24,6 +24,8 @@ import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { LabelComponent } from 'src/app/shared/components/label/label.component';
 import { LabelsService } from 'src/app/shared/services/labels.service';
+import { QrWriterComponent } from 'src/app/shared/components/qr-writer/qr-writer.component';
+import { QrReaderComponent } from 'src/app/shared/components/qr-reader/qr-reader.component';
 
 @Component({
   selector: 'app-patient-list',
@@ -111,6 +113,14 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.labelsSub = this.labelsService.getLabels()
       .subscribe((res) => {
       this.labels = res.labels;
+    });
+
+    this.labelsService.getSelectedLabel().subscribe((selected) => {
+      console.log(selected);
+      this.dataSource.filter = selected.trim().toLowerCase();
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
     });
   }
 
@@ -225,13 +235,24 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onScan() {
-    // const args = {
-    //   width: '30%',
-    //   id: null,
-    //   dialogTitle: 'Scan Code',
-    //   dialogButton: null
-    // };
-    // super.onPopup(args, QrCodeScannerComponent);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Scan QR Code'
+    };
+    this.dialog.open(QrReaderComponent, dialogConfig);
+  }
+
+  onGenerateQr(patientId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      id: patientId,
+      title: 'QR Code'
+    };
+    this.dialog.open(QrWriterComponent, dialogConfig);
   }
 
   onDetail(userId: string) {

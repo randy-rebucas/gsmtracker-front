@@ -1,9 +1,19 @@
-<div class="practitioner-item">
-    <img [src]="user?.image" alt="{{user?.name.firstname}}, {{user?.name.lastname}}" />
-    <p>{{user?.name.firstname}}, {{user?.name.lastname}}<br/>
-        <span>PRC Liense: <b>{{user?.prc}}</b></span>
-    </p>
-    <ul>
-        <li *ngFor="let practice of user?.practices">{{practice.practice}}</li>
-    </ul>
-</div>
+<mat-list-item style="height: 50px;" *ngIf="!isLoading" class="physicians">
+    <img matListAvatar [src]="user?.image" alt="{{user?.name.firstname}}, {{user?.name.lastname}}">
+    <h3 matLine> {{user?.name.firstname}}, {{user?.name.lastname}} </h3>
+    <p matLine><span *ngFor="let practice of user?.practices">{{practice.practice}}</span></p>
+</mat-list-item>
+
+<mat-list-item style="height: 50px;" *ngIf="isLoading">
+    <svg height="50" width="18%" class="loading">
+        <circle cx="23" cy="23" r="23" fill="#d8d5d1" />
+    </svg>
+    <div>
+        <svg height="18px" width="100%" class="loading">
+            <rect width="60%" height="100%" rx="5px" ry="5px" style="fill:#d8d5d1;" />
+        </svg>
+        <svg height="18px" width="100%" class="loading">
+            <rect width="50%" height="100%" rx="5px" ry="5px" style="fill:#d8d5d1;" />
+        </svg>
+    </div>
+</mat-list-item>

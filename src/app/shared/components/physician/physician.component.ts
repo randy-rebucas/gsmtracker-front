@@ -12,17 +12,22 @@ import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physic
 export class PhysicianComponent implements OnInit {
   @Input() physician: string;
 
+  isLoading: boolean;
+
   user: any;
   constructor(
     private userService: UserService,
     private physiciansService: PhysiciansService,
     private uploadService: UploadService
-  ) { }
+  ) {
+    this.isLoading = true;
+  }
 
   ngOnInit(): void {
     this.getData(this.physician).subscribe((resData) => {
       const merge = {...resData[0], ...resData[1], ...resData[2]};
       this.user = merge;
+      this.isLoading = false;
     });
   }
 

@@ -1,70 +1,71 @@
 <div class="search-div">
     <mat-form-field>
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+
+        <button mat-icon-button aria-label="" matSuffix matTooltip="Scan QR Code">
+          <mat-icon (click)="onScan()">crop_free</mat-icon>
+        </button>
     </mat-form-field>
-    <div (click)="onScan()">
-        <img src="https://img.icons8.com/material/24/000000/qr-code--v1.png">
-    </div>
 </div>
 
 <mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
     <ng-container matColumnDef="view-action">
-      <mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox>
-        <button mat-icon-button [matMenuTriggerFor]="matMasterSelect" aria-label="Label menu" matTooltip="Selection action" >
+        <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox>
+            <button mat-icon-button [matMenuTriggerFor]="matMasterSelect" aria-label="Label menu" matTooltip="Selection action">
           <mat-icon>arrow_drop_down</mat-icon>
         </button>
-        <mat-menu #matMasterSelect="matMenu">
-          <button mat-menu-item (click)="onToggleSelect('all')">
+            <mat-menu #matMasterSelect="matMenu">
+                <button mat-menu-item (click)="onToggleSelect('all')">
             <span>All</span>
           </button>
-          <button mat-menu-item (click)="onToggleSelect('none')">
+                <button mat-menu-item (click)="onToggleSelect('none')">
             <span>None</span>
           </button>
-        </mat-menu>
+            </mat-menu>
 
-        <button mat-icon-button [matMenuTriggerFor]="menuLabel" aria-label="Label menu" matTooltip="Manage labels" >
+            <button mat-icon-button [matMenuTriggerFor]="menuLabel" aria-label="Label menu" matTooltip="Manage labels">
             <mat-icon>label</mat-icon>
           </button>
-          <mat-menu #menuLabel="matMenu" >
-            <button mat-menu-item *ngFor="let label of labels" (click)="onSelectLabel($event, label.id)" class="label-items">
+            <mat-menu #menuLabel="matMenu">
+                <button mat-menu-item *ngFor="let label of labels" (click)="onSelectLabel($event, label.id)" class="label-items">
               <mat-icon>label</mat-icon>
               <span>{{label.label}}</span>
               <mat-icon *ngIf="checkLabel(label.id)">check</mat-icon>
             </button>
-            <button mat-menu-item (click)="onCreateLabel()" *ngIf="!labelSelected.length">
+                <button mat-menu-item (click)="onCreateLabel()" *ngIf="!labelSelected.length">
               <mat-icon>add</mat-icon>
               <span>Create label</span>
             </button>
-            <button mat-menu-item (click)="onApplySelectedLabel()" *ngIf="labelSelected.length">
+                <button mat-menu-item (click)="onApplySelectedLabel()" *ngIf="labelSelected.length">
               <span>Apply</span>
             </button>
-          </mat-menu>
+            </mat-menu>
 
-          <button mat-icon-button [matMenuTriggerFor]="menuAction" aria-label="Action menu" matTooltip="More actions" >
+            <button mat-icon-button [matMenuTriggerFor]="menuAction" aria-label="Action menu" matTooltip="More actions">
             <mat-icon>more_vert</mat-icon>
           </button>
-          <mat-menu #menuAction="matMenu">
-            <button mat-menu-item (click)="onPrint()">
+            <mat-menu #menuAction="matMenu">
+                <button mat-menu-item (click)="onPrint()">
               <mat-icon>print</mat-icon>
               <span>Print</span>
             </button>
-            <button mat-menu-item (click)="onExport()">
+                <button mat-menu-item (click)="onExport()">
               <mat-icon>cloud_download</mat-icon>
               <span>Export</span>
             </button>
-            <button mat-menu-item (click)="onDelete()">
+                <button mat-menu-item (click)="onDelete()">
               <mat-icon>delete_outline</mat-icon>
               <span>Delete</span>
             </button>
-          </mat-menu>
+            </mat-menu>
 
-          <label style="flex: 1 1 auto; text-align: right;"><b>{{this.selection.selected.length}}</b> Selected</label>
-      </mat-header-cell>
+            <label style="flex: 1 1 auto; text-align: right;"><b>{{this.selection.selected.length}} Selected</b></label>
+        </mat-header-cell>
     </ng-container>
 
     <ng-container matColumnDef="patient-counts">
-      <mat-header-cell *matHeaderCellDef> Patients ({{length}}) </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> Patients ({{length}}) </mat-header-cell>
     </ng-container>
 
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
@@ -83,9 +84,13 @@
                     <button mat-icon-button (click)="onUpdate(element.id)" aria-label="Edit" matTooltip="Edit" *ngIf="element.isOwned">
                     <mat-icon>create</mat-icon>
                   </button>
+                    <button mat-icon-button (click)="onGenerateQr(element.id)" aria-label="QR Code" matTooltip="QR Code" *ngIf="element.isOwned">
+                    <mat-icon>crop_free</mat-icon>
+                  </button>
                     <button mat-icon-button (click)="onDetail(element.id)" aria-label="Record" matTooltip="Record">
                     <mat-icon>assignment_ind</mat-icon>
                   </button>
+
                 </ng-container>
             </mat-cell>
         </ng-template>
@@ -142,12 +147,9 @@
                         <mat-card-subtitle>({{element.physicians.length}}) physician connected</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <div class="practitioners">
+                        <mat-list>
                             <app-physician *ngFor="let physician of element.physicians | slice:0:2;" [physician]="physician.userId"></app-physician>
-                            <ng-container *ngIf="element.physicians.length > 2">
-                                {{element.physicians.length - 2}} more...
-                            </ng-container>
-                        </div>
+                        </mat-list>
                     </mat-card-content>
                 </mat-card>
                 <mat-card class="record-card">

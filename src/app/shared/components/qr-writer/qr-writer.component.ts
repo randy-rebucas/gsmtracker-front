@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-qr-writer',
@@ -6,10 +7,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./qr-writer.component.scss']
 })
 export class QrWriterComponent implements OnInit {
+  title: string;
+  id: string;
 
-  constructor() { }
+  constructor(
+    public dialogRef: MatDialogRef < QrWriterComponent >,
+    @Inject(MAT_DIALOG_DATA) data
+  ) {
+    this.title = data.title;
+    this.id = data.id;
+  }
 
   ngOnInit(): void {
   }
 
+  onDownload() {
+
+  }
+
+  onShare() {
+
+  }
 }

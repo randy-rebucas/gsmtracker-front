@@ -16,7 +16,7 @@ export interface Label {
 })
 export class LabelsService {
   private labelSub = new Subject<{ labels: Label[] }>();
-
+  private labelSelectedSub = new Subject<any>();
   constructor(
     private http: HttpClient
   ) { }
@@ -45,6 +45,10 @@ export class LabelsService {
     return this.labelSub.asObservable();
   }
 
+  getSelectedLabel() {
+    return this.labelSelectedSub.asObservable();
+  }
+
   get(labelId: string) {
     return this.http.get<any>(BACKEND_URL + '/' + labelId);
   }
@@ -61,4 +65,7 @@ export class LabelsService {
     return this.http.delete<{ message: string }>(BACKEND_URL + '/' + labelId);
   }
 
+  setSelectedLabel(selectedId: string) {
+    this.labelSelectedSub.next(selectedId);
+  }
 }

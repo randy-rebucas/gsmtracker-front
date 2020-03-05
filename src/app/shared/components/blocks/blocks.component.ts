@@ -10,15 +10,21 @@ import { Blockchain } from '../../interfaces/blockchain';
 })
 export class BlocksComponent implements OnInit {
   @Input() patientAddress: string;
-  public blockchains: Observable<Blockchain[]>;
+  public blockchains: Blockchain[];
 
+  isLoading: boolean;
   constructor(
     private blockchainService: BlockchainService
-  ) { }
+  ) {
+    this.isLoading = true;
+  }
 
   ngOnInit(): void {
     // get patient blockchain
-    this.blockchains = this.blockchainService.getByUser(this.patientAddress);
+    this.blockchainService.getByUser(this.patientAddress).subscribe((blockchain) => {
+      this.blockchains = blockchain;
+      this.isLoading = false;
+    });
   }
 
 }
