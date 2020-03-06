@@ -26,6 +26,7 @@ import { LabelComponent } from 'src/app/shared/components/label/label.component'
 import { LabelsService } from 'src/app/shared/services/labels.service';
 import { QrWriterComponent } from 'src/app/shared/components/qr-writer/qr-writer.component';
 import { QrReaderComponent } from 'src/app/shared/components/qr-reader/qr-reader.component';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-patient-list',
@@ -61,6 +62,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   option: string;
   labelSelected: any[];
+  labelPicked: string;
   labels: any[];
   labelsSub: Subscription;
 
@@ -99,6 +101,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pageSizeOptions = [10, 20, 40, 80, 150, 300];
     this.isLoading = true;
     this.labelSelected = [];
+    this.labelPicked = '';
   }
 
   ngOnInit() {
@@ -107,7 +110,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userId = this.authenticationService.getUserId();
     this.titleService.setTitle(this.option === 'list' ? 'My Patients' : 'All Patients');
 
-    this.getQuery(this.perPage, this.currentPage);
+    this.getQuery(this.perPage, this.currentPage, this.labelPicked);
 
     this.labelsService.getAll(this.authenticationService.getUserId());
     this.labelsSub = this.labelsService.getLabels()
@@ -115,13 +118,14 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.labels = res.labels;
     });
 
-    this.labelsService.getSelectedLabel().subscribe((selected) => {
-      console.log(selected);
-      this.dataSource.filter = selected.trim().toLowerCase();
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+    this.labelsService.getSelectedLabel().subscribe((label) => {
+      this.labelPicked = label;
+      this.filterLabel(label);
     });
+  }
+
+  filterLabel(labelId: string) {
+    this.getQuery(this.perPage, this.currentPage, labelId);
   }
 
   ngAfterViewInit() {
@@ -200,11 +204,11 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     return newUsers;
   }
 
-  getQuery(perPage, currentPage) {
+  getQuery(perPage, currentPage, label) {
     if (this.option === 'list') {
-      this.patientsService.getMyPatient(this.userId, perPage, currentPage);
+      this.patientsService.getMyPatient(this.userId, perPage, currentPage, label);
     } else {
-      this.patientsService.getAll(perPage, currentPage);
+      this.patientsService.getAll(perPage, currentPage, label);
     }
   }
 
@@ -213,7 +217,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
     this.length = pageData.length;
-    this.getQuery(this.perPage, this.currentPage);
+    this.getQuery(this.perPage, this.currentPage, this.labelPicked);
   }
 
   onUpdate(patientId: string) {
@@ -229,7 +233,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
         this.notificationService.success(':: Updated successfully');
-        this.getQuery(this.perPage, this.currentPage);
+        this.getQuery(this.perPage, this.currentPage, this.labelPicked);
       }
     });
   }
@@ -386,7 +390,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ids.push(element.id);
           });
           this.patientsService.deleteMany(this.ids).subscribe((res) => {
-            this.getQuery(this.perPage, this.currentPage);
+            this.getQuery(this.perPage, this.currentPage, this.labelPicked);
             this.notificationService.warn('::' + res.message);
           });
         }
@@ -432,7 +436,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.filterSelection().forEach(element => {
       this.patientsService.setLabel(element.id, this.labelSelected).subscribe((res) => {
         console.log(res);
-        this.getQuery(this.perPage, this.currentPage);
+        this.getQuery(this.perPage, this.currentPage, this.labelPicked);
         this.notificationService.warn('::' + res.message);
         this.labelSelected = [];
         this.selection.clear();
@@ -445,7 +449,6 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.usersSub.unsubscribe();
     this.labelsSub.unsubscribe();
   }
 

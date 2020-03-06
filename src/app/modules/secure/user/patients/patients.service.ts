@@ -23,8 +23,8 @@ export class PatientsService {
     private http: HttpClient
   ) { }
 
-  getMyPatient(userId: string, perPage: number, currentPage: number) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}&userId=${userId}`;
+  getMyPatient(userId: string, perPage: number, currentPage: number, label?: string) {
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}&userId=${userId}&labelId=${label}`;
     this.http.get<{message: string, patients: any, counts: number }>(
       BACKEND_URL + queryParams
     )
@@ -37,8 +37,8 @@ export class PatientsService {
     });
   }
 
-  getAll(perPage: number, currentPage: number) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
+  getAll(perPage: number, currentPage: number, label?: string) {
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}&labelId=${label}`;
     this.http.get<{message: string, patients: any, counts: number }>(
       BACKEND_URL + queryParams
     )
@@ -62,7 +62,6 @@ export class PatientsService {
 
   getMap(userData) {
     return { patients: userData.patients.map(user => {
-      console.log(user);
       return {
         id: user._id,
         firstname: user.userId.name.firstname,

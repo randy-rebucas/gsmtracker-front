@@ -1,11 +1,21 @@
-<div class="search-div">
-    <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
-
+<div fxLayout="row">
+    <div fxFlex="40%" fxFlexAlign="start">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Find patient" autocomplete="off">
         <button mat-icon-button aria-label="" matSuffix matTooltip="Scan QR Code">
           <mat-icon (click)="onScan()">crop_free</mat-icon>
         </button>
-    </mat-form-field>
+      </mat-form-field>
+    </div>
+    <div fxFlex="40%" fxFlexOffset="20%" fxFlexAlign="end" style="text-align: right;">
+      <mat-form-field>
+        <mat-label>Select label (optional)</mat-label>
+        <select matNativeControl [(ngModel)]="labelPicked" (ngModelChange)="filterLabel($event)" (selectionChange)="filterLabel($event)">
+          <option value="">Select</option>
+          <option *ngFor="let label of labels" [value]="label.id">{{label.label}}</option>
+        </select>
+      </mat-form-field>
+    </div>
 </div>
 
 <mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
