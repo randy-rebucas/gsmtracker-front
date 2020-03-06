@@ -4,33 +4,67 @@
     </button>
 </h2>
 <mat-dialog-content class="mat-typography">
+  <div class="scanner-shell" [hidden]="!hasDevices">
+  <mat-form-field appearance="fill">
+    <select matNativeControl matInput (change)="onDeviceSelectChange($event.target.value)">
+      <option value="" [selected]="!currentDevice">No Device Selected</option>
+      <option *ngFor="let device of availableDevices" [value]="device.deviceId"
+        [selected]="currentDevice && device.deviceId === currentDevice.deviceId">{{device.label}}</option>
+    </select>
+  </mat-form-field>
     <div class="qr-scan-area">
         <!-- This is the npm package in-charge of scanning the QR -->
-        <zxing-scanner #scanner [(device)]="currentDevice" [formats]="allowedFormats" (scanSuccess)="onCodeResult($event)" (permissionResponse)="onHasPermission($event)"></zxing-scanner>
-        <div class="qr-area">
-            <div class="area"></div>
-        </div>
+        <zxing-scanner [torch]="torchEnabled" [(device)]="currentDevice" (scanSuccess)="onCodeResult($event)"
+    [formats]="formatsEnabled" [tryHarder]="tryHarder" (permissionResponse)="onHasPermission($event)"
+    (camerasFound)="onCamerasFound($event)" (torchCompatible)="onTorchCompatible($event)"></zxing-scanner>
     </div>
 
-    <!-- Displays message on the screen if guest is valid or not -->
-    <div class="guest">
-        <ng-container *ngIf="guestExist">
-            <div class="ui success message">
-                <i class="close icon"></i>
-                <div class="header">
-                    Welcome!!
-                </div>
-                <p>Guest has been found on the guest lists</p>
-            </div>
-        </ng-container>
-        <ng-container #notFound *ngIf="guestExist === false">
-            <div class="ui negative message">
-                <i class="close icon"></i>
-                <div class="header">
-                    Warning!
-                </div>
-                <p>This person is not a guest!</p>
-            </div>
-        </ng-container>
-    </div>
+
+  </div>
+    <ng-container *ngIf="hasPermission === undefined">
+
+      <h2>Waiting for permissions.</h2>
+
+      <blockquote>
+        If your device does not has cameras, no permissions will be asked.
+      </blockquote>
+
+    </ng-container>
+
+    <ng-container *ngIf="hasPermission === false">
+
+      <h2>You denied the camera permission, we can't scan anything without it. 😪</h2>
+
+    </ng-container>
+
+    <ng-container *ngIf="hasDevices === undefined">
+
+      <h2>Couldn't check for devices.</h2>
+
+      <blockquote>
+        This may be caused by some security error.
+      </blockquote>
+
+    </ng-container>
+
+    <ng-container *ngIf="hasDevices === false">
+
+      <h2>No devices were found.</h2>
+
+      <blockquote>
+        I believe your device has no media devices attached to.
+      </blockquote>
+
+    </ng-container>
 </mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="qrResultString">
+  <div>
+      <small>Result</small>
+      <strong>{{ patient.userId.name.firstname }}, {{ patient.userId.name.lastname }}</strong>
+      <button mat-icon-button (click)="clearResult()">
+        <mat-icon>close</mat-icon>
+      </button>
+  </div>
+
+  <button mat-button (click)="onViewRecord(patient)" cdkFocusInitial>View Record</button>
+</mat-dialog-actions>

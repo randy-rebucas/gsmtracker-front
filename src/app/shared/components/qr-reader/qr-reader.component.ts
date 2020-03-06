@@ -5,6 +5,8 @@ import { map } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BarcodeFormat } from '@zxing/library';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-qr-reader',
@@ -12,95 +14,81 @@ import { ZXingScannerComponent } from '@zxing/ngx-scanner';
   styleUrls: ['./qr-reader.component.scss']
 })
 export class QrReaderComponent implements OnInit {
-  currentDevice: MediaDeviceInfo = null;
-  hasDevices: boolean;
-  hasPermission: boolean;
-  qrResult: Patients;
-  guestExist: boolean;
-
   title: string;
   allowedFormats = [ BarcodeFormat.QR_CODE ];
+  scannerEnabled: boolean;
 
-  @ViewChild('scanner', { static: false })
-  scanner: ZXingScannerComponent;
+  availableDevices: MediaDeviceInfo[];
+  currentDevice: MediaDeviceInfo = null;
 
+  formatsEnabled: BarcodeFormat[] = [
+    BarcodeFormat.CODE_128,
+    BarcodeFormat.DATA_MATRIX,
+    BarcodeFormat.EAN_13,
+    BarcodeFormat.QR_CODE,
+  ];
+
+  hasDevices: boolean;
+  hasPermission: boolean;
+
+  qrResultString: boolean;
+
+  torchEnabled = false;
+  torchAvailable$ = new BehaviorSubject<boolean>(false);
+  tryHarder = false;
+
+  patient: any;
   constructor(
+    private router: Router,
     private patientsService: PatientsService,
     public dialogRef: MatDialogRef < QrReaderComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.title = data.title;
+    this.scannerEnabled = true;
   }
 
   ngOnInit(): void {}
 
-  // Clears the QR code scanned
   clearResult(): void {
-    this.qrResult = null;
+    this.qrResultString = false;
   }
 
-  // Scans the QR code
-  onCodeResult(resultString: string): void {
-    console.log(resultString);
-    this.guestExist = null;
-    // if (this.checkQRJSON(resultString)) {
-    //   this.qrResult = JSON.parse(resultString);
-    //   this.checkInGuest(this.qrResult);
-    //   this.clearMessage();
-    // } else {
-    //   this.guestExist = false;
-    //   this.clearMessage();
-    // }
+  onCamerasFound(devices: MediaDeviceInfo[]): void {
+    this.availableDevices = devices;
+    this.hasDevices = Boolean(devices && devices.length);
   }
 
-  // Permission for the app to use the device camera
-  onHasPermission(has: boolean): void {
+  onCodeResult(resultString: string) {
+    this.patientsService.get(resultString).subscribe((patient) => {
+      this.qrResultString = true;
+      this.patient = patient;
+    });
+  }
+
+  onDeviceSelectChange(selected: string) {
+    const device = this.availableDevices.find(x => x.deviceId === selected);
+    this.currentDevice = device || null;
+  }
+
+  onHasPermission(has: boolean) {
     this.hasPermission = has;
   }
 
-  // Checks if the QR code belongs to a valid guest
-  checkInGuest(resultQR: Patients): void {
-    console.log(resultQR);
-    // this.patientsService.getUpdateListener()
-    //   .pipe(
-    //     map(guests =>
-    //       guests.find((guest: Guest) => guest.id === guestQR.id)
-    //     )
-    //   )
-    //   .subscribe(guest => {
-    //     if (guest !== null && guest !== undefined) {
-    //       this.guestExist = true;
-    //     } else {
-    //       this.guestExist = false;
-    //     }
-    //     this.clearResult();
-    //     this.clearMessage();
-    //   });
+  onTorchCompatible(isCompatible: boolean): void {
+    this.torchAvailable$.next(isCompatible || false);
   }
 
-  clearMessage() {
-    setTimeout(() => {
-      this.guestExist = null;
-    }, 3000);
+  toggleTorch(): void {
+    this.torchEnabled = !this.torchEnabled;
   }
 
-  // This function check if the QR code has a valid JSON as data
-  checkQRJSON(qrString: string): boolean {
-    if (
-      /^[\],:{}\s]*$/.test(
-        qrString
-          .replace(/\\["\\\/bfnrtu]/g, '@')
-          .replace(
-            /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
-            ']'
-          )
-          .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
-      )
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+  toggleTryHarder(): void {
+    this.tryHarder = !this.tryHarder;
   }
 
+  onViewRecord(patient: any) {
+    this.dialogRef.close();
+    this.router.navigateByUrl('/secure/users/patients/' + patient._id + '/list');
+  }
 }

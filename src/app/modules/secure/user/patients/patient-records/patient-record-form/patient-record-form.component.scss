@@ -45,3 +45,7 @@ mat-tab-group ::ng-deep .mat-tab-body-wrapper {
 .error .mat-list-item.mat-list-item-with-avatar {
     height: 26px !important;
 }
+
+mat-vertical-stepper {
+  padding-bottom: 5em;
+}
