@@ -259,8 +259,19 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialog.open(QrWriterComponent, dialogConfig);
   }
 
-  onDetail(userId: string) {
-    this.router.navigate(['../', userId], {relativeTo: this.activatedRoute});
+  onDetail(user: any) {
+    console.log(user.isOwned);
+    if (!user.isOwned) {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      dialogConfig.data = {
+        title: 'Scan QR code to confirm visit'
+      };
+      this.dialog.open(QrReaderComponent, dialogConfig);
+    } else {
+      this.router.navigate(['../', user.id], {relativeTo: this.activatedRoute});
+    }
   }
 
   onExport() {

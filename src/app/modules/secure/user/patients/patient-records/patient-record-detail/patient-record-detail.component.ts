@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { Blockchain } from 'src/app/shared/interfaces/blockchain';
 import { Subscription } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-patient-record-detail',
@@ -13,6 +14,14 @@ export class PatientRecordDetailComponent implements OnInit, OnDestroy {
   blockId: string;
   blockchain: Blockchain;
   blockchainSub: Subscription;
+
+  public dataSource: MatTableDataSource<any>;
+  public displayedColumns: string[] = [
+    'medicine',
+    'preparation',
+    'sig',
+    'quantity'
+  ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -26,16 +35,8 @@ export class PatientRecordDetailComponent implements OnInit, OnDestroy {
     // get blockchain information
     this.blockchainSub = this.blockchainService.get(this.blockId).subscribe((block) => {
       this.blockchain = block;
-
-      console.log(this.blockchain);
-      // for (const key of Object.keys(block.transactions.data)) {
-      //   const record = block.transactions.data[key];
-      //   // ... do something with mealName
-      //   this.records.push(record);
-      // }
-
+      this.dataSource = block.transactions.data.prescriptions.prescriptions;
     });
-
   }
 
   ngOnDestroy() {

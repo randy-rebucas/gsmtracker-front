@@ -91,14 +91,14 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
 
     this.form = this.fb.group({
         vitalSign: this.fb.group({
-          temperature: new FormControl('', [Validators.required, Validators.maxLength(4), numberValidator]),
-          bloodPressure: new FormControl('', [Validators.required, Validators.maxLength(4), numberValidator]),
-          pulseRate: new FormControl('', [Validators.required, Validators.maxLength(4), numberValidator]),
-          respiratoryRate: new FormControl('', [Validators.required, Validators.maxLength(4), numberValidator]),
+          temperature: new FormControl('', [Validators.required, Validators.maxLength(6)]),
+          bloodPressure: new FormControl('', [Validators.required, Validators.maxLength(8)]),
+          pulseRate: new FormControl('', [Validators.required, Validators.maxLength(8)]),
+          respiratoryRate: new FormControl('', [Validators.required, Validators.maxLength(4)]),
         }),
         physicalExam: this.fb.group({
-          height: new FormControl('', [Validators.required, Validators.maxLength(4), numberValidator]),
-          weight: new FormControl('', [Validators.required, Validators.maxLength(4), numberValidator]),
+          height: new FormControl('', [Validators.required, Validators.maxLength(4)]),
+          weight: new FormControl('', [Validators.required, Validators.maxLength(4)]),
         }),
         chiefCompliant: this.fb.group({
           chiefCompliant: new FormControl('', [Validators.required, Validators.maxLength(3000)]),
@@ -167,7 +167,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
       medicine: new FormControl(selectedDrug, [Validators.required]),
       preparation: new FormControl('', [Validators.required, Validators.maxLength(150)]),
       sig: new FormControl('', [Validators.required, Validators.maxLength(150)]),
-      quantity: new FormControl(1, [Validators.required]),
+      quantity: new FormControl(1, [Validators.required, numberValidator]),
     });
   }
 
