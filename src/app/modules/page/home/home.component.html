@@ -1,12 +1,26 @@
 <header class="header-background">
     <div class="header-section">
         <div class="header-headline">
-            <h1 class="mat-h1">{{ 'app.welcome' | translate:{'app':'shop-inventory'} }}</h1>
-            <h2> {{ 'home.tag' | translate }}</h2>
+          <!-- {{ 'app.welcome' | translate:{'app':'shop-inventory'} }} -->
+          <!-- {{ 'home.tag' | translate }} -->
+            <h1 class="mat-h1">{{config.title}} <small>ver-{{config.version}}</small></h1>
+            <h2>{{config.tag}}</h2>
         </div>
         <div class="header-start">
 
-            <a mat-raised-button="" routerlink="/guide/getting-started" class="button mat-raised-button mat-button-base" tabindex="0" aria-disabled="false" href="/guide/getting-started">{{ 'home.get-started'  | translate }}</a>
+            <a mat-raised-button="" routerlink="/page/learn-more" class="button mat-raised-button mat-button-base" tabindex="0" aria-disabled="false" href="/page/learn-more">{{ 'home.get-started'  | translate }}</a>
         </div>
     </div>
+
 </header>
+<main class="docs-homepage-promo">
+  <div class="docs-homepage-row">
+    <div class="docs-homepage-promo-img">
+      <img src="../../../../assets/images/clinical.png"/>
+    </div>
+    <div class="docs-homepage-promo-desc">
+        <h2>Sprint from Zero to App</h2>
+        <p>Hit the ground running with comprehensive, modern UI components that work across the web, mobile, and desktop.</p>
+    </div>
+  </div>
+</main>

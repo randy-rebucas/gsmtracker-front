@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { AuthenticationService } from '../../authentication/authentication.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { AuthenticationService } from '../../authentication/authentication.service';
+import { AppConfigurationService } from '../../../configs/app-configuration.service';
 
 @Component({
   selector: 'app-home',
@@ -10,27 +9,22 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private authSub: Subscription;
+  config: any;
+
   constructor(
-    private translate: TranslateService,
+    private router: Router,
     private authenticationService: AuthenticationService,
-    private router: Router
-  ) {
-    translate.setDefaultLang('de'); // default language
-    this.translate.use('en'); // override language
-  }
+    private appConfigurationService: AppConfigurationService
+  ) {}
 
   ngOnInit() {
+    this.config = this.appConfigurationService;
 
-    this.authSub = this.authenticationService.getAuthStatusListener().subscribe((authState) => {
-      if (authState) {
-        this.router.navigateByUrl('secure/dashboard');
-      }
-    });
+    if (this.authenticationService.getIsAuth()) {
+      this.router.navigateByUrl('secure/dashboard');
+    }
 
   }
 
-  ngOnDestroy() {
-    this.authSub.unsubscribe();
-  }
+  ngOnDestroy() {}
 }

@@ -17,12 +17,15 @@ export class HeaderComponent implements OnInit {
 
   @Input() isAuthenticated: boolean;
 
+  config: any;
   constructor(
     private dialog: MatDialog,
-    public appConfigurationService: AppConfigurationService
+    private appConfigurationService: AppConfigurationService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.config = this.appConfigurationService;
+  }
 
   toggleSideBar() {
     this.toggleSideBarForMe.emit();

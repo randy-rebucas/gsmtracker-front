@@ -6,6 +6,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppConfigurationService {
   title: string;
+  version: string;
+  tag: string;
+  language: string;
   constructor(
     private httpClient: HttpClient
   ) { }
@@ -18,13 +21,14 @@ export class AppConfigurationService {
     return new Promise((r, e) => {
       // mock because can't xhr local file here
       const content = {
-        title : 'clinicplus',
-        dayTrial : 14,
-        version : '1.0.0'
+        title: 'clinicplus',
+        version: '1.0.0',
+        tag: '-were doctors are in!',
+        language: 'en'
       };
       Object.assign(this, content);
       r(content);
-      console.log('Response 1 - ', content);
+      console.log(content);
       // real code
       /*
       this.httpClient.get("./config/config.json")

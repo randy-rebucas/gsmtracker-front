@@ -33,6 +33,12 @@
         "no-exist-label": "No account yet?",
         "access-label": "Please input your email and password to gain access."
     },
+    "contact": {
+      "title": "Contact Us"
+    },
+    "about": {
+      "title": "About Us"
+    },
     "dashboard": {
         "title": "Dashboard"
     },
