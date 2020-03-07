@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
       email: new FormControl((this.cookieService.check('email')) ? this.cookieService.get('email') : null, {
         validators: [
           Validators.required,
+          Validators.email,
           Validators.maxLength(50)
         ]
       }),
@@ -49,7 +50,7 @@ export class LoginComponent implements OnInit {
 
   }
 
-  get email() { return this.form.get('email'); }
+  get formCtrls() { return this.form.controls; }
 
   onLogin() {
     if (this.form.invalid) {

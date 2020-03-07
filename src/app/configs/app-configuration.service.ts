@@ -28,7 +28,6 @@ export class AppConfigurationService {
       };
       Object.assign(this, content);
       r(content);
-      console.log(content);
       // real code
       /*
       this.httpClient.get("./config/config.json")

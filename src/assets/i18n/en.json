@@ -61,6 +61,7 @@
     },
     "validation": {
         "required": "Please enter {{s}}",
+        "maxLength": "{{ctrl}} only {{s}} allowed characters long.",
         "invalid": "Please enter valid {{s}}"
     }
 }

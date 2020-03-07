@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-app-login{
-  height: 100%;
+  background-image: url("/assets/images/clinic-slider.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
