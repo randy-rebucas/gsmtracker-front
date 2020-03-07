@@ -2,7 +2,9 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { HelpComponent } from '../help/help.component';
 import { SettingComponent } from '../setting/setting.component';
-import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
+import { TranslateService } from '@ngx-translate/core';
+import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
+import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 
 @Component({
   selector: 'app-header',
@@ -10,21 +12,31 @@ import { AppConfigurationService } from 'src/app/configs/app-configuration.servi
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  isAuth = true;
-
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
   @Output() logout = new EventEmitter<boolean>();
-
   @Input() isAuthenticated: boolean;
 
   config: any;
+  setting: any;
+  userId: string;
+
+  isAuth = true;
   constructor(
     private dialog: MatDialog,
-    private appConfigurationService: AppConfigurationService
-  ) { }
+    private translate: TranslateService,
+    private settingsService: SettingsService,
+    private authenticationService: AuthenticationService
+  ) {
+    this.userId = this.authenticationService.getUserId();
+  }
 
   ngOnInit() {
-    this.config = this.appConfigurationService;
+    this.settingsService.getSetting(this.userId);
+    this.settingsService.getSettingListener()
+    .subscribe((setting) => {
+      this.translate.use(setting.language);
+      this.setting = setting;
+    });
   }
 
   toggleSideBar() {
@@ -51,7 +63,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-    // Output the value
     this.logout.emit(this.isAuth);
   }
 }

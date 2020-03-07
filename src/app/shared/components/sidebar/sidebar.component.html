@@ -24,38 +24,38 @@
         </div>
     </div>
 
-    <button mat-stroked-button style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">Create patient</button>
+    <button mat-stroked-button style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'patients.create-patients' | translate }}</button>
     <mat-divider></mat-divider>
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/dashboard">
         <mat-icon>dashboard</mat-icon>
-        Dashboard
+        {{ 'dashboard.title' | translate }}
     </a>
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/users">
         <mat-icon>assignment_ind</mat-icon>
-        My Patients
+        {{ 'patients.my-patients' | translate }}
     </a>
 
     <mat-divider></mat-divider>
     <a mat-list-item (click)="onToogleLabel()" [ngClass]="{'arrow-up': showLabel==true}">
         <mat-icon>keyboard_arrow_down</mat-icon>
-        Labels
+        {{ 'labels.title' | translate }}
     </a>
     <ng-container *ngIf="showLabel">
         <a mat-list-item *ngFor="let label of labels">
             <mat-icon>label</mat-icon>
             <span (click)="onFilterLabel(label.id)">{{label.label}}</span>
             <div class="action">
-                <button mat-icon-button (click)="onCreateLabel(label.id)">
-          <mat-icon style="margin: unset;">create</mat-icon>
-        </button>
-                <button mat-icon-button (click)="onDeleteLabel(label.id)">
-          <mat-icon style="margin: unset;">delete_outline</mat-icon>
-        </button>
+              <button mat-icon-button (click)="onCreateLabel(label.id)" matTooltip="{{ 'common.edit' | translate }}">
+                <mat-icon style="margin: unset;">create</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteLabel(label.id)" matTooltip="{{ 'common.delete' | translate }}">
+                <mat-icon style="margin: unset;">delete_outline</mat-icon>
+              </button>
             </div>
         </a>
         <a mat-list-item (click)="onCreateLabel()">
             <mat-icon>add</mat-icon>
-            Create label
+            {{ 'labels.create-labels' | translate }}
         </a>
     </ng-container>
     <!--
@@ -63,21 +63,21 @@
     <h2 matSubheader>Tools</h2> -->
     <!-- <a mat-list-item (click)="onImportOpen()">
         <mat-icon>cloud_upload</mat-icon>
-        Import
+        {{ 'labels.import' | translate }}
     </a>
 
     <a mat-list-item>
         <mat-icon>cloud_download</mat-icon>
-        Export
+        {{ 'labels.export' | translate }}
     </a>
 
     <a mat-list-item disabled>
         <mat-icon>print</mat-icon>
-        Print
+        {{ 'common.print' | translate }}
     </a> -->
     <mat-divider></mat-divider>
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/users/patients/all">
         <mat-icon>supervisor_account</mat-icon>
-        All patients
+        {{ 'patients.all-patients' | translate }}
     </a>
 </mat-nav-list>

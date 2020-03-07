@@ -27,6 +27,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -58,7 +59,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatDividerModule,
     MatRadioModule,
     MatSlideToggleModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule
   ],
   exports: [
     MatFormFieldModule,
@@ -87,7 +89,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatDividerModule,
     MatRadioModule,
     MatSlideToggleModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule
   ]
 })
 export class AngularMaterialModule { }

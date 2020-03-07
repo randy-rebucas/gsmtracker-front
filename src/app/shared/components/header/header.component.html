@@ -4,22 +4,22 @@
             <mat-icon>menu</mat-icon>
         </button>
 
-        <span> {{config.title}} </span>
+        <span> {{setting?.clinicname}} </span>
 
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
                 <li>
-                    <button mat-icon-button matTooltip="Help" (click)="onOpenDialog('help')">
+                    <button mat-icon-button matTooltip="{{ 'help.title' | translate }}" (click)="onOpenDialog('help')">
                         <mat-icon>help_outline</mat-icon>
                     </button>
                 </li>
                 <li>
-                    <button mat-icon-button matTooltip="Settings" (click)="onOpenDialog('setting')">
+                    <button mat-icon-button matTooltip="{{ 'settings.title' | translate }}" (click)="onOpenDialog('setting')">
                       <mat-icon>settings</mat-icon>
                   </button>
                 </li>
                 <li>
-                    <button mat-icon-button matTooltip="Logout" (click)="onLogout()">
+                    <button mat-icon-button matTooltip="{{ 'authentication.logout' | translate }}" (click)="onLogout()">
                     <mat-icon>exit_to_app</mat-icon>
                   </button>
                 </li>

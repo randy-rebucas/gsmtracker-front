@@ -9,6 +9,8 @@ import { UserService } from 'src/app/modules/secure/user/user.service';
 import { map } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 
 @Component({
   selector: 'app-setting',
@@ -16,7 +18,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./setting.component.scss']
 })
 export class SettingComponent implements OnInit {
-  selected = 'en';
+  selected: string;
 
   public form: FormGroup;
   times = [];
@@ -27,14 +29,19 @@ export class SettingComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<SettingComponent>,
+    private translate: TranslateService,
     private settingsService: SettingsService,
+    private appConfigurationService: AppConfigurationService,
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private fb: FormBuilder
-  ) { }
+  ) {
+    translate.setDefaultLang(appConfigurationService.language); // default language
+  }
 
   ngOnInit(): void {
+    this.selected = this.appConfigurationService.language;
     const quarterHours = ['00', '15', '30', '45'];
 
     for (let i = 0; i < 24; i++) {
@@ -58,8 +65,8 @@ export class SettingComponent implements OnInit {
 
     this.form = this.fb.group({
       // rxpad header setting
-      rxHeaderOption: [''],
-      rxFooterOption: [''],
+      rxHeaderOption: new FormControl(null),
+      rxFooterOption: new FormControl(null),
       prescription: this.fb.group({
         rxTitle: new FormControl('', [Validators.maxLength(150)]),
         rxSubTitle: new FormControl('', [Validators.maxLength(150)]),
@@ -68,39 +75,28 @@ export class SettingComponent implements OnInit {
         rxPhones: this.fb.array([this.addClinicContactGroup()]),
         rxHours: this.fb.array([this.addClinicHourGroup()]),
       }),
+      clinicname: new FormControl(null),
       // language
-      language: [''],
+      language: new FormControl(null),
       // appointments
-      appointments: [''],
+      appointments: new FormControl(null),
       // updates
-      updates: ['']
+      updates: new FormControl(null)
     });
-    this.settingsService.get(this.userId)
-    .pipe(
-      map(settingData => {
-        if (settingData) {
-          const settingId = {
-            id: settingData._id,
-          };
-          return {...settingId, ...settingData};
-        }
-        return null;
-      })
-    )
+    // this.settingsService.get(this.userId)
+    this.settingsService.getSetting(this.userId);
+    this.settingsService.getSettingListener()
     .subscribe((setting) => {
       console.log(setting);
+      this.translate.use(setting.language);
     //     this.settingId = settingData.settingId;
     //     this.uploadService.get(this.settingId).subscribe((res) => {
     //       this.imagePath = res.image;
     //     });
-      if (!setting) {
-        console.log('all empty');
-        this.form.patchValue({
-          language: 'en',
-        });
-      }
+
       if (setting) {
         this.form.patchValue({
+          clinicname: setting.clinicname,
           rxHeaderOption: setting.rxHeaderOption,
           rxFooterOption: setting.rxFooterOption,
           appointments: setting.appointments,
@@ -110,61 +106,62 @@ export class SettingComponent implements OnInit {
         });
 
         const addressControl = this.form.controls.addresses as FormArray;
-        const address = (setting.prescription.length) ? setting.prescription[0].addresses : [];
+        const address = (setting.prescription) ? setting.prescription.rxAddresses : [];
         for (let i = 1; i < address.length; i++) {
           addressControl.push(this.addAddressGroup());
         }
         this.form.patchValue({addresses: address});
 
         const contactControl = this.form.controls.phones as FormArray;
-        const contacts = (setting.prescription.length) ? setting.prescription[0].phones : [];
+        const contacts = (setting.prescription) ? setting.prescription.rxPhones : [];
         for (let i = 1; i < contacts.length; i++) {
           contactControl.push(this.addClinicContactGroup());
         }
         this.form.patchValue({phones: contacts});
 
         const timesControl = this.form.controls.hours as FormArray;
-        const times = (setting.prescription.length) ? setting.prescription[0].hours : [];
+        const times = (setting.prescription) ? setting.prescription.rxHours : [];
         for (let i = 1; i < times.length; i++) {
           timesControl.push(this.addClinicHourGroup());
         }
         this.form.patchValue({hours: times});
       }
 
-      if ((setting)) {
-        this.isShowHeader = (setting) ? setting.rxHeaderOption : false;
-      }
+      this.isShowHeader = (setting) ? setting.rxHeaderOption : false;
     });
   }
 
   onToggleHeader(event: MatSlideToggleChange) {
     this.isShowHeader = event.checked;
-    console.log(event.checked);
   }
 
   addAddressGroup() {
     return this.fb.group({
-      address1: [null],
-      address2: null,
-      city: [null],
-      province: [null],
-      postalCode: [null, Validators.compose([
-        Validators.minLength(5), Validators.maxLength(5)])
-      ],
-      country: [null]
+      address1: new FormControl(null),
+      address2: new FormControl(null),
+      city: new FormControl(null),
+      province: new FormControl(null),
+      postalCode: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(5)
+        ]
+      }),
+      country: new FormControl(null)
     });
   }
 
   addClinicHourGroup() {
     return this.fb.group({
-      morningOpen: [null],
-      afternoonClose: [null]
+      morningOpen: new FormControl(null),
+      afternoonClose: new FormControl(null)
     });
   }
 
   addClinicContactGroup() {
     return this.fb.group({
-      contact: [null]
+      contact: new FormControl(null)
     });
   }
 
@@ -206,6 +203,7 @@ export class SettingComponent implements OnInit {
     }
     const updatedSetting = {
       userId: this.user.id,
+      clinicname: this.form.value.clinicname,
       // rxpad
       rxHeaderOption: this.form.value.rxHeaderOption,
       rxFooterOption: this.form.value.rxFooterOption,
@@ -217,8 +215,9 @@ export class SettingComponent implements OnInit {
       // updates
       updates: this.form.value.updates
     };
-    console.log(updatedSetting);
-    this.settingsService.update(updatedSetting).subscribe((res) => {
+
+    this.settingsService.setSetting(updatedSetting).subscribe((res) => {
+      this.settingsService.getSetting(this.user.id);
       this.notificationService.success(res.message);
       this.dialogRef.close();
     });

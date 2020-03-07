@@ -280,10 +280,10 @@ export class GeneralComponent implements OnInit {
       // updates
       updates: this.form.value.updates
     };
-    console.log(updatedSetting);
-    this.settingsService.update(updatedSetting).subscribe((res) => {
+
+    this.settingsService.setSetting(updatedSetting).subscribe((res) => {
+      this.settingsService.getSetting(this.user.id);
       this.notificationService.success(res.message);
     });
-
   }
 }

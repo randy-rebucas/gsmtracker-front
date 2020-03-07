@@ -1,8 +1,8 @@
-<h2 mat-dialog-title>Help Section</h2>
+<h2 mat-dialog-title>{{ 'help.title' | translate }}</h2>
 <mat-dialog-content class="mat-typography">
-    <h3>Sorry for inconvenience</h3>
-    <p>Our help center is still under development. We apologies for the inconvenience but you can still contact us on Facebook using <code>myclinicsoftware</code> or simply click this <a href="http://m.me/myclinicsoftware" target="_blank">link</a></p>
+    <h3>{{ 'help.heading' | translate }}</h3>
+    <p>{{ 'help.paragraph' | translate }} <a href="http://m.me/myclinicsoftware" target="_blank">link</a></p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+    <button mat-button mat-dialog-close cdkFocusInitial>{{ 'common.ok' | translate }}</button>
 </mat-dialog-actions>

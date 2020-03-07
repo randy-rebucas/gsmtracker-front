@@ -43,7 +43,14 @@
         "title": "Dashboard"
     },
     "patients": {
-        "title": "Patients"
+        "title": "Patients",
+        "create-patients": "Create patients",
+        "my-patients": "My Patients",
+        "all-patients": "All Patients"
+    },
+    "labels": {
+      "title": "Labels",
+      "create-labels": "Create labels"
     },
     "appointments": {
         "title": "Appointments"
@@ -52,16 +59,55 @@
         "title": "Messages"
     },
     "settings": {
-        "title": "Settings"
+        "title": "Settings",
+        "heading": "Heading",
+        "tagline": "Tagline",
+        "clinic-details": "Clinic Details",
+        "clinicname": "Clinic Name",
+        "prescription-pad": "Prescription Pad (option)",
+        "show-footer": "Show footer",
+        "show-header": "Show header",
+        "pick-time": "Pick time",
+        "no-noon-break": "No Noon Break",
+        "language": "Language",
+        "english": "English",
+        "deutsch": "Deutsch(German)",
+        "arabic": "Arabic",
+        "notifications": "Notifications (notify me once)",
+        "new-canceled-appointment": "New/Canceled Appointment",
+        "update-features": "Updates/Features",
+        "delete-account-note": "Delete account and cancel any associated subscriptions. This action is permanent.",
+        "delete-account": "Delete Account"
+    },
+    "help": {
+      "title": "Help",
+      "heading": "Sorry for inconvenience",
+      "paragraph": "Our help center is still under development. We apologies for the inconvenience but you can still contact us on Facebook using myclinicsoft or simply click this"
     },
     "common": {
         "error": "Error",
-        "okey": "Okey",
-        "submit": "Submit"
+        "ok": "Ok",
+        "edit": "Edit",
+        "delete": "Delete",
+        "submit": "Submit",
+        "close": "Close",
+        "update": "Update",
+        "print": "Print",
+        "export": "Export",
+        "import": "Import"
     },
     "validation": {
         "required": "Please enter {{s}}",
         "maxLength": "{{ctrl}} only {{s}} allowed characters long.",
         "invalid": "Please enter valid {{s}}"
+    },
+    "basic": {
+      "street-line1": "Street Address",
+      "street-line2": "Street Address Line 2",
+      "city": "City",
+      "province": "Province",
+      "postal-code": "Postal Code",
+      "country": "Country",
+      "contact": "Contact"
     }
 }
