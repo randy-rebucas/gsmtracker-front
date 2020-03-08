@@ -69,7 +69,7 @@ export class PatientFormComponent implements OnInit {
         validators: [
           Validators.required,
           Validators.pattern('^[0-9]*$'),
-          // Validators.minLength(9),
+          Validators.minLength(9),
           Validators.maxLength(11)
         ]
       }),
