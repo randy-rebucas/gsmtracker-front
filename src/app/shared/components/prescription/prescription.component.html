@@ -22,17 +22,17 @@
                         {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
                     </ng-container>
                 </th>
-                <th colspan="2">Clinic Hours:</th>
+                <th colspan="2">{{ 'settings.clinic-hours' | translate }}:</th>
             </tr>
             <tr *ngIf="setting?.rxHeaderOption">
                 <th colspan="2"><span *ngFor="let hour of setting?.prescription.rxHours; let o = index;">{{hour.morningOpen}} - {{hour.afternoonClose}}</span></th>
             </tr>
             <tr *ngIf="setting?.rxHeaderOption">
-                <th colspan="2">Tel no <span *ngFor="let phone of setting?.prescription.rxPhones; let i = index;">{{phone.contact}} <span *ngIf="i < 1">/</span> </span>
+                <th colspan="2">{{ 'basic.contact' | translate }} <span *ngFor="let phone of setting?.prescription.rxPhones; let i = index;">{{phone.contact}} <span *ngIf="i < 1">/</span> </span>
                 </th>
             </tr>
             <tr *ngIf="setting?.rxHeaderOption">
-                <th colspan="2"><span *ngIf="setting?.prescription.rxNoNoonBreak">No Noon Break</span></th>
+                <th colspan="2"><span *ngIf="setting?.prescription.rxNoNoonBreak">{{ 'settings.no-noon-break' | translate }}</span></th>
             </tr>
             <tr>
                 <th colspan="4">
@@ -40,21 +40,21 @@
                 </th>
             </tr>
             <tr>
-                <th>Name: </th>
+                <th>{{ 'basic.name' | translate }}: </th>
                 <th>
                     {{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}
                 </th>
-                <th>Birthdate:</th>
+                <th>{{ 'basic.birthdate' | translate }}:</th>
                 <th> {{user?.birthdate | date}}</th>
             </tr>
             <tr>
-                <th>Age: </th>
+                <th>{{ 'basic.age' | translate }}: </th>
                 <th>{{this.getAge(user?.birthdate)}}</th>
-                <th>Gender: </th>
+                <th>{{ 'basic.gender' | translate }}: </th>
                 <th>{{user?.gender}}</th>
             </tr>
             <tr class="address">
-                <th>Address:</th>
+                <th>{{ 'basic.address' | translate }}:</th>
                 <th colspan="3">
                     <ng-container *ngFor="let address of user?.addresses; let i = index;">
                         <ng-container *ngIf="address.current">
@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    License No :
+                  {{ 'physicians.prc' | translate }} :
                 </td>
                 <td>
                     {{setting?.prc}}
@@ -106,7 +106,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    PTR No :
+                  {{ 'physicians.ptr' | translate }} :
                 </td>
                 <td>
                     {{setting?.ptr}}
@@ -114,7 +114,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    S2 No :
+                  {{ 'physicians.s2' | translate }} :
                 </td>
                 <td>
                     {{setting?.s2}}
@@ -135,6 +135,6 @@
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button (click)="onPrint()" cdkFocusInitial>Print</button>
+    <button mat-button mat-dialog-close>{{ 'common.close' | translate }}</button>
+    <button mat-button (click)="onPrint()" cdkFocusInitial>{{ 'common.print' | translate }}</button>
 </mat-dialog-actions>

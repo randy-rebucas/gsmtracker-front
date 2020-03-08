@@ -12,7 +12,7 @@ import { AuthenticationService } from 'src/app/modules/authentication/authentica
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
+  @Output() toggleSideBar: EventEmitter<any> = new EventEmitter();
   @Output() logout = new EventEmitter<boolean>();
   @Input() isAuthenticated: boolean;
 
@@ -20,6 +20,8 @@ export class HeaderComponent implements OnInit {
   userId: string;
 
   isAuth = true;
+  showBadge: boolean;
+  isLoading: boolean;
   constructor(
     private dialog: MatDialog,
     private translate: TranslateService,
@@ -27,6 +29,8 @@ export class HeaderComponent implements OnInit {
     private authenticationService: AuthenticationService
   ) {
     this.userId = this.authenticationService.getUserId();
+    this.showBadge = false;
+    this.isLoading = true;
   }
 
   ngOnInit() {
@@ -35,11 +39,12 @@ export class HeaderComponent implements OnInit {
     .subscribe((setting) => {
       this.translate.use(setting.language);
       this.setting = setting;
+      this.isLoading = false;
     });
   }
 
-  toggleSideBar() {
-    this.toggleSideBarForMe.emit();
+  onToggleSideBar() {
+    this.toggleSideBar.emit();
     setTimeout(() => {
       window.dispatchEvent(
         new Event('resize')
@@ -48,16 +53,11 @@ export class HeaderComponent implements OnInit {
   }
 
   onOpenDialog(type: string) {
-    const dialogTitle = (type === 'help') ? 'Help' : 'Settings';
     const targetEl = (type === 'help') ? HelpComponent : SettingComponent;
-
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '40%';
-    dialogConfig.data = {
-      title: dialogTitle
-    };
     this.dialog.open(targetEl, dialogConfig);
   }
 

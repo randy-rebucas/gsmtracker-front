@@ -8,7 +8,6 @@ import { EllipsisPipe } from './pipes/ellipsis.pipe';
 import { BirthdayPipe } from './pipes/birthday.pipe';
 
 import { DrugsComponent } from './components/lookup/drugs/drugs.component';
-import { PromptModule } from './components/prompt/prompt.module';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -38,7 +37,8 @@ import { ItemsComponent } from './components/label/items/items.component';
 import { QrReaderComponent } from './components/qr-reader/qr-reader.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { MatBadgeModule } from '@angular/material/badge';
+import { PromptComponent } from './components/prompt/prompt.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +67,7 @@ import { TranslateModule } from '@ngx-translate/core';
     LabelComponent,
     ItemsComponent,
     QrReaderComponent,
+    PromptComponent
   ],
   imports: [
     CommonModule,
@@ -80,10 +81,10 @@ import { TranslateModule } from '@ngx-translate/core';
     HighchartsChartModule,
     PerfectScrollbarModule,
     QRCodeModule,
-    ZXingScannerModule
+    ZXingScannerModule,
+    MatBadgeModule
   ],
   exports: [
-    PromptModule,
     // Pipes
     EllipsisPipe,
     BirthdayPipe,
@@ -104,7 +105,8 @@ import { TranslateModule } from '@ngx-translate/core';
     QrWriterComponent,
     ProfileComponent,
     LabelComponent,
-    ItemsComponent
+    ItemsComponent,
+    PromptComponent
   ]
 })
 export class SharedModule { }

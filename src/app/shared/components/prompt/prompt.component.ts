@@ -12,8 +12,11 @@ export class PromptComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PromptComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {message: string, title: string},
-  ) { }
+    @Inject(MAT_DIALOG_DATA) data
+  ) {
+    this.title = data.title;
+    this.message = data.message;
+  }
 
   ngOnInit(): void {
   }

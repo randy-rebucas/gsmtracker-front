@@ -83,14 +83,47 @@
     },
     "records": {
       "title": "Records",
+      "block": "Block",
       "more": "{{s}} more...",
-      "no-record": "No records found!"
+      "no-record": "No records found!",
+      "hash": "Hash",
+      "nonce": "Nonce",
+      "vital-sign": "Vital Sign",
+      "vital-sign-obj": {
+        "temperature": "Temperature",
+        "blood-pressure": "Blood Pressure",
+        "pulse-rate": "Pulse Rate",
+        "respiratory-rate": "Respiratory Rate"
+      },
+      "physical-exam": "Physical Exam",
+      "physical-exam-obj": {
+        "height": "Height",
+        "weight": "Weight"
+      },
+      "chief-complain": "Chief Complaint",
+      "prescription": "Prescription",
+      "prescription-obj": {
+        "medicine": "Medicine",
+        "preparation": "Preparation",
+        "sig": "Sig",
+        "quantity": "Quantity"
+      },
+      "present-illness": "Present Illness",
+      "past-medical": "Past Medical",
+      "family-history": "Family History",
+      "social-history": "Social History",
+      "assessment": "Assessment",
+      "progress-notes": "Progress Notes",
+      "files": "Files"
     },
     "appointments": {
         "title": "Appointments"
     },
     "messages": {
         "title": "Messages"
+    },
+    "notifications": {
+      "title": "Notifications"
     },
     "settings": {
         "title": "Settings",
@@ -103,10 +136,14 @@
         "show-header": "Show header",
         "pick-time": "Pick time",
         "no-noon-break": "No Noon Break",
+        "clinic-hours": "Clinic hours",
         "language": "Language",
-        "english": "English",
-        "deutsch": "Deutsch(German)",
-        "arabic": "Arabic",
+        "language-tip": "Current language",
+        "language-option": {
+          "en": "English",
+          "de": "Deutsch(German)",
+          "ar": "Arabic"
+        },
         "notifications": "Notifications (notify me once)",
         "new-canceled-appointment": "New/Canceled Appointment",
         "update-features": "Updates/Features",
@@ -125,6 +162,7 @@
         "ok": "Ok",
         "no": "No",
         "yes": "Yes",
+        "create": "Create",
         "edit": "Edit",
         "delete": "Delete",
         "update": "Update",
@@ -133,16 +171,24 @@
         "download": "Download",
         "share": "Share",
         "print": "Print",
+        "preview": "Preview",
         "export": "Export",
         "copy": "Copy",
+        "next": "Next",
+        "back": "Back",
         "import": "Import",
+        "finish": "Finish",
+        "finish-note": "You are now done. Please cleck <b>Submit</b> to print prescription.",
         "loading": "Loading {{s}}...",
         "no-data": "No {{s}} data.",
         "confirm-delete-message": "Are you sure to delete {{s}} record ?",
+        "confirm-message": "Please confirm?",
+        "confirm-message-note": "This will add {{s}}",
         "updated-message": "{{s}} updated successfully.",
         "created-message": "{{s}} created successfully.",
         "deleted-message": "{{s}} deleted successfully.",
-        "not-permitted-message": "You are not permitted to take this action!"
+        "not-permitted-message": "You are not permitted to take this action!",
+        "disregard-changes": "Do you want to discard the changes?"
     },
     "validation": {
         "required": "Please enter {{s}}",
@@ -152,6 +198,7 @@
         "pattern": "{{s}} not a valid value"
     },
     "basic": {
+      "name": "Name",
       "firstname": "Firstname",
       "middlename": "Midlename",
       "lastname": "Lastname",
@@ -176,7 +223,8 @@
       "set-current": "Set as Current",
       "change-pass": "Change password",
       "change-email": "Change email",
-      "basic-information": "Basic Information"
+      "basic-information": "Basic Information",
+      "date": "Date"
     },
     "qrcode": {
       "title": "QR Code",

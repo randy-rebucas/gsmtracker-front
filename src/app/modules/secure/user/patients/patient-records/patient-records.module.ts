@@ -14,6 +14,7 @@ import { CanDeactivateGuard } from '../can-deactivate.guard';
 import { HttpClientModule } from '@angular/common/http';
 import { MatStepperModule } from '@angular/material/stepper';
 import { PatientRecordsComponent } from './patient-records.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { PatientRecordsComponent } from './patient-records.component';
     CommonModule,
     FormsModule,
     HttpClientModule,
+    TranslateModule.forChild(),
     ReactiveFormsModule,
     MatStepperModule,
     AngularMaterialModule,

@@ -7,6 +7,7 @@ import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { PatientsService } from '../../patients.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { PrescriptionComponent } from 'src/app/shared/components/prescription/prescription.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-patient-record-list',
@@ -20,6 +21,7 @@ export class PatientRecordListComponent implements OnInit {
 
   isLoading: boolean;
   constructor(
+    private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
     private patientsService: PatientsService,
     private blockchainService: BlockchainService,
@@ -45,10 +47,12 @@ export class PatientRecordListComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '40%';
-    dialogConfig.data = {
-      block: blockchain,
-      title: 'Preview Print'
-    };
+    this.translate.get('common.preview').subscribe((translation) => {
+      dialogConfig.data = {
+        block: blockchain,
+        title: translation
+      };
+    });
     this.dialog.open(PrescriptionComponent, dialogConfig)
       .afterClosed()
       .subscribe((result) => {

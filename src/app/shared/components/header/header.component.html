@@ -1,13 +1,21 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
-        <button mat-icon-button (click)="toggleSideBar()">
+        <button mat-icon-button (click)="onToggleSideBar()">
             <mat-icon>menu</mat-icon>
         </button>
 
-        <span> {{setting?.clinicname}} </span>
+        <span *ngIf="!isLoading"> {{setting?.clinicname}} </span>
 
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
+                <li *ngIf="!isLoading">
+                  <button mat-button matTooltip="{{ 'settings.language-tip' | translate }}">{{ 'settings.language-option.' + setting?.language | translate }}</button>
+                </li>
+                <li>
+                  <button mat-icon-button matTooltip="{{ 'notifications.title' | translate }}">
+                      <mat-icon matBadge="0" [matBadgeHidden]="!showBadge" matBadgePosition="above after" matBadgeColor="warn">notifications_none</mat-icon>
+                  </button>
+                </li>
                 <li>
                     <button mat-icon-button matTooltip="{{ 'help.title' | translate }}" (click)="onOpenDialog('help')">
                         <mat-icon>help_outline</mat-icon>
