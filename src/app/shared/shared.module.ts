@@ -36,9 +36,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LabelComponent } from './components/label/label.component';
 import { ItemsComponent } from './components/label/items/items.component';
 import { QrReaderComponent } from './components/qr-reader/qr-reader.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpLoaderFactory } from '../app.module';
+import { HttpClientModule } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({

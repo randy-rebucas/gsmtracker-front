@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { AuthenticationService } from '../../../../authentication/authentication.service';
@@ -47,13 +47,42 @@ export class PatientFormComponent implements OnInit {
   ngOnInit() {
 
     this.form = this.fb.group({
-      userId: [],
-      firstname: ['', [Validators.required]],
-      midlename: ['', [Validators.required]],
-      lastname: ['', [Validators.required]],
-      contact: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
-      birthdate: ['', [Validators.required]],
+      userId: new FormControl(null),
+      firstname: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(30)
+        ]
+      }),
+      midlename: new FormControl(null, {
+        validators: [
+          Validators.maxLength(30)
+        ]
+      }),
+      lastname: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(30)
+        ]
+      }),
+      contact: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.pattern('^[0-9]*$'),
+          // Validators.minLength(9),
+          Validators.maxLength(11)
+        ]
+      }),
+      gender: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      }),
+      birthdate: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      }),
       addresses: this.fb.array([this.addAddressGroup()])
     });
 
@@ -85,13 +114,43 @@ export class PatientFormComponent implements OnInit {
 
   addAddressGroup() {
     return this.fb.group({
-      current: [],
-      address1: ['', [Validators.required]],
-      address2: [''],
-      city: ['', [Validators.required]],
-      province: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]],
-      country: ['', [Validators.required]]
+      current: new FormControl(true),
+      address1: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(250)
+        ]
+      }),
+      address2: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(250)
+        ]
+      }),
+      city: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(50)
+        ]
+      }),
+      province: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(50)
+        ]
+      }),
+      postalCode: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.pattern('^[0-9]*$'),
+          Validators.maxLength(6)
+        ]
+      }),
+      country: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      })
     });
   }
 
@@ -107,6 +166,14 @@ export class PatientFormComponent implements OnInit {
 
   get addressArray() {
     return this.form.get('addresses') as FormArray;
+  }
+
+  get formCtrls() {
+    return this.form.controls;
+  }
+
+  getAddresseFormGroup(index: any): FormGroup {
+    return this.addressArray.controls[index] as FormGroup;
   }
 
   onSavePatient() {

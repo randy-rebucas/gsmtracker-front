@@ -68,9 +68,9 @@ export class SettingComponent implements OnInit {
       rxHeaderOption: new FormControl(null),
       rxFooterOption: new FormControl(null),
       prescription: this.fb.group({
-        rxTitle: new FormControl('', [Validators.maxLength(150)]),
-        rxSubTitle: new FormControl('', [Validators.maxLength(150)]),
-        rxNoNoonBreak: new FormControl(''),
+        rxTitle: new FormControl(null, [Validators.maxLength(150)]),
+        rxSubTitle: new FormControl(null, [Validators.maxLength(150)]),
+        rxNoNoonBreak: new FormControl(null),
         rxAddresses: this.fb.array([this.addAddressGroup()]),
         rxPhones: this.fb.array([this.addClinicContactGroup()]),
         rxHours: this.fb.array([this.addClinicHourGroup()]),

@@ -24,7 +24,10 @@ export class AppConfigurationService {
         title: 'clinicplus',
         version: '1.0.0',
         tag: '-were doctors are in!',
-        language: 'en'
+        language: 'en',
+        perPage: 10,
+        currentPage: 1,
+        pageSizeOptions: [10, 20, 40, 80, 150, 300]
       };
       Object.assign(this, content);
       r(content);

@@ -12,6 +12,8 @@ import { switchMap } from 'rxjs/operators';
 import { LabelComponent } from '../label/label.component';
 import { LabelsService } from '../../services/labels.service';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
 
 export interface Label {
   label: string;
@@ -36,9 +38,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   labelsSub: Subscription;
 
   isLoading: boolean;
+  userId: string;
+  setting: any;
 
   constructor(
-    public authenticationService: AuthenticationService,
+    private translate: TranslateService,
+    private settingsService: SettingsService,
+    private authenticationService: AuthenticationService,
     private userService: UserService,
     private uploadService: UploadService,
     private labelsService: LabelsService,
@@ -51,18 +57,25 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.currentPage = 1;
     this.defaultImage = './../../../../assets/images/blank.png';
     this.isLoading = true;
+    this.userId = this.authenticationService.getUserId();
   }
 
   ngOnInit(): void {
+    this.settingsService.getSetting(this.userId);
+    this.settingsService.getSettingListener()
+    .subscribe((setting) => {
+      this.translate.use(setting.language);
+      this.setting = setting;
+    });
 
-    this.labelsService.getAll(this.authenticationService.getUserId());
+    this.labelsService.getAll(this.userId);
     this.labelsSub = this.labelsService.getLabels()
       .subscribe((res) => {
       this.labels = res.labels;
     });
 
     this.email = this.authenticationService.getUserEmail();
-    this.userService.get(this.authenticationService.getUserId())
+    this.userService.get(this.userId)
     .pipe(
       switchMap((userData) => {
         this.userData = userData;
@@ -80,10 +93,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '40%';
-    dialogConfig.data = {
-      title: 'Profile',
-      id: this.authenticationService.getUserId()
-    };
+    // set modal attribute
+    this.translate.get('common.profile').subscribe((language) => {
+      dialogConfig.data = {
+        title: language,
+        id: this.userId
+      };
+    });
+
     this.dialog.open(ProfileComponent, dialogConfig);
   }
 
@@ -92,26 +109,48 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   onCreateLabel(labelId?: string) {
+    let modalTitle = '';
+    let modalBtn = '';
+    this.translate.get((labelId) ? 'labels.update-labels' : 'labels.create-labels').subscribe((res: string) => {
+      modalTitle = res;
+    });
+    this.translate.get((labelId) ? 'common.update' : 'common.submit').subscribe((res: string) => {
+      modalBtn = res;
+    });
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: (labelId) ? 'Update label' : 'Create label',
+      title: modalTitle,
+      btn: modalBtn,
       id: labelId
     };
     this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        const msg = (result === 'update') ? ':: Updated successfully' : ':: Added successfully';
-        this.notificationService.success(msg);
-        this.labelsService.getAll(this.authenticationService.getUserId());
+        let norifResMessgae = '';
+        this.translate.get(
+          (result === 'update') ? 'common.updated-message' : 'common.created-message',
+          {s: 'Label'}
+        ).subscribe((res: string) => {
+          norifResMessgae = res;
+        });
+        this.notificationService.success(norifResMessgae);
+        this.labelsService.getAll(this.userId);
       }
     });
   }
 
   onDeleteLabel(labelId?: string) {
-    this.labelsService.delete(labelId).subscribe((res) => {
-      this.notificationService.success(res.message);
-      this.labelsService.getAll(this.authenticationService.getUserId());
+    this.labelsService.delete(labelId).subscribe((response) => {
+      let norifResMessgae = '';
+      this.translate.get('common.deleted-message',
+        {s: 'Label'}
+      ).subscribe((res: string) => {
+        norifResMessgae = res;
+      });
+      this.notificationService.success(norifResMessgae);
+      this.labelsService.getAll(this.userId);
     });
   }
 
@@ -120,16 +159,26 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '50%';
-    dialogConfig.data = {
-      id: null,
-      title: 'Create New',
-      button: 'Save'
-    };
+    // set modal attributes
+    this.translate.get([
+      'patients.create-patients',
+      'common.submit'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        id: null,
+        title: translate['patients.create-patients'],
+        button: translate['common.submit']
+      };
+    });
+
     this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        this.notificationService.success(':: Added successfully');
+        this.translate.get('common.created-message', {s: 'Patient'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
+        });
+
         this.router.navigateByUrl('/secure/users/patients/' + result + '/form');
-        this.patientsService.getMyPatient(this.authenticationService.getUserId(), this.perPage, this.currentPage);
       }
     });
   }

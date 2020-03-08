@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { UserService } from 'src/app/modules/secure/user/user.service';
 import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
@@ -67,19 +67,74 @@ export class ProfileComponent implements OnInit {
     this.isLoading = true;
 
     this.form = this.fb.group({
-      firstname: ['', [Validators.required]],
-      midlename: ['', [Validators.required]],
-      lastname: ['', [Validators.required]],
-      contact: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
-      birthdate: ['', [Validators.required]],
+      firstname: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(30)
+        ]
+      }),
+      midlename: new FormControl(null, {
+        validators: [
+          Validators.maxLength(30)
+        ]
+      }),
+      lastname: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(30)
+        ]
+      }),
+      contact: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.pattern('^[0-9]*$'),
+          Validators.minLength(9),
+          Validators.maxLength(11)
+        ]
+      }),
+      gender: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      }),
+      birthdate: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      }),
       addresses: this.fb.array([this.addAddressGroup()]),
-      bio: ['', [Validators.required]],
+      bio: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(1500)
+        ]
+      }),
       practices: this.fb.array([this.practicesGroup()]),
-      prc: ['', [Validators.required]],
-      ptr: [''],
-      s2: [''],
-      professionalFee: ['', [Validators.required]]
+      prc: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(15)
+        ]
+      }),
+      ptr: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(15)
+        ]
+      }),
+      s2: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(10)
+        ]
+      }),
+      professionalFee: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.pattern('^[0-9]*$'),
+          Validators.maxLength(6)
+        ]
+      }),
     });
 
     this.getData(this.userId).subscribe((resData) => {
@@ -125,20 +180,60 @@ export class ProfileComponent implements OnInit {
 
   addAddressGroup() {
     return this.fb.group({
-      current: [],
-      address1: ['', [Validators.required]],
-      address2: [''],
-      city: ['', [Validators.required]],
-      province: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]],
-      country: ['', [Validators.required]]
+      current: new FormControl(true),
+      address1: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(250)
+        ]
+      }),
+      address2: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(250)
+        ]
+      }),
+      city: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(50)
+        ]
+      }),
+      province: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(50)
+        ]
+      }),
+      postalCode: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.pattern('^[0-9]*$'),
+          Validators.maxLength(6)
+        ]
+      }),
+      country: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      })
     });
   }
 
   practicesGroup() {
     return this.fb.group({
-      practice: ['', [Validators.required]],
-      practiceYearExperience: ['', [Validators.required]]
+      practice: new FormControl(null, {
+        validators: [
+          Validators.required
+        ]
+      }),
+      practiceYearExperience: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.pattern('^[0-9]*$'),
+          Validators.maxLength(2)
+        ]
+      })
     });
   }
 
@@ -170,6 +265,18 @@ export class ProfileComponent implements OnInit {
     return this.form.get('practices') as FormArray;
   }
 
+  get formCtrls() {
+    return this.form.controls;
+  }
+
+  getAddresseFormGroup(index: any): FormGroup {
+    return this.addressArray.controls[index] as FormGroup;
+  }
+
+  getPractiseFormGroup(index: any): FormGroup {
+    return this.practiceArray.controls[index] as FormGroup;
+  }
+
   onSubmit() {
 
     if (this.form.invalid) {
@@ -190,7 +297,6 @@ export class ProfileComponent implements OnInit {
     };
 
     this.userService.update(updateUser).subscribe(() => {
-      this.notificationService.success(':: Updated successfully');
       const updatePhysician = {
         _id: this.user._id,
         practices: this.form.value.practices,
@@ -201,6 +307,7 @@ export class ProfileComponent implements OnInit {
         professionalFee: this.form.value.professionalFee
       };
       this.physiciansService.update(updatePhysician).subscribe(() => {
+        this.notificationService.success(':: Updated successfully');
         this.dialogRef.close();
       });
     });

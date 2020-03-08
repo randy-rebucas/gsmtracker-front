@@ -11,6 +11,8 @@ import { AngularMaterialModule } from 'src/app/angular-material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CanDeactivateGuard } from './can-deactivate.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HttpClientModule } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -21,10 +23,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
+    TranslateModule.forChild(),
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    MatTooltipModule,
     SharedModule,
     FlexLayoutModule,
     RouterModule.forChild([

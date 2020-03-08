@@ -7,7 +7,7 @@
   <div class="scanner-shell" [hidden]="!hasDevices">
   <mat-form-field appearance="fill">
     <select matNativeControl matInput (change)="onDeviceSelectChange($event.target.value)">
-      <option value="" [selected]="!currentDevice">No Device Selected</option>
+      <option value="" [selected]="!currentDevice">{{ 'qrcode.no-device-selected' | translate }}</option>
       <option *ngFor="let device of availableDevices" [value]="device.deviceId"
         [selected]="currentDevice && device.deviceId === currentDevice.deviceId">{{device.label}}</option>
     </select>
@@ -22,49 +22,29 @@
 
   </div>
     <ng-container *ngIf="hasPermission === undefined">
-
-      <h2>Waiting for permissions.</h2>
-
-      <blockquote>
-        If your device does not has cameras, no permissions will be asked.
-      </blockquote>
-
+      <div [innerHTML]="'qrcode.permission-waiting' | translate"></div>
     </ng-container>
 
     <ng-container *ngIf="hasPermission === false">
-
-      <h2>You denied the camera permission, we can't scan anything without it. 😪</h2>
-
+      <div [innerHTML]="'qrcode.permission-denied' | translate"></div>
     </ng-container>
 
     <ng-container *ngIf="hasDevices === undefined">
-
-      <h2>Couldn't check for devices.</h2>
-
-      <blockquote>
-        This may be caused by some security error.
-      </blockquote>
-
+      <div [innerHTML]="'qrcode.device-check-fail' | translate"></div>
     </ng-container>
 
     <ng-container *ngIf="hasDevices === false">
-
-      <h2>No devices were found.</h2>
-
-      <blockquote>
-        I believe your device has no media devices attached to.
-      </blockquote>
-
+      <div [innerHTML]="'qrcode.no-device-found' | translate"></div>
     </ng-container>
 </mat-dialog-content>
 <mat-dialog-actions align="end" *ngIf="qrResultString">
   <div>
-      <small>Result</small>
+      <small>{{ 'qrcode.result' | translate }}</small>
       <strong>{{ patient.userId.name.firstname }}, {{ patient.userId.name.lastname }}</strong>
       <button mat-icon-button (click)="clearResult()">
         <mat-icon>close</mat-icon>
       </button>
   </div>
 
-  <button mat-button (click)="onViewRecord(patient)" cdkFocusInitial>View Record</button>
+  <button mat-button (click)="onViewRecord(patient)" cdkFocusInitial>{{ 'qrcode.view-record' | translate }}</button>
 </mat-dialog-actions>

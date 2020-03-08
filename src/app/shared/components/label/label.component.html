@@ -1,12 +1,21 @@
-<h2 mat-dialog-title>{{title}}</h2>
+<h2 mat-dialog-title>{{ title | translate }}</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="form" (submit)="onCreate()">
     <mat-form-field>
+      <mat-label>{{ 'labels.title' | translate }}</mat-label>
       <input matInput type="text" formControlName="label" #labelInput>
+      <mat-error *ngIf="formCtrls.label.errors">
+        <div *ngIf="formCtrls.label.errors.required">
+            {{ 'validation.required' | translate:{'s':'label'} }}
+        </div>
+        <div *ngIf="formCtrls.label.errors.maxlength">
+            {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'label'} }}
+        </div>
+      </mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button (click)="onCreate()" cdkFocusInitial>{{btn}}</button>
+  <button mat-button mat-dialog-close>{{ 'common.close' | translate }}</button>
+  <button mat-button (click)="onCreate()" cdkFocusInitial>{{ btn | translate }}</button>
 </mat-dialog-actions>

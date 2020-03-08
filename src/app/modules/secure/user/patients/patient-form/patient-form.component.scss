@@ -2,10 +2,6 @@ mat-form-field {
     width: 100%;
 }
 
-mat-form-field:not(:first-child) {
-    margin-left: 1em;
-}
-
 .form-field-block {
     display: flex;
     flex-grow: 1;

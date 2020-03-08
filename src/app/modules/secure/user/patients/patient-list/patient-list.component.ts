@@ -3,9 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { Subscription, merge, Observable, of as observableOf } from 'rxjs';
-import { startWith, switchMap, map, catchError, tap } from 'rxjs/operators';
-import { User } from '../../user';
+import { Subscription, merge, of as observableOf } from 'rxjs';
+import { startWith, switchMap, map, catchError } from 'rxjs/operators';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -19,14 +18,13 @@ import { trigger, style, state, transition, animate } from '@angular/animations'
 import { AuthenticationService } from '../../../../authentication/authentication.service';
 import { PatientFormComponent } from '../patient-form/patient-form.component';
 import { PatientsService } from '../patients.service';
-import { Physicians } from '../../physicians/physicians';
 import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
-import { BlockchainService } from 'src/app/shared/services/blockchain.service';
 import { LabelComponent } from 'src/app/shared/components/label/label.component';
 import { LabelsService } from 'src/app/shared/services/labels.service';
 import { QrWriterComponent } from 'src/app/shared/components/qr-writer/qr-writer.component';
 import { QrReaderComponent } from 'src/app/shared/components/qr-reader/qr-reader.component';
-import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { TranslateService } from '@ngx-translate/core';
+import { SettingsService } from '../../../settings/settings.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -45,26 +43,19 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   public perPage: number;
   public currentPage: number;
   public pageSizeOptions: any;
-
   public isLoading: boolean;
-
-  private usersSub: Subscription;
-  private users: any[] = [];
-  private ids: any = [];
-  private contacts: any[] = [];
-  private hours: any[] = [];
-  private addresses: any[];
-
   public userId: string;
   public avatar: string;
-
   public patients: any;
+
+  private ids: any = [];
 
   option: string;
   labelSelected: any[];
   labelPicked: string;
   labels: any[];
   labelsSub: Subscription;
+  setting: any;
 
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
@@ -91,6 +82,8 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private patientsService: PatientsService,
+    private translate: TranslateService,
+    private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
     private labelsService: LabelsService,
     private dialog: MatDialog
@@ -102,17 +95,27 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
     this.labelSelected = [];
     this.labelPicked = '';
+    this.userId = this.authenticationService.getUserId();
   }
 
   ngOnInit() {
+    this.settingsService.getSetting(this.userId);
+    this.settingsService.getSettingListener()
+    .subscribe((setting) => {
+      this.translate.use(setting.language);
+      this.setting = setting;
+    });
+
     this.option = this.activatedRoute.snapshot.url[0].path;
 
-    this.userId = this.authenticationService.getUserId();
-    this.titleService.setTitle(this.option === 'list' ? 'My Patients' : 'All Patients');
+    this.translate.get(this.option === 'list' ? 'patients.my-patients' : 'patients.all-patients')
+    .subscribe((res: string) => {
+      this.titleService.setTitle(res);
+    });
 
     this.getQuery(this.perPage, this.currentPage, this.labelPicked);
 
-    this.labelsService.getAll(this.authenticationService.getUserId());
+    this.labelsService.getAll(this.userId);
     this.labelsSub = this.labelsService.getLabels()
       .subscribe((res) => {
       this.labels = res.labels;
@@ -152,6 +155,18 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
       ).subscribe(
         data => this.dataSource = new MatTableDataSource(this.setOwnerShip(data))
       );
+
+    this.translate.get([
+      'paginator.item-per-page',
+      'paginator.next-page',
+      'paginator.previous-page'
+    ])
+    .subscribe(translation => {
+      this.paginator._intl.itemsPerPageLabel = translation['paginator.item-per-page'];
+      this.paginator._intl.nextPageLabel = translation['paginator.next-page'];
+      this.paginator._intl.previousPageLabel = translation['paginator.previous-page'];
+      // this.paginator._intl.getRangeLabel = matRangeLabelIntl;
+    });
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -225,26 +240,44 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '50%';
-    dialogConfig.data = {
-      id: patientId,
-      title: 'Update',
-      button: 'Update'
-    };
+    // set modal title
+    this.translate.get([
+      'patients.update-patients',
+      'common.update'
+    ]).subscribe((translation) => {
+      dialogConfig.data = {
+        id: patientId,
+        title: translation['patients.update-patients'],
+        button: translation['common.update']
+      };
+    });
+
     this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        this.notificationService.success(':: Updated successfully');
+        let norifResMessgae = '';
+        this.translate.get('common.updated-message',
+          {s: 'Patient'}
+        ).subscribe((res: string) => {
+          norifResMessgae = res;
+        });
+        this.notificationService.success(norifResMessgae);
         this.getQuery(this.perPage, this.currentPage, this.labelPicked);
       }
     });
   }
 
   onScan() {
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      title: 'Scan QR Code'
-    };
+    // set modal title
+    this.translate.get('qrcode.scan').subscribe((res: string) => {
+      dialogConfig.data = {
+        title: res
+      };
+    });
+
     this.dialog.open(QrReaderComponent, dialogConfig);
   }
 
@@ -252,22 +285,29 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      id: patientId,
-      title: 'QR Code'
-    };
+    // set modal title
+    this.translate.get('qrcode.title').subscribe((res: string) => {
+      dialogConfig.data = {
+        id: patientId,
+        title: res
+      };
+    });
+
     this.dialog.open(QrWriterComponent, dialogConfig);
   }
 
   onDetail(user: any) {
-    console.log(user.isOwned);
     if (!user.isOwned) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
-      dialogConfig.data = {
-        title: 'Scan QR code to confirm visit'
-      };
+      // set modal title
+      this.translate.get('qrcode.scan-qrcode').subscribe((res: string) => {
+        dialogConfig.data = {
+          title: res
+        };
+      });
+
       this.dialog.open(QrReaderComponent, dialogConfig);
     } else {
       this.router.navigate(['../', user.id], {relativeTo: this.activatedRoute});
@@ -390,24 +430,28 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   onDelete() {
     // check for allowed record lenght
     if (this.filterSelection().length) {
-      const plural = (this.filterSelection().length > 1) ? '(s)' : '';
-      this.dialogService.openConfirmDialog('Are you sure to delete ' + this.filterSelection().length +
-      ' item' + plural +
-      ' record ?')
-      .afterClosed().subscribe(dialogRes => {
-        if (dialogRes) {
+      this.translate.get('common.confirm-delete-message', {s: this.filterSelection().length}).subscribe((confirmMessage: string) => {
+        this.dialogService.openConfirmDialog(confirmMessage)
+        .afterClosed().subscribe(dialogRes => {
+          if (dialogRes) {
 
-          this.filterSelection().forEach(element => {
-            this.ids.push(element.id);
-          });
-          this.patientsService.deleteMany(this.ids).subscribe((res) => {
-            this.getQuery(this.perPage, this.currentPage, this.labelPicked);
-            this.notificationService.warn('::' + res.message);
-          });
-        }
+            this.filterSelection().forEach(element => {
+              this.ids.push(element.id);
+            });
+            this.patientsService.deleteMany(this.ids).subscribe((res) => {
+
+              this.translate.get('common.deleted-message', {s: 'Patient'}).subscribe((msg: string) => {
+                this.notificationService.success(msg);
+              });
+              this.getQuery(this.perPage, this.currentPage, this.labelPicked);
+            });
+          }
+        });
       });
     } else {
-      this.notificationService.success(':: You are not permitted to take this action!');
+      this.translate.get('common.not-permitted-message').subscribe((res: string) => {
+        this.notificationService.warn(res);
+      });
     }
   }
 
@@ -416,18 +460,33 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onCreateLabel(labelId?: string) {
+    let modalTitle = '';
+    let modalBtn = '';
+    this.translate.get((labelId) ? 'labels.update-labels' : 'labels.create-labels').subscribe((res: string) => {
+      modalTitle = res;
+    });
+    this.translate.get((labelId) ? 'common.update' : 'common.submit').subscribe((res: string) => {
+      modalBtn = res;
+    });
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: (labelId) ? 'Update label' : 'Create label',
+      title: modalTitle,
+      btn: modalBtn,
       id: labelId
     };
     this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        const msg = (result === 'update') ? ':: Updated successfully' : ':: Added successfully';
-        this.notificationService.success(msg);
-        this.labelsService.getAll(this.authenticationService.getUserId());
+        let norifResMessgae = '';
+        this.translate.get(
+          (result === 'update') ? 'common.updated-message' : 'common.created-message',
+          {s: 'Label'}
+        ).subscribe((res: string) => {
+          norifResMessgae = res;
+        });
+        this.notificationService.success(norifResMessgae);
+        this.labelsService.getAll(this.userId);
       }
     });
   }
@@ -445,10 +504,13 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onApplySelectedLabel() {
     this.filterSelection().forEach(element => {
-      this.patientsService.setLabel(element.id, this.labelSelected).subscribe((res) => {
-        console.log(res);
+      this.patientsService.setLabel(element.id, this.labelSelected).subscribe((response) => {
         this.getQuery(this.perPage, this.currentPage, this.labelPicked);
-        this.notificationService.warn('::' + res.message);
+        this.translate.get('common.updated-message',
+          {s: 'Label'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
+        });
         this.labelSelected = [];
         this.selection.clear();
       });

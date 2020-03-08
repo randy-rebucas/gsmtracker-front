@@ -13,9 +13,9 @@
 </mat-list>
 
 <ng-container *ngIf="blockchains?.length > 3">
-    {{blockchains?.length - 3}} more...
+    {{ 'records.more' | translate:{'s':blockchains?.length - 3} }}
 </ng-container>
 
 <ng-container *ngIf="!blockchains?.length">
-    <p>no record</p>
+    <p>{{ 'records.no-record' | translate }}</p>
 </ng-container>

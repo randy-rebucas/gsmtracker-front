@@ -16,7 +16,6 @@ export class HeaderComponent implements OnInit {
   @Output() logout = new EventEmitter<boolean>();
   @Input() isAuthenticated: boolean;
 
-  config: any;
   setting: any;
   userId: string;
 

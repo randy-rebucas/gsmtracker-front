@@ -9,7 +9,8 @@
         "contact": "Contact"
     },
     "footer": {
-        "powered-by": "Powered by Google ©2010-2019.",
+      "reserved": "All rights reserved 2020",
+        "powered-by": "Powered by coreweb ©2010-2019.",
         "current-version": "Current Version",
         "learn": "Learn how"
     },
@@ -45,12 +46,45 @@
     "patients": {
         "title": "Patients",
         "create-patients": "Create patients",
+        "update-patients": "Update patients",
         "my-patients": "My Patients",
-        "all-patients": "All Patients"
+        "all-patients": "All Patients",
+        "find-patients": "Find patient",
+        "select-label": "Select label (optional)",
+        "select": "Select",
+        "select-action-menu": "Select action menu",
+        "select-action": "Selection action",
+        "all": "All",
+        "none": "None",
+        "label-menu": "Label menu",
+        "apply": "Apply",
+        "action": "Action",
+        "more-action": "More Action",
+        "num-selected": "{{s}} Selected",
+        "counts": "Patients ({{s}})"
+    },
+    "physicians": {
+      "title": "Physicians",
+      "counts": "({{s}}) physician connected",
+      "professional-fee": "Professional Fee",
+      "s2": "S2",
+      "ptr": "PTR",
+      "prc": "PRC",
+      "practice": "Practice",
+      "year-of-experience": "Year of Experience",
+      "bio": "Bio",
+      "additional-info": "Additional Information"
     },
     "labels": {
       "title": "Labels",
-      "create-labels": "Create labels"
+      "create-labels": "Create label",
+      "update-labels": "Update label",
+      "manage-labels": "Manage labels"
+    },
+    "records": {
+      "title": "Records",
+      "more": "{{s}} more...",
+      "no-record": "No records found!"
     },
     "appointments": {
         "title": "Appointments"
@@ -85,29 +119,81 @@
       "paragraph": "Our help center is still under development. We apologies for the inconvenience but you can still contact us on Facebook using myclinicsoft or simply click this"
     },
     "common": {
+      "profile": "Profile",
         "error": "Error",
+        "qr-code": "QR Code",
         "ok": "Ok",
+        "no": "No",
+        "yes": "Yes",
         "edit": "Edit",
         "delete": "Delete",
+        "update": "Update",
         "submit": "Submit",
         "close": "Close",
-        "update": "Update",
+        "download": "Download",
+        "share": "Share",
         "print": "Print",
         "export": "Export",
-        "import": "Import"
+        "copy": "Copy",
+        "import": "Import",
+        "loading": "Loading {{s}}...",
+        "no-data": "No {{s}} data.",
+        "confirm-delete-message": "Are you sure to delete {{s}} record ?",
+        "updated-message": "{{s}} updated successfully.",
+        "created-message": "{{s}} created successfully.",
+        "deleted-message": "{{s}} deleted successfully.",
+        "not-permitted-message": "You are not permitted to take this action!"
     },
     "validation": {
         "required": "Please enter {{s}}",
         "maxLength": "{{ctrl}} only {{s}} allowed characters long.",
-        "invalid": "Please enter valid {{s}}"
+        "minLength": "{{ctrl}} at least {{s}} characters.",
+        "invalid": "Please enter valid {{s}}",
+        "pattern": "{{s}} not a valid value"
     },
     "basic": {
+      "firstname": "Firstname",
+      "middlename": "Midlename",
+      "lastname": "Lastname",
+      "gender": "Gender",
+      "gender-option": {
+        "male": "Male",
+        "female": "Female"
+      },
+      "birthdate": "Birthdate",
+      "age": "Age",
+      "contact": "Contact",
+      "address": "Address",
       "street-line1": "Street Address",
       "street-line2": "Street Address Line 2",
       "city": "City",
       "province": "Province",
       "postal-code": "Postal Code",
       "country": "Country",
-      "contact": "Contact"
+      "private-key": "Private Key",
+      "public-key": "Public Key",
+      "counts": "({{s}}) address recorded",
+      "set-current": "Set as Current",
+      "change-pass": "Change password",
+      "change-email": "Change email",
+      "basic-information": "Basic Information"
+    },
+    "qrcode": {
+      "title": "QR Code",
+      "scan": "Scan QR Code",
+      "scan-qrcode": "Scan QR code to confirm visit",
+      "no-device-selected": "No Device Selected",
+      "result": "Result",
+      "view-record": "View record",
+      "permission-waiting": "<h2>Waiting for permissions.</h2><blockquote>If your device does not has cameras, no permissions will be asked.</blockquote>",
+      "permission-denied": "<h2>You denied the camera permission, we can't scan anything without it. 😪</h2>",
+      "device-check-fail": "<h2>Couldn't check for devices.</h2><blockquote>This may be caused by some security error.</blockquote>",
+      "no-device-found": "<h2>No devices were found.</h2><blockquote>I believe your device has no media devices attached to.</blockquote>",
+      "note": "Bring this QR anyware you go for refference. <a href='/page/learn-more#qr-code' target='_blank'>Learn more</a>"
+    },
+    "paginator": {
+      "item-per-page": "Items per page:",
+      "next-page": "Next page",
+      "previous-page": "Pervious page"
     }
 }

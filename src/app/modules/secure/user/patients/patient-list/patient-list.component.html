@@ -1,7 +1,8 @@
 <div fxLayout="row">
     <div fxFlex="40%" fxFlexAlign="start">
       <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Find patient" autocomplete="off">
+        <mat-label>{{ 'patients.find-patients' | translate }}</mat-label>
+        <input matInput (keyup)="applyFilter($event.target.value)" autocomplete="off">
         <button mat-icon-button aria-label="" matSuffix matTooltip="Scan QR Code">
           <mat-icon (click)="onScan()">crop_free</mat-icon>
         </button>
@@ -9,9 +10,9 @@
     </div>
     <div fxFlex="40%" fxFlexOffset="20%" fxFlexAlign="end" style="text-align: right;">
       <mat-form-field>
-        <mat-label>Select label (optional)</mat-label>
+        <mat-label>{{ 'patients.select-label' | translate }}</mat-label>
         <select matNativeControl [(ngModel)]="labelPicked" (ngModelChange)="filterLabel($event)" (selectionChange)="filterLabel($event)">
-          <option value="">Select</option>
+          <option value="">{{ 'patients.select' | translate }}</option>
           <option *ngFor="let label of labels" [value]="label.id">{{label.label}}</option>
         </select>
       </mat-form-field>
@@ -22,19 +23,19 @@
     <ng-container matColumnDef="view-action">
         <mat-header-cell *matHeaderCellDef>
             <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox>
-            <button mat-icon-button [matMenuTriggerFor]="matMasterSelect" aria-label="Label menu" matTooltip="Selection action">
+            <button mat-icon-button [matMenuTriggerFor]="matMasterSelect" matTooltip="{{ 'patients.select-action' | translate }}">
           <mat-icon>arrow_drop_down</mat-icon>
         </button>
             <mat-menu #matMasterSelect="matMenu">
                 <button mat-menu-item (click)="onToggleSelect('all')">
-            <span>All</span>
+            <span>{{ 'patients.all' | translate }}</span>
           </button>
                 <button mat-menu-item (click)="onToggleSelect('none')">
-            <span>None</span>
+            <span>{{ 'patients.none' | translate }}</span>
           </button>
             </mat-menu>
 
-            <button mat-icon-button [matMenuTriggerFor]="menuLabel" aria-label="Label menu" matTooltip="Manage labels">
+            <button mat-icon-button [matMenuTriggerFor]="menuLabel" matTooltip="{{ 'labels.manage-labels' | translate }}">
             <mat-icon>label</mat-icon>
           </button>
             <mat-menu #menuLabel="matMenu">
@@ -45,37 +46,37 @@
             </button>
                 <button mat-menu-item (click)="onCreateLabel()" *ngIf="!labelSelected.length">
               <mat-icon>add</mat-icon>
-              <span>Create label</span>
+              <span>{{ 'labels.create-labels' | translate }}</span>
             </button>
                 <button mat-menu-item (click)="onApplySelectedLabel()" *ngIf="labelSelected.length">
-              <span>Apply</span>
+              <span>{{ 'patients.apply' | translate }}</span>
             </button>
             </mat-menu>
 
-            <button mat-icon-button [matMenuTriggerFor]="menuAction" aria-label="Action menu" matTooltip="More actions">
+            <button mat-icon-button [matMenuTriggerFor]="menuAction" aria-label="" matTooltip="{{ 'patients.more-action' | translate }}">
             <mat-icon>more_vert</mat-icon>
           </button>
             <mat-menu #menuAction="matMenu">
                 <button mat-menu-item (click)="onPrint()">
               <mat-icon>print</mat-icon>
-              <span>Print</span>
+              <span>{{ 'common.print' | translate }}</span>
             </button>
                 <button mat-menu-item (click)="onExport()">
               <mat-icon>cloud_download</mat-icon>
-              <span>Export</span>
+              <span>{{ 'common.export' | translate }}</span>
             </button>
                 <button mat-menu-item (click)="onDelete()">
               <mat-icon>delete_outline</mat-icon>
-              <span>Delete</span>
+              <span>{{ 'common.delete' | translate }}</span>
             </button>
             </mat-menu>
 
-            <label style="flex: 1 1 auto; text-align: right;"><b>{{this.selection.selected.length}} Selected</b></label>
+            <label style="flex: 1 1 auto; text-align: right;"><b>{{ 'patients.num-selected' | translate:{'s':this.selection.selected.length} }}</b></label>
         </mat-header-cell>
     </ng-container>
 
     <ng-container matColumnDef="patient-counts">
-        <mat-header-cell *matHeaderCellDef> Patients ({{length}}) </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ 'patients.counts' | translate:{'s':length} }}</mat-header-cell>
     </ng-container>
 
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
@@ -88,16 +89,16 @@
         </div>
         <div *ngIf="column === 'action'; then thenBlockRow else elseBlockRow"></div>
         <ng-template #thenBlockRow>
-            <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>{{ 'patients.action' | translate }}</mat-header-cell>
             <mat-cell *matCellDef="let element">
                 <ng-container>
-                    <button mat-icon-button (click)="onUpdate(element.id)" aria-label="Edit" matTooltip="Edit" *ngIf="element.isOwned">
+                    <button mat-icon-button (click)="onUpdate(element.id)" matTooltip="{{ 'common.edit' | translate }}" *ngIf="element.isOwned">
                     <mat-icon>create</mat-icon>
                   </button>
-                    <button mat-icon-button (click)="onGenerateQr(element.id)" aria-label="QR Code" matTooltip="QR Code" *ngIf="element.isOwned">
+                    <button mat-icon-button (click)="onGenerateQr(element.id)" matTooltip="{{ 'common.qr-code' | translate }}" *ngIf="element.isOwned">
                     <mat-icon>crop_free</mat-icon>
                   </button>
-                    <button mat-icon-button (click)="onDetail(element)" aria-label="Record" matTooltip="Record">
+                    <button mat-icon-button (click)="onDetail(element)" matTooltip="{{ 'records.title' | translate }}">
                     <mat-icon>assignment_ind</mat-icon>
                   </button>
 
@@ -105,7 +106,7 @@
             </mat-cell>
         </ng-template>
         <ng-template #elseBlockRow>
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{column | titlecase}} </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'basic.'+ column | translate }} </mat-header-cell>
             <div *ngIf="column === 'birthdate'; then thenBlockDate else elseBlockDate"></div>
             <ng-template #thenBlockDate>
                 <mat-cell *matCellDef="let element"> {{ element[column] | date }}</mat-cell>
@@ -125,8 +126,8 @@
 
                 <mat-card class="address-card">
                     <mat-card-header>
-                        <mat-card-title>Address</mat-card-title>
-                        <mat-card-subtitle>({{element.address.length}}) address recorded</mat-card-subtitle>
+                        <mat-card-title>{{ 'basic.address' | translate }}</mat-card-title>
+                        <mat-card-subtitle>{{ 'basic.counts' | translate:{'s':element.address.length} }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
                         <div class="address">
@@ -153,8 +154,8 @@
                 </mat-card> -->
                 <mat-card class="physicians-card">
                     <mat-card-header>
-                        <mat-card-title>Physicians</mat-card-title>
-                        <mat-card-subtitle>({{element.physicians.length}}) physician connected</mat-card-subtitle>
+                        <mat-card-title>{{ 'physicians.title' | translate }}</mat-card-title>
+                        <mat-card-subtitle>{{ 'physicians.counts' | translate:{'s':element.physicians.length} }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
                         <mat-list>
@@ -164,8 +165,8 @@
                 </mat-card>
                 <mat-card class="record-card">
                     <mat-card-header>
-                        <mat-card-title>Record Chain</mat-card-title>
-                        <mat-card-subtitle>secure record</mat-card-subtitle>
+                        <mat-card-title>{{ 'records.title' | translate }}</mat-card-title>
+                        <mat-card-subtitle></mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
                         <app-blocks [patientAddress]="element.publicKey"></app-blocks>
@@ -184,12 +185,12 @@
 
     <ng-container matColumnDef="loading">
         <mat-footer-cell *matFooterCellDef colspan="8">
-            <p class="mat-body">Loading data...</p>
+            <p class="mat-body">{{ 'common.loading' | translate:{'s':'patient'} }}</p>
         </mat-footer-cell>
     </ng-container>
     <ng-container matColumnDef="noData">
         <mat-footer-cell *matFooterCellDef colspan="8">
-            <p class="mat-body">No patient data.</p>
+            <p class="mat-body">{{ 'common.no-data' | translate:{'s':'patient'} }}</p>
         </mat-footer-cell>
     </ng-container>
     <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource != null}"></mat-footer-row>
