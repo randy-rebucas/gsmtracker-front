@@ -254,13 +254,11 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        let norifResMessgae = '';
         this.translate.get('common.updated-message',
           {s: 'Patient'}
-        ).subscribe((res: string) => {
-          norifResMessgae = res;
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
         });
-        this.notificationService.success(norifResMessgae);
         this.getQuery(this.perPage, this.currentPage, this.labelPicked);
       }
     });
@@ -460,32 +458,28 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onCreateLabel(labelId?: string) {
-    let modalTitle = '';
-    let modalBtn = '';
-    this.translate.get((labelId) ? 'labels.update-labels' : 'labels.create-labels').subscribe((res: string) => {
-      modalTitle = res;
-    });
-    this.translate.get((labelId) ? 'common.update' : 'common.submit').subscribe((res: string) => {
-      modalBtn = res;
-    });
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      title: modalTitle,
-      btn: modalBtn,
-      id: labelId
-    };
+    // set modal attribute
+    this.translate.get([
+      'labels.create-labels',
+      'common.submit'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        title: translate['labels.create-labels'],
+        btn: translate['common.submit'],
+        id: labelId
+      };
+    });
+
     this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        let norifResMessgae = '';
-        this.translate.get(
-          (result === 'update') ? 'common.updated-message' : 'common.created-message',
+        this.translate.get('common.created-message',
           {s: 'Label'}
-        ).subscribe((res: string) => {
-          norifResMessgae = res;
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
         });
-        this.notificationService.success(norifResMessgae);
         this.labelsService.getAll(this.userId);
       }
     });
