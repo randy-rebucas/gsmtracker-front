@@ -61,7 +61,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   public columnsToDisplay: string[] = [
     'select',
     'firstname',
-    'midlename',
+    'middlename',
     'lastname',
     'contact',
     'gender',

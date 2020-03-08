@@ -9,6 +9,7 @@
     "contact": "Kontakt"
   },
   "footer": {
+    "reserved": "Alle rechten voorbehouden 2020",
     "powered-by": "Präsentiert von coreweb ©2010-2019.",
     "current-version": "Aktuelle Version",
     "learn": "Lernen wie"
@@ -20,9 +21,227 @@
   "authentication": {
     "login": "Einloggen",
     "register": "Registrieren",
-    "logout": "Ausloggen"
+    "logout": "Ausloggen",
+    "name": "Kliniek naam",
+    "practice": "Praktijk",
+    "firstname": "Voornaam",
+    "lastname": "Achternaam",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "remember": "Onthoud me",
+    "required-label": "Vul alstublieft alle invoer in.",
+    "existing-label": "Heb je al een account?",
+    "no-exist-label": "Nog geen account?",
+    "access-label": "Voer uw e-mailadres en wachtwoord in om toegang te krijgen."
+  },
+  "contact": {
+    "title": "Neem contact op"
+  },
+  "about": {
+    "title": "Over ons"
   },
   "dashboard": {
     "title": "Instrumententafel"
+  },
+  "patients": {
+    "title": "Patiënten",
+    "create-patients": "Maak patiënten",
+    "update-patients": "Patiënten bijwerken",
+    "my-patients": "Mijn patiënten",
+    "all-patients": "Alle patiënten",
+    "find-patients": "Zoek patiënt",
+    "select-label": "Selecteer label (optioneel)",
+    "select": "Selecteer",
+    "select-action-menu": "Selecteer actiemenu",
+    "select-action": "Selectie actie",
+    "all": "Allemaal",
+    "none": "Geen",
+    "label-menu": "Label-menu",
+    "apply": "Van toepassing zijn",
+    "action": "Actie",
+    "more-action": "Meer actie",
+    "num-selected": "{{s}} Geselecteerd",
+    "counts": "Patiënten ({{s}})"
+},
+"physicians": {
+  "title": "Artsen",
+  "counts": "({{s}}) arts verbonden",
+  "professional-fee": "Professionele vergoeding",
+  "s2": "S2",
+  "ptr": "VOOR",
+  "prc": "PRC",
+  "practice": "Praktijk",
+  "year-of-experience": "Jaar van ervaring",
+  "bio": "Bio",
+  "additional-info": "Extra informatie"
+},
+"labels": {
+  "title": "Labels",
+  "create-labels": "Label maken",
+  "update-labels": "Label bijwerken",
+  "manage-labels": "Beheer labels"
+},
+"records": {
+  "title": "Records",
+  "block": "Blok",
+  "more": "{{s}} meer...",
+  "no-record": "Geen verslagen gevonden!",
+  "hash": "Hash",
+  "nonce": "Nonce",
+  "vital-sign": "Vitaal teken",
+  "vital-sign-obj": {
+    "temperature": "Temperatuur",
+    "blood-pressure": "Bloeddruk",
+    "pulse-rate": "Hartslag",
+    "respiratory-rate": "Ademhalingsfrequentie"
+  },
+  "physical-exam": "Fysiek examen",
+  "physical-exam-obj": {
+    "height": "Hoogte",
+    "weight": "Gewicht"
+  },
+  "chief-complain": "Chief Klacht",
+  "prescription": "Voorschrift",
+  "prescription-obj": {
+    "medicine": "Geneeskunde",
+    "preparation": "Voorbereiding",
+    "sig": "zichzelf",
+    "quantity": "Aantal stuks"
+  },
+  "present-illness": "Huidige ziekte",
+  "past-medical": "Afgelopen medisch",
+  "family-history": "Familiegeschiedenis",
+  "social-history": "Sociale Geschiedenis",
+  "assessment": "Beoordeling",
+  "progress-notes": "Voortgangsberichten",
+  "files": "Bestanden"
+},
+"appointments": {
+    "title": "Afspraken"
+},
+"messages": {
+    "title": "Berichten"
+},
+"notifications": {
+  "title": "Meldingen"
+},
+"settings": {
+    "title": "Instellingen",
+    "heading": "Rubriek",
+    "tagline": "Tagline",
+    "clinic-details": "Kliniekdetails",
+    "clinicname": "Naam kliniek",
+    "prescription-pad": "Recept Pad (optie)",
+    "show-footer": "Voettekst weergeven",
+    "show-header": "Toon koptekst",
+    "pick-time": "Kies tijd",
+    "no-noon-break": "Geen middagpauze",
+    "clinic-hours": "Kliniekuren",
+    "language": "Taal",
+    "language-tip": "Huidige taal",
+    "language-option": {
+      "en": "Engels",
+      "de": "Deutsch (Duits)",
+      "ar": "Arabisch"
+    },
+    "notifications": "Meldingen (meld me één keer)",
+    "new-canceled-appointment": "Nieuwe / geannuleerde afspraak",
+    "update-features": "Updates / functies",
+    "delete-account-note": "Verwijder account en annuleer alle bijbehorende abonnementen. Deze actie is permanent.",
+    "delete-account": "Account verwijderen"
+  },
+  "help": {
+    "title": "Helpen",
+    "heading": "Sorry voor het ongemak",
+    "paragraph": "Ons helpcentrum is nog in ontwikkeling. Onze excuses voor het ongemak, maar u kunt nog steeds contact met ons opnemen op Facebook via myclinicsoft of eenvoudig klikken"
+  },
+  "common": {
+    "profile": "Profiel",
+    "error": "Fout",
+    "qr-code": "QR code",
+    "ok": "OK",
+    "no": "Nee",
+    "yes": "Ja",
+    "create": "Maken",
+    "edit": "Bewerk",
+    "delete": "Verwijderen",
+    "update": "Bijwerken",
+    "submit": "Verzenden",
+    "close": "Dichtbij",
+    "download": "Downloaden",
+    "share": "Delen",
+    "print": "Afdrukken",
+    "preview": "Preview",
+    "export": "Exporteren",
+    "copy": "Kopiëren",
+    "next": "De volgende",
+    "back": "Terug",
+    "import": "Importeren",
+    "finish": "Af hebben",
+    "finish-note": "U bent nu klaar. Wis <b> Verzenden </b> om het recept af te drukken.",
+    "loading": "Bezig met laden {{s}}...",
+    "no-data": "Geen {{s}} gegevens.",
+    "confirm-delete-message": "Weet u zeker dat u het {{s}} record wilt verwijderen?",
+    "confirm-message": "Bevestig alstublieft?",
+    "confirm-message-note": "Hiermee voegt u {{s}} toe",
+    "updated-message": "{{s}} succesvol bijgewerkt.",
+    "created-message": "{{s}} met succes gemaakt.",
+    "deleted-message": "{{s}} succesvol verwijderd.",
+    "not-permitted-message": "U mag deze actie niet ondernemen!",
+    "disregard-changes": "Wilt u de wijzigingen ongedaan maken?"
+  },
+  "validation": {
+      "required": "Kom binnen alstublieft {{s}}",
+      "maxLength": "{{ctrl}} alleen {{s}} toegestane tekens lang.",
+      "minLength": "{{ctrl}} ten minste {{s}} tekens.",
+      "invalid": "Voer een geldige {{s}} in",
+      "pattern": "{{s}} geen geldige waarde"
+  },
+  "basic": {
+    "name": "Naam",
+    "firstname": "Voornaam",
+    "middlename": "Midlename",
+    "lastname": "Achternaam",
+    "gender": "Geslacht",
+    "gender-option": {
+      "male": "Mannetje",
+      "female": "Vrouw"
+    },
+    "birthdate": "Geboortedatum",
+    "age": "Leeftijd",
+    "contact": "Contact",
+    "address": "Adres",
+    "street-line1": "Woonadres",
+    "street-line2": "straat adres lijn 2",
+    "city": "stad",
+    "province": "Provincie",
+    "postal-code": "Postcode",
+    "country": "Land",
+    "private-key": "Prive sleutel",
+    "public-key": "ublieke sleutel",
+    "counts": "({{s}}) adres opgenomen",
+    "set-current": "Instellen als huidig",
+    "change-pass": "Verander wachtwoord",
+    "change-email": "Verander e-mail",
+    "basic-information": "Basis informatie",
+    "date": "Datum"
+  },
+  "qrcode": {
+    "title": "QR code",
+    "scan": "Scan QR-code",
+    "scan-qrcode": "Scan de QR-code om het bezoek te bevestigen",
+    "no-device-selected": "Geen apparaat geselecteerd",
+    "result": "Resultaat",
+    "view-record": "Bekijk record",
+    "permission-waiting": "<h2> Wachten op machtigingen. </h2> <blockquote> Als uw apparaat geen camera's heeft, worden er geen machtigingen gevraagd. </blockquote>",
+    "permission-denied": "<h2> U hebt de cameratoestemming geweigerd, zonder deze kunnen we niets scannen. 😪 </h2>",
+    "device-check-fail": "<h2> Kon niet controleren op apparaten. </h2> <blockquote> Dit kan worden veroorzaakt door een beveiligingsfout. </blockquote>",
+    "no-device-found": "<h2> Er zijn geen apparaten gevonden. </h2> <blockquote> Ik geloof dat op uw apparaat geen media-apparaten zijn aangesloten. </blockquote>",
+    "note": "Breng deze QR-code mee waar u naar verwijst. <a href='/page/learn-more#qr-code' target='_blank'> Meer informatie </a>"
+  },
+  "paginator": {
+    "item-per-page": "Artikelen per pagina:",
+    "next-page": "Volgende bladzijde",
+    "previous-page": "Vorige bladzijde"
   }
 }
