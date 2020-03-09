@@ -7,8 +7,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./prompt.component.scss']
 })
 export class PromptComponent implements OnInit {
-  message = 'Please confirm this action!';
-  title = '';
+  message: string;
+  title: string;
 
   constructor(
     public dialogRef: MatDialogRef<PromptComponent>,

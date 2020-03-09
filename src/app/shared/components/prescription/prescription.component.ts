@@ -4,12 +4,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Blockchain } from '../../interfaces/blockchain';
 import { DatePipe } from '@angular/common';
 import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { Observable, forkJoin } from 'rxjs';
 import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-prescription',
@@ -35,7 +35,7 @@ export class PrescriptionComponent implements OnInit {
     this.title = data.title;
   }
 
-  getData(userId): Observable<any> {
+  getData(userId: string): Observable<any> {
     const setting = this.settingsService.get(userId);
     const physicians = this.physiciansService.get(userId);
     return forkJoin([setting, physicians]);

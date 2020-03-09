@@ -31,7 +31,7 @@ export class PhysicianComponent implements OnInit {
     });
   }
 
-  getData(userId): Observable<any> {
+  getData(userId: string): Observable<any> {
     const images = this.uploadService.get(userId);
     const users = this.userService.get(userId);
     const physicians = this.physiciansService.get(userId);

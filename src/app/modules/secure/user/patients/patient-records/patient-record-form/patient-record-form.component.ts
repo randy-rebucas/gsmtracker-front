@@ -1,33 +1,23 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { CanComponentDeactivate } from '../../can-deactivate.guard';
-import { Observable } from 'rxjs';
-import { startWith, map, debounceTime, tap, switchMap, finalize, flatMap } from 'rxjs/operators';
-import { DrugsService } from 'src/app/shared/services/drugs.service';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Observable } from 'rxjs';
+import { startWith, debounceTime, tap, switchMap, finalize, flatMap } from 'rxjs/operators';
+import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { CanComponentDeactivate } from 'src/app/shared/guards/can-deactivate.guard';
+import { DrugsService } from 'src/app/shared/services/drugs.service';
 import { PromptComponent } from 'src/app/shared/components/prompt/prompt.component';
 import { PatientsService } from '../../patients.service';
 import { BlockchainService } from 'src/app/shared/services/blockchain.service';
-import { numberValidator } from 'src/app/validators/number-validator';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { PrescriptionComponent } from 'src/app/shared/components/prescription/prescription.component';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { TranslateService } from '@ngx-translate/core';
 
 export interface Drug {
   id: string;
   name: string;
-}
-
-/** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  }
 }
 
 @Component({
@@ -35,7 +25,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './patient-record-form.component.html',
   styleUrls: ['./patient-record-form.component.scss']
 })
-export class PatientRecordFormComponent implements OnInit, CanComponentDeactivate {
+export class PatientRecordFormComponent implements OnInit, AfterContentInit, CanComponentDeactivate {
 
   preLoading: boolean;
   isLoading: boolean;
@@ -45,9 +35,7 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
   public form: FormGroup;
   selectedDrug: string;
   isConfirmed: boolean;
-
   user: any;
-  matcher = new MyErrorStateMatcher();
 
   constructor(
     private drugService: DrugsService,
@@ -71,21 +59,6 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
     this.patientsService.get(this.patientId).subscribe((user) => {
       this.user = user;
     });
-
-    this.searchDrugsCtrl.valueChanges
-      .pipe(
-        debounceTime(300),
-        tap(() => this.preLoading = true),
-        startWith(''),
-        switchMap((value) => {
-          return this.drugService.search({name: value})
-          .pipe(
-            finalize(() => this.preLoading = false),
-          );
-        })
-      ).subscribe((users) => {
-        this.filteredOptions = users.results;
-      });
 
     this.form = this.fb.group({
         vitalSign: this.fb.group({
@@ -181,6 +154,23 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
             ]
           }),
         })
+    });
+  }
+
+  ngAfterContentInit() {
+    this.searchDrugsCtrl.valueChanges
+    .pipe(
+      debounceTime(300),
+      tap(() => this.preLoading = true),
+      startWith(''),
+      switchMap((value) => {
+        return this.drugService.search({name: value})
+        .pipe(
+          finalize(() => this.preLoading = false),
+        );
+      })
+    ).subscribe((users) => {
+      this.filteredOptions = users.results;
     });
   }
 
@@ -321,7 +311,12 @@ export class PatientRecordFormComponent implements OnInit, CanComponentDeactivat
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
 
     if (this.form.dirty && !this.isConfirmed) {
-      return confirm('Do you want to discard the changes?');
+      let confirmMessage;
+      this.translate.get('common.disregard-changes')
+      .subscribe((translation) => {
+        confirmMessage = translation;
+      });
+      return confirm(confirmMessage);
     }
 
     return true;

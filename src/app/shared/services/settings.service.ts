@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
-import { environment } from '../../../../environments/environment';
-import { Settings } from './settings';
-import { Subject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Settings } from 'src/app/shared/interfaces/settings';
+import { environment } from 'src/environments/environment';
+
 
 export interface Setting {
   settingId: string;
@@ -17,8 +17,6 @@ const BACKEND_URL = environment.apiUrl + '/setting';
   providedIn: 'root'
 })
 export class SettingsService {
-
-  private settings: Setting[] = [];
   private settingsUpdated = new Subject<Settings>();
 
   constructor(

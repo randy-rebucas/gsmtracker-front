@@ -1,15 +1,12 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { Patients } from 'src/app/modules/secure/user/patients/patients';
-import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
-import { map } from 'rxjs/operators';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BarcodeFormat } from '@zxing/library';
-import { ZXingScannerComponent } from '@zxing/ngx-scanner';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
+import { BarcodeFormat } from '@zxing/library';
+import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
+
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-qr-reader',
@@ -45,7 +42,6 @@ export class QrReaderComponent implements OnInit {
   userId: string;
   constructor(
     private router: Router,
-    private translate: TranslateService,
     private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
     private patientsService: PatientsService,
@@ -61,7 +57,6 @@ export class QrReaderComponent implements OnInit {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
-      this.translate.use(setting.language);
       this.setting = setting;
     });
   }

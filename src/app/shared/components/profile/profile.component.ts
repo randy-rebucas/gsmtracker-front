@@ -1,11 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { forkJoin, Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/modules/secure/user/user.service';
 import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { forkJoin, Observable } from 'rxjs';
 import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 
 export interface Practices {
@@ -51,6 +52,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private translate: TranslateService,
     private userService: UserService,
     private physiciansService: PhysiciansService,
     private uploadService: UploadService,
@@ -139,7 +141,6 @@ export class ProfileComponent implements OnInit {
 
     this.getData(this.userId).subscribe((resData) => {
       const merge = {...resData[0], ...resData[1], ...resData[2]};
-      console.log(merge);
       this.isLoading = false;
       this.user = merge;
       this.form.patchValue({
@@ -171,7 +172,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  getData(userId): Observable<any> {
+  getData(userId: any): Observable<any> {
     const images = this.uploadService.get(userId);
     const users = this.userService.get(userId);
     const physicians = this.physiciansService.get(userId);
@@ -278,11 +279,11 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit() {
-
+    // check if form is valid
     if (this.form.invalid) {
       return;
     }
-
+    // user data
     const updateUser = {
       _id: this.userId,
       name: {
@@ -296,7 +297,8 @@ export class ProfileComponent implements OnInit {
       addresses: this.form.value.addresses
     };
 
-    this.userService.update(updateUser).subscribe(() => {
+    this.userService.update(updateUser).subscribe((userResponse) => {
+      // physician data
       const updatePhysician = {
         _id: this.user._id,
         practices: this.form.value.practices,
@@ -306,8 +308,15 @@ export class ProfileComponent implements OnInit {
         s2: this.form.value.s2,
         professionalFee: this.form.value.professionalFee
       };
-      this.physiciansService.update(updatePhysician).subscribe(() => {
-        this.notificationService.success(':: Updated successfully');
+      this.physiciansService.update(updatePhysician).subscribe((physicianResponse) => {
+        // set user subscription
+        this.userService.setSubListener({...userResponse, ...physicianResponse});
+        // response message
+        this.translate.get('common.updated-message', {s: 'Physician'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
+        });
+        // close dialog
         this.dialogRef.close();
       });
     });
@@ -318,7 +327,11 @@ export class ProfileComponent implements OnInit {
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
-    this.notificationService.success(':: Copied');
+    // response message
+    this.translate.get('common.copied')
+    .subscribe((norifResMessgae: string) => {
+      this.notificationService.success(norifResMessgae);
+    });
   }
 
   onChangeEmail() {

@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
-import { NotificationService } from '../../services/notification.service';
-import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { User } from 'src/app/modules/secure/user/user';
-import { Settings } from 'src/app/modules/secure/settings/settings';
-import { UserService } from 'src/app/modules/secure/user/user.service';
 import { map } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+
+import { NotificationService } from '../../services/notification.service';
+import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { User } from 'src/app/modules/secure/user/user';
+
+import { UserService } from 'src/app/modules/secure/user/user.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
+import { Settings } from '../../interfaces/settings';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-setting',

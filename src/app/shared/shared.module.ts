@@ -7,7 +7,6 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { EllipsisPipe } from './pipes/ellipsis.pipe';
 import { BirthdayPipe } from './pipes/birthday.pipe';
 
-import { DrugsComponent } from './components/lookup/drugs/drugs.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -45,7 +44,6 @@ import { PromptComponent } from './components/prompt/prompt.component';
     EllipsisPipe,
     BirthdayPipe,
 
-    DrugsComponent,
     FooterComponent,
     HeaderComponent,
     SidebarComponent,

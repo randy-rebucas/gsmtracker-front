@@ -22,6 +22,10 @@ mat-paginator.mat-paginator {
     width: 100%;
 }
 
+.mat-column-select {
+  overflow: initial;
+}
+
 .wrapper {
     max-width: 1200px;
     margin: 0 auto;

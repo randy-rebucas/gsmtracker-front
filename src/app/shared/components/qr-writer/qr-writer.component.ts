@@ -1,8 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-qr-writer',
@@ -15,7 +14,6 @@ export class QrWriterComponent implements OnInit {
   setting: any;
   userId: string;
   constructor(
-    private translate: TranslateService,
     private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
     public dialogRef: MatDialogRef < QrWriterComponent >,
@@ -30,7 +28,6 @@ export class QrWriterComponent implements OnInit {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
-      this.translate.use(setting.language);
       this.setting = setting;
     });
   }

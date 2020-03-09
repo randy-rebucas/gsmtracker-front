@@ -1,0 +1,12 @@
+:host {
+  position: fixed;
+  bottom: 7%;
+  width: 330px;
+  margin: 10px;
+}
+
+.example-header-image {
+  background-image: url('/assets/images/clinic-slider.jpg');
+  background-size: cover;
+  margin-right: 10px;
+}

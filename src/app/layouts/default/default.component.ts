@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
+import { SettingsService } from 'src/app/shared/services/settings.service';
+
 
 @Component({
   selector: 'app-default',

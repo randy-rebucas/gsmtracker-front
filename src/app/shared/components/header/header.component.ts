@@ -2,9 +2,8 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { HelpComponent } from '../help/help.component';
 import { SettingComponent } from '../setting/setting.component';
-import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-header',
@@ -24,7 +23,6 @@ export class HeaderComponent implements OnInit {
   isLoading: boolean;
   constructor(
     private dialog: MatDialog,
-    private translate: TranslateService,
     private settingsService: SettingsService,
     private authenticationService: AuthenticationService
   ) {
@@ -37,7 +35,6 @@ export class HeaderComponent implements OnInit {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
-      this.translate.use(setting.language);
       this.setting = setting;
       this.isLoading = false;
     });

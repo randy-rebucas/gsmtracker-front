@@ -21,13 +21,14 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
 
-import { CanDeactivateGuard } from './modules/secure/user/patients/can-deactivate.guard';
+
 import { DefaultModule } from './layouts/default/default.module';
 import { FrontComponent } from './layouts/front/front.component';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { CanDeactivateGuard } from './shared/guards/can-deactivate.guard';
 
 
 // import { registerLocaleData } from '@angular/common';

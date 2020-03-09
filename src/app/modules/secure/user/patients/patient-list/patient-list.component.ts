@@ -24,7 +24,8 @@ import { LabelsService } from 'src/app/shared/services/labels.service';
 import { QrWriterComponent } from 'src/app/shared/components/qr-writer/qr-writer.component';
 import { QrReaderComponent } from 'src/app/shared/components/qr-reader/qr-reader.component';
 import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from '../../../settings/settings.service';
+import { SettingsService } from 'src/app/shared/services/settings.service';
+
 
 @Component({
   selector: 'app-patient-list',
@@ -153,7 +154,11 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
           return observableOf([]);
         })
       ).subscribe(
-        data => this.dataSource = new MatTableDataSource(this.setOwnerShip(data))
+        data => {
+          this.dataSource = new MatTableDataSource(this.setOwnerShip(data));
+          // this.dataLength = this.dataSource.data.length;
+          console.log(this.length);
+        }
       );
 
     this.translate.get([
@@ -171,7 +176,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    return this.selection.selected.length;
+    return this.selection.selected.length === this.length;
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */

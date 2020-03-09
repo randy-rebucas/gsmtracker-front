@@ -22,7 +22,11 @@
 <mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
     <ng-container matColumnDef="view-action">
         <mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox>
+            <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            [aria-label]="checkboxLabel()"></mat-checkbox>
             <button mat-icon-button [matMenuTriggerFor]="matMasterSelect" matTooltip="{{ 'patients.select-action' | translate }}">
           <mat-icon>arrow_drop_down</mat-icon>
         </button>
@@ -83,7 +87,11 @@
         <div *ngIf="column === 'select'">
             <mat-header-cell *matHeaderCellDef></mat-header-cell>
             <mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+                [aria-label]="checkboxLabel(row)">
                 </mat-checkbox>
             </mat-cell>
         </div>
@@ -176,11 +184,11 @@
         </mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="columnsToDisplay" [class.header-row]="isAllSelected()"></mat-header-row>
-    <mat-header-row *matHeaderRowDef="['view-action']" [class.header-row]="!isAllSelected()"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="columnsToDisplay" [class.header-row]="selection.hasValue()"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="['view-action']" [class.header-row]="!selection.hasValue()"></mat-header-row>
     <mat-header-row *matHeaderRowDef="['patient-counts']" class="sub-header"></mat-header-row>
 
-    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" (click)="onRowClicked(element)" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></mat-row>
+    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" (click)="selection.toggle(element)" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></mat-row>
     <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
 
     <ng-container matColumnDef="loading">

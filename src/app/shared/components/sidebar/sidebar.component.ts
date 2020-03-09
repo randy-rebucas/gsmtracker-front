@@ -1,19 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Subscription, Observable, forkJoin } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/modules/secure/user/user.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NotificationService } from '../../services/notification.service';
 import { PatientFormComponent } from 'src/app/modules/secure/user/patients/patient-form/patient-form.component';
-import { Router } from '@angular/router';
-import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { UploadService } from '../../services/upload.service';
-import { switchMap } from 'rxjs/operators';
 import { LabelComponent } from '../label/label.component';
 import { LabelsService } from '../../services/labels.service';
-import { Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
+import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
+import { SettingsService } from '../../services/settings.service';
 
 export interface Label {
   label: string;
@@ -31,12 +30,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public imagePath: any;
   defaultImage: any;
   imagePreview: any;
+  fullname: string;
   email: string;
   userData: any;
   user: any;
   showLabel: boolean;
   labels: any[];
   labelsSub: Subscription;
+  userSub: Subscription;
 
   isLoading: boolean;
   userId: string;
@@ -46,13 +47,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
+    private physiciansService: PhysiciansService,
     private userService: UserService,
     private uploadService: UploadService,
     private labelsService: LabelsService,
     private dialog: MatDialog,
     private notificationService: NotificationService,
-    private router: Router,
-    private patientsService: PatientsService
+    private router: Router
   ) {
     this.perPage = 10;
     this.currentPage = 1;
@@ -80,18 +81,24 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
 
     this.email = this.authenticationService.getUserEmail();
-    this.userService.get(this.userId)
-    .pipe(
-      switchMap((userData) => {
-        this.userData = userData;
-        return this.uploadService.get(userData._id);
-      })
-    )
-    .subscribe((transformedUser) => {
+
+    this.getData(this.userId).subscribe((resData) => {
       this.isLoading = false;
-      this.user = { ...this.userData, ...transformedUser};
-      this.imagePreview = this.user.image;
+      const merge = {...resData[0], ...resData[1], ...resData[2]};
+      this.fullname = merge.name.firstname + ' ' + merge.name.midlename + ' ' + merge.name.lastname;
+      this.imagePreview = merge.image;
     });
+
+    this.userSub = this.userService.getSubListener().subscribe((userListener) => {
+      this.fullname = userListener.name.firstname + ' ' + userListener.name.midlename + ' ' + userListener.name.lastname;
+    });
+  }
+
+  getData(userId: string): Observable<any> {
+    const images = this.uploadService.get(userId);
+    const users = this.userService.get(userId);
+    const physicians = this.physiciansService.get(userId);
+    return forkJoin([images, users, physicians]);
   }
 
   onOpenProfile() {
@@ -148,15 +155,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   onDeleteLabel(labelId?: string) {
-    this.labelsService.delete(labelId).subscribe((response) => {
-      let norifResMessgae = '';
-      this.translate.get('common.deleted-message',
-        {s: 'Label'}
-      ).subscribe((res: string) => {
-        norifResMessgae = res;
+    this.labelsService.delete(labelId).subscribe(() => {
+      this.translate.get('common.deleted-message', {s: 'Label'})
+      .subscribe((norifResMessgae: string) => {
+        this.notificationService.success(norifResMessgae);
+        this.labelsService.getAll(this.userId);
       });
-      this.notificationService.success(norifResMessgae);
-      this.labelsService.getAll(this.userId);
     });
   }
 
@@ -204,6 +208,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.userSub.unsubscribe();
     this.labelsSub.unsubscribe();
   }
 }

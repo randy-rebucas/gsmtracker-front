@@ -16,6 +16,7 @@ export class UserService {
 
   private users: User[] = [];
   private usersUpdated = new Subject<{ users: User[], counts: number }>();
+  private usersSub = new Subject<any>();
 
   constructor(
     private http: HttpClient
@@ -59,6 +60,14 @@ export class UserService {
     return this.usersUpdated.asObservable();
   }
 
+  setSubListener(data: any) {
+    this.usersSub.next(data);
+  }
+
+  getSubListener() {
+    return this.usersSub.asObservable();
+  }
+
   get(userId: string) {
     return this.http.get<any>(BACKEND_URL + '/' + userId);
   }
@@ -68,7 +77,7 @@ export class UserService {
   }
 
   update(updatedUser: any) {
-    return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedUser._id, updatedUser);
+    return this.http.put<User>(BACKEND_URL + '/' + updatedUser._id, updatedUser);
   }
 
   delete(patientId: string) {

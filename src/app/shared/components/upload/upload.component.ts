@@ -53,7 +53,6 @@ export class UploadComponent implements OnInit {
     this.selectedFile = (event.target as HTMLInputElement).files[0];
     const reader = new FileReader();
     reader.onload = () => {
-      this.imagePreview = reader.result;
       this.uploadService.upload(
         this.sourceId,
         reader.result

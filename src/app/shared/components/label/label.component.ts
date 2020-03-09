@@ -3,8 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LabelsService } from '../../services/labels.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from 'src/app/modules/secure/settings/settings.service';
+
 
 @Component({
   selector: 'app-label',
@@ -21,8 +20,6 @@ export class LabelComponent implements OnInit {
   @ViewChild('labelInput', {static: true}) labelInput: any;
 
   constructor(
-    private translate: TranslateService,
-    private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
     private labelsService: LabelsService,
     public dialogRef: MatDialogRef < LabelComponent >,
@@ -36,13 +33,6 @@ export class LabelComponent implements OnInit {
 
   ngOnInit(): void {
     this.labelInput.nativeElement.focus();
-
-    this.settingsService.getSetting(this.userId);
-    this.settingsService.getSettingListener()
-    .subscribe((setting) => {
-      this.translate.use(setting.language);
-      this.setting = setting;
-    });
 
     if (this.labelId) {
       this.labelsService.get(this.labelId).subscribe(res => {

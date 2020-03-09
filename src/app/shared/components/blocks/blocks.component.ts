@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BlockchainService } from '../../services/blockchain.service';
-import { Observable } from 'rxjs';
 import { Blockchain } from '../../interfaces/blockchain';
 
 @Component({
@@ -21,7 +20,8 @@ export class BlocksComponent implements OnInit {
 
   ngOnInit(): void {
     // get patient blockchain
-    this.blockchainService.getByUser(this.patientAddress).subscribe((blockchain) => {
+    this.blockchainService.getByUser(this.patientAddress)
+    .subscribe((blockchain) => {
       this.blockchains = blockchain;
       this.isLoading = false;
     });

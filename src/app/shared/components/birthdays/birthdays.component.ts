@@ -34,7 +34,6 @@ export class BirthdaysComponent implements OnInit {
           this.users.push(obj);
         });
       }
-      
 
       this.birthdays = this.users;
     });

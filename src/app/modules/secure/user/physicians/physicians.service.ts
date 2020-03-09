@@ -50,7 +50,7 @@ export class PhysiciansService {
     });
   }
 
-  physicianSub(transformData) {
+  physicianSub(transformData: any) {
     this.physicians = transformData.physicians;
     this.physiciansUpdated.next({
       physicians: [...this.physicians],
@@ -58,7 +58,7 @@ export class PhysiciansService {
     });
   }
 
-  getMap(userData) {
+  getMap(userData: any) {
     return { patients: userData.patients.map(user => {
       return {
         id: user._id,
@@ -91,7 +91,7 @@ export class PhysiciansService {
   }
 
   update(updatedPhysician: any) {
-    return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedPhysician._id, updatedPhysician);
+    return this.http.put<Physicians>(BACKEND_URL + '/' + updatedPhysician._id, updatedPhysician);
   }
 
   delete(physicianId: string) {

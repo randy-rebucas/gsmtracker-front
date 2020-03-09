@@ -10,11 +10,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { PatientRecordListComponent } from './patient-record-list/patient-record-list.component';
 import { PatientRecordFormComponent } from './patient-record-form/patient-record-form.component';
 import { PatientRecordDetailComponent } from './patient-record-detail/patient-record-detail.component';
-import { CanDeactivateGuard } from '../can-deactivate.guard';
 import { HttpClientModule } from '@angular/common/http';
 import { MatStepperModule } from '@angular/material/stepper';
 import { PatientRecordsComponent } from './patient-records.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { CanDeactivateGuard } from 'src/app/shared/guards/can-deactivate.guard';
 
 @NgModule({
   declarations: [

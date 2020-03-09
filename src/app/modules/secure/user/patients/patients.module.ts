@@ -1,18 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { TranslateModule } from '@ngx-translate/core';
 import { PatientsComponent } from './patients.component';
 import { PatientFormComponent } from './patient-form/patient-form.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
-
 import { AngularMaterialModule } from 'src/app/angular-material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { CanDeactivateGuard } from './can-deactivate.guard';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { HttpClientModule } from '@angular/common/http';
-import { TranslateModule } from '@ngx-translate/core';
+import { CanDeactivateGuard } from 'src/app/shared/guards/can-deactivate.guard';
 
 
 @NgModule({
