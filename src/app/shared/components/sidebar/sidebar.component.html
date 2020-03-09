@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="profile-card" (click)="onOpenProfile()" *ngIf="!isLoading">
-        <img [src]="user?.image ? user?.image : defaultImage" alt="{{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}">
+        <img [src]="imagePreview ? imagePreview : defaultImage" alt="{{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}">
         <div class="info">
             <h2>{{user?.name.firstname}} {{user?.name.midlename}} {{user?.name.lastname}}</h2>
             <h4>{{email}}</h4>
@@ -45,10 +45,10 @@
             <mat-icon>label</mat-icon>
             <span (click)="onFilterLabel(label.id)">{{label.label}}</span>
             <div class="action">
-              <button mat-icon-button (click)="onCreateLabel(label.id)" matTooltip="{{ 'common.edit' | translate }}">
+                <button mat-icon-button (click)="onCreateLabel(label.id)" matTooltip="{{ 'common.edit' | translate }}">
                 <mat-icon style="margin: unset;">create</mat-icon>
               </button>
-              <button mat-icon-button (click)="onDeleteLabel(label.id)" matTooltip="{{ 'common.delete' | translate }}">
+                <button mat-icon-button (click)="onDeleteLabel(label.id)" matTooltip="{{ 'common.delete' | translate }}">
                 <mat-icon style="margin: unset;">delete_outline</mat-icon>
               </button>
             </div>

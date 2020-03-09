@@ -43,6 +43,9 @@ export class UploadComponent implements OnInit {
       })
     });
 
+    this.uploadService.getProfilePicture().subscribe((image) => {
+      this.imagePreview = image;
+    });
   }
 
   onFileChanged(event: Event) {
@@ -61,7 +64,7 @@ export class UploadComponent implements OnInit {
           this.mode = 'determinate';
         } else if (e.type === HttpEventType.Response) {
           this.loadingPic = false;
-          this.imagePreview = e.body.imagePath;
+          this.uploadService.setProfilePic(e.body.imagePath);
           this.notificationService.success(':: ' + e.body.message);
         }
       });

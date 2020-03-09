@@ -30,6 +30,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public currentPage: number;
   public imagePath: any;
   defaultImage: any;
+  imagePreview: any;
   email: string;
   userData: any;
   user: any;
@@ -74,6 +75,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.labels = res.labels;
     });
 
+    this.uploadService.getProfilePicture().subscribe((image) => {
+      this.imagePreview = image;
+    });
+
     this.email = this.authenticationService.getUserEmail();
     this.userService.get(this.userId)
     .pipe(
@@ -85,6 +90,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     .subscribe((transformedUser) => {
       this.isLoading = false;
       this.user = { ...this.userData, ...transformedUser};
+      this.imagePreview = this.user.image;
     });
   }
 

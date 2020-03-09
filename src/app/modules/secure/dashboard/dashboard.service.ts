@@ -1,13 +1,52 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
 
-  constructor() { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   bigChart() {
+
+    // const queryParams = `?pagesize=${perPage}&page=${currentPage}`;
+    // this.http.get<{message: string, users: any, counts: number }>(
+    //   BACKEND_URL + queryParams
+    // )
+    // .pipe(
+    //   map(userData => {
+    //     return { users: userData.users.map(user => {
+    //       return {
+    //         id: user._id,
+    //         name: user.name,
+    //         contact: user.contact,
+    //         gender: user.gender,
+    //         birthdate: user.birthdate,
+    //         address: user.address,
+    //         created: user.createdAt,
+    //         updated: user.updatedAt,
+    //         meta: user.metas,
+    //         physicians: user.physicians,
+    //         privateKey: user.prikey,
+    //         publicKey: user.pubkey
+    //       };
+    //     }), max: userData.counts};
+    //   })
+    // )
+    // .subscribe((transformData) => {
+    //   this.users = transformData.users;
+    //   this.usersUpdated.next({
+    //     users: [...this.users],
+    //     counts: transformData.max
+    //   });
+    // });
+
     return [{
       name: 'Asia',
       data: [502, 635, 809, 947, 1402, 3634, 5268]
