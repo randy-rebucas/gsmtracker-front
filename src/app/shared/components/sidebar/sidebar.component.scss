@@ -4,7 +4,7 @@
         margin-right: 20px;
     }
     .profile-card {
-        padding: 0 20px 10px 20px;
+        padding: 10px 20px;
         display: flex;
         justify-content: flex-start;
         cursor: pointer;
@@ -27,6 +27,20 @@
             }
         }
     }
+}
+
+mat-nav-list {
+  height: 350px;
+  overflow: overlay;
+}
+
+mat-nav-list::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.26);
+}
+
+mat-nav-list::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
 }
 
 .arrow-up mat-icon {
