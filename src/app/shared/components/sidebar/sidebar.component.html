@@ -26,15 +26,18 @@
 
     <button mat-raised-button color="accent" style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'patients.create-patients' | translate }}</button>
     <mat-divider></mat-divider>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/dashboard">
+    <!-- <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/dashboard">
         <mat-icon>dashboard</mat-icon>
         {{ 'dashboard.title' | translate }}
-    </a>
+    </a> -->
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/users">
         <mat-icon>assignment_ind</mat-icon>
         {{ 'patients.my-patients' | translate }}
     </a>
-
+    <a mat-list-item disabled>
+      <mat-icon>filter_none</mat-icon>
+      Duplicates
+    </a>
     <mat-divider></mat-divider>
     <a mat-list-item (click)="onToogleLabel()" [ngClass]="{'arrow-up': showLabel==true}">
         <mat-icon>keyboard_arrow_down</mat-icon>
@@ -58,23 +61,23 @@
             {{ 'labels.create-labels' | translate }}
         </a>
     </ng-container>
-    <!--
+
     <mat-divider></mat-divider>
-    <h2 matSubheader>Tools</h2> -->
+    <!-- <h2 matSubheader>Tools</h2> -->
     <!-- <a mat-list-item (click)="onImportOpen()">
         <mat-icon>cloud_upload</mat-icon>
         {{ 'labels.import' | translate }}
-    </a>
+    </a> -->
 
-    <a mat-list-item>
+    <a mat-list-item disabled>
         <mat-icon>cloud_download</mat-icon>
-        {{ 'labels.export' | translate }}
+        {{ 'common.export' | translate }}
     </a>
 
     <a mat-list-item disabled>
         <mat-icon>print</mat-icon>
         {{ 'common.print' | translate }}
-    </a> -->
+    </a>
     <mat-divider></mat-divider>
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/users/patients/all">
         <mat-icon>supervisor_account</mat-icon>

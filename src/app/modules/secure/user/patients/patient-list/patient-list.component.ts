@@ -25,6 +25,7 @@ import { QrWriterComponent } from 'src/app/shared/components/qr-writer/qr-writer
 import { QrReaderComponent } from 'src/app/shared/components/qr-reader/qr-reader.component';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from 'src/app/shared/services/settings.service';
+import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 
 
 @Component({
@@ -84,6 +85,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     private notificationService: NotificationService,
     private patientsService: PatientsService,
     private translate: TranslateService,
+    private appConfigurationService: AppConfigurationService,
     private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
     private labelsService: LabelsService,
@@ -103,7 +105,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
-      this.translate.use(setting.language);
+      this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
       this.setting = setting;
     });
 

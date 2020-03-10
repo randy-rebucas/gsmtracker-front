@@ -4,6 +4,7 @@ import { HelpComponent } from '../help/help.component';
 import { SettingComponent } from '../setting/setting.component';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { SettingsService } from '../../services/settings.service';
+import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 
 @Component({
   selector: 'app-header',
@@ -21,10 +22,13 @@ export class HeaderComponent implements OnInit {
   isAuth = true;
   showBadge: boolean;
   isLoading: boolean;
+  appTitle: string;
+  appLang: string;
   constructor(
     private dialog: MatDialog,
     private settingsService: SettingsService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private appConfigurationService: AppConfigurationService
   ) {
     this.userId = this.authenticationService.getUserId();
     this.showBadge = false;
@@ -36,6 +40,8 @@ export class HeaderComponent implements OnInit {
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
       this.setting = setting;
+      this.appTitle = this.setting ? this.setting.clinicname : this.appConfigurationService.title;
+      this.appLang = this.setting ? this.setting.language : this.appConfigurationService.language;
       this.isLoading = false;
     });
   }

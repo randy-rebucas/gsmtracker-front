@@ -13,6 +13,7 @@ import { LabelComponent } from '../label/label.component';
 import { LabelsService } from '../../services/labels.service';
 import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 import { SettingsService } from '../../services/settings.service';
+import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 
 export interface Label {
   label: string;
@@ -46,6 +47,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(
     private translate: TranslateService,
     private settingsService: SettingsService,
+    private appConfigurationService: AppConfigurationService,
     private authenticationService: AuthenticationService,
     private physiciansService: PhysiciansService,
     private userService: UserService,
@@ -66,7 +68,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
-      this.translate.use(setting.language);
+      this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
       this.setting = setting;
     });
 

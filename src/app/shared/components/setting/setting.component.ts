@@ -43,7 +43,6 @@ export class SettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.selected = this.appConfigurationService.language;
     const quarterHours = ['00', '15', '30', '45'];
 
     for (let i = 0; i < 24; i++) {
@@ -54,24 +53,22 @@ export class SettingComponent implements OnInit {
     }
 
     this.userId = this.authenticationService.getUserId();
-    this.userService.get(this.userId).pipe(
-      map(userData => {
-        const userId = {
-          id: userData._id,
-        };
-        return {...userId, ...userData};
-      })
-    ).subscribe((user) => {
-      this.user = user;
-    });
 
     this.form = this.fb.group({
       // rxpad header setting
       rxHeaderOption: new FormControl(null),
       rxFooterOption: new FormControl(null),
       prescription: this.fb.group({
-        rxTitle: new FormControl(null, [Validators.maxLength(150)]),
-        rxSubTitle: new FormControl(null, [Validators.maxLength(150)]),
+        rxTitle: new FormControl(null, {
+          validators: [
+            Validators.maxLength(150)
+          ]
+        }),
+        rxSubTitle: new FormControl(null, {
+          validators: [
+            Validators.maxLength(150)
+          ]
+        }),
         rxNoNoonBreak: new FormControl(null),
         rxAddresses: this.fb.array([this.addAddressGroup()]),
         rxPhones: this.fb.array([this.addClinicContactGroup()]),
@@ -90,21 +87,23 @@ export class SettingComponent implements OnInit {
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
       console.log(setting);
-      this.translate.use(setting.language);
+      this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
     //     this.settingId = settingData.settingId;
     //     this.uploadService.get(this.settingId).subscribe((res) => {
     //       this.imagePath = res.image;
     //     });
+      this.form.patchValue({
+        clinicname: (setting) ? setting.clinicname : this.appConfigurationService.title,
+        appointments:  (setting) ? setting.appointments : true,
+        language: (setting) ? setting.language : this.appConfigurationService.language,
+        updates:  (setting) ? setting.updates : true
+      });
 
       if (setting) {
         this.form.patchValue({
-          clinicname: setting.clinicname,
           rxHeaderOption: setting.rxHeaderOption,
           rxFooterOption: setting.rxFooterOption,
-          appointments: setting.appointments,
-          prescription: setting.prescription,
-          language: setting.language,
-          updates: setting.updates
+          prescription: setting.prescription
         });
 
         const addressControl = this.form.controls.addresses as FormArray;
@@ -139,15 +138,29 @@ export class SettingComponent implements OnInit {
 
   addAddressGroup() {
     return this.fb.group({
-      address1: new FormControl(null),
-      address2: new FormControl(null),
-      city: new FormControl(null),
-      province: new FormControl(null),
+      address1: new FormControl(null, {
+        validators: [
+          Validators.maxLength(300)
+        ]
+      }),
+      address2: new FormControl(null, {
+        validators: [
+          Validators.maxLength(300)
+        ]
+      }),
+      city: new FormControl(null, {
+        validators: [
+          Validators.maxLength(150)
+        ]
+      }),
+      province: new FormControl(null, {
+        validators: [
+          Validators.maxLength(150)
+        ]
+      }),
       postalCode: new FormControl(null, {
         validators: [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(5)
+          Validators.maxLength(6)
         ]
       }),
       country: new FormControl(null)
@@ -163,7 +176,11 @@ export class SettingComponent implements OnInit {
 
   addClinicContactGroup() {
     return this.fb.group({
-      contact: new FormControl(null)
+      contact: new FormControl(null, {
+        validators: [
+          Validators.maxLength(12)
+        ]
+      })
     });
   }
 
@@ -204,7 +221,7 @@ export class SettingComponent implements OnInit {
       return;
     }
     const updatedSetting = {
-      userId: this.user.id,
+      userId:  this.userId,
       clinicname: this.form.value.clinicname,
       // rxpad
       rxHeaderOption: this.form.value.rxHeaderOption,
@@ -219,7 +236,7 @@ export class SettingComponent implements OnInit {
     };
 
     this.settingsService.setSetting(updatedSetting).subscribe((res) => {
-      this.settingsService.getSetting(this.user.id);
+      this.settingsService.getSetting(this.userId);
       this.notificationService.success(res.message);
       this.dialogRef.close();
     });

@@ -4,12 +4,12 @@
             <mat-icon>menu</mat-icon>
         </button>
 
-        <span *ngIf="!isLoading"> {{setting?.clinicname}} </span>
+        <span *ngIf="!isLoading"> {{appTitle}} </span>
 
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
                 <li *ngIf="!isLoading">
-                  <button mat-button matTooltip="{{ 'settings.language-tip' | translate }}">{{ 'settings.language-option.' + setting?.language | translate }}</button>
+                  <button mat-button matTooltip="{{ 'settings.language-tip' | translate }}">{{ 'settings.language-option.' + appLang | translate }}</button>
                 </li>
                 <li>
                   <button mat-icon-button matTooltip="{{ 'notifications.title' | translate }}">
