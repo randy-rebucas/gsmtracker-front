@@ -26,6 +26,8 @@ import { QrReaderComponent } from 'src/app/shared/components/qr-reader/qr-reader
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from 'src/app/shared/services/settings.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
+import { UploadService } from 'src/app/shared/services/upload.service';
+import { Settings } from 'src/app/shared/interfaces/settings';
 
 
 @Component({
@@ -57,7 +59,8 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   labelPicked: string;
   labels: any[];
   labelsSub: Subscription;
-  setting: any;
+  setting: Settings;
+  settingsData: any;
 
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
@@ -86,6 +89,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     private patientsService: PatientsService,
     private translate: TranslateService,
     private appConfigurationService: AppConfigurationService,
+    private uploadService: UploadService,
     private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
     private labelsService: LabelsService,
@@ -104,9 +108,15 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
-    .subscribe((setting) => {
-      this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
-      this.setting = setting;
+    .pipe(
+      switchMap(setting => {
+        this.setting = setting;
+        return this.uploadService.get(setting._id);
+      })
+    )
+    .subscribe((mergeRes) => {
+      this.settingsData = { ...this.setting, ...mergeRes };
+      this.translate.use((this.settingsData) ? this.settingsData.language : this.appConfigurationService.language);
     });
 
     this.option = this.activatedRoute.snapshot.url[0].path;
@@ -394,6 +404,42 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     const pdfDoc = new jsPDF('p', 'mm', 'a4');
     const pageHeight = pdfDoc.internal.pageSize.height || pdfDoc.internal.pageSize.getHeight();
     const pageWidth = pdfDoc.internal.pageSize.width || pdfDoc.internal.pageSize.getWidth();
+
+    // clinic owner
+    pdfDoc.setFontSize(16);
+    pdfDoc.setFont('normal');
+    pdfDoc.addImage(this.settingsData.image, 'PNG', 10, 10, 18, 18);
+    pdfDoc.text(this.settingsData.clinicname, 35, 10, null, null, 'left');
+
+    pdfDoc.setFontSize(10);
+    pdfDoc.setFont('courier');
+    const addresses = this.settingsData.prescription.rxAddresses;
+    addresses.forEach(element => {
+      pdfDoc.text(element.address1, 35, 14, null, null, 'left');
+      let gap = 0;
+      if (element.address2) {
+        gap = 4;
+        pdfDoc.text(element.address2, 35, 18, null, null, 'left');
+      }
+      pdfDoc.text('' + element.postalCode + '', 35, 18 + gap, null, null, 'left');
+      pdfDoc.text(element.province, 45, 18 + gap, null, null, 'left');
+      pdfDoc.text(element.city, 70, 18 + gap, null, null, 'left');
+      pdfDoc.text(element.country, 35, 22 + gap, null, null, 'left');
+    });
+
+    pdfDoc.text('Clinic hour', 125, 14, null, null, 'left');
+    const hours = this.settingsData.prescription.rxHours;
+    for (let index = 0; index < hours.length; index++) {
+      const element = hours[index];
+      pdfDoc.text(element.morningOpen + ' - ' + element.afternoonClose, 155, 14 + ( index * 4 ), null, null, 'left');
+    }
+
+    pdfDoc.text('Tel no: ', 125, 18, null, null, 'left');
+    const contacts = this.settingsData.prescription.rxPhones;
+    for (let index = 0; index < contacts.length; index++) {
+      const element = contacts[index];
+      pdfDoc.text(element.contact, 155, 18 + ( index * 4 ), null, null, 'left');
+    }
 
     pdfDoc.line(10, 28, 200, 28);
 

@@ -17,7 +17,7 @@ const BACKEND_URL = environment.apiUrl + '/patients';
 export class PatientsService {
 
   private patients: Patients[] = [];
-  private patientsUpdated = new Subject<{ patients: Patients[], counts: number }>();
+  private patientsUpdated = new Subject<{ patients: any[], counts: number }>();
 
   constructor(
     private http: HttpClient

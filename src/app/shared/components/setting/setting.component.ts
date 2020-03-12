@@ -13,6 +13,7 @@ import { UserService } from 'src/app/modules/secure/user/user.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 import { Settings } from '../../interfaces/settings';
 import { SettingsService } from '../../services/settings.service';
+import { UploadService } from '../../services/upload.service';
 
 @Component({
   selector: 'app-setting',
@@ -27,12 +28,14 @@ export class SettingComponent implements OnInit {
   user: User;
   setting: Settings;
   isShowHeader: boolean;
+  imagePath: any;
   private userId: string;
 
   constructor(
     public dialogRef: MatDialogRef<SettingComponent>,
     private translate: TranslateService,
     private settingsService: SettingsService,
+    private uploadService: UploadService,
     private appConfigurationService: AppConfigurationService,
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService,
@@ -75,6 +78,7 @@ export class SettingComponent implements OnInit {
         rxHours: this.fb.array([this.addClinicHourGroup()]),
       }),
       clinicname: new FormControl(null),
+      clinicowner:  new FormControl(null),
       // language
       language: new FormControl(null),
       // appointments
@@ -86,14 +90,16 @@ export class SettingComponent implements OnInit {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
-      console.log(setting);
+      this.setting = setting;
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
-    //     this.settingId = settingData.settingId;
-    //     this.uploadService.get(this.settingId).subscribe((res) => {
-    //       this.imagePath = res.image;
-    //     });
+
+      this.uploadService.get(setting._id).subscribe((res) => {
+        this.imagePath = res.image;
+      });
+
       this.form.patchValue({
         clinicname: (setting) ? setting.clinicname : this.appConfigurationService.title,
+        clinicowner: (setting) ? setting.clinicowner : this.appConfigurationService.owner,
         appointments:  (setting) ? setting.appointments : true,
         language: (setting) ? setting.language : this.appConfigurationService.language,
         updates:  (setting) ? setting.updates : true
@@ -223,6 +229,7 @@ export class SettingComponent implements OnInit {
     const updatedSetting = {
       userId:  this.userId,
       clinicname: this.form.value.clinicname,
+      clinicowner: this.form.value.clinicowner,
       // rxpad
       rxHeaderOption: this.form.value.rxHeaderOption,
       rxFooterOption: this.form.value.rxFooterOption,

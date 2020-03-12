@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppConfigurationService {
   title: string;
+  owner: string;
   version: string;
   tag: string;
   language: string;
@@ -22,6 +23,7 @@ export class AppConfigurationService {
       // mock because can't xhr local file here
       const content = {
         title: 'clinicplus',
+        owner: 'clinicplus team (please change this)',
         version: '1.0.0',
         tag: '-were doctors are in!',
         language: 'en',

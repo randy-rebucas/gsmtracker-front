@@ -38,6 +38,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { PromptComponent } from './components/prompt/prompt.component';
+import { ExportComponent } from './components/export/export.component';
+import { PrintComponent } from './components/print/print.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,9 @@ import { PromptComponent } from './components/prompt/prompt.component';
     LabelComponent,
     ItemsComponent,
     QrReaderComponent,
-    PromptComponent
+    PromptComponent,
+    ExportComponent,
+    PrintComponent
   ],
   imports: [
     CommonModule,

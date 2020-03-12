@@ -74,6 +74,14 @@ a.mat-list-item span {
     }
 }
 
+.action {
+  visibility: hidden;
+}
+
+::ng-deep .mat-list-item-content:hover .action {
+  visibility: visible;
+}
+
 mat-nav-list.mat-nav-list.mat-list-base {
   position: relative;
   z-index: 9;

@@ -65,17 +65,17 @@
 
     <mat-divider></mat-divider>
     <!-- <h2 matSubheader>Tools</h2> -->
-    <!-- <a mat-list-item (click)="onImportOpen()">
+    <a mat-list-item (click)="onImportOpen()">
         <mat-icon>cloud_upload</mat-icon>
-        {{ 'labels.import' | translate }}
-    </a> -->
+        {{ 'common.import' | translate }}
+    </a>
 
-    <a mat-list-item disabled>
+    <a mat-list-item (click)="onExportOpen()">
         <mat-icon>cloud_download</mat-icon>
         {{ 'common.export' | translate }}
     </a>
 
-    <a mat-list-item disabled>
+    <a mat-list-item (click)="onPrintOpen()">
         <mat-icon>print</mat-icon>
         {{ 'common.print' | translate }}
     </a>

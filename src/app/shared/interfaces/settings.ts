@@ -1,7 +1,9 @@
 export interface Settings {
+  _id?: string;
   id: string;
   userId: string;
   clinicname: string;
+  clinicowner: string;
   rxHeaderOption: boolean;
   rxFooterOption: boolean;
   prescription: Prescription;

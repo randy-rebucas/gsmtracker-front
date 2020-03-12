@@ -182,3 +182,17 @@ mat-slide-toggle {
     background: #efefef;
     padding: 1em;
 }
+
+.clinic-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.clinic-logo {
+  margin-right: 1em;
+  width: 15%;
+}
+
+.clinic-detail {
+  flex-grow: 1;
+}

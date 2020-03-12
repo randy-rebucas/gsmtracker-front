@@ -14,6 +14,9 @@ import { LabelsService } from '../../services/labels.service';
 import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 import { SettingsService } from '../../services/settings.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
+import { ImportComponent } from '../import/import.component';
+import { ExportComponent } from '../export/export.component';
+import { PrintComponent } from '../print/print.component';
 
 export interface Label {
   label: string;
@@ -196,13 +199,48 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   onImportOpen() {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.data = {
-    //   title: 'Import patients'
-    // };
-    // this.dialog.open(ImportComponent, dialogConfig);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '25%';
+    this.translate.get([
+      'patients.import-patients'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        title: translate['patients.import-patients']
+      };
+    });
+    this.dialog.open(ImportComponent, dialogConfig);
+  }
+
+  onExportOpen() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '25%';
+    this.translate.get([
+      'patients.export-patients'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        title: translate['patients.export-patients']
+      };
+    });
+    this.dialog.open(ExportComponent, dialogConfig);
+  }
+
+  onPrintOpen() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '25%';
+    this.translate.get([
+      'patients.print-patients'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        title: translate['patients.print-patients']
+      };
+    });
+    this.dialog.open(PrintComponent, dialogConfig);
   }
 
   onFilterLabel(labelId: string) {

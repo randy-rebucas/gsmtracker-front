@@ -16,6 +16,7 @@ export class UploadComponent implements OnInit {
   @Input() imagePreview: ArrayBuffer | any;
   @Input() defaultImage: string;
   @Input() size: number;
+  @Input() responseListener: boolean;
 
   form: FormGroup;
   loadingPic: boolean;
@@ -28,6 +29,7 @@ export class UploadComponent implements OnInit {
     private uploadService: UploadService,
     private notificationService: NotificationService
   ) {
+    this.responseListener = true;
     this.loadingPic = false;
     this.defaultImage = './../../../../assets/images/blank.png';
   }
@@ -62,8 +64,10 @@ export class UploadComponent implements OnInit {
           this.color = 'primary';
           this.mode = 'determinate';
         } else if (e.type === HttpEventType.Response) {
+          if (this.responseListener) {
+            this.uploadService.setProfilePic(e.body.imagePath);
+          }
           this.loadingPic = false;
-          this.uploadService.setProfilePic(e.body.imagePath);
           this.notificationService.success(':: ' + e.body.message);
         }
       });

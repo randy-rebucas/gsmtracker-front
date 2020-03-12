@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.config = this.appConfigurationService;
 
     if (this.authenticationService.getIsAuth()) {
-      this.router.navigateByUrl('secure/dashboard');
+      this.router.navigateByUrl('secure/users');
     }
 
   }

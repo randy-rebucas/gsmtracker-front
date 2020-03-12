@@ -1,11 +1,23 @@
 <h2 mat-dialog-title>{{ 'settings.title' | translate }}</h2>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
-      <h3>{{ 'settings.clinic-details' | translate }}</h3>
-      <mat-form-field>
-        <mat-label>{{ 'settings.clinicname' | translate }}</mat-label>
-        <input matInput type="text" formControlName="clinicname">
-    </mat-form-field>
+        <h3>{{ 'settings.clinic-details' | translate }}</h3>
+        <div class="clinic-info">
+          <div class="clinic-logo">
+            <app-upload [sourceId]="setting?._id" [imagePreview]="imagePath" [size]="100" [defaultImage]="'/assets/images/clinic-blank.png'" [responseListener]="false"></app-upload>
+          </div>
+          <div class="clinic-detail">
+            <mat-form-field>
+              <mat-label>{{ 'settings.clinicname' | translate }}</mat-label>
+              <input matInput type="text" formControlName="clinicname">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>{{ 'settings.clinicowner' | translate }}</mat-label>
+              <input matInput type="text" formControlName="clinicowner">
+            </mat-form-field>
+          </div>
+        </div>
+
         <h3>{{ 'settings.prescription-pad' | translate }}</h3>
         <div class="toggle-group">
             <mat-slide-toggle formControlName="rxFooterOption" class="toggle">{{ 'settings.show-footer' | translate }}</mat-slide-toggle>
