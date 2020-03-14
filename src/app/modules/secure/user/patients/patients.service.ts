@@ -18,6 +18,7 @@ export class PatientsService {
 
   private patients: Patients[] = [];
   private patientsUpdated = new Subject<{ patients: any[], counts: number }>();
+  private selectedSub = new Subject<any>();
 
   constructor(
     private http: HttpClient
@@ -115,5 +116,13 @@ export class PatientsService {
 
   setLabel(patientId: string, labels: any[]) {
     return this.http.get<any>(BACKEND_URL + '/setLabel/' + patientId + '/' + labels);
+  }
+
+  setSelectedItem(selectedItem: any) {
+    this.selectedSub.next(selectedItem);
+  }
+
+  getSelectedItem() {
+    return this.selectedSub.asObservable();
   }
 }

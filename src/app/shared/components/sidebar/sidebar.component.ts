@@ -17,6 +17,8 @@ import { AppConfigurationService } from 'src/app/configs/app-configuration.servi
 import { ImportComponent } from '../import/import.component';
 import { ExportComponent } from '../export/export.component';
 import { PrintComponent } from '../print/print.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
 
 export interface Label {
   label: string;
@@ -47,6 +49,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   userId: string;
   setting: any;
 
+  public selection = new SelectionModel<any>(true, []);
+  selectedItem: any[];
+
   constructor(
     private translate: TranslateService,
     private settingsService: SettingsService,
@@ -57,6 +62,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private uploadService: UploadService,
     private labelsService: LabelsService,
     private dialog: MatDialog,
+    private patientsService: PatientsService,
     private notificationService: NotificationService,
     private router: Router
   ) {
@@ -96,6 +102,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     this.userSub = this.userService.getSubListener().subscribe((userListener) => {
       this.fullname = userListener.name.firstname + ' ' + userListener.name.midlename + ' ' + userListener.name.lastname;
+    });
+
+    this.patientsService.getSelectedItem().subscribe((res) => {
+      this.selectedItem = res;
+      console.log(res);
     });
   }
 
@@ -222,7 +233,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       'patients.export-patients'
     ]).subscribe((translate) => {
       dialogConfig.data = {
-        title: translate['patients.export-patients']
+        title: translate['patients.export-patients'],
+        selectedItem: this.selectedItem
       };
     });
     this.dialog.open(ExportComponent, dialogConfig);
@@ -237,7 +249,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       'patients.print-patients'
     ]).subscribe((translate) => {
       dialogConfig.data = {
-        title: translate['patients.print-patients']
+        title: translate['patients.print-patients'],
+        selectedItem: this.selectedItem
       };
     });
     this.dialog.open(PrintComponent, dialogConfig);

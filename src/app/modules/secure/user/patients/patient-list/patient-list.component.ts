@@ -28,6 +28,9 @@ import { SettingsService } from 'src/app/shared/services/settings.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Settings } from 'src/app/shared/interfaces/settings';
+import { PrintComponent } from 'src/app/shared/components/print/print.component';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { ExportComponent } from 'src/app/shared/components/export/export.component';
 
 
 @Component({
@@ -82,7 +85,6 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private datePipe: DatePipe,
     private titleService: Title,
     private dialogService: DialogService,
     private notificationService: NotificationService,
@@ -168,8 +170,6 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
       ).subscribe(
         data => {
           this.dataSource = new MatTableDataSource(this.setOwnerShip(data));
-          // this.dataLength = this.dataSource.data.length;
-          console.log(this.length);
         }
       );
 
@@ -191,25 +191,39 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.selection.selected.length === this.length;
   }
 
+  isCheckboxChange(row: any) {
+      this.selection.toggle(row);
+      this.selectListener();
+  }
+
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
     this.selection.clear() :
     this.dataSource.data.forEach(
-      row => this.selection.select(row)
+      row => {
+        this.selection.select(row);
+        this.selectListener();
+      }
     );
   }
 
   onToggleSelect(option: string) {
     if (option === 'all') {
       this.dataSource.data.forEach(
-        row => this.selection.select(row)
+        row => {
+          this.selection.select(row);
+          this.selectListener();
+        }
       );
     } else {
       this.selection.clear();
     }
   }
 
+  selectListener() {
+    this.patientsService.setSelectedItem(this.selection.selected);
+  }
   /** The label for the checkbox on the passed row */
   checkboxLabel(row?: any): string {
     if (!row) {
@@ -330,146 +344,38 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onExport() {
-    const csvOptions = {
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true,
-      showTitle: false,
-      title: 'Patients',
-      useBom: true,
-      noDownload: false,
-      headers: [
-        'Firstname',
-        'Midlename',
-        'Lastname',
-        'Contact',
-        'Gender',
-        'Birthdate',
-        'Created',
-        'Address',
-        'City',
-        'Province',
-        'Country',
-        'Postal'
-      ]
-    };
-
-    const patientList = [];
-    for (const iterator of this.selection.selected) {
-      const dataObj = {
-        fullname: iterator.firstname,
-        midlename: iterator.midlename,
-        lastname: iterator.lastname,
-        contact: iterator.contact,
-        gender: iterator.gender,
-        birthdate: this.datePipe.transform(iterator.birthdate, 'yyyy-MM-dd'),
-        created: this.datePipe.transform(iterator.created, 'yyyy-MM-dd')
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '25%';
+    this.translate.get([
+      'patients.export-patients'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        title: translate['patients.export-patients'],
+        selectedItem: this.selection.selected
       };
+    });
 
-      let addressObj = {};
-      if (iterator.address.length > 1 ) {
-        iterator.address.forEach(el => {
-          if (el.current) {
-            addressObj = {
-              address: el.address1 + ' ' + el.address2,
-              city: el.city,
-              province: el.province,
-              country: el.country,
-              postalCode: el.postalCode
-            };
-          }
-        });
-      } else {
-        addressObj = {
-          address: iterator.address[0].address1 + ' ' + iterator.address[0].address2,
-          city: iterator.address[0].city,
-          province: iterator.address[0].province,
-          country: iterator.address[0].country,
-          postalCode: iterator.address[0].postalCode
-        };
-      }
-
-      const mergeObj = {...dataObj, ...addressObj};
-
-      patientList.push(mergeObj);
-    }
-    // tslint:disable-next-line: no-unused-expression
-    new AngularCsv(patientList, 'Patients', csvOptions);
+    this.dialog.open(ExportComponent, dialogConfig);
   }
 
   onPrint() {
-    const numSelected = this.selection.selected;
-    const datePipe = new DatePipe('en-US');
-    const pdfDoc = new jsPDF('p', 'mm', 'a4');
-    const pageHeight = pdfDoc.internal.pageSize.height || pdfDoc.internal.pageSize.getHeight();
-    const pageWidth = pdfDoc.internal.pageSize.width || pdfDoc.internal.pageSize.getWidth();
-
-    // clinic owner
-    pdfDoc.setFontSize(16);
-    pdfDoc.setFont('normal');
-    pdfDoc.addImage(this.settingsData.image, 'PNG', 10, 10, 18, 18);
-    pdfDoc.text(this.settingsData.clinicname, 35, 10, null, null, 'left');
-
-    pdfDoc.setFontSize(10);
-    pdfDoc.setFont('courier');
-    const addresses = this.settingsData.prescription.rxAddresses;
-    addresses.forEach(element => {
-      pdfDoc.text(element.address1, 35, 14, null, null, 'left');
-      let gap = 0;
-      if (element.address2) {
-        gap = 4;
-        pdfDoc.text(element.address2, 35, 18, null, null, 'left');
-      }
-      pdfDoc.text('' + element.postalCode + '', 35, 18 + gap, null, null, 'left');
-      pdfDoc.text(element.province, 45, 18 + gap, null, null, 'left');
-      pdfDoc.text(element.city, 70, 18 + gap, null, null, 'left');
-      pdfDoc.text(element.country, 35, 22 + gap, null, null, 'left');
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '25%';
+    // set modal title
+    this.translate.get([
+      'patients.print-patients'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        title: translate['patients.print-patients'],
+        selectedItem: this.selection.selected
+      };
     });
 
-    pdfDoc.text('Clinic hour', 125, 14, null, null, 'left');
-    const hours = this.settingsData.prescription.rxHours;
-    for (let index = 0; index < hours.length; index++) {
-      const element = hours[index];
-      pdfDoc.text(element.morningOpen + ' - ' + element.afternoonClose, 155, 14 + ( index * 4 ), null, null, 'left');
-    }
-
-    pdfDoc.text('Tel no: ', 125, 18, null, null, 'left');
-    const contacts = this.settingsData.prescription.rxPhones;
-    for (let index = 0; index < contacts.length; index++) {
-      const element = contacts[index];
-      pdfDoc.text(element.contact, 155, 18 + ( index * 4 ), null, null, 'left');
-    }
-
-    pdfDoc.line(10, 28, 200, 28);
-
-    pdfDoc.setFontSize(10);
-    pdfDoc.setFont('courier');
-    pdfDoc.text('Fullname', 10, 32, null, null, 'left');
-    pdfDoc.text('Contact', 125, 32, null, null, 'left');
-    pdfDoc.text('Gender', 155, 32, null, null, 'left');
-    pdfDoc.text('Birthdate', 175, 32, null, null, 'left');
-
-    pdfDoc.setFontSize(10);
-    pdfDoc.setFont('courier');
-
-    for (let index = 0; index < numSelected.length; index++) {
-      const element = numSelected[index];
-      pdfDoc.text(element.firstname + ' ' + element.midlename + ', ' + element.lastname, 10, 37 + (index * 8), null, null, 'left');
-      pdfDoc.text(element.contact, 125, 37 + (index * 8), null, null, 'left');
-      pdfDoc.text(element.gender, 155, 37 + (index * 8), null, null, 'left');
-      pdfDoc.text(datePipe.transform(element.birthdate, 'MMM dd, yyyy'), 175, 37 + (index * 8), null, null, 'left');
-      pdfDoc.text('Address: ', 15, 41 + (index * 8), null, null, 'left');
-      element.address.forEach(el => {
-        if (el.current) {
-          pdfDoc.text(el.address1 + '' + (el.address2) ? el.address2 : '' + ', ' +
-          el.postalCode +
-          el.province + el.city + el.country, 35, 41 + (index * 8), null, null, 'left');
-        }
-      });
-    }
-    pdfDoc.autoPrint();
-    pdfDoc.output('dataurlnewwindow');
+    this.dialog.open(PrintComponent, dialogConfig);
   }
 
   filterSelection() {
