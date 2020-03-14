@@ -1,4 +1,4 @@
-<div fxLayout="row">
+<div fxLayout="row" id="header-list">
     <div fxFlex="40%" fxFlexAlign="start">
       <mat-form-field>
         <mat-label>{{ 'patients.find-patients' | translate }}</mat-label>
@@ -32,13 +32,15 @@
         </button>
             <mat-menu #matMasterSelect="matMenu">
                 <button mat-menu-item (click)="onToggleSelect('all')">
-            <span>{{ 'patients.all' | translate }}</span>
-          </button>
-                <button mat-menu-item (click)="onToggleSelect('none')">
-            <span>{{ 'patients.none' | translate }}</span>
-          </button>
+                  <span>{{ 'patients.all' | translate }}</span>
+                </button>
+                      <button mat-menu-item (click)="onToggleSelect('none')">
+                  <span>{{ 'patients.none' | translate }}</span>
+                </button>
             </mat-menu>
-
+            <button mat-icon-button (click)="onReset()" matTooltip="Refresh">
+              <mat-icon>replay</mat-icon>
+            </button>
             <button mat-icon-button [matMenuTriggerFor]="menuLabel" matTooltip="{{ 'labels.manage-labels' | translate }}">
             <mat-icon>label</mat-icon>
           </button>
@@ -122,6 +124,9 @@
             <ng-template [ngIf]="column === 'age'">
                 <mat-cell *matCellDef="let element"> {{ element.birthdate | birthday }}</mat-cell>
             </ng-template>
+            <ng-template [ngIf]="column === 'middlename'">
+              <mat-cell *matCellDef="let element"> {{ element.midlename }}</mat-cell>
+          </ng-template>
             <ng-template #elseBlockDate>
                 <mat-cell *matCellDef="let element"> {{ element[column] | titlecase }}</mat-cell>
             </ng-template>

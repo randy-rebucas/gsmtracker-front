@@ -218,6 +218,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     } else {
       this.selection.clear();
+      this.selectListener();
     }
   }
 
@@ -341,6 +342,12 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.router.navigate(['../', user.id], {relativeTo: this.activatedRoute});
     }
+  }
+
+  onReset() {
+    this.onToggleSelect('none');
+    this.labelPicked = '';
+    this.getQuery(this.perPage, this.currentPage, '');
   }
 
   onExport() {

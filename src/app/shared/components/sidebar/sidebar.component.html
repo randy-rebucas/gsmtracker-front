@@ -35,10 +35,7 @@
         <mat-icon>assignment_ind</mat-icon>
         {{ 'patients.my-patients' | translate }}
     </a>
-    <a mat-list-item disabled>
-      <mat-icon>filter_none</mat-icon>
-      Duplicates
-    </a>
+
     <mat-divider></mat-divider>
     <a mat-list-item (click)="onToogleLabel()" [ngClass]="{'arrow-up': showLabel==true}">
         <mat-icon>keyboard_arrow_down</mat-icon>

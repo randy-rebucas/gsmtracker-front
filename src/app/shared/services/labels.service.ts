@@ -22,7 +22,8 @@ export class LabelsService {
   ) { }
 
   getAll(userId: string) {
-    this.http.get<{message: string, labels: any }>(BACKEND_URL).pipe(
+    const queryParams = `?labelOwner=${userId}`;
+    this.http.get<{message: string, labels: any }>(BACKEND_URL + queryParams).pipe(
       map(labelData => {
         return {
           labels: labelData.labels.map(resLabel => {
