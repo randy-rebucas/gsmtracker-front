@@ -1,14 +1,15 @@
 <h2 mat-dialog-title>Import patients</h2>
 <mat-dialog-content class="mat-typography">
-  <p>To import patients, select a CSV. <a href="/page/learn-more" target="_blank">Learn more</a></p>
+  <!-- <p>To import patients, select a CSV. <a href="/page/learn-more" target="_blank">Learn more</a></p>
   <form [formGroup]="form" (submit)="onImport()">
-    <!-- <button mat-flat-button type="button" color="primary" (click)="filePicker.click()">Select file</button>
-    <input type="file" #filePicker/> -->
+    <button mat-flat-button type="button" color="primary" (click)="filePicker.click()">Select file</button>
+    <input type="file" #filePicker/>
 
     <input type="file" formControlName="file"/>
-  </form>
+  </form> -->
+  <p>Import function is disabled at this moment. Please contact support <a href="http://m.me/myclinicsoftware" target="_blank">here</a> to know why.</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button (click)="onImport()" cdkFocusInitial>Import</button>
+  <button mat-button (click)="onImport()" cdkFocusInitial disabled>Import</button>
 </mat-dialog-actions>
