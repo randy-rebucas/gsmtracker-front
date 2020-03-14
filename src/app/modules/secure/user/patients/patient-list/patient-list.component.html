@@ -193,7 +193,7 @@
     <mat-header-row *matHeaderRowDef="['view-action']" [class.header-row]="!selection.hasValue()"></mat-header-row>
     <mat-header-row *matHeaderRowDef="['patient-counts']" class="sub-header"></mat-header-row>
 
-    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" (click)="selection.toggle(element)" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></mat-row>
+    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" (click)="isCheckboxChange(element)" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></mat-row>
     <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
 
     <ng-container matColumnDef="loading">
