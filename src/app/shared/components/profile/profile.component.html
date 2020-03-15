@@ -11,33 +11,92 @@
             <mat-form-field>
                 <mat-label>{{ 'basic.private-key' | translate }} </mat-label>
                 <input matInput value="{{user?.privateKey}}" #private readonly>
-                <button mat-icon-button matSuffix matTooltip="{{ 'common.copy' | translate }}" (click)="onCopy(private)">
+                <button mat-icon-button matSuffix [cdkCopyToClipboard]="user?.privateKey" matTooltip="{{ 'common.copy' | translate }}">
                   <mat-icon>file_copy</mat-icon>
                 </button>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>{{ 'basic.public-key' | translate }}:</mat-label>
                 <input matInput value="{{user?.publicKey}}" #public readonly>
-                <button mat-icon-button matSuffix matTooltip="{{ 'common.copy' | translate }}" (click)="onCopy(public)">
+                <button mat-icon-button matSuffix [cdkCopyToClipboard]="user?.publicKey" matTooltip="{{ 'common.copy' | translate }}">
                   <mat-icon>file_copy</mat-icon>
                 </button>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field *ngIf="!isChangeEmail">
                 <mat-label>{{ 'authentication.email' | translate }} </mat-label>
                 <input matInput value="{{authenticationService.getUserEmail()}}" readonly>
-                <button mat-icon-button matSuffix matTooltip="{{ 'basic.change-email' | translate }}" (click)="onChangeEmail()">
+                <button mat-icon-button matSuffix matTooltip="{{ 'basic.change-email' | translate }}" (click)="changeEmail()">
                   <mat-icon>edit</mat-icon>
                 </button>
             </mat-form-field>
-            <mat-form-field>
+            <form [formGroup]="formChangeEmail" class="auth-form" id="change-email" (submit)="onChangeEmail()" *ngIf="isChangeEmail">
+              <mat-form-field>
+                <mat-label>Previous Password</mat-label>
+                  <input matInput type="password" formControlName="oldPass">
+                  <mat-error *ngIf="emailFormCtrls.oldPass.errors">
+                    <div *ngIf="emailFormCtrls.oldPass.errors.required">
+                        {{ 'validation.required' | translate:{'s':'old password'} }}
+                    </div>
+                    <div *ngIf="emailFormCtrls.oldPass.errors.maxlength">
+                        {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
+                    </div>
+                  </mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>New email</mat-label>
+                  <input matInput formControlName="newEmail">
+                  <mat-error *ngIf="emailFormCtrls.newEmail.errors">
+                    <div *ngIf="emailFormCtrls.newEmail.errors.required">
+                        {{ 'validation.required' | translate:{'s':'email'} }}
+                    </div>
+                    <div *ngIf="emailFormCtrls.newEmail.errors.maxlength">
+                        {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'email'} }}
+                    </div>
+                    <div *ngIf="emailFormCtrls.newEmail.errors.email">
+                      {{ 'validation.invalid' | translate:{'s':'email'} }}
+                    </div>
+                  </mat-error>
+              </mat-form-field>
+              <button type="button" mat-button (click)="changeEmail()">Cancel</button>
+              <button type="submit" mat-button color="primary">Update</button>
+            </form>
+
+            <mat-form-field *ngIf="!isChangePass">
                 <mat-label>{{ 'authentication.password' | translate }} </mat-label>
                 <input matInput value="********" readonly>
-                <button mat-icon-button matSuffix matTooltip="{{ 'basic.change-pass' | translate }}" (click)="onChangePass()">
+                <button mat-icon-button matSuffix matTooltip="{{ 'basic.change-pass' | translate }}" (click)="changePass()">
                   <mat-icon>edit</mat-icon>
                 </button>
             </mat-form-field>
-
+            <form [formGroup]="formChangePass" class="auth-form" id="change-pass" (submit)="onChangePass()" *ngIf="isChangePass">
+              <mat-form-field>
+                <mat-label>Previous Password</mat-label>
+                  <input matInput type="password" formControlName="oldPass">
+                  <mat-error *ngIf="passFormCtrls.oldPass.errors">
+                    <div *ngIf="passFormCtrls.oldPass.errors.required">
+                        {{ 'validation.required' | translate:{'s':'old password'} }}
+                    </div>
+                    <div *ngIf="passFormCtrls.oldPass.errors.maxlength">
+                        {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
+                    </div>
+                  </mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>New Password</mat-label>
+                  <input matInput type="password" formControlName="newPass">
+                  <mat-error *ngIf="passFormCtrls.newPass.errors">
+                    <div *ngIf="passFormCtrls.newPass.errors.required">
+                        {{ 'validation.required' | translate:{'s':'new password'} }}
+                    </div>
+                    <div *ngIf="passFormCtrls.newPass.errors.maxlength">
+                        {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'new password'} }}
+                    </div>
+                  </mat-error>
+              </mat-form-field>
+              <button type="button" mat-button (click)="changePass()">Cancel</button>
+              <button type="submit" mat-button color="primary">Update</button>
+            </form>
             <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
                 <h2 class="mat-subheading-2">{{ 'basic.basic-information' | translate }}</h2>
                 <div class="form-field-block">

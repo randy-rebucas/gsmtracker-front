@@ -1,8 +1,8 @@
 <div class="login-page">
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
-<div class="content" *ngIf="!isLoading">
 
-    <form [formGroup]="form" (submit)="onLogin()" class="login-form">
+<div class="content">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <form [formGroup]="form" (submit)="onLogin()" class="login-form"  *ngIf="!isLoading">
         <div>
             <h2 class="app-name">{{ 'authentication.login' | translate }}</h2>
             <p class="subheading">{{ 'authentication.access-label' | translate }}</p>

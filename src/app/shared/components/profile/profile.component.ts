@@ -8,6 +8,7 @@ import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
+import { constants } from 'buffer';
 
 export interface Practices {
   value: string;
@@ -24,8 +25,12 @@ export class ProfileComponent implements OnInit {
   userId: string;
   user: any;
   isLoading: boolean;
+  isChangePass: boolean;
+  isChangeEmail: boolean;
   public imagePath: any;
   public form: FormGroup;
+  public formChangePass: FormGroup;
+  public formChangeEmail: FormGroup;
   public startDate = new Date(1990, 0, 1);
 
   practices: Practices[] = [
@@ -67,6 +72,36 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
+    this.formChangePass = this.fb.group({
+      oldPass: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(10)
+        ]
+      }),
+      newPass: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(10)
+        ]
+      })
+    });
+
+    this.formChangeEmail = this.fb.group({
+      oldPass: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.maxLength(10)
+        ]
+      }),
+      newEmail: new FormControl(null, {
+        validators: [
+          Validators.required,
+          Validators.email,
+          Validators.maxLength(50)
+        ]
+      })
+    });
 
     this.form = this.fb.group({
       firstname: new FormControl(null, {
@@ -270,6 +305,14 @@ export class ProfileComponent implements OnInit {
     return this.form.controls;
   }
 
+  get passFormCtrls() {
+    return this.formChangePass.controls;
+  }
+
+  get emailFormCtrls() {
+    return this.formChangeEmail.controls;
+  }
+
   getAddresseFormGroup(index: any): FormGroup {
     return this.addressArray.controls[index] as FormGroup;
   }
@@ -323,22 +366,45 @@ export class ProfileComponent implements OnInit {
 
   }
 
-  onCopy(inputElement: any) {
-    inputElement.select();
-    document.execCommand('copy');
-    inputElement.setSelectionRange(0, 0);
-    // response message
-    this.translate.get('common.copied')
-    .subscribe((norifResMessgae: string) => {
-      this.notificationService.success(norifResMessgae);
-    });
+  changeEmail() {
+    this.isChangeEmail = !this.isChangeEmail;
   }
 
   onChangeEmail() {
+    const updateEmail = {
+      email: this.authenticationService.getUserEmail(),
+      oldPass: this.formChangeEmail.value.oldPass,
+      newEmail: this.formChangeEmail.value.newEmail,
+      targetField: 'email'
+    };
+    this.authenticationService.update(updateEmail, this.userId).subscribe((res) => {
+      this.translate.get('common.updated-message', {s: 'Email'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
+        });
+      this.dialogRef.close();
+      this.authenticationService.logout();
+    });
+  }
 
+  changePass() {
+    this.isChangePass = !this.isChangePass;
   }
 
   onChangePass() {
-
+    const updatePass = {
+      email: this.authenticationService.getUserEmail(),
+      oldPass: this.formChangePass.value.oldPass,
+      newPass: this.formChangePass.value.newPass,
+      targetField: 'password'
+    };
+    this.authenticationService.update(updatePass, this.userId).subscribe((res) => {
+      this.translate.get('common.updated-message', {s: 'Password'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
+        });
+      this.dialogRef.close();
+      this.authenticationService.logout();
+    });
   }
 }

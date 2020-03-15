@@ -40,6 +40,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { PromptComponent } from './components/prompt/prompt.component';
 import { ExportComponent } from './components/export/export.component';
 import { PrintComponent } from './components/print/print.component';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { PrintComponent } from './components/print/print.component';
     PerfectScrollbarModule,
     QRCodeModule,
     ZXingScannerModule,
-    MatBadgeModule
+    MatBadgeModule,
+    ClipboardModule
   ],
   exports: [
     // Pipes

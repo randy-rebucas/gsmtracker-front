@@ -150,4 +150,8 @@ export class AuthenticationService {
       publicKey: authPublicKey
     };
   }
+
+  update(updateData: any, userId: string) {
+    return this.http.put<any>(BACKEND_URL + '/' + userId, updateData);
+  }
 }
