@@ -5,6 +5,9 @@ export interface Blockchain {
   previousHash: string;
   hash: string;
   nonce: number;
+  hasAccess?: boolean;
+  status?: string;
+  physicianId?: string;
 }
 
 export interface Transaction {

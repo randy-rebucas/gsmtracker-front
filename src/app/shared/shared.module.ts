@@ -41,6 +41,8 @@ import { PromptComponent } from './components/prompt/prompt.component';
 import { ExportComponent } from './components/export/export.component';
 import { PrintComponent } from './components/print/print.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { RequestComponent } from './components/request/request.component';
+import { AccessComponent } from './components/access/access.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +72,9 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     QrReaderComponent,
     PromptComponent,
     ExportComponent,
-    PrintComponent
+    PrintComponent,
+    RequestComponent,
+    AccessComponent
   ],
   imports: [
     CommonModule,
@@ -110,7 +114,11 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     ProfileComponent,
     LabelComponent,
     ItemsComponent,
-    PromptComponent
+    PromptComponent,
+    ExportComponent,
+    PrintComponent,
+    RequestComponent,
+    AccessComponent
   ],
   providers: [DatePipe]
 })
