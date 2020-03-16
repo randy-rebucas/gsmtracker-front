@@ -37,7 +37,7 @@
                 *ngIf="blockchain.physicianId === null && blockchain.transactions.fromAddress != this.pubKey">
                   <i class="material-icons">lock</i>
                 </button>
-                <app-access [physicianId]="blockchain.physicianId"></app-access>
+                <!-- <app-access [physicianId]="blockchain.physicianId"></app-access> -->
             </mat-card-actions>
         </mat-card>
     </div>
@@ -45,21 +45,21 @@
 
 
   </div>
-  <div fxFlex="30%">
+  <div fxFlex="30%" id="right-blocks">
     <ng-container *ngIf="!isLoading">
-      <button mat-flat-button color="primary" (click)="onRequest()">Request Permissions</button>
-      <div class="physicians-list">
-        <p>Physicians:</p>
-        <mat-list>
-          <app-physician *ngFor="let physician of physicians" [physician]="physician.userId"></app-physician>
-        </mat-list>
-      </div>
-      <!-- <div class="permission-list">
-        <p>Physicians:</p>
-        <mat-list>
-          <app-physician *ngFor="let physician of physicians" [physician]="physician.userId"></app-physician>
-        </mat-list>
-      </div> -->
+      <button mat-flat-button color="primary" (click)="onRequest()" id="request-btn">Request Permissions</button>
+
+      <mat-card class="physicians-card">
+        <mat-card-header>
+          <mat-card-title>Physicians</mat-card-title>
+          <mat-card-subtitle>({{physicians.length}}) physicians connected</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <app-physician *ngFor="let physician of physicians" [physician]="physician.userId"></app-physician>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
     </ng-container>
 
   </div>
