@@ -96,7 +96,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.getData(this.userId).subscribe((resData) => {
       this.isLoading = false;
       const merge = {...resData[0], ...resData[1], ...resData[2]};
-      this.fullname = merge.name.firstname + ' ' + merge.name.midlename + ' ' + merge.name.lastname;
+      this.fullname = merge.name.firstname + ' ' + merge.name.lastname;
       this.imagePreview = merge.image;
     });
 

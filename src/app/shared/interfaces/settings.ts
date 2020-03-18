@@ -1,5 +1,4 @@
 export interface Settings {
-  _id?: string;
   id: string;
   userId: string;
   clinicname: string;
@@ -11,6 +10,7 @@ export interface Settings {
   language: string;
   updates: boolean;
   imagePath: string;
+  _id?: string;
 }
 
 export interface Prescription {

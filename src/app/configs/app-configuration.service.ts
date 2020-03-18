@@ -22,8 +22,8 @@ export class AppConfigurationService {
     return new Promise((r, e) => {
       // mock because can't xhr local file here
       const content = {
-        title: 'clinicplus',
-        owner: 'clinicplus team (please change this)',
+        title: 'myclinicsoft',
+        owner: 'myclinicsoft team (please change this)',
         version: '1.0.0',
         tag: '-were doctors are in!',
         language: 'en',

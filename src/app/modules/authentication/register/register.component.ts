@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../authentication.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { AuthenticationService } from '../authentication.service';
 
 export interface Practices {
   value: string;
@@ -14,10 +15,10 @@ export interface Practices {
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   isLoading = false;
   form: FormGroup;
-
+  authSub: Subscription;
   constructor(
     public router: Router,
     public authenticationService: AuthenticationService,
@@ -76,8 +77,7 @@ export class RegisterComponent implements OnInit {
     };
 
     this.authenticationService.createUser(authRegister);
-
-    this.authenticationService.getAuthStatusListener().subscribe((res) => {
+    this.authSub = this.authenticationService.getAuthStatusListener().subscribe((res) => {
       if (!res) {
         this.isLoading = false;
       }
@@ -86,5 +86,11 @@ export class RegisterComponent implements OnInit {
 
   onLogin() {
     this.router.navigate(['/auth/login']);
+  }
+
+  ngOnDestroy() {
+    if (this.authSub) {
+      this.authSub.unsubscribe();
+    }
   }
 }

@@ -58,7 +58,7 @@
             <div>
                 <mat-form-field class="w-100">
                   <mat-label>{{ 'authentication.password' | translate }}</mat-label>
-                    <input matInput formControlName="password">
+                    <input matInput type="password" formControlName="password">
                     <mat-error *ngIf="formCtrls.password.errors">
                       <div *ngIf="formCtrls.password.errors.required">
                           {{ 'validation.required' | translate:{'s':'password'} }}

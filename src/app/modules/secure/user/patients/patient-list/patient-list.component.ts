@@ -110,15 +110,8 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
-    .pipe(
-      switchMap(setting => {
-        this.setting = setting;
-        return this.uploadService.get(setting._id);
-      })
-    )
-    .subscribe((mergeRes) => {
-      this.settingsData = { ...this.setting, ...mergeRes };
-      this.translate.use((this.settingsData) ? this.settingsData.language : this.appConfigurationService.language);
+    .subscribe((setting) => {
+      this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
     });
 
     this.option = this.activatedRoute.snapshot.url[0].path;
@@ -139,6 +132,12 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.labelsService.getSelectedLabel().subscribe((label) => {
       this.labelPicked = label;
       this.filterLabel(label);
+    });
+  }
+
+  getLogo(settingId: string) {
+    this.uploadService.get(settingId).subscribe((setting) => {
+      console.log(setting);
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -20,7 +20,7 @@ import { UploadService } from '../../services/upload.service';
   templateUrl: './setting.component.html',
   styleUrls: ['./setting.component.scss']
 })
-export class SettingComponent implements OnInit {
+export class SettingComponent implements OnInit, AfterContentInit {
   selected: string;
 
   public form: FormGroup;
@@ -57,6 +57,9 @@ export class SettingComponent implements OnInit {
 
     this.userId = this.authenticationService.getUserId();
 
+  }
+
+  ngAfterContentInit() {
     this.form = this.fb.group({
       // rxpad header setting
       rxHeaderOption: new FormControl(null),
@@ -86,16 +89,19 @@ export class SettingComponent implements OnInit {
       // updates
       updates: new FormControl(null)
     });
-    // this.settingsService.get(this.userId)
+
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
+      console.log(setting);
       this.setting = setting;
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
 
-      this.uploadService.get(setting._id).subscribe((res) => {
-        this.imagePath = res.image;
-      });
+      if (setting) {
+        this.uploadService.get(setting?._id).subscribe((res) => {
+          this.imagePath = res.image;
+        });
+      }
 
       this.form.patchValue({
         clinicname: (setting) ? setting.clinicname : this.appConfigurationService.title,

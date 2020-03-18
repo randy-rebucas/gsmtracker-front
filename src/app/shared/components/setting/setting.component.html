@@ -3,7 +3,7 @@
     <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
         <h3>{{ 'settings.clinic-details' | translate }}</h3>
         <div class="clinic-info">
-          <div class="clinic-logo">
+          <div class="clinic-logo" *ngIf="setting?._id">
             <app-upload [sourceId]="setting?._id" [imagePreview]="imagePath" [size]="100" [defaultImage]="'/assets/images/clinic-blank.png'" [responseListener]="false"></app-upload>
           </div>
           <div class="clinic-detail">
