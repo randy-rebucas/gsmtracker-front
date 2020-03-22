@@ -6,7 +6,7 @@ import { AuthenticationGuard } from './modules/authentication/authentication.gua
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'page',
+    redirectTo: 'auth',
     pathMatch: 'full'
   },
   {
