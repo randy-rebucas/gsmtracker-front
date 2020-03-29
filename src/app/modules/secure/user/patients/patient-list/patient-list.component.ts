@@ -31,6 +31,7 @@ import { Settings } from 'src/app/shared/interfaces/settings';
 import { PrintComponent } from 'src/app/shared/components/print/print.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ExportComponent } from 'src/app/shared/components/export/export.component';
+import { AuthComponent } from 'src/app/shared/components/auth/auth.component';
 
 
 @Component({
@@ -478,6 +479,31 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkLabel(labelId: string) {
     return this.labelSelected.find(x => x === labelId);
+  }
+
+  onCreateAuth(patientId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '25%';
+    this.translate.get([
+      'patients.generate-auth-patients'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        title: translate['patients.generate-auth-patients'],
+        id: patientId
+      };
+    });
+
+    this.dialog.open(AuthComponent, dialogConfig).afterClosed().subscribe((result) => {
+      if (result) {
+        this.translate.get('common.updated-message',
+          {s: 'Patient'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
+        });
+      }
+    });
   }
 
   ngOnDestroy() {

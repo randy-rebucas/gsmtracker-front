@@ -54,6 +54,14 @@ export class AuthenticationService {
     return this.authStatusListener.asObservable();
   }
 
+  get(userId: string) {
+    return this.http.get<any>(BACKEND_URL + '/' + userId);
+  }
+
+  generate(newAuth: any) {
+    return this.http.post<{ message: string }>(BACKEND_URL + '/generate/', newAuth);
+  }
+
   createUser(authRegister: any) {
     this.http.post<{message: string, user: any}>(BACKEND_URL + '/register', authRegister).subscribe((res) => {
       this.notificationService.success(res.message);

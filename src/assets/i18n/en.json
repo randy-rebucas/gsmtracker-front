@@ -50,6 +50,7 @@
         "import-patients": "Import patients",
         "export-patients": "Export patients",
         "print-patients": "Print patients",
+        "generate-auth-patients": "Generate Auth",
         "my-patients": "My Patients",
         "all-patients": "All Patients",
         "find-patients": "Find patient",
@@ -193,6 +194,7 @@
         "confirm-message-note": "This will add {{s}}",
         "updated-message": "{{s}} updated successfully.",
         "created-message": "{{s}} created successfully.",
+        "generated-message": "{{s}} auth generated successfully.",
         "deleted-message": "{{s}} deleted successfully.",
         "not-permitted-message": "You are not permitted to take this action!",
         "disregard-changes": "Do you want to discard the changes?"

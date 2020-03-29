@@ -43,6 +43,7 @@ import { PrintComponent } from './components/print/print.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { RequestComponent } from './components/request/request.component';
 import { AccessComponent } from './components/access/access.component';
+import { AuthComponent } from './components/auth/auth.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { AccessComponent } from './components/access/access.component';
     ExportComponent,
     PrintComponent,
     RequestComponent,
-    AccessComponent
+    AccessComponent,
+    AuthComponent
   ],
   imports: [
     CommonModule,
@@ -118,7 +120,8 @@ import { AccessComponent } from './components/access/access.component';
     ExportComponent,
     PrintComponent,
     RequestComponent,
-    AccessComponent
+    AccessComponent,
+    AuthComponent
   ],
   providers: [DatePipe]
 })
