@@ -62,7 +62,8 @@ export class LoginComponent implements OnInit {
     const authData = {
       email: this.form.value.email,
       password: this.form.value.password,
-      remember: this.form.value.remember
+      remember: this.form.value.remember,
+      role: 'physicians'
     };
 
     this.authenticationService.login(authData);

@@ -35,5 +35,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>{{ 'common.close' | translate }}</button>
-  <button mat-button (click)="onSubmit()" cdkFocusInitial>Submit</button>
+  <button mat-button (click)="onSubmit()" cdkFocusInitial [disabled]="status">Submit</button>
 </mat-dialog-actions>
