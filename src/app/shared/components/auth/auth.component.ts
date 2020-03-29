@@ -38,11 +38,7 @@ export class AuthComponent implements OnInit {
     .subscribe((res) => {
       this.status = res.status;
       this.form.patchValue({email: res.auth.email});
-      this.form.patchValue({password: this.generatePass});
     });
-    // this.authenticationService.get(this.patientId).subscribe((res) => {
-    //   console.log(res);
-    // });
 
     this.form = new FormGroup({
       email: new FormControl(null, {
@@ -59,6 +55,8 @@ export class AuthComponent implements OnInit {
         ]
       })
     });
+
+    this.form.patchValue({password: this.generatePass});
   }
 
   get formCtrls() { return this.form.controls; }
