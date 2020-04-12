@@ -28,6 +28,7 @@ export class PatientRecordListComponent implements OnInit, AfterViewInit {
   isLoading: boolean;
   hasPermission: boolean;
   user: any;
+  userData: any;
   pubKey: string;
 
   constructor(
@@ -58,6 +59,7 @@ export class PatientRecordListComponent implements OnInit, AfterViewInit {
     )
     .subscribe((blocks) => {
       const newBlocks = [];
+
       blocks.forEach(block => {
         this.accessService.hasAcceess(block._id, this.authenticationService.getUserId()).subscribe((res) => {
           const hasAccess = {
@@ -67,10 +69,14 @@ export class PatientRecordListComponent implements OnInit, AfterViewInit {
           newBlocks.push({ ...block, ...hasAccess });
         });
       });
-
+      console.log(newBlocks);
       this.blockchains = newBlocks;
-      this.physicians = this.user.physicians;
       this.isLoading = false;
+
+      const ownerShip = {
+        isOwned : this.user.physicians.some(e => e.userId === this.authenticationService.getUserId())
+      };
+      this.userData = {...this.user, ...ownerShip};
     });
 
   }

@@ -121,8 +121,7 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
     .subscribe((res: string) => {
       this.titleService.setTitle(res);
     });
-
-    this.getQuery(this.perPage, this.currentPage, this.labelPicked);
+    // this.getQuery(this.perPage, this.currentPage, this.labelPicked);
 
     this.labelsService.getAll(this.userId);
     this.labelsSub = this.labelsService.getLabels()
@@ -134,6 +133,8 @@ export class PatientListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.labelPicked = label;
       this.filterLabel(label);
     });
+
+    this.onReset();
   }
 
   getLogo(settingId: string) {

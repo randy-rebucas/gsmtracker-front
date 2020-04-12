@@ -47,16 +47,16 @@
   </div>
   <div fxFlex="30%" id="right-blocks">
     <ng-container *ngIf="!isLoading">
-      <button mat-flat-button color="primary" (click)="onRequest()" id="request-btn">Request Permissions</button>
-
+      <button mat-flat-button color="primary" (click)="onRequest()" id="request-btn" *ngIf="!userData?.isOwned">Request Permissions</button>
+      <br/>
       <mat-card class="physicians-card">
         <mat-card-header>
           <mat-card-title>Physicians</mat-card-title>
-          <mat-card-subtitle>({{physicians.length}}) physicians connected</mat-card-subtitle>
+          <mat-card-subtitle>({{userData?.physicians.length}}) physicians connected</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <mat-list>
-            <app-physician *ngFor="let physician of physicians" [physician]="physician.userId"></app-physician>
+            <app-physician *ngFor="let physician of userData?.physicians" [physician]="physician.userId"></app-physician>
           </mat-list>
         </mat-card-content>
       </mat-card>
