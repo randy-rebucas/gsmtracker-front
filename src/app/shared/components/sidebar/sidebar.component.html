@@ -1,31 +1,31 @@
 <div class="profile-card" *ngIf="isLoading">
-  <svg height="50" width="20%" class="loading">
+    <svg height="50" width="20%" class="loading">
     <circle cx="25" cy="25" r="25" fill="#d8d5d1" />
   </svg>
-  <div class="info">
-      <h2>
-          <svg height="23px" width="100%" class="loading">
+    <div class="info">
+        <h2>
+            <svg height="23px" width="100%" class="loading">
           <rect width="100%" height="100%" rx="5px" ry="5px" style="fill:#d8d5d1;" />
         </svg>
-      </h2>
-      <h4>
-          <svg height="18px" width="100%" class="loading">
+        </h2>
+        <h4>
+            <svg height="18px" width="100%" class="loading">
           <rect width="80%" height="100%" rx="5px" ry="5px" style="fill:#d8d5d1;" />
         </svg>
-      </h4>
-  </div>
+        </h4>
+    </div>
 </div>
 <div class="profile-card" (click)="onOpenProfile()" *ngIf="!isLoading">
-  <img [src]="imagePreview ? imagePreview : defaultImage" [alt]="fullname">
-  <div class="info">
-      <h2>{{fullname}}</h2>
-      <h4>{{email}}</h4>
-  </div>
+    <img [src]="imagePreview ? imagePreview : defaultImage" [alt]="fullname">
+    <div class="info">
+        <h2>{{fullname}}</h2>
+        <h4>{{email}}</h4>
+    </div>
 </div>
 
 <!-- <button mat-raised-button color="accent" style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'patients.create-patients' | translate }}</button>
  -->
- <button mat-raised-button color="accent" style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'repairs.create-repairs' | translate }}</button>
+<button mat-raised-button color="accent" style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'repairs.create-repairs' | translate }}</button>
 <mat-divider></mat-divider>
 <mat-nav-list>
 
@@ -84,4 +84,3 @@
         {{ 'repairs.all-repairs' | translate }}
     </a>
 </mat-nav-list>
-<app-ads></app-ads>

@@ -6,12 +6,8 @@ const routes: Routes = [{
   path: '',
   component: DefaultComponent,
   children: [
-    { path: '', redirectTo: 'users', pathMatch: 'full' },
-    { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
-    { path: 'appointments', loadChildren: () => import('./appointments/appointments.module').then(m => m.AppointmentsModule) },
-    { path: 'messages', loadChildren: () => import('./messages/messages.module').then(m => m.MessagesModule) },
-    { path: 'repairs', loadChildren: () => import('./repairs/repairs.module').then(m => m.RepairsModule) },
-    { path: 'users', loadChildren: () => import('./user/user.module').then(m => m.UserModule) }
+    { path: '', redirectTo: 'repairs', pathMatch: 'full' },
+    { path: 'repairs', loadChildren: () => import('./repairs/repairs.module').then(m => m.RepairsModule) }
   ]
 }];
 

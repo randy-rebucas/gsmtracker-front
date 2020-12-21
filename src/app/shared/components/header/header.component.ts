@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { HelpComponent } from '../help/help.component';
 import { SettingComponent } from '../setting/setting.component';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { SettingsService } from '../../services/settings.service';
@@ -55,13 +54,12 @@ export class HeaderComponent implements OnInit {
     }, 300);
   }
 
-  onOpenDialog(type: string) {
-    const targetEl = (type === 'help') ? HelpComponent : SettingComponent;
+  onOpenSetting() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '40%';
-    this.dialog.open(targetEl, dialogConfig);
+    this.dialog.open(SettingComponent, dialogConfig);
   }
 
   onLogout() {

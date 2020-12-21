@@ -9,7 +9,7 @@ import { LabelsService } from '../../services/labels.service';
 import { SettingsService } from '../../services/settings.service';
 import { UploadService } from '../../services/upload.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
+import { RepairsService } from 'src/app/modules/secure/repairs/repairs.service';
 import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 import { DatePipe } from '@angular/common';
 
@@ -36,7 +36,7 @@ export class ExportComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private uploadService: UploadService,
     private authenticationService: AuthenticationService,
-    private patientsService: PatientsService,
+    private repairsService: RepairsService,
     private datePipe: DatePipe,
     public dialogRef: MatDialogRef < ExportComponent >,
     @Inject(MAT_DIALOG_DATA) data
@@ -104,7 +104,7 @@ export class ExportComponent implements OnInit, OnDestroy {
       ]
     };
 
-    const patientList = [];
+    const repairList = [];
     for (const iterator of patients) {
       const dataObj = {
         fullname: iterator.firstname,
@@ -141,10 +141,10 @@ export class ExportComponent implements OnInit, OnDestroy {
 
       const mergeObj = {...dataObj, ...addressObj};
 
-      patientList.push(mergeObj);
+      repairList.push(mergeObj);
     }
     // tslint:disable-next-line: no-unused-expression
-    new AngularCsv(patientList, 'Patients', csvOptions);
+    new AngularCsv(repairList, 'Repair', csvOptions);
   }
 
   onExport() {
@@ -153,9 +153,9 @@ export class ExportComponent implements OnInit, OnDestroy {
     } else {
       // set label filter
       const hasLabel = (this.selectedOption !== 'my-repair') ? this.selectedOption : '';
-      this.patientsService.getMyPatient(this.userId, null, null, hasLabel);
-      this.patientsService.getUpdateListener().subscribe((patient) => {
-        this.doExport(patient.patients);
+      this.repairsService.getMyRepair(this.userId, null, null, hasLabel);
+      this.repairsService.getUpdateListener().subscribe((repair) => {
+        this.doExport(repair.repairs);
       });
     }
   }

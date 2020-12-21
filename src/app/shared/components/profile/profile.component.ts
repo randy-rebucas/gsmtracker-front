@@ -3,13 +3,10 @@ import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@ang
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { UserService } from 'src/app/modules/secure/user/user.service';
 import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 import { constants } from 'buffer';
-import { OwnersService } from 'src/app/modules/secure/user/owners/owners.service';
 
 export interface Practices {
   value: string;
@@ -59,9 +56,6 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private translate: TranslateService,
-    private userService: UserService,
-    private physiciansService: PhysiciansService,
-    private ownersService: OwnersService,
     private uploadService: UploadService,
     private notificationService: NotificationService,
     public authenticationService: AuthenticationService,
@@ -173,10 +167,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getData(userId: any): Observable<any> {
-    const images = this.uploadService.get(userId);
-    const users = this.userService.get(userId);
-    const owners = this.ownersService.get(userId);
-    return forkJoin([images, users, owners]);
+    return this.uploadService.get(userId);
   }
 
   addAddressGroup() {
@@ -269,25 +260,6 @@ export class ProfileComponent implements OnInit {
       contact: this.form.value.contact,
       addresses: this.form.value.addresses
     };
-
-    this.userService.update(updateUser).subscribe((userResponse) => {
-      // physician data
-      const updateOwner = {
-        _id: this.user._id,
-        description: this.form.value.bio,
-      };
-      this.ownersService.update(updateOwner).subscribe((ownerResponse) => {
-        // set user subscription
-        this.userService.setSubListener({...userResponse, ...ownerResponse});
-        // response message
-        this.translate.get('common.updated-message', {s: 'Physician'}
-        ).subscribe((norifResMessgae: string) => {
-          this.notificationService.success(norifResMessgae);
-        });
-        // close dialog
-        this.dialogRef.close();
-      });
-    });
 
   }
 

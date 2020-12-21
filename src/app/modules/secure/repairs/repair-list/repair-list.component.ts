@@ -18,8 +18,6 @@ import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { LabelComponent } from 'src/app/shared/components/label/label.component';
 import { LabelsService } from 'src/app/shared/services/labels.service';
-import { QrWriterComponent } from 'src/app/shared/components/qr-writer/qr-writer.component';
-import { QrReaderComponent } from 'src/app/shared/components/qr-reader/qr-reader.component';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from 'src/app/shared/services/settings.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
@@ -28,7 +26,6 @@ import { Settings } from 'src/app/shared/interfaces/settings';
 import { PrintComponent } from 'src/app/shared/components/print/print.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ExportComponent } from 'src/app/shared/components/export/export.component';
-import { AuthComponent } from 'src/app/shared/components/auth/auth.component';
 import { RepairsService } from '../repairs.service';
 import { RepairFormComponent } from '../repair-form/repair-form.component';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
@@ -299,54 +296,6 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  onScan() {
-
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    // set modal title
-    this.translate.get('qrcode.scan').subscribe((res: string) => {
-      dialogConfig.data = {
-        title: res
-      };
-    });
-
-    this.dialog.open(QrReaderComponent, dialogConfig);
-  }
-
-  onGenerateQr(patientId: string) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    // set modal title
-    this.translate.get('qrcode.title').subscribe((res: string) => {
-      dialogConfig.data = {
-        id: patientId,
-        title: res
-      };
-    });
-
-    this.dialog.open(QrWriterComponent, dialogConfig);
-  }
-
-  onDetail(user: any) {
-    if (!user.isOwned) {
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.disableClose = true;
-      dialogConfig.autoFocus = true;
-      // set modal title
-      this.translate.get('qrcode.scan-qrcode').subscribe((res: string) => {
-        dialogConfig.data = {
-          title: res
-        };
-      });
-
-      this.dialog.open(QrReaderComponent, dialogConfig);
-    } else {
-      this.router.navigate(['../', user.id], {relativeTo: this.activatedRoute});
-    }
-  }
-
   onReset() {
     this.onToggleSelect('none');
     this.labelPicked = '';
@@ -482,31 +431,6 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkLabel(labelId: string) {
     return this.labelSelected.find(x => x === labelId);
-  }
-
-  onCreateAuth(patientId: string) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '25%';
-    this.translate.get([
-      'repairs.generate-auth-repairs'
-    ]).subscribe((translate) => {
-      dialogConfig.data = {
-        title: translate['repairs.generate-auth-repairs'],
-        id: patientId
-      };
-    });
-
-    this.dialog.open(AuthComponent, dialogConfig).afterClosed().subscribe((result) => {
-      if (result) {
-        this.translate.get('common.updated-message',
-          {s: 'Patient'}
-        ).subscribe((norifResMessgae: string) => {
-          this.notificationService.success(norifResMessgae);
-        });
-      }
-    });
   }
 
   ngOnDestroy() {

@@ -4,21 +4,17 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription, Observable, forkJoin } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { UserService } from 'src/app/modules/secure/user/user.service';
 import { NotificationService } from '../../services/notification.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { UploadService } from '../../services/upload.service';
 import { LabelComponent } from '../label/label.component';
 import { LabelsService } from '../../services/labels.service';
-import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 import { SettingsService } from '../../services/settings.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 import { ImportComponent } from '../import/import.component';
 import { ExportComponent } from '../export/export.component';
 import { PrintComponent } from '../print/print.component';
 import { SelectionModel } from '@angular/cdk/collections';
-import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
-import { OwnersService } from 'src/app/modules/secure/user/owners/owners.service';
 import { RepairFormComponent } from 'src/app/modules/secure/repairs/repair-form/repair-form.component';
 
 export interface Label {
@@ -58,13 +54,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private appConfigurationService: AppConfigurationService,
     private authenticationService: AuthenticationService,
-    private physiciansService: PhysiciansService,
-    private ownerService: OwnersService,
-    private userService: UserService,
     private uploadService: UploadService,
     private labelsService: LabelsService,
     private dialog: MatDialog,
-    private patientsService: PatientsService,
     private notificationService: NotificationService,
     private router: Router
   ) {
@@ -101,22 +93,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.fullname = merge.name.firstname + ' ' + merge.name.lastname;
       this.imagePreview = merge.image;
     });
-
-    this.userSub = this.userService.getSubListener().subscribe((userListener) => {
-      this.fullname = userListener.name.firstname + ' ' + userListener.name.midlename + ' ' + userListener.name.lastname;
-    });
-
-    this.patientsService.getSelectedItem().subscribe((res) => {
-      this.selectedItem = res;
-      console.log(res);
-    });
   }
 
   getData(userId: string): Observable<any> {
-    const images = this.uploadService.get(userId);
-    const users = this.userService.get(userId);
-    const owners = this.ownerService.get(userId);
-    return forkJoin([images, users, owners]);
+    return this.uploadService.get(userId);
   }
 
   onOpenProfile() {

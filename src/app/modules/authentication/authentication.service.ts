@@ -6,7 +6,6 @@ import { environment } from '../../../environments/environment';
 import { Subject } from 'rxjs';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { CookieService } from 'ngx-cookie-service';
-import { UserService } from '../secure/user/user.service';
 import { Login, Register } from './authentication';
 
 const BACKEND_URL = environment.apiUrl + '/auth';
@@ -26,8 +25,7 @@ export class AuthenticationService {
     private http: HttpClient,
     private router: Router,
     private notificationService: NotificationService,
-    private cookieService: CookieService,
-    private userService: UserService
+    private cookieService: CookieService
   ) {}
 
   getToken() {
@@ -100,9 +98,7 @@ export class AuthenticationService {
         }
 
         this.saveAuthData(token, this.userId, this.userEmail, this.publicKey);
-        this.userService.get(response.userId).subscribe(userData => {
-          this.router.navigate(['/secure']);
-        });
+        this.router.navigate(['/secure']);
       }
     }, error => {
       this.authStatusListener.next(false);

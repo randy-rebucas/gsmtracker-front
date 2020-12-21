@@ -7,11 +7,12 @@ import { switchMap } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
 import * as jsPDF from 'jspdf';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
+
 import { SettingsService } from '../../services/settings.service';
 import { LabelsService } from '../../services/labels.service';
 import { UploadService } from '../../services/upload.service';
 import { Settings } from '../../interfaces/settings';
+import { RepairsService } from 'src/app/modules/secure/repairs/repairs.service';
 
 @Component({
   selector: 'app-print',
@@ -36,7 +37,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private uploadService: UploadService,
     private authenticationService: AuthenticationService,
-    private patientsService: PatientsService,
+    private repairsService: RepairsService,
     public dialogRef: MatDialogRef < PrintComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
@@ -155,9 +156,9 @@ export class PrintComponent implements OnInit, OnDestroy {
     } else {
       // set label filter
       const hasLabel = (this.selectedOption !== 'my-repair') ? this.selectedOption : '';
-      this.patientsService.getMyPatient(this.userId, null, null, hasLabel);
-      this.patientsService.getUpdateListener().subscribe((patient) => {
-        this.doPrint(patient.patients);
+      this.repairsService.getMyRepair(this.userId, null, null, hasLabel);
+      this.repairsService.getUpdateListener().subscribe((repair) => {
+        this.doPrint(repair.repairs);
       });
     }
   }

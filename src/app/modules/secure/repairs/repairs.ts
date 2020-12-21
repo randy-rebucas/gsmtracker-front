@@ -1,4 +1,4 @@
-import { Owners } from '../user/owners/owners';
+
 
 export interface Labels {
   label: string;
@@ -20,7 +20,6 @@ export interface Repairs {
     serialNumber: string,
     others: string
   };
-  owners: Owners[];
   labels: Labels[];
   complaint: string;
   technician: string;

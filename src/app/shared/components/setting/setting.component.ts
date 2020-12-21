@@ -7,9 +7,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { User } from 'src/app/modules/secure/user/user';
-
-import { UserService } from 'src/app/modules/secure/user/user.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 import { Settings } from '../../interfaces/settings';
 import { SettingsService } from '../../services/settings.service';
@@ -25,7 +22,6 @@ export class SettingComponent implements OnInit, AfterContentInit {
 
   public form: FormGroup;
   times = [];
-  user: User;
   setting: Settings;
   imagePath: any;
   private userId: string;
@@ -38,7 +34,6 @@ export class SettingComponent implements OnInit, AfterContentInit {
     private appConfigurationService: AppConfigurationService,
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService,
-    private userService: UserService,
     private fb: FormBuilder
   ) {
     translate.setDefaultLang(appConfigurationService.language); // default language
