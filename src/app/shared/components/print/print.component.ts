@@ -27,6 +27,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   imagePath: any;
   settingsData: any;
   items: any;
+  title: string;
   itemCount: number;
   optionPicked: string;
 
@@ -39,6 +40,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < PrintComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
+    this.title = data.title;
     this.items = data.selectedItem;
     this.userId = this.authenticationService.getUserId();
   }
@@ -49,7 +51,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     // count selected items
     this.itemCount = (this.items) ? this.items.length : 0;
     // set selection
-    this.selectedOption = (this.items) ? '' : 'my-patient';
+    this.selectedOption = (this.items) ? '' : 'my-repair';
 
     this.labelsService.getAll(this.userId);
     this.labelsSub = this.labelsService.getLabels()
@@ -144,7 +146,7 @@ export class PrintComponent implements OnInit, OnDestroy {
 
   onChangeOption(event: MatRadioChange) {
     this.optionPicked = event.value;
-    this.selectedOption = (event.value === 'option') ? 'my-patient' : '';
+    this.selectedOption = (event.value === 'option') ? 'my-repair' : '';
   }
 
   onPrint() {
@@ -152,7 +154,7 @@ export class PrintComponent implements OnInit, OnDestroy {
       this.doPrint(this.items);
     } else {
       // set label filter
-      const hasLabel = (this.selectedOption !== 'my-patient') ? this.selectedOption : '';
+      const hasLabel = (this.selectedOption !== 'my-repair') ? this.selectedOption : '';
       this.patientsService.getMyPatient(this.userId, null, null, hasLabel);
       this.patientsService.getUpdateListener().subscribe((patient) => {
         this.doPrint(patient.patients);

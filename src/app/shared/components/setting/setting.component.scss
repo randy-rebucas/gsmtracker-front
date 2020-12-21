@@ -3,20 +3,6 @@
     margin: 1em 0 3em;
 }
 
-.arrayGroup {
-    position: relative;
-}
-
-.arrayGroup .action {
-    position: absolute;
-    top: 0;
-    right: 0;
-    visibility: hidden;
-}
-
-.arrayGroup:hover .action {
-    visibility: visible;
-}
 
 mat-form-field {
     width: 100%;
@@ -183,16 +169,16 @@ mat-slide-toggle {
     padding: 1em;
 }
 
-.clinic-info {
+.shop-info {
   display: flex;
   flex-direction: row;
 }
 
-.clinic-logo {
+.shop-logo {
   margin-right: 1em;
   width: 15%;
 }
 
-.clinic-detail {
+.shop-detail {
   flex-grow: 1;
 }

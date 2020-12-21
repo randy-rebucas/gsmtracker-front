@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/modules/secure/user/user.service';
 import { NotificationService } from '../../services/notification.service';
-import { PatientFormComponent } from 'src/app/modules/secure/user/patients/patient-form/patient-form.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { UploadService } from '../../services/upload.service';
 import { LabelComponent } from '../label/label.component';
@@ -19,6 +18,8 @@ import { ExportComponent } from '../export/export.component';
 import { PrintComponent } from '../print/print.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PatientsService } from 'src/app/modules/secure/user/patients/patients.service';
+import { OwnersService } from 'src/app/modules/secure/user/owners/owners.service';
+import { RepairFormComponent } from 'src/app/modules/secure/repairs/repair-form/repair-form.component';
 
 export interface Label {
   label: string;
@@ -58,6 +59,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private appConfigurationService: AppConfigurationService,
     private authenticationService: AuthenticationService,
     private physiciansService: PhysiciansService,
+    private ownerService: OwnersService,
     private userService: UserService,
     private uploadService: UploadService,
     private labelsService: LabelsService,
@@ -113,8 +115,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   getData(userId: string): Observable<any> {
     const images = this.uploadService.get(userId);
     const users = this.userService.get(userId);
-    const physicians = this.physiciansService.get(userId);
-    return forkJoin([images, users, physicians]);
+    const owners = this.ownerService.get(userId);
+    return forkJoin([images, users, owners]);
   }
 
   onOpenProfile() {
@@ -187,24 +189,24 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.width = '50%';
     // set modal attributes
     this.translate.get([
-      'patients.create-patients',
+      'repairs.create-repairs',
       'common.submit'
     ]).subscribe((translate) => {
       dialogConfig.data = {
         id: null,
-        title: translate['patients.create-patients'],
+        title: translate['repairs.create-repairs'],
         button: translate['common.submit']
       };
     });
 
-    this.dialog.open(PatientFormComponent, dialogConfig).afterClosed().subscribe((result) => {
+    this.dialog.open(RepairFormComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        this.translate.get('common.created-message', {s: 'Patient'}
+        this.translate.get('common.created-message', {s: 'Repair'}
         ).subscribe((norifResMessgae: string) => {
           this.notificationService.success(norifResMessgae);
         });
 
-        this.router.navigateByUrl('/secure/users/patients/' + result + '/form');
+        this.router.navigateByUrl('/secure/repairs/');
       }
     });
   }
@@ -230,10 +232,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '25%';
     this.translate.get([
-      'patients.export-patients'
+      'repairs.export-repairs'
     ]).subscribe((translate) => {
       dialogConfig.data = {
-        title: translate['patients.export-patients'],
+        title: translate['repairs.export-repairs'],
         selectedItem: this.selectedItem
       };
     });
@@ -246,10 +248,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '25%';
     this.translate.get([
-      'patients.print-patients'
+      'repairs.print-repairs'
     ]).subscribe((translate) => {
       dialogConfig.data = {
-        title: translate['patients.print-patients'],
+        title: translate['repairs.print-repairs'],
         selectedItem: this.selectedItem
       };
     });

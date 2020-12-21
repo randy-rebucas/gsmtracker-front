@@ -29,6 +29,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   items: any;
   itemCount: number;
   optionPicked: string;
+  title: string;
 
   constructor(
     private labelsService: LabelsService,
@@ -40,6 +41,7 @@ export class ExportComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef < ExportComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
+    this.title = data.title;
     this.items = data.selectedItem;
     this.userId = this.authenticationService.getUserId();
   }
@@ -50,7 +52,7 @@ export class ExportComponent implements OnInit, OnDestroy {
     // count selected items
     this.itemCount = (this.items) ? this.items.length : 0;
     // set selection
-    this.selectedOption = (this.items) ? '' : 'my-patient';
+    this.selectedOption = (this.items) ? '' : 'my-repair';
 
     this.labelsService.getAll(this.userId);
     this.labelsSub = this.labelsService.getLabels()
@@ -73,7 +75,7 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   onChangeOption(event: MatRadioChange) {
     this.optionPicked = event.value;
-    this.selectedOption = (event.value === 'option') ? 'my-patient' : '';
+    this.selectedOption = (event.value === 'option') ? 'my-repair' : '';
   }
 
   doExport(patients: any) {
@@ -150,7 +152,7 @@ export class ExportComponent implements OnInit, OnDestroy {
       this.doExport(this.items);
     } else {
       // set label filter
-      const hasLabel = (this.selectedOption !== 'my-patient') ? this.selectedOption : '';
+      const hasLabel = (this.selectedOption !== 'my-repair') ? this.selectedOption : '';
       this.patientsService.getMyPatient(this.userId, null, null, hasLabel);
       this.patientsService.getUpdateListener().subscribe((patient) => {
         this.doExport(patient.patients);

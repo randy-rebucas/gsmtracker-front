@@ -22,10 +22,10 @@ export class AppConfigurationService {
     return new Promise((r, e) => {
       // mock because can't xhr local file here
       const content = {
-        title: 'myclinicsoft',
-        owner: 'myclinicsoft team (please change this)',
+        title: 'shop tracker',
+        owner: 'shop tracker team (please change this)',
         version: '1.0.0',
-        tag: '-were doctors are in!',
+        tag: '-technicians record book!',
         language: 'en',
         perPage: 10,
         currentPage: 1,

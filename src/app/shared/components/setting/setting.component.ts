@@ -27,7 +27,6 @@ export class SettingComponent implements OnInit, AfterContentInit {
   times = [];
   user: User;
   setting: Settings;
-  isShowHeader: boolean;
   imagePath: any;
   private userId: string;
 
@@ -61,27 +60,8 @@ export class SettingComponent implements OnInit, AfterContentInit {
 
   ngAfterContentInit() {
     this.form = this.fb.group({
-      // rxpad header setting
-      rxHeaderOption: new FormControl(null),
-      rxFooterOption: new FormControl(null),
-      prescription: this.fb.group({
-        rxTitle: new FormControl(null, {
-          validators: [
-            Validators.maxLength(150)
-          ]
-        }),
-        rxSubTitle: new FormControl(null, {
-          validators: [
-            Validators.maxLength(150)
-          ]
-        }),
-        rxNoNoonBreak: new FormControl(null),
-        rxAddresses: this.fb.array([this.addAddressGroup()]),
-        rxPhones: this.fb.array([this.addClinicContactGroup()]),
-        rxHours: this.fb.array([this.addClinicHourGroup()]),
-      }),
-      clinicname: new FormControl(null),
-      clinicowner:  new FormControl(null),
+      shopname: new FormControl(null),
+      shopowner:  new FormControl(null),
       // language
       language: new FormControl(null),
       // appointments
@@ -93,7 +73,6 @@ export class SettingComponent implements OnInit, AfterContentInit {
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
-      console.log(setting);
       this.setting = setting;
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
 
@@ -104,128 +83,14 @@ export class SettingComponent implements OnInit, AfterContentInit {
       }
 
       this.form.patchValue({
-        clinicname: (setting) ? setting.clinicname : this.appConfigurationService.title,
-        clinicowner: (setting) ? setting.clinicowner : this.appConfigurationService.owner,
+        shopname: (setting) ? setting.shopname : this.appConfigurationService.title,
+        shopowner: (setting) ? setting.shopowner : this.appConfigurationService.owner,
         appointments:  (setting) ? setting.appointments : true,
         language: (setting) ? setting.language : this.appConfigurationService.language,
         updates:  (setting) ? setting.updates : true
       });
 
-      if (setting) {
-        this.form.patchValue({
-          rxHeaderOption: setting.rxHeaderOption,
-          rxFooterOption: setting.rxFooterOption,
-          prescription: setting.prescription
-        });
-
-        const addressControl = this.form.controls.addresses as FormArray;
-        const address = (setting.prescription) ? setting.prescription.rxAddresses : [];
-        for (let i = 1; i < address.length; i++) {
-          addressControl.push(this.addAddressGroup());
-        }
-        this.form.patchValue({addresses: address});
-
-        const contactControl = this.form.controls.phones as FormArray;
-        const contacts = (setting.prescription) ? setting.prescription.rxPhones : [];
-        for (let i = 1; i < contacts.length; i++) {
-          contactControl.push(this.addClinicContactGroup());
-        }
-        this.form.patchValue({phones: contacts});
-
-        const timesControl = this.form.controls.hours as FormArray;
-        const times = (setting.prescription) ? setting.prescription.rxHours : [];
-        for (let i = 1; i < times.length; i++) {
-          timesControl.push(this.addClinicHourGroup());
-        }
-        this.form.patchValue({hours: times});
-      }
-
-      this.isShowHeader = (setting) ? setting.rxHeaderOption : false;
     });
-  }
-
-  onToggleHeader(event: MatSlideToggleChange) {
-    this.isShowHeader = event.checked;
-  }
-
-  addAddressGroup() {
-    return this.fb.group({
-      address1: new FormControl(null, {
-        validators: [
-          Validators.maxLength(300)
-        ]
-      }),
-      address2: new FormControl(null, {
-        validators: [
-          Validators.maxLength(300)
-        ]
-      }),
-      city: new FormControl(null, {
-        validators: [
-          Validators.maxLength(150)
-        ]
-      }),
-      province: new FormControl(null, {
-        validators: [
-          Validators.maxLength(150)
-        ]
-      }),
-      postalCode: new FormControl(null, {
-        validators: [
-          Validators.maxLength(6)
-        ]
-      }),
-      country: new FormControl(null)
-    });
-  }
-
-  addClinicHourGroup() {
-    return this.fb.group({
-      morningOpen: new FormControl(null),
-      afternoonClose: new FormControl(null)
-    });
-  }
-
-  addClinicContactGroup() {
-    return this.fb.group({
-      contact: new FormControl(null, {
-        validators: [
-          Validators.maxLength(12)
-        ]
-      })
-    });
-  }
-
-  get addressArray() {
-    return this.form.get('prescription.rxAddresses') as FormArray;
-  }
-
-  get hourArray() {
-    return this.form.get('prescription.rxHours') as FormArray;
-  }
-
-  get contactArray() {
-    return this.form.get('prescription.rxPhones') as FormArray;
-  }
-
-  addHour() {
-    this.hourArray.push(this.addClinicHourGroup());
-  }
-
-  addContact() {
-    this.contactArray.push(this.addClinicContactGroup());
-  }
-
-  removeHour(index: number) {
-    this.hourArray.removeAt(index);
-    this.hourArray.markAsDirty();
-    this.hourArray.markAsTouched();
-  }
-
-  removeContact(index: number) {
-    this.contactArray.removeAt(index);
-    this.contactArray.markAsDirty();
-    this.contactArray.markAsTouched();
   }
 
   onSubmit() {
@@ -236,10 +101,6 @@ export class SettingComponent implements OnInit, AfterContentInit {
       userId:  this.userId,
       clinicname: this.form.value.clinicname,
       clinicowner: this.form.value.clinicowner,
-      // rxpad
-      rxHeaderOption: this.form.value.rxHeaderOption,
-      rxFooterOption: this.form.value.rxFooterOption,
-      prescription: this.form.value.prescription,
       // language
       language: this.form.value.language,
       // appointments

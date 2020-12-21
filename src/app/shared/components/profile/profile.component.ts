@@ -9,6 +9,7 @@ import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { PhysiciansService } from 'src/app/modules/secure/user/physicians/physicians.service';
 import { constants } from 'buffer';
+import { OwnersService } from 'src/app/modules/secure/user/owners/owners.service';
 
 export interface Practices {
   value: string;
@@ -60,6 +61,7 @@ export class ProfileComponent implements OnInit {
     private translate: TranslateService,
     private userService: UserService,
     private physiciansService: PhysiciansService,
+    private ownersService: OwnersService,
     private uploadService: UploadService,
     private notificationService: NotificationService,
     public authenticationService: AuthenticationService,
@@ -145,33 +147,7 @@ export class ProfileComponent implements OnInit {
           Validators.required,
           Validators.maxLength(1500)
         ]
-      }),
-      practices: this.fb.array([this.practicesGroup()]),
-      prc: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(15)
-        ]
-      }),
-      ptr: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(15)
-        ]
-      }),
-      s2: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(10)
-        ]
-      }),
-      professionalFee: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.pattern('^[0-9]*$'),
-          Validators.maxLength(6)
-        ]
-      }),
+      })
     });
 
     this.getData(this.userId).subscribe((resData) => {
@@ -185,11 +161,7 @@ export class ProfileComponent implements OnInit {
         birthdate: merge.birthdate,
         contact: merge.contact,
         gender: merge.gender,
-        bio: merge.description,
-        prc: merge.prc,
-        ptr: merge.ptr,
-        s2: merge.s2,
-        professionalFee: merge.professionalFee
+        bio: merge.description
       });
       const addressControl = this.form.controls.addresses as FormArray;
       const address = merge.addresses;
@@ -197,21 +169,14 @@ export class ProfileComponent implements OnInit {
         addressControl.push(this.addAddressGroup());
       }
       this.form.patchValue({addresses: address});
-
-      const practiceControl = this.form.controls.practices as FormArray;
-      const practice = merge.practices;
-      for (let i = 1; i < practice.length; i++) {
-        practiceControl.push(this.practicesGroup());
-      }
-      this.form.patchValue({practices: practice});
     });
   }
 
   getData(userId: any): Observable<any> {
     const images = this.uploadService.get(userId);
     const users = this.userService.get(userId);
-    const physicians = this.physiciansService.get(userId);
-    return forkJoin([images, users, physicians]);
+    const owners = this.ownersService.get(userId);
+    return forkJoin([images, users, owners]);
   }
 
   addAddressGroup() {
@@ -256,29 +221,8 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  practicesGroup() {
-    return this.fb.group({
-      practice: new FormControl(null, {
-        validators: [
-          Validators.required
-        ]
-      }),
-      practiceYearExperience: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.pattern('^[0-9]*$'),
-          Validators.maxLength(2)
-        ]
-      })
-    });
-  }
-
   addAddress() {
     this.addressArray.push(this.addAddressGroup());
-  }
-
-  addParactice() {
-    this.practiceArray.push(this.practicesGroup());
   }
 
   removeAddress(index: number) {
@@ -287,18 +231,8 @@ export class ProfileComponent implements OnInit {
     this.addressArray.markAsTouched();
   }
 
-  removePractice(index: number) {
-    this.practiceArray.removeAt(index);
-    this.practiceArray.markAsDirty();
-    this.practiceArray.markAsTouched();
-  }
-
   get addressArray() {
     return this.form.get('addresses') as FormArray;
-  }
-
-  get practiceArray() {
-    return this.form.get('practices') as FormArray;
   }
 
   get formCtrls() {
@@ -315,10 +249,6 @@ export class ProfileComponent implements OnInit {
 
   getAddresseFormGroup(index: any): FormGroup {
     return this.addressArray.controls[index] as FormGroup;
-  }
-
-  getPractiseFormGroup(index: any): FormGroup {
-    return this.practiceArray.controls[index] as FormGroup;
   }
 
   onSubmit() {
@@ -342,18 +272,13 @@ export class ProfileComponent implements OnInit {
 
     this.userService.update(updateUser).subscribe((userResponse) => {
       // physician data
-      const updatePhysician = {
+      const updateOwner = {
         _id: this.user._id,
-        practices: this.form.value.practices,
         description: this.form.value.bio,
-        prc: this.form.value.prc,
-        ptr: this.form.value.ptr,
-        s2: this.form.value.s2,
-        professionalFee: this.form.value.professionalFee
       };
-      this.physiciansService.update(updatePhysician).subscribe((physicianResponse) => {
+      this.ownersService.update(updateOwner).subscribe((ownerResponse) => {
         // set user subscription
-        this.userService.setSubListener({...userResponse, ...physicianResponse});
+        this.userService.setSubListener({...userResponse, ...ownerResponse});
         // response message
         this.translate.get('common.updated-message', {s: 'Physician'}
         ).subscribe((norifResMessgae: string) => {

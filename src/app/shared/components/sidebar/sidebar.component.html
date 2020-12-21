@@ -23,7 +23,9 @@
   </div>
 </div>
 
-<button mat-raised-button color="accent" style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'patients.create-patients' | translate }}</button>
+<!-- <button mat-raised-button color="accent" style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'patients.create-patients' | translate }}</button>
+ -->
+ <button mat-raised-button color="accent" style="margin: 0 10px 10px; width: 94%; border-radius: 20px;" (click)="onDialogOpen()">{{ 'repairs.create-repairs' | translate }}</button>
 <mat-divider></mat-divider>
 <mat-nav-list>
 
@@ -31,9 +33,9 @@
         <mat-icon>dashboard</mat-icon>
         {{ 'dashboard.title' | translate }}
     </a> -->
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/users">
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/repairs">
         <mat-icon>assignment_ind</mat-icon>
-        {{ 'patients.my-patients' | translate }}
+        {{ 'repairs.my-repairs' | translate }}
     </a>
 
     <mat-divider></mat-divider>
@@ -62,10 +64,10 @@
 
     <mat-divider></mat-divider>
     <!-- <h2 matSubheader>Tools</h2> -->
-    <a mat-list-item (click)="onImportOpen()">
+    <!-- <a mat-list-item (click)="onImportOpen()">
         <mat-icon>cloud_upload</mat-icon>
         {{ 'common.import' | translate }}
-    </a>
+    </a> -->
 
     <a mat-list-item (click)="onExportOpen()">
         <mat-icon>cloud_download</mat-icon>
@@ -77,9 +79,9 @@
         {{ 'common.print' | translate }}
     </a>
     <mat-divider></mat-divider>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/users/patients/all">
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/repairs/all">
         <mat-icon>supervisor_account</mat-icon>
-        {{ 'patients.all-patients' | translate }}
+        {{ 'repairs.all-repairs' | translate }}
     </a>
 </mat-nav-list>
 <app-ads></app-ads>

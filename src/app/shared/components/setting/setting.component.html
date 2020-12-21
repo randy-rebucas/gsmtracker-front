@@ -1,122 +1,22 @@
 <h2 mat-dialog-title>{{ 'settings.title' | translate }}</h2>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
-        <h3>{{ 'settings.clinic-details' | translate }}</h3>
-        <div class="clinic-info">
-          <div class="clinic-logo" *ngIf="setting?._id">
+        <h3>{{ 'settings.shop-details' | translate }}</h3>
+        <div class="shop-info">
+          <div class="shop-logo" *ngIf="setting?._id">
             <app-upload [sourceId]="setting?._id" [imagePreview]="imagePath" [size]="100" [defaultImage]="'/assets/images/clinic-blank.png'" [responseListener]="false"></app-upload>
           </div>
-          <div class="clinic-detail">
+          <div class="shop-detail">
             <mat-form-field>
-              <mat-label>{{ 'settings.clinicname' | translate }}</mat-label>
-              <input matInput type="text" formControlName="clinicname">
+              <mat-label>{{ 'settings.shopname' | translate }}</mat-label>
+              <input matInput type="text" formControlName="shopname">
             </mat-form-field>
             <mat-form-field>
-              <mat-label>{{ 'settings.clinicowner' | translate }}</mat-label>
-              <input matInput type="text" formControlName="clinicowner">
+              <mat-label>{{ 'settings.shopowner' | translate }}</mat-label>
+              <input matInput type="text" formControlName="shopowner">
             </mat-form-field>
           </div>
         </div>
-
-        <h3>{{ 'settings.prescription-pad' | translate }}</h3>
-        <div class="toggle-group">
-            <mat-slide-toggle formControlName="rxFooterOption" class="toggle">{{ 'settings.show-footer' | translate }}</mat-slide-toggle>
-            <mat-slide-toggle formControlName="rxHeaderOption" class="toggle" (change)="onToggleHeader($event)">{{ 'settings.show-header' | translate }}</mat-slide-toggle>
-        </div>
-        <ng-container *ngIf="isShowHeader">
-            <div class="rx-block-wrapper" formGroupName="prescription">
-                <div class="form-field-block">
-                    <mat-form-field>
-                      <mat-label>{{ 'settings.heading' | translate }}</mat-label>
-                        <input matInput type="text" formControlName="rxTitle">
-                    </mat-form-field>
-                    <mat-form-field>
-                      <mat-label>{{ 'settings.tagline' | translate }}</mat-label>
-                        <input matInput type="text" formControlName="rxSubTitle">
-                    </mat-form-field>
-                </div>
-
-                <ng-container formArrayName="rxAddresses" *ngIf="addressArray.length > 0">
-                    <div *ngFor="let address of addressArray.controls; let i = index;" [formGroupName]="i" class="addressGroup">
-
-                        <div class="form-field-block">
-                            <mat-form-field>
-                              <mat-label>{{ 'basic.street-line1' | translate }}</mat-label>
-                                <input matInput type="text" formControlName="address1">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-field-block">
-                            <mat-form-field>
-                              <mat-label>{{ 'basic.street-line2' | translate }}</mat-label>
-                                <input matInput type="text" formControlName="address2">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-field-block">
-                            <mat-form-field>
-                              <mat-label>{{ 'basic.city' | translate }}</mat-label>
-                                <input matInput type="text" formControlName="city">
-                            </mat-form-field>
-                            <mat-form-field>
-                              <mat-label>{{ 'basic.province' | translate }}</mat-label>
-                                <input matInput type="text" formControlName="province">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-field-block">
-                            <mat-form-field>
-                              <mat-label>{{ 'basic.postal-code' | translate }}</mat-label>
-                                <input matInput #postalCode maxlength="5" type="number" formControlName="postalCode">
-                                <mat-hint>{{postalCode.value.length}} / 5</mat-hint>
-                            </mat-form-field>
-                            <mat-form-field>
-                              <mat-label>{{ 'basic.country' | translate }}</mat-label>
-                                <input matInput type="text" formControlName="country">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <ng-container formArrayName="rxPhones" *ngIf="contactArray.length > 0">
-                    <div class="form-field-block form-field-contact" *ngFor="let contact of contactArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
-                        <mat-form-field class="contact">
-                          <mat-label>{{ 'basic.contact' | translate }}</mat-label>
-                            <input matInput type="text" formControlName="contact">
-                        </mat-form-field>
-                        <div class="action-button">
-                            <button mat-icon-button *ngIf="contactArray.controls.length < 3" (click)="addContact()" type="button"><mat-icon>add</mat-icon></button>
-                            <button mat-icon-button color="warn" *ngIf="contactArray.controls.length > 1" (click)="removeContact(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-                        </div>
-                    </div>
-                </ng-container>
-                <ng-container formArrayName="rxHours">
-                    <div class="form-field-block form-field-hour" *ngFor="let hour of hourArray.controls; let i = index;" [formGroupName]="i" class="arrayGroup">
-                        <mat-form-field class="time">
-                            <mat-label>{{ 'settings.pick-time' | translate }}</mat-label>
-                            <mat-select formControlName="morningOpen">
-                                <mat-option *ngFor="let time of times" [value]="time">
-                                    {{time}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field class="time">
-                            <mat-label>{{ 'settings.pick-time' | translate }}</mat-label>
-                            <mat-select formControlName="afternoonClose">
-                                <mat-option *ngFor="let time of times" [value]="time">
-                                    {{time}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <div class="action-button">
-                            <button mat-icon-button *ngIf="hourArray.controls.length < 3" (click)="addHour()" type="button"><mat-icon>add</mat-icon></button>
-                            <button mat-icon-button color="warn" *ngIf="hourArray.controls.length > 1" (click)="removeHour(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-                        </div>
-                    </div>
-                </ng-container>
-                <div class="form-field-block">
-                    <mat-slide-toggle formControlName="rxNoNoonBreak" color="primary">{{ 'settings.no-noon-break' | translate }}</mat-slide-toggle>
-                </div>
-            </div>
-        </ng-container>
-
 
         <h3>{{ 'settings.language' | translate }}</h3>
         <mat-radio-group formControlName="language" aria-label="Select an language" class="radio-group">

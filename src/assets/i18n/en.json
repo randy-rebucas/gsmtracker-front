@@ -15,14 +15,14 @@
         "learn": "Learn how"
     },
     "home": {
-        "tag": "-were all tech act as one!",
+        "tag": "-technicians record book!",
         "get-started": "Get started"
     },
     "authentication": {
         "login": "Login",
         "register": "Register",
         "logout": "Logout",
-        "name": "Clinic name",
+        "name": "Shop name",
         "practice": "Practice",
         "firstname": "Firstname",
         "lastname": "Lastname",
@@ -67,6 +67,33 @@
         "num-selected": "{{s}} Selected",
         "counts": "Patients ({{s}})"
     },
+    "repairs": {
+      "title": "Repairs",
+      "create-repairs": "Create repairs",
+      "update-repairs": "Update repairs",
+      "import-repairs": "Import repairs",
+      "export-repairs": "Export repairs",
+      "print-repairs": "Print repairs",
+      "generate-auth-repairs": "Generate Auth",
+      "my-repairs": "My Repairs",
+      "all-repairs": "All Repairs",
+      "find-repairs": "Find repairs",
+      "select-label": "Select label (optional)",
+      "select": "Select",
+      "select-action-menu": "Select action menu",
+      "select-action": "Selection action",
+      "all": "All",
+      "none": "None",
+      "label-menu": "Label menu",
+      "apply": "Apply",
+      "action": "Action",
+      "more-action": "More Action",
+      "num-selected": "{{s}} Selected",
+      "counts": "Repairs ({{s}})",
+      "warranty": "Warranty",
+      "amount-paid": "Amount Paid",
+      "more-information": "More Information"
+    },
     "physicians": {
       "title": "Physicians",
       "counts": "({{s}}) physician connected",
@@ -78,6 +105,25 @@
       "year-of-experience": "Year of Experience",
       "bio": "Bio",
       "additional-info": "Additional Information"
+    },
+    "customers": {
+      "cutomer-information": "Customer Information"
+    },
+    "technicians": {
+      "technician": "Technician"
+    },
+    "owners": {
+      "title": "Owners",
+      "counts": "({{s}}) owner connected",
+      "bio": "Bio",
+      "additional-info": "Additional Information"
+    },
+    "mobiles": {
+      "mobile-information": "Mobile Information",
+      "brand": "Brand",
+      "serial-number": "Serial Number",
+      "model": "Model",
+      "other": "Other"
     },
     "labels": {
       "title": "Labels",
@@ -133,15 +179,9 @@
         "title": "Settings",
         "heading": "Heading",
         "tagline": "Tagline",
-        "clinic-details": "Clinic Details",
-        "clinicname": "Clinic Name",
-        "clinicowner": "Clinic Owner",
-        "prescription-pad": "Prescription Pad (option)",
-        "show-footer": "Show footer",
-        "show-header": "Show header",
-        "pick-time": "Pick time",
-        "no-noon-break": "No Noon Break",
-        "clinic-hours": "Clinic hours",
+        "shop-details": "Shop Details",
+        "shopname": "Shop Name",
+        "shopowner": "Shop Owner",
         "language": "Language",
         "language-tip": "Current language",
         "language-option": {
@@ -158,7 +198,7 @@
     "help": {
       "title": "Help",
       "heading": "Sorry for inconvenience",
-      "paragraph": "Our help center is still under development. We apologies for the inconvenience but you can still contact us on Facebook using myclinicsoft or simply click this"
+      "paragraph": "Our help center is still under development."
     },
     "common": {
       "profile": "Profile",
@@ -233,7 +273,15 @@
       "change-pass": "Change password",
       "change-email": "Change email",
       "basic-information": "Basic Information",
-      "date": "Date"
+      "date": "Date",
+      "customer": "Customer",
+      "phone": "Phone",
+      "warranty": "Warranty",
+      "technician": "Technician",
+      "amount": "Amount",
+      "created": "Created",
+      "status": "Status",
+      "action": "Action"
     },
     "qrcode": {
       "title": "QR Code",
