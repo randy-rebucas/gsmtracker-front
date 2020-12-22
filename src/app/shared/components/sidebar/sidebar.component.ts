@@ -90,7 +90,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.getData(this.userId).subscribe((resData) => {
       this.isLoading = false;
       const merge = {...resData[0], ...resData[1], ...resData[2]};
-      this.fullname = merge.name.firstname + ' ' + merge.name.lastname;
+      // this.fullname = merge.name.firstname + ' ' + merge.name.lastname;
       this.imagePreview = merge.image;
     });
   }
@@ -163,32 +163,33 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   onDialogOpen() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    // set modal attributes
-    this.translate.get([
-      'repairs.create-repairs',
-      'common.submit'
-    ]).subscribe((translate) => {
-      dialogConfig.data = {
-        id: null,
-        title: translate['repairs.create-repairs'],
-        button: translate['common.submit']
-      };
-    });
+    this.router.navigate(['/secure/repairs/form']);
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+    // dialogConfig.autoFocus = true;
+    // dialogConfig.width = '50%';
+    // // set modal attributes
+    // this.translate.get([
+    //   'repairs.create-repairs',
+    //   'common.submit'
+    // ]).subscribe((translate) => {
+    //   dialogConfig.data = {
+    //     id: null,
+    //     title: translate['repairs.create-repairs'],
+    //     button: translate['common.submit']
+    //   };
+    // });
 
-    this.dialog.open(RepairFormComponent, dialogConfig).afterClosed().subscribe((result) => {
-      if (result) {
-        this.translate.get('common.created-message', {s: 'Repair'}
-        ).subscribe((norifResMessgae: string) => {
-          this.notificationService.success(norifResMessgae);
-        });
+    // this.dialog.open(RepairFormComponent, dialogConfig).afterClosed().subscribe((result) => {
+    //   if (result) {
+    //     this.translate.get('common.created-message', {s: 'Repair'}
+    //     ).subscribe((norifResMessgae: string) => {
+    //       this.notificationService.success(norifResMessgae);
+    //     });
 
-        this.router.navigateByUrl('/secure/repairs/');
-      }
-    });
+    //     this.router.navigateByUrl('/secure/repairs/');
+    //   }
+    // });
   }
 
   onImportOpen() {

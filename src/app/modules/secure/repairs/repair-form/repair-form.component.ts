@@ -4,6 +4,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { RepairsService } from '../repairs.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { UserService } from 'src/app/shared/services/user.service';
+import { CustomerService } from 'src/app/shared/services/customer.service';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-repair-form',
@@ -24,18 +32,18 @@ export class RepairFormComponent implements OnInit {
   public pageSizeOptions: any;
 
   public startDate = new Date(1990, 0, 1);
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
 
   constructor(
     private repairsService: RepairsService,
+    private userService: UserService,
+    private customerService: CustomerService,
     private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private router: Router,
     private authenticationService: AuthenticationService,
-    private dialogRef: MatDialogRef < RepairFormComponent >,
-    @Inject(MAT_DIALOG_DATA) data
   ) {
-    this.formId = data.id;
-    this.formTitle = data.title;
-    this.formButtontext = data.button;
-
     this.total = 0;
     this.perPage = 10;
     this.currentPage = 1;
@@ -127,32 +135,6 @@ export class RepairFormComponent implements OnInit {
       })
     });
 
-    if (this.formId) {
-        this.isLoading = true;
-
-        this.repairsService.get(this.formId).subscribe(repairData => {
-          console.log(repairData);
-          this.isLoading = false;
-          this.form.patchValue({
-            firstname: repairData.customer.name.firstname,
-            lastname: repairData.customer.name.lastname,
-            contact: repairData.customer.phone,
-            address: repairData.customer.address,
-            brand: repairData.phoneInfo.brand,
-            serialNumber: repairData.phoneInfo.serialNumber,
-            model: repairData.phoneInfo.model,
-            other: repairData.phoneInfo.others,
-            chiefCompliant: repairData.complaint,
-            actionTaken: repairData.actionTaken,
-            warranty: repairData.warranty,
-            technician: repairData.technician,
-            amountPaid: repairData.amountPaid,
-          });
-        });
-      } else {
-        this.isLoading = false;
-        this.formId = null;
-      }
   }
 
   get formCtrls() {
@@ -163,18 +145,11 @@ export class RepairFormComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.isLoading = true;
     const newRepair = {
       owners: [{
         ownerId: this.authenticationService.getUserId()
       }],
-      customer: {
-        name: {
-          firstname: this.form.value.firstname,
-          lastname: this.form.value.lastname
-        },
-        phone: this.form.value.contact,
-        address: this.form.value.address
-      },
       phoneInfo: {
         brand: this.form.value.brand,
         model: this.form.value.model,
@@ -184,41 +159,57 @@ export class RepairFormComponent implements OnInit {
       complaint: this.form.value.chiefCompliant,
       actionTaken: this.form.value.actionTaken,
       warranty: this.form.value.warranty,
-      technician: this.form.value.technician,
+      technicians: [{
+        technicianId: this.authenticationService.getUserId()
+      }],
       amountPaid: this.form.value.amountPaid
     };
 
-    const repairId = {
-      _id: this.formId,
+    // const repairId = {
+    //   _id: this.formId,
+    // };
+
+    // const updateRepair = {
+    //   ...repairId, ...newRepair
+    // };
+
+    // console.log(updateRepair);
+
+    // if (!this.formId) {
+    const userData = {
+      name: {
+        firstname: this.form.value.firstname,
+        lastname: this.form.value.lastname
+      },
+      contact: this.form.value.contact,
+      addresses: [{
+        current: true,
+        address1: this.form.value.address
+      }]
     };
-
-    const updateRepair = {
-      ...repairId, ...newRepair
-    };
-
-    console.log(updateRepair);
-    if (!this.formId) {
-      this.repairsService.insert(newRepair).subscribe((res) => {
-        // set patient data
-        this.onClose(res.repairId);
-        // const newpatient = {
-        //   userId: res.id,
-        //   physician: this.authenticationService.getUserId()
-        // };
-        // this.patientsService.insert(newpatient).subscribe((response) => {
-        //   this.onClose(response.patientId);
-        // });
+    this.userService.insert(userData).subscribe((userResponse) => {
+      const customerData = {
+        userId: userResponse.id,
+        description: 'request job for unit: ' + newRepair.phoneInfo.brand + ' with serial num: ' + newRepair.phoneInfo.serialNumber
+      };
+      this.customerService.insert(customerData).subscribe((customerResponse) => {
+        const patchRepair = { ...newRepair, customerId:  customerResponse.customerId };
+        this.repairsService.insert(patchRepair).subscribe((repairResponse) => {
+          this.snackBar.open('Repair Save! Id: ' + repairResponse.repairId, null, {
+            duration: 500,
+            horizontalPosition: this.horizontalPosition,
+            verticalPosition: this.verticalPosition,
+          });
+          this.form.reset();
+          this.router.navigate(['/secure/repairs']);
+        });
       });
-    } else {
-      this.repairsService.update(updateRepair).subscribe(() => {
-        this.onClose('update');
-      });
-    }
-  }
-
-  onClose(state?: string) {
-    this.form.reset();
-    this.dialogRef.close(state);
+    });
+    // } else {
+    //   this.repairsService.update(updateRepair).subscribe(() => {
+    //     this.onClose('update');
+    //   });
+    // }
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
@@ -12,9 +12,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe } from '@angular/common';
 
-import * as jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { LabelComponent } from 'src/app/shared/components/label/label.component';
 import { LabelsService } from 'src/app/shared/services/labels.service';
@@ -29,6 +26,7 @@ import { ExportComponent } from 'src/app/shared/components/export/export.compone
 import { RepairsService } from '../repairs.service';
 import { RepairFormComponent } from '../repair-form/repair-form.component';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'app-repair-list',
@@ -103,22 +101,22 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.labelSelected = [];
     this.labelPicked = '';
     this.userId = this.authenticationService.getUserId();
+
   }
 
   ngOnInit() {
+    this.option = this.activatedRoute.snapshot.url[0].path;
+
     this.settingsService.getSetting(this.userId);
     this.settingsService.getSettingListener()
     .subscribe((setting) => {
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
     });
 
-    this.option = this.activatedRoute.snapshot.url[0].path;
-
     this.translate.get(this.option === 'list' ? 'repairs.my-repairs' : 'repairs.all-repairs')
     .subscribe((res: string) => {
       this.titleService.setTitle(res);
     });
-    // this.getQuery(this.perPage, this.currentPage, this.labelPicked);
 
     this.labelsService.getAll(this.userId);
     this.labelsSub = this.labelsService.getLabels()
@@ -141,7 +139,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   filterLabel(labelId: string) {
-    this.getQuery(this.perPage, this.currentPage, labelId);
+    this.getQuery(this.perPage, this.currentPage, labelId, (this.option === 'list') ? this.userId : '');
   }
 
   ngAfterViewInit() {
@@ -156,7 +154,6 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
           return this.repairsService.getUpdateListener();
         }),
         map(data => {
-          // console.log(data);
           // Flip flag to show that loading has finished.
           this.isLoading = false;
           this.length = data.counts;
@@ -183,6 +180,21 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paginator._intl.previousPageLabel = translation['paginator.previous-page'];
       // this.paginator._intl.getRangeLabel = matRangeLabelIntl;
     });
+  }
+
+  setOwnerShip(data) {
+    const newRepairs = [];
+    data.forEach(repair => {
+      const ownerShip = {
+        isOwned : repair.owners.some(e => e.ownerId === this.userId)
+      };
+      newRepairs.push({...repair, ...ownerShip});
+    });
+    return newRepairs;
+  }
+
+  getQuery(perPage: number, currentPage: number, label: string, userId: string) {
+    this.repairsService.getAll(perPage, currentPage, label, userId);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -239,32 +251,12 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  setOwnerShip(data) {
-    const newRepairs = [];
-    data.forEach(repair => {
-      const ownerShip = {
-        isOwned : repair.owners.some(e => e.ownerId === this.userId)
-      };
-      newRepairs.push({...repair, ...ownerShip});
-    });
-    console.log(newRepairs);
-    return newRepairs;
-  }
-
-  getQuery(perPage, currentPage, label) {
-    if (this.option === 'list') {
-      this.repairsService.getMyRepair(this.userId, perPage, currentPage, label);
-    } else {
-      this.repairsService.getAll(perPage, currentPage, label);
-    }
-  }
-
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;
     this.length = pageData.length;
-    this.getQuery(this.perPage, this.currentPage, this.labelPicked);
+    this.getQuery(this.perPage, this.currentPage, this.labelPicked, (this.option === 'list') ? this.userId : '');
   }
 
   onUpdate(repairId: string) {
@@ -291,7 +283,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
         ).subscribe((norifResMessgae: string) => {
           this.notificationService.success(norifResMessgae);
         });
-        this.getQuery(this.perPage, this.currentPage, this.labelPicked);
+        this.getQuery(this.perPage, this.currentPage, this.labelPicked, (this.option === 'list') ? this.userId : '');
       }
     });
   }
@@ -299,7 +291,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   onReset() {
     this.onToggleSelect('none');
     this.labelPicked = '';
-    this.getQuery(this.perPage, this.currentPage, '');
+    this.getQuery(this.perPage, this.currentPage, '', (this.option === 'list') ? this.userId : '');
   }
 
   onExport() {
@@ -359,7 +351,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
               this.translate.get('common.deleted-message', {s: 'Patient'}).subscribe((msg: string) => {
                 this.notificationService.success(msg);
               });
-              this.getQuery(this.perPage, this.currentPage, this.labelPicked);
+              this.getQuery(this.perPage, this.currentPage, this.labelPicked, (this.option === 'list') ? this.userId : '');
             });
           }
         });
@@ -371,7 +363,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onRowClicked(row) {
+  onRowClicked(row: any) {
     console.log('Row clicked: ', row);
   }
 
@@ -416,8 +408,8 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onApplySelectedLabel() {
     this.filterSelection().forEach(element => {
-      this.repairsService.setLabel(element.id, this.labelSelected).subscribe((response) => {
-        this.getQuery(this.perPage, this.currentPage, this.labelPicked);
+      this.repairsService.setLabel(element.id, this.labelSelected).subscribe(() => {
+        this.getQuery(this.perPage, this.currentPage, this.labelPicked, (this.option === 'list') ? this.userId : '');
         this.translate.get('common.updated-message',
           {s: 'Label'}
         ).subscribe((norifResMessgae: string) => {

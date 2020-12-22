@@ -32,10 +32,10 @@ import { EditorModule } from '@tinymce/tinymce-angular';
     EditorModule,
     RouterModule.forChild([
       { path: '', component: RepairsComponent, children: [
-        { path: '', redirectTo: 'list', pathMatch: 'full' },
-        { path: 'list', component: RepairListComponent },
+        { path: '', redirectTo: 'all', pathMatch: 'full' },
         { path: 'all', component: RepairListComponent },
-        { path: 'form', component: RepairFormComponent, canDeactivate: [CanDeactivateGuard] },
+        { path: 'list', component: RepairListComponent },
+        { path: 'form', component: RepairFormComponent },
         { path: ':repairId', component: RepairListComponent },
       ] }
     ])

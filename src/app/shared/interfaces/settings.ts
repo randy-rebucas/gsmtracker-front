@@ -3,7 +3,6 @@ export interface Settings {
   userId: string;
   shopname: string;
   shopowner: string;
-  appointments: boolean;
   language: string;
   updates: boolean;
   imagePath: string;

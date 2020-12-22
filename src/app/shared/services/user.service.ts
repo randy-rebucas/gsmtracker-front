@@ -45,4 +45,8 @@ export class UserService {
       })
     );
   }
+
+  insert(newUser: any) {
+    return this.http.post<{ message: string, user: string, id: string }>(BACKEND_URL, newUser);
+  }
 }

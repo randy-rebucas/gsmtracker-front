@@ -80,7 +80,6 @@ export class SettingComponent implements OnInit, AfterContentInit {
       this.form.patchValue({
         shopname: (setting) ? setting.shopname : this.appConfigurationService.title,
         shopowner: (setting) ? setting.shopowner : this.appConfigurationService.owner,
-        appointments:  (setting) ? setting.appointments : true,
         language: (setting) ? setting.language : this.appConfigurationService.language,
         updates:  (setting) ? setting.updates : true
       });

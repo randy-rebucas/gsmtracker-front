@@ -6,14 +6,7 @@ export interface Labels {
 
 export interface Repairs {
   id: string;
-  customer: {
-    name: {
-      firstname: string;
-      lastname: string;
-    };
-    phone: string;
-    address: string;
-  };
+  customers: any;
   phoneInfo: {
     brand: string;
     model: string;
@@ -22,11 +15,11 @@ export interface Repairs {
   };
   labels: Labels[];
   complaint: string;
-  technician: string;
+  technicians: any;
   actionTaken: string;
   amountPaid: number;
   warranty: string;
-  status: string;
-  deleted: string;
   release?: string;
+  status?: string;
+  deleted?: string;
 }

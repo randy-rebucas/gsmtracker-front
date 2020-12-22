@@ -23,23 +23,8 @@ export class RepairsService {
     private http: HttpClient
   ) { }
 
-  getMyRepair(userId: string, perPage: number, currentPage: number, label?: string) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}&userId=${userId}&labelId=${label}`;
-    this.http.get<{message: string, repairs: any, counts: number }>(
-      BACKEND_URL + queryParams
-    )
-    .pipe(
-      map(userData => {
-        return this.getMap(userData);
-      })
-    ).subscribe((transformData) => {
-      // console.log(transformData);
-      this.repairSub(transformData);
-    });
-  }
-
-  getAll(perPage: number, currentPage: number, label?: string) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}&labelId=${label}`;
+  getAll(perPage: number, currentPage: number, label?: string, userId?: string) {
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}&labelId=${label}&userId=${userId}`;
     this.http.get<{message: string, repairs: any, counts: number }>(
       BACKEND_URL + queryParams
     )
@@ -54,7 +39,6 @@ export class RepairsService {
   }
 
   repairSub(transformData) {
-    console.log(transformData);
     this.repairs = transformData.repairs;
     this.repairsUpdated.next({
       repairs: [...this.repairs],
@@ -63,14 +47,15 @@ export class RepairsService {
   }
 
   getMap(repairData) {
+    console.log(repairData);
     return { repairs: repairData.repairs.map(repair => {
       return {
         id: repair._id,
-        customer: repair.customer,
+        customer: repair.customerId._id,
         phoneInfo: repair.phoneInfo,
         complaint: repair.complaint,
         actionTaken: repair.actionTaken,
-        technician: repair.technician,
+        technicians: repair.technicians,
         amountPaid: repair.amountPaid,
         created: repair.createdAt,
         updated: repair.updatedAt,

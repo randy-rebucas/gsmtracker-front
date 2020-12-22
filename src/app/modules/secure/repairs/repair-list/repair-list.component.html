@@ -1,3 +1,4 @@
+<button mat-raised-button color="primary" [routerLink]="['/secure/repairs/all']">Reload</button>
 <div fxLayout="row" id="header-list">
     <div fxFlex="40%" fxFlexAlign="start">
         <mat-form-field>
@@ -91,7 +92,7 @@
 
     <ng-container matColumnDef="customer">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.customer' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.customer.phone}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.customer}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="phone">
@@ -106,7 +107,7 @@
 
     <ng-container matColumnDef="technician">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.technician' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.technician}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.technicians}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="created">

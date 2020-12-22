@@ -153,7 +153,7 @@ export class ExportComponent implements OnInit, OnDestroy {
     } else {
       // set label filter
       const hasLabel = (this.selectedOption !== 'my-repair') ? this.selectedOption : '';
-      this.repairsService.getMyRepair(this.userId, null, null, hasLabel);
+      this.repairsService.getAll(null, null, hasLabel, this.userId);
       this.repairsService.getUpdateListener().subscribe((repair) => {
         this.doExport(repair.repairs);
       });
