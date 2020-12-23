@@ -36,6 +36,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
         { path: 'all', component: RepairListComponent },
         { path: 'list', component: RepairListComponent },
         { path: 'form', component: RepairFormComponent },
+        { path: 'form/:formId', component: RepairFormComponent },
         { path: ':repairId', component: RepairListComponent },
       ] }
     ])

@@ -28,6 +28,7 @@ import { PromptComponent } from './components/prompt/prompt.component';
 import { ExportComponent } from './components/export/export.component';
 import { PrintComponent } from './components/print/print.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { TechnicianChipListComponent } from './components/technician/technician-chip-list/technician-chip-list.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     ItemsComponent,
     PromptComponent,
     ExportComponent,
-    PrintComponent
+    PrintComponent,
+    TechnicianChipListComponent
   ],
   imports: [
     CommonModule,
@@ -77,7 +79,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     ItemsComponent,
     PromptComponent,
     ExportComponent,
-    PrintComponent
+    PrintComponent,
+    TechnicianChipListComponent
   ],
   providers: [DatePipe]
 })

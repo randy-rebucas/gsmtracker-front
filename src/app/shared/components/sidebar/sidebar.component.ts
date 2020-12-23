@@ -16,6 +16,8 @@ import { ExportComponent } from '../export/export.component';
 import { PrintComponent } from '../print/print.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { RepairFormComponent } from 'src/app/modules/secure/repairs/repair-form/repair-form.component';
+import { UserService } from '../../services/user.service';
+import { RepairsService } from 'src/app/modules/secure/repairs/repairs.service';
 
 export interface Label {
   label: string;
@@ -55,10 +57,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private appConfigurationService: AppConfigurationService,
     private authenticationService: AuthenticationService,
     private uploadService: UploadService,
+    private repairsService: RepairsService,
     private labelsService: LabelsService,
     private dialog: MatDialog,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private userService: UserService,
   ) {
     this.perPage = 10;
     this.currentPage = 1;
@@ -90,13 +94,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.getData(this.userId).subscribe((resData) => {
       this.isLoading = false;
       const merge = {...resData[0], ...resData[1], ...resData[2]};
-      // this.fullname = merge.name.firstname + ' ' + merge.name.lastname;
+      this.fullname = merge.name.firstname + ' ' + merge.name.lastname;
       this.imagePreview = merge.image;
+    });
+
+    this.userSub = this.userService.getSubListener().subscribe((userListener) => {
+      this.fullname = userListener.name.firstname + ' ' + userListener.name.midlename + ' ' + userListener.name.lastname;
+    });
+
+    this.repairsService.getSelectedItem().subscribe((res) => {
+      this.selectedItem = res;
     });
   }
 
   getData(userId: string): Observable<any> {
-    return this.uploadService.get(userId);
+    const images = this.uploadService.get(userId);
+    const users = this.userService.get(userId);
+    return forkJoin([images, users]);
   }
 
   onOpenProfile() {
@@ -164,32 +178,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   onDialogOpen() {
     this.router.navigate(['/secure/repairs/form']);
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // dialogConfig.width = '50%';
-    // // set modal attributes
-    // this.translate.get([
-    //   'repairs.create-repairs',
-    //   'common.submit'
-    // ]).subscribe((translate) => {
-    //   dialogConfig.data = {
-    //     id: null,
-    //     title: translate['repairs.create-repairs'],
-    //     button: translate['common.submit']
-    //   };
-    // });
-
-    // this.dialog.open(RepairFormComponent, dialogConfig).afterClosed().subscribe((result) => {
-    //   if (result) {
-    //     this.translate.get('common.created-message', {s: 'Repair'}
-    //     ).subscribe((norifResMessgae: string) => {
-    //       this.notificationService.success(norifResMessgae);
-    //     });
-
-    //     this.router.navigateByUrl('/secure/repairs/');
-    //   }
-    // });
   }
 
   onImportOpen() {

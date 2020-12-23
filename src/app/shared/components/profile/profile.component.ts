@@ -1,12 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { forkJoin, Observable } from 'rxjs';
 import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { constants } from 'buffer';
+import { UserService } from '../../services/user.service';
 
 export interface Practices {
   value: string;
@@ -19,47 +19,26 @@ export interface Practices {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  title: string;
-  userId: string;
-  user: any;
-  isLoading: boolean;
-  isChangePass: boolean;
-  isChangeEmail: boolean;
+  public title: string;
+  public userId: string;
+  public user: any;
+  public isLoading: boolean;
+  public isChangePass: boolean;
+  public isChangeEmail: boolean;
   public imagePath: any;
   public form: FormGroup;
   public formChangePass: FormGroup;
   public formChangeEmail: FormGroup;
   public startDate = new Date(1990, 0, 1);
 
-  practices: Practices[] = [
-    {value: 'ALLERGY & IMMUNOLOGY', viewValue: 'ALLERGY & IMMUNOLOGY'},
-    {value: 'ANESTHESIOLOGY', viewValue: 'ANESTHESIOLOGY'},
-    {value: 'DERMATOLOGY', viewValue: 'DERMATOLOGY'},
-    {value: 'DIAGNOSTIC RADIOLOGY', viewValue: 'DIAGNOSTIC RADIOLOGY'},
-    {value: 'EMERGENCY MEDICINE', viewValue: 'EMERGENCY MEDICINE'},
-    {value: 'FAMILY MEDICINE', viewValue: 'FAMILY MEDICINE'},
-    {value: 'INTERNAL MEDICINE', viewValue: 'INTERNAL MEDICINE'},
-    {value: 'MEDICAL GENETICS', viewValue: 'MEDICAL GENETICS'},
-    {value: 'NEUROLOGY', viewValue: 'NEUROLOGY'},
-    {value: 'NUCLEAR MEDICINE', viewValue: 'NUCLEAR MEDICINE'},
-    {value: 'OBSTETRICS AND GYNECOLOGY', viewValue: 'OBSTETRICS AND GYNECOLOGY'},
-    {value: 'PATHOLOGY', viewValue: 'PATHOLOGY'},
-    {value: 'PEDIATRICS', viewValue: 'PEDIATRICS'},
-    {value: 'PHYSICAL MEDICINE & REHABILITATION', viewValue: 'PHYSICAL MEDICINE & REHABILITATION'},
-    {value: 'PREVENTIVE MEDICINE', viewValue: 'PREVENTIVE MEDICINE'},
-    {value: 'PSYCHIATRY', viewValue: 'PSYCHIATRY'},
-    {value: 'RADIATION ONCOLOGY', viewValue: 'RADIATION ONCOLOGY'},
-    {value: 'SURGERY', viewValue: 'SURGERY'},
-    {value: 'UROLOGY', viewValue: 'UROLOGY'}
-  ];
-
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private translate: TranslateService,
     private uploadService: UploadService,
+    private userService: UserService,
     private notificationService: NotificationService,
-    public authenticationService: AuthenticationService,
-    public dialogRef: MatDialogRef < ProfileComponent >,
+    private authenticationService: AuthenticationService,
+    private dialogRef: MatDialogRef < ProfileComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.title = data.title;
@@ -68,7 +47,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.formChangePass = this.fb.group({
+    this.formChangePass = this.formBuilder.group({
       oldPass: new FormControl(null, {
         validators: [
           Validators.required,
@@ -83,7 +62,7 @@ export class ProfileComponent implements OnInit {
       })
     });
 
-    this.formChangeEmail = this.fb.group({
+    this.formChangeEmail = this.formBuilder.group({
       oldPass: new FormControl(null, {
         validators: [
           Validators.required,
@@ -99,7 +78,7 @@ export class ProfileComponent implements OnInit {
       })
     });
 
-    this.form = this.fb.group({
+    this.form = this.formBuilder.group({
       firstname: new FormControl(null, {
         validators: [
           Validators.required,
@@ -135,7 +114,7 @@ export class ProfileComponent implements OnInit {
           Validators.required
         ]
       }),
-      addresses: this.fb.array([this.addAddressGroup()]),
+      addresses: this.formBuilder.array([this.addAddressGroup()]),
       bio: new FormControl(null, {
         validators: [
           Validators.required,
@@ -147,6 +126,7 @@ export class ProfileComponent implements OnInit {
     this.getData(this.userId).subscribe((resData) => {
       const merge = {...resData[0], ...resData[1], ...resData[2]};
       this.isLoading = false;
+      console.log(merge);
       this.user = merge;
       this.form.patchValue({
         firstname: merge.name.firstname,
@@ -167,11 +147,13 @@ export class ProfileComponent implements OnInit {
   }
 
   getData(userId: any): Observable<any> {
-    return this.uploadService.get(userId);
+    const images = this.uploadService.get(userId);
+    const users = this.userService.get(userId);
+    return forkJoin([images, users]);
   }
 
   addAddressGroup() {
-    return this.fb.group({
+    return this.formBuilder.group({
       current: new FormControl(true),
       address1: new FormControl(null, {
         validators: [
@@ -261,6 +243,12 @@ export class ProfileComponent implements OnInit {
       addresses: this.form.value.addresses
     };
 
+    this.userService.update(updateUser).subscribe(() => {
+      this.translate.get('common.updated-message', {s: 'Profile'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
+        });
+    });
   }
 
   changeEmail() {

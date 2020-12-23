@@ -8,21 +8,6 @@
             <app-upload [sourceId]="userId" [imagePreview]="user?.image" [size]="100"></app-upload>
         </div>
         <div class="profile-detail">
-            <mat-form-field>
-                <mat-label>{{ 'basic.private-key' | translate }} </mat-label>
-                <input matInput value="{{user?.privateKey}}" #private readonly>
-                <button mat-icon-button matSuffix [cdkCopyToClipboard]="user?.privateKey" matTooltip="{{ 'common.copy' | translate }}">
-                  <mat-icon>file_copy</mat-icon>
-                </button>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'basic.public-key' | translate }}:</mat-label>
-                <input matInput value="{{user?.publicKey}}" #public readonly>
-                <button mat-icon-button matSuffix [cdkCopyToClipboard]="user?.publicKey" matTooltip="{{ 'common.copy' | translate }}">
-                  <mat-icon>file_copy</mat-icon>
-                </button>
-            </mat-form-field>
-
             <mat-form-field *ngIf="!isChangeEmail">
                 <mat-label>{{ 'authentication.email' | translate }} </mat-label>
                 <input matInput value="{{authenticationService.getUserEmail()}}" readonly>
@@ -31,35 +16,35 @@
                 </button>
             </mat-form-field>
             <form [formGroup]="formChangeEmail" class="auth-form" id="change-email" (submit)="onChangeEmail()" *ngIf="isChangeEmail">
-              <mat-form-field>
-                <mat-label>Previous Password</mat-label>
-                  <input matInput type="password" formControlName="oldPass">
-                  <mat-error *ngIf="emailFormCtrls.oldPass.errors">
-                    <div *ngIf="emailFormCtrls.oldPass.errors.required">
-                        {{ 'validation.required' | translate:{'s':'old password'} }}
-                    </div>
-                    <div *ngIf="emailFormCtrls.oldPass.errors.maxlength">
-                        {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
-                    </div>
-                  </mat-error>
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>New email</mat-label>
-                  <input matInput formControlName="newEmail">
-                  <mat-error *ngIf="emailFormCtrls.newEmail.errors">
-                    <div *ngIf="emailFormCtrls.newEmail.errors.required">
-                        {{ 'validation.required' | translate:{'s':'email'} }}
-                    </div>
-                    <div *ngIf="emailFormCtrls.newEmail.errors.maxlength">
-                        {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'email'} }}
-                    </div>
-                    <div *ngIf="emailFormCtrls.newEmail.errors.email">
-                      {{ 'validation.invalid' | translate:{'s':'email'} }}
-                    </div>
-                  </mat-error>
-              </mat-form-field>
-              <button type="button" mat-button (click)="changeEmail()">Cancel</button>
-              <button type="submit" mat-button color="primary">Update</button>
+                <mat-form-field>
+                    <mat-label>Previous Password</mat-label>
+                    <input matInput type="password" formControlName="oldPass">
+                    <mat-error *ngIf="emailFormCtrls.oldPass.errors">
+                        <div *ngIf="emailFormCtrls.oldPass.errors.required">
+                            {{ 'validation.required' | translate:{'s':'old password'} }}
+                        </div>
+                        <div *ngIf="emailFormCtrls.oldPass.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>New email</mat-label>
+                    <input matInput formControlName="newEmail">
+                    <mat-error *ngIf="emailFormCtrls.newEmail.errors">
+                        <div *ngIf="emailFormCtrls.newEmail.errors.required">
+                            {{ 'validation.required' | translate:{'s':'email'} }}
+                        </div>
+                        <div *ngIf="emailFormCtrls.newEmail.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'email'} }}
+                        </div>
+                        <div *ngIf="emailFormCtrls.newEmail.errors.email">
+                            {{ 'validation.invalid' | translate:{'s':'email'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <button type="button" mat-button (click)="changeEmail()">Cancel</button>
+                <button type="submit" mat-button color="primary">Update</button>
             </form>
 
             <mat-form-field *ngIf="!isChangePass">
@@ -70,208 +55,208 @@
                 </button>
             </mat-form-field>
             <form [formGroup]="formChangePass" class="auth-form" id="change-pass" (submit)="onChangePass()" *ngIf="isChangePass">
-              <mat-form-field>
-                <mat-label>Previous Password</mat-label>
-                  <input matInput type="password" formControlName="oldPass">
-                  <mat-error *ngIf="passFormCtrls.oldPass.errors">
-                    <div *ngIf="passFormCtrls.oldPass.errors.required">
-                        {{ 'validation.required' | translate:{'s':'old password'} }}
-                    </div>
-                    <div *ngIf="passFormCtrls.oldPass.errors.maxlength">
-                        {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
-                    </div>
-                  </mat-error>
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>New Password</mat-label>
-                  <input matInput type="password" formControlName="newPass">
-                  <mat-error *ngIf="passFormCtrls.newPass.errors">
-                    <div *ngIf="passFormCtrls.newPass.errors.required">
-                        {{ 'validation.required' | translate:{'s':'new password'} }}
-                    </div>
-                    <div *ngIf="passFormCtrls.newPass.errors.maxlength">
-                        {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'new password'} }}
-                    </div>
-                  </mat-error>
-              </mat-form-field>
-              <button type="button" mat-button (click)="changePass()">Cancel</button>
-              <button type="submit" mat-button color="primary">Update</button>
+                <mat-form-field>
+                    <mat-label>Previous Password</mat-label>
+                    <input matInput type="password" formControlName="oldPass">
+                    <mat-error *ngIf="passFormCtrls.oldPass.errors">
+                        <div *ngIf="passFormCtrls.oldPass.errors.required">
+                            {{ 'validation.required' | translate:{'s':'old password'} }}
+                        </div>
+                        <div *ngIf="passFormCtrls.oldPass.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>New Password</mat-label>
+                    <input matInput type="password" formControlName="newPass">
+                    <mat-error *ngIf="passFormCtrls.newPass.errors">
+                        <div *ngIf="passFormCtrls.newPass.errors.required">
+                            {{ 'validation.required' | translate:{'s':'new password'} }}
+                        </div>
+                        <div *ngIf="passFormCtrls.newPass.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'new password'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <button type="button" mat-button (click)="changePass()">Cancel</button>
+                <button type="submit" mat-button color="primary">Update</button>
             </form>
-            <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
+            <form [formGroup]="form" class="profile-form" (submit)="onSubmit()">
                 <h2 class="mat-subheading-2">{{ 'basic.basic-information' | translate }}</h2>
                 <div class="form-field-block">
                     <mat-form-field>
-                      <mat-label>{{ 'basic.firstname' | translate }}</mat-label>
+                        <mat-label>{{ 'basic.firstname' | translate }}</mat-label>
                         <input matInput formControlName="firstname" uppercase>
                         <mat-error *ngIf="formCtrls.firstname.errors">
-                          <div *ngIf="formCtrls.firstname.errors.required">
-                              {{ 'validation.required' | translate:{'s':'firstname'} }}
-                          </div>
-                          <div *ngIf="formCtrls.firstname.errors.maxlength">
-                              {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
-                          </div>
+                            <div *ngIf="formCtrls.firstname.errors.required">
+                                {{ 'validation.required' | translate:{'s':'firstname'} }}
+                            </div>
+                            <div *ngIf="formCtrls.firstname.errors.maxlength">
+                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                            </div>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                      <mat-label>{{ 'basic.middlename' | translate }}</mat-label>
+                        <mat-label>{{ 'basic.middlename' | translate }}</mat-label>
                         <input matInput formControlName="midlename">
                         <mat-error *ngIf="formCtrls.midlename.errors">
-                          <div *ngIf="formCtrls.midlename.errors.required">
-                              {{ 'validation.required' | translate:{'s':'lastname'} }}
-                          </div>
-                          <div *ngIf="formCtrls.midlename.errors.maxlength">
-                              {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
-                          </div>
+                            <div *ngIf="formCtrls.midlename.errors.required">
+                                {{ 'validation.required' | translate:{'s':'lastname'} }}
+                            </div>
+                            <div *ngIf="formCtrls.midlename.errors.maxlength">
+                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                            </div>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                      <mat-label>{{ 'basic.lastname' | translate }}</mat-label>
+                        <mat-label>{{ 'basic.lastname' | translate }}</mat-label>
                         <input matInput formControlName="lastname">
                         <mat-error *ngIf="formCtrls.lastname.errors">
-                          <div *ngIf="formCtrls.lastname.errors.required">
-                              {{ 'validation.required' | translate:{'s':'lastname'} }}
-                          </div>
-                          <div *ngIf="formCtrls.lastname.errors.maxlength">
-                              {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
-                          </div>
+                            <div *ngIf="formCtrls.lastname.errors.required">
+                                {{ 'validation.required' | translate:{'s':'lastname'} }}
+                            </div>
+                            <div *ngIf="formCtrls.lastname.errors.maxlength">
+                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                            </div>
                         </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="form-field-block">
                     <mat-form-field>
-                      <mat-label>{{ 'basic.contact' | translate }}</mat-label>
+                        <mat-label>{{ 'basic.contact' | translate }}</mat-label>
                         <input matInput formControlName="contact">
                         <mat-error *ngIf="formCtrls.contact.errors">
-                          <div *ngIf="formCtrls.contact.errors.required">
-                              {{ 'validation.required' | translate:{'s':'contact'} }}
-                          </div>
-                          <div *ngIf="formCtrls.contact.errors.maxlength">
-                              {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'contact'} }}
-                          </div>
-                          <div *ngIf="formCtrls.contact.errors.minlength">
-                            {{ 'validation.minLength' | translate:{'s':'9', 'ctrl': 'contact'} }}
-                          </div>
-                          <div *ngIf="formCtrls.contact.errors.pattern">
-                            {{ 'validation.pattern' | translate:{'s': 'contact'} }}
-                          </div>
+                            <div *ngIf="formCtrls.contact.errors.required">
+                                {{ 'validation.required' | translate:{'s':'contact'} }}
+                            </div>
+                            <div *ngIf="formCtrls.contact.errors.maxlength">
+                                {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'contact'} }}
+                            </div>
+                            <div *ngIf="formCtrls.contact.errors.minlength">
+                                {{ 'validation.minLength' | translate:{'s':'9', 'ctrl': 'contact'} }}
+                            </div>
+                            <div *ngIf="formCtrls.contact.errors.pattern">
+                                {{ 'validation.pattern' | translate:{'s': 'contact'} }}
+                            </div>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                      <mat-label>{{ 'basic.gender' | translate }}</mat-label>
+                        <mat-label>{{ 'basic.gender' | translate }}</mat-label>
                         <mat-select formControlName="gender">
                             <mat-option value="{{ 'basic.gender-option.male' | translate }}">{{ 'basic.gender-option.male' | translate }}</mat-option>
                             <mat-option value="{{ 'basic.gender-option.female' | translate }}">{{ 'basic.gender-option.female' | translate }}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="formCtrls.gender.errors">
-                          <div *ngIf="formCtrls.gender.errors.required">
-                              {{ 'validation.required' | translate:{'s':'gender'} }}
-                          </div>
+                            <div *ngIf="formCtrls.gender.errors.required">
+                                {{ 'validation.required' | translate:{'s':'gender'} }}
+                            </div>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                      <mat-label>{{ 'basic.birthdate' | translate }}</mat-label>
+                        <mat-label>{{ 'basic.birthdate' | translate }}</mat-label>
                         <input matInput readonly [matDatepicker]="picker" formControlName="birthdate">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
                         <mat-error *ngIf="formCtrls.birthdate.errors">
-                          <div *ngIf="formCtrls.birthdate.errors.required">
-                              {{ 'validation.required' | translate:{'s':'birthdate'} }}
-                          </div>
+                            <div *ngIf="formCtrls.birthdate.errors.required">
+                                {{ 'validation.required' | translate:{'s':'birthdate'} }}
+                            </div>
                         </mat-error>
                     </mat-form-field>
                 </div>
                 <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
                     <div *ngFor="let address of addressArray.controls; let i = index;" class="addressGroup">
-                      <ng-container [formGroupName]="i">
-                        <div [formGroup]="address">
-                          <div class="form-field-block">
-                              <mat-checkbox formControlName="current">{{ 'basic.set-current' | translate }}</mat-checkbox>
-                          </div>
-                          <mat-form-field>
-                            <mat-label>{{ 'basic.street-line1' | translate }}</mat-label>
-                              <input matInput formControlName="address1">
-                              <mat-error *ngIf="getAddresseFormGroup(i).controls['address1'].errors">
-                                <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.required">
-                                    {{ 'validation.required' | translate:{'s':'address1'} }}
+                        <ng-container [formGroupName]="i">
+                            <div [formGroup]="address">
+                                <div class="form-field-block">
+                                    <mat-checkbox formControlName="current">{{ 'basic.set-current' | translate }}</mat-checkbox>
                                 </div>
-                                <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.maxlength">
-                                    {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address1'} }}
-                                </div>
-                              </mat-error>
-                          </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>{{ 'basic.street-line1' | translate }}</mat-label>
+                                    <input matInput formControlName="address1">
+                                    <mat-error *ngIf="getAddresseFormGroup(i).controls['address1'].errors">
+                                        <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.required">
+                                            {{ 'validation.required' | translate:{'s':'address1'} }}
+                                        </div>
+                                        <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.maxlength">
+                                            {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address1'} }}
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>
 
-                          <mat-form-field>
-                            <mat-label>{{ 'basic.street-line2' | translate }}</mat-label>
-                              <input matInput formControlName="address2">
-                              <mat-error *ngIf="getAddresseFormGroup(i).controls['address2'].errors">
-                                <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.required">
-                                    {{ 'validation.required' | translate:{'s':'address2'} }}
-                                </div>
-                                <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.maxlength">
-                                    {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address2'} }}
-                                </div>
-                              </mat-error>
-                          </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>{{ 'basic.street-line2' | translate }}</mat-label>
+                                    <input matInput formControlName="address2">
+                                    <mat-error *ngIf="getAddresseFormGroup(i).controls['address2'].errors">
+                                        <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.required">
+                                            {{ 'validation.required' | translate:{'s':'address2'} }}
+                                        </div>
+                                        <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.maxlength">
+                                            {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address2'} }}
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>
 
-                          <div class="form-field-block">
-                              <mat-form-field>
-                                <mat-label>{{ 'basic.city' | translate }}</mat-label>
-                                  <input matInput formControlName="city">
-                                  <mat-error *ngIf="getAddresseFormGroup(i).controls['city'].errors">
-                                    <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.required">
-                                        {{ 'validation.required' | translate:{'s':'province'} }}
-                                    </div>
-                                    <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.maxlength">
-                                        {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'city'} }}
-                                    </div>
-                                  </mat-error>
-                              </mat-form-field>
-                              <mat-form-field>
-                                <mat-label>{{ 'basic.province' | translate }}</mat-label>
-                                  <input matInput formControlName="province">
-                                  <mat-error *ngIf="getAddresseFormGroup(i).controls['province'].errors">
-                                    <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.required">
-                                        {{ 'validation.required' | translate:{'s':'province'} }}
-                                    </div>
-                                    <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.maxlength">
-                                        {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'province'} }}
-                                    </div>
-                                  </mat-error>
-                              </mat-form-field>
-                          </div>
-                          <div class="form-field-block">
-                              <mat-form-field>
-                                <mat-label>{{ 'basic.postal-code' | translate }}</mat-label>
-                                  <input matInput formControlName="postalCode">
-                                  <mat-error *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors">
-                                    <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.required">
-                                        {{ 'validation.required' | translate:{'s':'postal code'} }}
-                                    </div>
-                                    <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.maxlength">
-                                        {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'postal code'} }}
-                                    </div>
-                                    <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.pattern">
-                                      {{ 'validation.pattern' | translate:{'s': 'postal code'} }}
-                                    </div>
-                                  </mat-error>
-                              </mat-form-field>
-                              <mat-form-field>
-                                <mat-label>{{ 'basic.country' | translate }}</mat-label>
-                                  <input matInput formControlName="country">
-                                  <mat-error *ngIf="getAddresseFormGroup(i).controls['country'].errors">
-                                    <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.required">
-                                        {{ 'validation.required' | translate:{'s':'country'} }}
-                                    </div>
-                                  </mat-error>
-                              </mat-form-field>
-                          </div>
+                                <div class="form-field-block">
+                                    <mat-form-field>
+                                        <mat-label>{{ 'basic.city' | translate }}</mat-label>
+                                        <input matInput formControlName="city">
+                                        <mat-error *ngIf="getAddresseFormGroup(i).controls['city'].errors">
+                                            <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.required">
+                                                {{ 'validation.required' | translate:{'s':'province'} }}
+                                            </div>
+                                            <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.maxlength">
+                                                {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'city'} }}
+                                            </div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>{{ 'basic.province' | translate }}</mat-label>
+                                        <input matInput formControlName="province">
+                                        <mat-error *ngIf="getAddresseFormGroup(i).controls['province'].errors">
+                                            <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.required">
+                                                {{ 'validation.required' | translate:{'s':'province'} }}
+                                            </div>
+                                            <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.maxlength">
+                                                {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'province'} }}
+                                            </div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-field-block">
+                                    <mat-form-field>
+                                        <mat-label>{{ 'basic.postal-code' | translate }}</mat-label>
+                                        <input matInput formControlName="postalCode">
+                                        <mat-error *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors">
+                                            <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.required">
+                                                {{ 'validation.required' | translate:{'s':'postal code'} }}
+                                            </div>
+                                            <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.maxlength">
+                                                {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'postal code'} }}
+                                            </div>
+                                            <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.pattern">
+                                                {{ 'validation.pattern' | translate:{'s': 'postal code'} }}
+                                            </div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>{{ 'basic.country' | translate }}</mat-label>
+                                        <input matInput formControlName="country">
+                                        <mat-error *ngIf="getAddresseFormGroup(i).controls['country'].errors">
+                                            <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.required">
+                                                {{ 'validation.required' | translate:{'s':'country'} }}
+                                            </div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
 
-                          <div class="action">
-                              <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
-                              <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-                          </div>
-                        </div>
-                      </ng-container>
+                                <div class="action">
+                                    <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                                    <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
                 </ng-container>
 
@@ -280,12 +265,12 @@
                     <mat-label>{{ 'physicians.bio' | translate }}</mat-label>
                     <textarea matInput formControlName="bio"></textarea>
                     <mat-error *ngIf="formCtrls.bio.errors">
-                      <div *ngIf="formCtrls.bio.errors.required">
-                          {{ 'validation.required' | translate:{'s':'bio'} }}
-                      </div>
-                      <div *ngIf="formCtrls.bio.errors.maxlength">
-                          {{ 'validation.maxLength' | translate:{'s':'1500', 'ctrl': 'bio'} }}
-                      </div>
+                        <div *ngIf="formCtrls.bio.errors.required">
+                            {{ 'validation.required' | translate:{'s':'bio'} }}
+                        </div>
+                        <div *ngIf="formCtrls.bio.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'1500', 'ctrl': 'bio'} }}
+                        </div>
                     </mat-error>
                 </mat-form-field>
             </form>

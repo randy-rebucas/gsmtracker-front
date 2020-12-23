@@ -1,180 +1,324 @@
-<h2>{{ formTitle | titlecase }}</h2>
-
 <div *ngIf="isLoading" class="loading">
     <mat-spinner [diameter]="50"></mat-spinner>
 </div>
-<form [formGroup]="form" class="normal-form" (submit)="onSave()" *ngIf="!isLoading">
-    <legend class="mat-subheading-2">{{ 'customers.cutomer-information' | translate }}</legend>
-    <div class="form-field-block">
-        <mat-form-field>
-            <mat-label>{{ 'basic.firstname' | translate }}</mat-label>
-            <input matInput formControlName="firstname" uppercase>
-            <mat-error *ngIf="formCtrls.firstname.errors">
-                <div *ngIf="formCtrls.firstname.errors.required">
-                    {{ 'validation.required' | translate:{'s':'firstname'} }}
-                </div>
-                <div *ngIf="formCtrls.firstname.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'basic.lastname' | translate }}</mat-label>
-            <input matInput formControlName="lastname">
-            <mat-error *ngIf="formCtrls.lastname.errors">
-                <div *ngIf="formCtrls.lastname.errors.required">
-                    {{ 'validation.required' | translate:{'s':'lastname'} }}
-                </div>
-                <div *ngIf="formCtrls.lastname.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'basic.contact' | translate }}</mat-label>
-            <input matInput formControlName="contact">
-            <mat-error *ngIf="formCtrls.contact.errors">
-                <div *ngIf="formCtrls.contact.errors.required">
-                    {{ 'validation.required' | translate:{'s':'contact'} }}
-                </div>
-                <div *ngIf="formCtrls.contact.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'contact'} }}
-                </div>
-                <div *ngIf="formCtrls.contact.errors.minlength">
-                    {{ 'validation.minLength' | translate:{'s':'9', 'ctrl': 'contact'} }}
-                </div>
-                <div *ngIf="formCtrls.contact.errors.pattern">
-                    {{ 'validation.pattern' | translate:{'s': 'contact'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-    </div>
-
-    <mat-form-field>
-        <mat-label>{{ 'basic.address' | translate }}</mat-label>
-        <input matInput formControlName="address">
-        <mat-error *ngIf="formCtrls.address.errors">
-            <div *ngIf="formCtrls.address.errors.required">
-                {{ 'validation.required' | translate:{'s':'address'} }}
+<form [formGroup]="form" class="repair-form" (submit)="onSave()" *ngIf="!isLoading">
+    <h2>Repair form (Job Order)</h2>
+    <mat-tab-group class="custom-tabs">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <!-- <span class="material-icons">
+                    person_outline
+                    </span> -->
+                <mat-icon class="material-icons">person_outline</mat-icon>
+                Customer Detail
+            </ng-template>
+            <div class="form-field-block">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'basic.firstname' | translate }}</mat-label>
+                    <input matInput formControlName="firstname" uppercase>
+                    <mat-error *ngIf="formCtrls.firstname.errors">
+                        <div *ngIf="formCtrls.firstname.errors.required">
+                            {{ 'validation.required' | translate:{'s':'firstname'} }}
+                        </div>
+                        <div *ngIf="formCtrls.firstname.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'basic.middlename' | translate }}</mat-label>
+                    <input matInput formControlName="midlename">
+                    <mat-error *ngIf="formCtrls.midlename.errors">
+                        <div *ngIf="formCtrls.midlename.errors.required">
+                            {{ 'validation.required' | translate:{'s':'lastname'} }}
+                        </div>
+                        <div *ngIf="formCtrls.midlename.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'basic.lastname' | translate }}</mat-label>
+                    <input matInput formControlName="lastname">
+                    <mat-error *ngIf="formCtrls.lastname.errors">
+                        <div *ngIf="formCtrls.lastname.errors.required">
+                            {{ 'validation.required' | translate:{'s':'lastname'} }}
+                        </div>
+                        <div *ngIf="formCtrls.lastname.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
             </div>
-            <div *ngIf="formCtrls.address.errors.maxlength">
-                {{ 'validation.maxLength' | translate:{'s':'350', 'ctrl': 'address'} }}
+            <div class="form-field-block">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'basic.contact' | translate }}</mat-label>
+                    <input matInput formControlName="contact">
+                    <mat-error *ngIf="formCtrls.contact.errors">
+                        <!-- <div *ngIf="formCtrls.contact.errors.required">
+                            {{ 'validation.required' | translate:{'s':'contact'} }}
+                        </div> -->
+                        <div *ngIf="formCtrls.contact.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'contact'} }}
+                        </div>
+                        <div *ngIf="formCtrls.contact.errors.minlength">
+                            {{ 'validation.minLength' | translate:{'s':'9', 'ctrl': 'contact'} }}
+                        </div>
+                        <div *ngIf="formCtrls.contact.errors.pattern">
+                            {{ 'validation.pattern' | translate:{'s': 'contact'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'basic.gender' | translate }}</mat-label>
+                    <mat-select formControlName="gender">
+                        <mat-option value="{{ 'basic.gender-option.male' | translate }}">{{ 'basic.gender-option.male' | translate }}</mat-option>
+                        <mat-option value="{{ 'basic.gender-option.female' | translate }}">{{ 'basic.gender-option.female' | translate }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formCtrls.gender.errors">
+                        <div *ngIf="formCtrls.gender.errors.required">
+                            {{ 'validation.required' | translate:{'s':'gender'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'basic.birthdate' | translate }}</mat-label>
+                    <input matInput readonly [matDatepicker]="picker" formControlName="birthdate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
+                    <mat-error *ngIf="formCtrls.birthdate.errors">
+                        <div *ngIf="formCtrls.birthdate.errors.required">
+                            {{ 'validation.required' | translate:{'s':'birthdate'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
             </div>
-        </mat-error>
-    </mat-form-field>
-    <legend class="mat-subheading-2">{{ 'mobiles.mobile-information' | translate }}</legend>
-    <div class="form-field-block">
-        <mat-form-field>
-            <mat-label>{{ 'mobiles.brand' | translate }}</mat-label>
-            <input matInput formControlName="brand" uppercase>
-            <mat-error *ngIf="formCtrls.brand.errors">
-                <div *ngIf="formCtrls.brand.errors.required">
-                    {{ 'validation.required' | translate:{'s':'brand'} }}
-                </div>
-                <div *ngIf="formCtrls.brand.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'brand'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'mobiles.serial-number' | translate }}</mat-label>
-            <input matInput formControlName="serialNumber">
-            <mat-error *ngIf="formCtrls.serialNumber.errors">
-                <div *ngIf="formCtrls.serialNumber.errors.required">
-                    {{ 'validation.required' | translate:{'s':'serialNumber'} }}
-                </div>
-                <div *ngIf="formCtrls.serialNumber.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'serialNumber'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-    </div>
-    <div class="form-field-block">
-        <mat-form-field>
-            <mat-label>{{ 'mobiles.model' | translate }}</mat-label>
-            <input matInput formControlName="model" uppercase>
-            <mat-error *ngIf="formCtrls.model.errors">
-                <div *ngIf="formCtrls.model.errors.required">
-                    {{ 'validation.required' | translate:{'s':'model'} }}
-                </div>
-                <div *ngIf="formCtrls.model.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'model'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'mobiles.other' | translate }}</mat-label>
-            <input matInput formControlName="other">
-            <mat-error *ngIf="formCtrls.other.errors">
-                <div *ngIf="formCtrls.other.errors.required">
-                    {{ 'validation.required' | translate:{'s':'other'} }}
-                </div>
-                <div *ngIf="formCtrls.other.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'150', 'ctrl': 'other'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-    </div>
+            <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
+                <div *ngFor="let address of addressArray.controls; let i = index;" class="addressGroup">
+                    <ng-container [formGroupName]="i">
+                        <div [formGroup]="address">
 
-    <legend class="mat-subheading-2">{{ 'records.chief-complain' | translate }}</legend>
-    <editor formControlName="chiefCompliant" [init]="{plugins: 'link', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-    <mat-error *ngIf="formCtrls.chiefCompliant.errors">
-        <div *ngIf="formCtrls.chiefCompliant.errors.required">
-            {{ 'validation.required' | translate:{'s':'chief complain'} }}
-        </div>
-        <div *ngIf="formCtrls.chiefCompliant.errors.maxlength">
-            {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'chief complain'} }}
-        </div>
-    </mat-error>
+                            <mat-form-field appearance="outline">
+                                <mat-label>{{ 'basic.street-line1' | translate }}</mat-label>
+                                <input matInput formControlName="address1">
+                                <mat-error *ngIf="getAddresseFormGroup(i).controls['address1'].errors">
+                                    <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.required">
+                                        {{ 'validation.required' | translate:{'s':'address1'} }}
+                                    </div>
+                                    <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.maxlength">
+                                        {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address1'} }}
+                                    </div>
+                                </mat-error>
+                            </mat-form-field>
 
-    <legend class="mat-subheading-2">Services Details</legend>
-    <editor formControlName="actionTaken" [init]="{plugins: 'link', branding: false}" [apiKey]="'6pnq043thyrdl0xy2pebscsxociv79cmgecrs7erj64buw5o'"></editor>
-    <mat-error *ngIf="formCtrls.actionTaken.errors">
-        <div *ngIf="formCtrls.actionTaken.errors.required">
-            {{ 'validation.required' | translate:{'s':'action taken'} }}
-        </div>
-        <div *ngIf="formCtrls.actionTaken.errors.maxlength">
-            {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'action taken'} }}
-        </div>
-    </mat-error>
-    <legend class="mat-subheading-2">{{ 'repairs.more-information' | translate }}</legend>
-    <div class="form-field-block">
-        <mat-form-field>
-            <mat-label>{{ 'repairs.warranty' | translate }}</mat-label>
-            <input matInput formControlName="warranty" uppercase>
-            <mat-error *ngIf="formCtrls.warranty.errors">
-                <div *ngIf="formCtrls.warranty.errors.required">
-                    {{ 'validation.required' | translate:{'s':'warranty'} }}
+                            <mat-form-field appearance="outline">
+                                <mat-label>{{ 'basic.street-line2' | translate }}</mat-label>
+                                <input matInput formControlName="address2">
+                                <mat-error *ngIf="getAddresseFormGroup(i).controls['address2'].errors">
+                                    <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.required">
+                                        {{ 'validation.required' | translate:{'s':'address2'} }}
+                                    </div>
+                                    <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.maxlength">
+                                        {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address2'} }}
+                                    </div>
+                                </mat-error>
+                            </mat-form-field>
+
+                            <div class="form-field-block">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>{{ 'basic.city' | translate }}</mat-label>
+                                    <input matInput formControlName="city">
+                                    <mat-error *ngIf="getAddresseFormGroup(i).controls['city'].errors">
+                                        <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.required">
+                                            {{ 'validation.required' | translate:{'s':'province'} }}
+                                        </div>
+                                        <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.maxlength">
+                                            {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'city'} }}
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>{{ 'basic.province' | translate }}</mat-label>
+                                    <input matInput formControlName="province">
+                                    <mat-error *ngIf="getAddresseFormGroup(i).controls['province'].errors">
+                                        <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.required">
+                                            {{ 'validation.required' | translate:{'s':'province'} }}
+                                        </div>
+                                        <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.maxlength">
+                                            {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'province'} }}
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="form-field-block">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>{{ 'basic.postal-code' | translate }}</mat-label>
+                                    <input matInput formControlName="postalCode">
+                                    <mat-error *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors">
+                                        <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.required">
+                                            {{ 'validation.required' | translate:{'s':'postal code'} }}
+                                        </div>
+                                        <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.maxlength">
+                                            {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'postal code'} }}
+                                        </div>
+                                        <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.pattern">
+                                            {{ 'validation.pattern' | translate:{'s': 'postal code'} }}
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>{{ 'basic.country' | translate }}</mat-label>
+                                    <input matInput formControlName="country">
+                                    <mat-error *ngIf="getAddresseFormGroup(i).controls['country'].errors">
+                                        <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.required">
+                                            {{ 'validation.required' | translate:{'s':'country'} }}
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="action">
+                                <div class="form-field-block">
+                                    <mat-checkbox formControlName="current">{{ 'basic.set-current' | translate }}</mat-checkbox>
+                                </div>
+                                <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                                <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
-                <div *ngIf="formCtrls.warranty.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'warranty'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'technicians.technician' | translate }}</mat-label>
-            <input matInput formControlName="technician">
-            <mat-error *ngIf="formCtrls.technician.errors">
-                <div *ngIf="formCtrls.technician.errors.required">
-                    {{ 'validation.required' | translate:{'s':'technician'} }}
-                </div>
-                <div *ngIf="formCtrls.technician.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'technician'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'repairs.amount-paid' | translate }}</mat-label>
-            <input matInput formControlName="amountPaid">
-            <mat-error *ngIf="formCtrls.amountPaid.errors">
-                <div *ngIf="formCtrls.amountPaid.errors.required">
-                    {{ 'validation.required' | translate:{'s':'amount paid'} }}
-                </div>
-                <div *ngIf="formCtrls.amountPaid.errors.maxlength">
-                    {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'amount paid'} }}
-                </div>
-            </mat-error>
-        </mat-form-field>
-    </div>
-    <button type="submit" mat-raised-button color="primary" cdkFocusInitial>Submit</button>
+            </ng-container>
+
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="material-icons">fact_check</mat-icon>
+                Unit/Complaint Detail
+            </ng-template>
+            <div class="form-field-block">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'mobiles.brand' | translate }}</mat-label>
+                    <input matInput formControlName="brand" uppercase>
+                    <mat-error *ngIf="formCtrls.brand.errors">
+                        <div *ngIf="formCtrls.brand.errors.required">
+                            {{ 'validation.required' | translate:{'s':'brand'} }}
+                        </div>
+                        <div *ngIf="formCtrls.brand.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'brand'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'mobiles.serial-number' | translate }}</mat-label>
+                    <input matInput formControlName="serialNumber">
+                    <mat-error *ngIf="formCtrls.serialNumber.errors">
+                        <div *ngIf="formCtrls.serialNumber.errors.required">
+                            {{ 'validation.required' | translate:{'s':'serialNumber'} }}
+                        </div>
+                        <div *ngIf="formCtrls.serialNumber.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'serialNumber'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-field-block">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'mobiles.model' | translate }}</mat-label>
+                    <input matInput formControlName="model" uppercase>
+                    <mat-error *ngIf="formCtrls.model.errors">
+                        <div *ngIf="formCtrls.model.errors.required">
+                            {{ 'validation.required' | translate:{'s':'model'} }}
+                        </div>
+                        <div *ngIf="formCtrls.model.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'model'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'mobiles.other' | translate }}</mat-label>
+                    <input matInput formControlName="other">
+                    <mat-error *ngIf="formCtrls.other.errors">
+                        <div *ngIf="formCtrls.other.errors.required">
+                            {{ 'validation.required' | translate:{'s':'other'} }}
+                        </div>
+                        <div *ngIf="formCtrls.other.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'150', 'ctrl': 'other'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Complaint</mat-label>
+                <textarea formControlName="chiefCompliant" matInput rows="5" placeholder=""></textarea>
+                <mat-error *ngIf="formCtrls.chiefCompliant.errors">
+                    <div *ngIf="formCtrls.chiefCompliant.errors.required">
+                        {{ 'validation.required' | translate:{'s':'chief complain'} }}
+                    </div>
+                    <div *ngIf="formCtrls.chiefCompliant.errors.maxlength">
+                        {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'chief complain'} }}
+                    </div>
+                </mat-error>
+            </mat-form-field>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="material-icons">read_more</mat-icon>
+                Job Detail
+            </ng-template>
+            <mat-form-field appearance="outline">
+                <mat-label>Action Taken</mat-label>
+                <textarea formControlName="actionTaken" matInput rows="5" placeholder=""></textarea>
+                <mat-error *ngIf="formCtrls.actionTaken.errors">
+                    <div *ngIf="formCtrls.actionTaken.errors.required">
+                        {{ 'validation.required' | translate:{'s':'action taken'} }}
+                    </div>
+                    <div *ngIf="formCtrls.actionTaken.errors.maxlength">
+                        {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'action taken'} }}
+                    </div>
+                </mat-error>
+            </mat-form-field>
+
+            <div class="form-field-block">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'repairs.warranty' | translate }}</mat-label>
+                    <input matInput formControlName="warranty" uppercase>
+                    <mat-error *ngIf="formCtrls.warranty.errors">
+                        <div *ngIf="formCtrls.warranty.errors.required">
+                            {{ 'validation.required' | translate:{'s':'warranty'} }}
+                        </div>
+                        <div *ngIf="formCtrls.warranty.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'warranty'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'technicians.technician' | translate }}</mat-label>
+                    <input matInput formControlName="technician">
+                    <mat-error *ngIf="formCtrls.technician.errors">
+                        <div *ngIf="formCtrls.technician.errors.required">
+                            {{ 'validation.required' | translate:{'s':'technician'} }}
+                        </div>
+                        <div *ngIf="formCtrls.technician.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'technician'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'repairs.amount-paid' | translate }}</mat-label>
+                    <input matInput formControlName="amountPaid">
+                    <mat-error *ngIf="formCtrls.amountPaid.errors">
+                        <div *ngIf="formCtrls.amountPaid.errors.required">
+                            {{ 'validation.required' | translate:{'s':'amount paid'} }}
+                        </div>
+                        <div *ngIf="formCtrls.amountPaid.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'amount paid'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <button type="submit" mat-raised-button color="primary" cdkFocusInitial>Submit</button>
+        </mat-tab>
+    </mat-tab-group>
+
 </form>

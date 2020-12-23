@@ -1,0 +1,6 @@
+<div *ngIf="isLoadingName; else elseBlock">
+    <mat-progress-spinner diameter="20" mode="determinate" value="100"></mat-progress-spinner>
+</div>
+<ng-template #elseBlock>
+    {{technicianName | titlecase}}
+</ng-template>

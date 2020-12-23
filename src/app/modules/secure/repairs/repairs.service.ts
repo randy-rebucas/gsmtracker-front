@@ -47,11 +47,12 @@ export class RepairsService {
   }
 
   getMap(repairData) {
-    console.log(repairData);
     return { repairs: repairData.repairs.map(repair => {
+      const customerFirstname = repair.customerId.userId.name.firstname;
+      const customerLastname = repair.customerId.userId.name.lastname;
       return {
         id: repair._id,
-        customer: repair.customerId._id,
+        customer: customerLastname.concat(', ', customerFirstname.toString()),
         phoneInfo: repair.phoneInfo,
         complaint: repair.complaint,
         actionTaken: repair.actionTaken,

@@ -1,40 +1,42 @@
-.profile-wrapper {
-    display: flex;
-    flex-flow: row;
-}
-
-.profile-wrapper .profile-picture {
-    margin-right: 1em;
-}
-
-.form-field-block {
-    display: flex;
-}
-
-mat-form-field {
-    width: 100%;
-}
-
-.addressGroup {
-    position: relative;
-}
-
-.action {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-mat-form-field.mat-form-field.custom-width {
-    width: 90%;
-}
-
-.btn-action {
-    position: absolute;
-    right: -50px;
-    top: -12px;
-    background: #fff;
-    z-index: 999;
+mat-dialog-content {
+    .profile-wrapper {
+        display: flex;
+        flex-flow: row;
+        .profile-picture {
+            margin-right: 1em;
+        }
+        .profile-detail {
+            mat-form-field {
+                width: 100%;
+            }
+            form.profile-form {
+                h2 {
+                    margin: 0 0 16px;
+                }
+                .form-field-block {
+                    display: flex;
+                    mat-form-field {
+                        width: 100%;
+                    }
+                }
+                .addressGroup {
+                    position: relative;
+                    .action {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                    }
+                }
+            }
+        }
+    }
+    &::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, .26);
+    }
 }
 
 mat-spinner {
@@ -42,6 +44,6 @@ mat-spinner {
 }
 
 .auth-form {
-  background: #e6e6e6;
-  padding: 1em;
+    background: #e6e6e6;
+    padding: 1em;
 }

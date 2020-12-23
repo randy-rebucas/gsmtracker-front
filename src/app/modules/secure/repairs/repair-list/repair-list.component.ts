@@ -260,32 +260,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onUpdate(repairId: string) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '50%';
-    // set modal title
-    this.translate.get([
-      'repairs.update-repairs',
-      'common.update'
-    ]).subscribe((translation) => {
-      dialogConfig.data = {
-        id: repairId,
-        title: translation['repairs.update-repairs'],
-        button: translation['common.update']
-      };
-    });
-
-    this.dialog.open(RepairFormComponent, dialogConfig).afterClosed().subscribe((result) => {
-      if (result) {
-        this.translate.get('common.updated-message',
-          {s: 'Repair'}
-        ).subscribe((norifResMessgae: string) => {
-          this.notificationService.success(norifResMessgae);
-        });
-        this.getQuery(this.perPage, this.currentPage, this.labelPicked, (this.option === 'list') ? this.userId : '');
-      }
-    });
+    this.router.navigate(['/secure/repairs/form', repairId]);
   }
 
   onReset() {

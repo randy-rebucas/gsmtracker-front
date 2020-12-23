@@ -1,4 +1,3 @@
-<button mat-raised-button color="primary" [routerLink]="['/secure/repairs/all']">Reload</button>
 <div fxLayout="row" id="header-list">
     <div fxFlex="40%" fxFlexAlign="start">
         <mat-form-field>
@@ -92,7 +91,7 @@
 
     <ng-container matColumnDef="customer">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.customer' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.customer}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.customer | titlecase }} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="phone">
@@ -107,7 +106,13 @@
 
     <ng-container matColumnDef="technician">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.technician' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.technicians}} </mat-cell>
+        <mat-cell *matCellDef="let element">
+            <mat-chip-list aria-label="Technician selection">
+                <mat-chip *ngFor="let technician of element.technicians">
+                    <app-technician-chip-list [technicianId]="technician.technicianId"></app-technician-chip-list>
+                </mat-chip>
+            </mat-chip-list>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="created">
@@ -117,12 +122,12 @@
 
     <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.status' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="amount">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.amount' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.amountPaid}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.amountPaid | currency:'PHP':'symbol-narrow'}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="action">
@@ -142,7 +147,6 @@
     <ng-container matColumnDef="expandedDetail">
         <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
             <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-
                 <!-- <mat-card class="address-card">
                   <mat-card-header>
                       <mat-card-title>{{ 'basic.address' | translate }}</mat-card-title>

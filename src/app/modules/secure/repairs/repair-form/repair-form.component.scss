@@ -1,4 +1,4 @@
-form {
+form.repair-form {
     padding: 0 6em 3em 6em;
 }
 
@@ -27,4 +27,38 @@ mat-spinner {
 
 .form-field-block mat-form-field:not(:first-child) {
     margin-left: 10px;
+}
+
+.action {
+    display: flex;
+}
+
+mat-tab-group.custom-tabs {
+    flex-direction: row !important;
+    mat-tab-header.mat-tab-header {
+        border-bottom: unset;
+        margin-right: 2em;
+        .mat-tab-label-container {
+            .mat-tab-list {
+                .mat-tab-labels {
+                    flex-direction: column;
+                    .mat-tab-label {
+                        text-align: left !important;
+                        justify-content: flex-start !important;
+                        .mat-tab-label-content {
+                            mat-icon {
+                                margin-right: 10px;
+                            }
+                        }
+                    }
+                }
+                mat-ink-bar {
+                    display: none;
+                }
+            }
+        }
+    }
+    .mat-tab-body-wrapper {
+        flex-grow: 1;
+    }
 }
