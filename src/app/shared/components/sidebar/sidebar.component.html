@@ -31,11 +31,19 @@
         <mat-icon>dashboard</mat-icon>
         {{ 'dashboard.title' | translate }}
     </a> -->
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/repairs/list">
-        <mat-icon>assignment_ind</mat-icon>
+    <a mat-list-item routerLinkActive="active" routerLink="/secure/repairs/list">
+        <mat-icon>handyman</mat-icon>
         {{ 'repairs.my-repairs' | translate }}
     </a>
 
+    <a mat-list-item routerLinkActive="active" routerLink="/secure/users/customers">
+        <mat-icon>assignment_ind</mat-icon>
+        Customers
+    </a>
+    <a mat-list-item routerLinkActive="active" routerLink="/secure/users/technicians">
+        <mat-icon>assignment_ind</mat-icon>
+        Technicians
+    </a>
     <mat-divider></mat-divider>
     <a mat-list-item (click)="onToogleLabel()" [ngClass]="{'arrow-up': showLabel==true}">
         <mat-icon>keyboard_arrow_down</mat-icon>
@@ -77,8 +85,8 @@
         {{ 'common.print' | translate }}
     </a>
     <mat-divider></mat-divider>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/secure/repairs/all">
-        <mat-icon>supervisor_account</mat-icon>
+    <a mat-list-item routerLinkActive="active" routerLink="/secure/repairs/all">
+        <mat-icon>handyman</mat-icon>
         {{ 'repairs.all-repairs' | translate }}
     </a>
 </mat-nav-list>

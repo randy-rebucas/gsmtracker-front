@@ -33,6 +33,36 @@ mat-spinner {
     display: flex;
 }
 
+.customer-option {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p {
+        text-transform: uppercase;
+        position: relative;
+        padding: 1em 0;
+        &:before {
+            content: "";
+            position: absolute;
+            background: gainsboro;
+            width: 100px;
+            left: -105px;
+            top: 25px;
+            height: 1px;
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            background: gainsboro;
+            width: 100px;
+            right: -105px;
+            top: 25px;
+            height: 1px;
+        }
+    }
+}
+
 mat-tab-group.custom-tabs {
     flex-direction: row !important;
     mat-tab-header.mat-tab-header {

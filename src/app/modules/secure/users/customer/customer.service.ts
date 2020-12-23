@@ -3,18 +3,15 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Customer } from './customer';
 
 const BACKEND_URL = environment.apiUrl + '/customers';
-
-export interface Customer {
-  id: string;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
-  private customerSub = new Subject<{ customers: Customer[] }>();
+  private customerUpdated = new Subject<{ customers: Customer[] }>();
 
   constructor(
     private http: HttpClient
@@ -35,14 +32,14 @@ export class CustomerService {
       })
     )
     .subscribe((transformData) => {
-      this.customerSub.next({
+      this.customerUpdated.next({
         customers: [...transformData.customers]
       });
     });
   }
 
-  getLabels() {
-    return this.customerSub.asObservable();
+  getUpdateListener() {
+    return this.customerUpdated.asObservable();
   }
 
   get(customerId: string) {
@@ -60,5 +57,4 @@ export class CustomerService {
   delete(customerId: string) {
     return this.http.delete<{ message: string }>(BACKEND_URL + '/' + customerId);
   }
-
 }

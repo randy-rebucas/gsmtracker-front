@@ -1,20 +1,14 @@
-import { Component, OnInit, Inject, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { RepairsService } from '../repairs.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from 'src/app/shared/services/user.service';
-import { CustomerService } from 'src/app/shared/services/customer.service';
-import {
-  MatSnackBar,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
-} from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Repairs } from '../repairs';
-import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { CustomerService } from '../../users/customer/customer.service';
 
 @Component({
   selector: 'app-repair-form',
@@ -34,9 +28,9 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
   public pageSizeOptions: any;
 
   public startDate = new Date(1990, 0, 1);
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
   public repair: Repairs;
+  public selectedCustomerId: string;
+
   constructor(
     private translate: TranslateService,
     private notificationService: NotificationService,
@@ -44,8 +38,7 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
     private repairsService: RepairsService,
     private userService: UserService,
     private customerService: CustomerService,
-    private fb: FormBuilder,
-    private snackBar: MatSnackBar,
+    private formBuilder: FormBuilder,
     private router: Router,
     private authenticationService: AuthenticationService,
   ) {
@@ -53,12 +46,14 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
     this.perPage = 10;
     this.currentPage = 1;
     this.pageSizeOptions = [5, 10, 25, 100];
+    this.selectedCustomerId = null;
     this.formId = this.activatedRoute.snapshot.params.formId;
   }
 
   ngOnInit() {
-    this.form = this.fb.group({
+    this.form = this.formBuilder.group({
       repairId: new FormControl(null),
+      customerId: new FormControl(null),
       firstname: new FormControl(null, {
         validators: [
           Validators.required,
@@ -93,7 +88,7 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
           Validators.maxLength(11)
         ]
       }),
-      addresses: this.fb.array([this.addAddressGroup()]),
+      addresses: this.formBuilder.array([this.addAddressGroup()]),
       brand: new FormControl(null, {
         validators: [
           Validators.required,
@@ -182,8 +177,9 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // selectedCustomerId
   addAddressGroup() {
-    return this.fb.group({
+    return this.formBuilder.group({
       current: new FormControl(false),
       address1: new FormControl(null, {
         validators: [

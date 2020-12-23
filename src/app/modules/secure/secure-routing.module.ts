@@ -7,7 +7,8 @@ const routes: Routes = [{
   component: DefaultComponent,
   children: [
     { path: '', redirectTo: 'repairs', pathMatch: 'full' },
-    { path: 'repairs', loadChildren: () => import('./repairs/repairs.module').then(m => m.RepairsModule) }
+    { path: 'repairs', loadChildren: () => import('./repairs/repairs.module').then(m => m.RepairsModule) },
+    { path: 'users', loadChildren: () => import('./users/users.module').then(m => m.UsersModule) }
   ]
 }];
 

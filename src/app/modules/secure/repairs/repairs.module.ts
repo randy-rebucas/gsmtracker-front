@@ -11,7 +11,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { CanDeactivateGuard } from 'src/app/shared/guards/can-deactivate.guard';
-import { EditorModule } from '@tinymce/tinymce-angular';
 
 
 @NgModule({
@@ -29,7 +28,6 @@ import { EditorModule } from '@tinymce/tinymce-angular';
     AngularMaterialModule,
     SharedModule,
     FlexLayoutModule,
-    EditorModule,
     RouterModule.forChild([
       { path: '', component: RepairsComponent, children: [
         { path: '', redirectTo: 'all', pathMatch: 'full' },
@@ -37,7 +35,6 @@ import { EditorModule } from '@tinymce/tinymce-angular';
         { path: 'list', component: RepairListComponent },
         { path: 'form', component: RepairFormComponent },
         { path: 'form/:formId', component: RepairFormComponent },
-        { path: ':repairId', component: RepairListComponent },
       ] }
     ])
   ],
