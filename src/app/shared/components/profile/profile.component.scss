@@ -21,10 +21,11 @@ mat-dialog-content {
                 }
                 .addressGroup {
                     position: relative;
-                    .action {
-                        position: absolute;
-                        top: 0;
-                        right: 0;
+                    .form-field-block-custom {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: space-between;
                     }
                 }
             }

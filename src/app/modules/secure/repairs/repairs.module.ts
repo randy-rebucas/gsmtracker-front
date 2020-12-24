@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { RepairListComponent } from './repair-list/repair-list.component';
 import { RepairFormComponent } from './repair-form/repair-form.component';
 import { RepairsComponent } from './repairs.component';
@@ -11,6 +11,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { CanDeactivateGuard } from 'src/app/shared/guards/can-deactivate.guard';
+import { CustomerFormComponent } from '../users/customer/customer-form/customer-form.component';
+import { CustomerLookupComponent } from '../users/customer/customer-lookup/customer-lookup.component';
 
 
 @NgModule({
@@ -38,9 +40,13 @@ import { CanDeactivateGuard } from 'src/app/shared/guards/can-deactivate.guard';
       ] }
     ])
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    TitleCasePipe
+  ],
   entryComponents: [
-    RepairFormComponent
+    CustomerFormComponent,
+    CustomerLookupComponent
   ]
 })
 export class RepairsModule { }

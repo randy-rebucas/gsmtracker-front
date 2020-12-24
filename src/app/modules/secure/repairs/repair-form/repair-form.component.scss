@@ -92,3 +92,59 @@ mat-tab-group.custom-tabs {
         flex-grow: 1;
     }
 }
+
+mat-card-header {
+    .mat-card-header-text {
+        margin: unset;
+    }
+}
+
+.right-align {
+    text-align: right !important;
+}
+
+.right-align::-webkit-outer-spin-button,
+.right-align::-webkit-inner-spin-button {
+    display: none;
+}
+
+.right-align {
+    -moz-appearance: textfield;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-suffix {
+    top: unset !important;
+}
+
+mat-card {
+    position: relative !important;
+    border: 1px solid gainsboro;
+    background: unset !important;
+    border-radius: 8px;
+    box-shadow: unset !important;
+    margin-top: 1em;
+}
+
+.customer-card:before {
+    content: "Customer";
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    padding-top: 5px;
+    letter-spacing: 1.5px;
+    background: #fafafa;
+    font-size: 12px;
+    padding: 0 4px;
+}
+
+.technician-card:before {
+    content: "Technician";
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    padding-top: 5px;
+    letter-spacing: 1.5px;
+    background: #fafafa;
+    font-size: 12px;
+    padding: 0 4px;
+}

@@ -1,1 +1,18 @@
-<p>customer-lookup works!</p>
+<h2 mat-dialog-title>Customer Lookup</h2>
+<mat-dialog-content>
+    <mat-form-field appearance="outline">
+        <mat-label>Find Customer</mat-label>
+        <input type="text" matInput [formControl]="searchCustomer" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getCustomer($event)">
+            <mat-option *ngIf="preLoading" class="is-loading"></mat-option>
+            <ng-container *ngIf="!preLoading">
+                <mat-option *ngFor="let option of filteredOptions" [value]="option">
+                    <span>{{ option.name }}</span>
+                </mat-option>
+            </ng-container>
+        </mat-autocomplete>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

@@ -106,13 +106,7 @@
 
     <ng-container matColumnDef="technician">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.technician' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-chip-list aria-label="Technician selection">
-                <mat-chip *ngFor="let technician of element.technicians">
-                    <app-technician-chip-list [technicianId]="technician.technicianId"></app-technician-chip-list>
-                </mat-chip>
-            </mat-chip-list>
-        </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.technician | titlecase }} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="created">
@@ -147,54 +141,50 @@
     <ng-container matColumnDef="expandedDetail">
         <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
             <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                <!-- <mat-card class="address-card">
-                  <mat-card-header>
-                      <mat-card-title>{{ 'basic.address' | translate }}</mat-card-title>
-                      <mat-card-subtitle>{{ 'basic.counts' | translate:{'s':element.address.length} }}</mat-card-subtitle>
-                  </mat-card-header>
-                  <mat-card-content>
-                      <div class="address">
-                          <div *ngFor="let address of element.address; let i = index;">
-                              <p>
-                                  {{address.address1}} <br/>
-                                  <ng-container *ngIf="address.address2">
-                                      {{address.address2}} <br/>
-                                  </ng-container>
-                                  {{address.postalCode}} {{address.province}}, {{address.city}}<br/> {{address.country}}
-                              </p>
-                          </div>
-                      </div>
-                  </mat-card-content>
-              </mat-card> -->
-                <!-- <mat-card class="record-card">
-                <mat-card-header>
-                    <mat-card-title>Labels</mat-card-title>
-                    <mat-card-subtitle>({{element.labels.length}}) labels</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                  <app-items *ngFor="let label of element.labels" [labelId]="label.labelId"></app-items>
-                </mat-card-content>
-              </mat-card> -->
-                <!-- <mat-card class="physicians-card">
-                  <mat-card-header>
-                      <mat-card-title>{{ 'physicians.title' | translate }}</mat-card-title>
-                      <mat-card-subtitle>{{ 'physicians.counts' | translate:{'s':element.physicians.length} }}</mat-card-subtitle>
-                  </mat-card-header>
-                  <mat-card-content>
-                      <mat-list>
-                          <app-physician *ngFor="let physician of element.physicians | slice:0:2;" [physician]="physician.userId"></app-physician>
-                      </mat-list>
-                  </mat-card-content>
-              </mat-card> -->
-                <!-- <mat-card class="record-card">
-                  <mat-card-header>
-                      <mat-card-title>{{ 'records.title' | translate }}</mat-card-title>
-                      <mat-card-subtitle></mat-card-subtitle>
-                  </mat-card-header>
-                  <mat-card-content>
-                      <app-blocks [patientAddress]="element.publicKey"></app-blocks>
-                  </mat-card-content>
-              </mat-card> -->
+                <!-- actionTaken
+                complaint
+release
+warranty -->
+                <mat-card class="address-card">
+                    <mat-card-header>
+                        <mat-card-title>Phone Information</mat-card-title>
+                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>Brand: <span>{{element.phoneInfo.brand}}</span></p>
+                        <p>Models: <span>{{element.phoneInfo.model}}</span></p>
+                        <p>Serial #: <span>{{element.phoneInfo.serialNumber}}</span></p>
+                        <p>Other: <span>{{element.phoneInfo.others}}</span></p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="record-card">
+                    <mat-card-header>
+                        <mat-card-title>Complaint</mat-card-title>
+                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>{{element.complaint}}</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="physicians-card">
+                    <mat-card-header>
+                        <mat-card-title>Action Taken</mat-card-title>
+                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>{{element.actionTaken}}</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="record-card">
+                    <mat-card-header>
+                        <mat-card-title>Service Details</mat-card-title>
+                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>{{element.warranty}}</p>
+                        <p *ngIf="element.release">Release: {{element.release}} </p>
+                    </mat-card-content>
+                </mat-card>
             </div>
         </mat-cell>
     </ng-container>

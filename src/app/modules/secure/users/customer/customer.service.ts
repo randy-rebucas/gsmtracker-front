@@ -1,11 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Customer } from './customer';
 
 const BACKEND_URL = environment.apiUrl + '/customers';
+
+export class CustomerLookup {
+  constructor(public id: string, public name: string) {}
+}
+
+export interface Customers {
+  total: number;
+  results: CustomerLookup[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +65,19 @@ export class CustomerService {
 
   delete(customerId: string) {
     return this.http.delete<{ message: string }>(BACKEND_URL + '/' + customerId);
+  }
+
+  search(filter: {name: string} = {name: ''}): Observable<Customers> {
+    return this.http.get<Customers>(BACKEND_URL + '/lookup')
+    .pipe(
+      tap((response: Customers) => {
+        response.results = response.results.map(
+            customer => new CustomerLookup(customer.id, customer.name)
+          ).filter(
+            customer => customer.name.includes(filter.name)
+          );
+        return response;
+      })
+    );
   }
 }

@@ -1,14 +1,26 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation, OnDestroy, ViewChild, AfterViewChecked } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { RepairsService } from '../repairs.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
-import { UserService } from 'src/app/shared/services/user.service';
 import { Repairs } from '../repairs';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { CustomerFormComponent } from '../../users/customer/customer-form/customer-form.component';
 import { CustomerService } from '../../users/customer/customer.service';
+import { Customer } from '../../users/customer/customer';
+import { CustomerLookupComponent } from '../../users/customer/customer-lookup/customer-lookup.component';
+import { debounceTime, finalize, startWith, switchMap, tap } from 'rxjs/operators';
+import { TechnicianService } from '../../users/technician/technician.service';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { Technician } from '../../users/technician/technician';
+
+export interface TechnicianLookup {
+  id: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-repair-form',
@@ -16,79 +28,43 @@ import { CustomerService } from '../../users/customer/customer.service';
   styleUrls: ['./repair-form.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class RepairFormComponent implements OnInit, AfterViewInit {
-
+export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   public form: FormGroup;
   public formId: string;
-
   public isLoading: boolean;
-  public total: number;
-  public perPage: number;
-  public currentPage: number;
-  public pageSizeOptions: any;
-
-  public startDate = new Date(1990, 0, 1);
+  public preLoading: boolean;
+  public initCheck: boolean;
+  public filteredOptions: TechnicianLookup[] = [];
   public repair: Repairs;
+  public customer: Customer;
+  public technician: Technician;
   public selectedCustomerId: string;
+  public selectedTechnicianId: string;
+  public searchTechnician = new FormControl();
+  public technicianOptionShow: boolean;
+  @ViewChild(MatAutocompleteTrigger) matAuto: MatAutocompleteTrigger;
 
   constructor(
     private translate: TranslateService,
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
     private repairsService: RepairsService,
-    private userService: UserService,
+    private technicianService: TechnicianService,
     private customerService: CustomerService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private dialog: MatDialog,
     private authenticationService: AuthenticationService,
   ) {
-    this.total = 0;
-    this.perPage = 10;
-    this.currentPage = 1;
-    this.pageSizeOptions = [5, 10, 25, 100];
-    this.selectedCustomerId = null;
     this.formId = this.activatedRoute.snapshot.params.formId;
+    this.initCheck = true;
   }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
       repairId: new FormControl(null),
       customerId: new FormControl(null),
-      firstname: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(30)
-        ]
-      }),
-      midlename: new FormControl(null, {
-        validators: [
-          Validators.maxLength(30)
-        ]
-      }),
-      lastname: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(30)
-        ]
-      }),
-      gender: new FormControl(null, {
-        validators: [
-          Validators.required
-        ]
-      }),
-      birthdate: new FormControl(null, {
-        validators: [
-          Validators.required
-        ]
-      }),
-      contact: new FormControl(null, {
-        validators: [
-          Validators.pattern('^[0-9]*$'),
-          Validators.minLength(9),
-          Validators.maxLength(11)
-        ]
-      }),
-      addresses: this.formBuilder.array([this.addAddressGroup()]),
+      technicianId: new FormControl(null),
       brand: new FormControl(null, {
         validators: [
           Validators.required,
@@ -130,12 +106,6 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
           Validators.maxLength(30)
         ]
       }),
-      technician: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(30)
-        ]
-      }),
       amountPaid: new FormControl(null, {
         validators: [
           Validators.required,
@@ -143,20 +113,103 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
         ]
       })
     });
+  }
 
+  openCustomerLookup() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '40%';
+    // set modal title
+    this.translate.get([
+      'repairs.print-repairs'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        // title: translate['repairs.print-repairs']
+        title: 'Customer Lookup'
+      };
+    });
+
+    const dialogRef = this.dialog.open(CustomerLookupComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.data) {
+        this.setCustomerId(result.data);
+        this.getCustomerData(this.getCustomerId());
+      }
+    });
+  }
+
+  openCustomerForm() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '40%';
+    // set modal title
+    this.translate.get([
+      'repairs.print-repairs'
+    ]).subscribe((translate) => {
+      dialogConfig.data = {
+        // title: translate['repairs.print-repairs']
+        title: 'Customer'
+      };
+    });
+
+    const dialogRef = this.dialog.open(CustomerFormComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.data) {
+        this.setCustomerId(result.data);
+        this.getCustomerData(this.getCustomerId());
+      }
+    });
+  }
+
+  onRemoveCustomerId() {
+    sessionStorage.removeItem('customerId');
+    this.getCustomerId();
+  }
+
+  setCustomerId(customerId: string) {
+    sessionStorage.setItem('customerId', customerId);
+  }
+
+  getCustomerId() {
+    if (!sessionStorage.getItem('customerId')) {
+      this.setCustomerId('empty');
+    }
+    return sessionStorage.getItem('customerId');
+  }
+
+  getCustomerData(customerId: string) {
+    this.customerService.get(customerId).subscribe((customerResponse) => {
+      this.selectedCustomerId = customerResponse._id;
+      this.formCtrls.customerId.setValue(customerResponse._id);
+      this.customer = customerResponse.userId;
+    });
+  }
+
+  toggleTechnicianOption() {
+    this.technicianOptionShow = !this.technicianOptionShow;
+  }
+
+  getTechnicianData(technicianId: string) {
+    this.technicianService.get(technicianId).subscribe((technicianResponse) => {
+      console.log(technicianResponse);
+      this.selectedTechnicianId = technicianResponse._id;
+      this.formCtrls.technicianId.setValue(technicianResponse._id);
+      this.technician = technicianResponse.userId;
+    });
   }
 
   ngAfterViewInit(): void {
     if (this.formId) {
       this.repairsService.get(this.formId).subscribe((repairResponse) => {
+        this.setCustomerId(repairResponse.customerId._id);
+        this.getCustomerData(repairResponse.customerId._id);
+        this.selectedTechnicianId = repairResponse.technicianId;
+        this.getTechnicianData(repairResponse.technicianId);
         this.form.patchValue({
           repairId: repairResponse._id,
-          firstname: repairResponse.customerId.userId.name.firstname,
-          midlename: repairResponse.customerId.userId.name.midlename,
-          lastname: repairResponse.customerId.userId.name.lastname,
-          gender: repairResponse.customerId.userId.gender,
-          birthdate: repairResponse.customerId.userId.birthdate,
-          contact: repairResponse.customerId.userId.contact,
+          customerId: repairResponse.customerId._id,
           brand: repairResponse.phoneInfo.brand,
           serialNumber: repairResponse.phoneInfo.serialNumber,
           model: repairResponse.phoneInfo.model,
@@ -164,78 +217,31 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
           chiefCompliant: repairResponse.complaint,
           actionTaken: repairResponse.actionTaken,
           warranty: repairResponse.warranty,
-          technician: repairResponse.technicians,
+          technician: repairResponse.technicianId,
           amountPaid: repairResponse.amountPaid
         });
-        const addressControl = this.form.controls.addresses as FormArray;
-        const address = repairResponse.customerId.userId.addresses;
-        for (let i = 1; i < address.length; i++) {
-          addressControl.push(this.addAddressGroup());
-        }
-        this.form.patchValue({addresses: address});
       });
     }
-  }
 
-  // selectedCustomerId
-  addAddressGroup() {
-    return this.formBuilder.group({
-      current: new FormControl(false),
-      address1: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(250)
-        ]
-      }),
-      address2: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(250)
-        ]
-      }),
-      city: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(50)
-        ]
-      }),
-      province: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.maxLength(50)
-        ]
-      }),
-      postalCode: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.pattern('^[0-9]*$'),
-          Validators.maxLength(6)
-        ]
-      }),
-      country: new FormControl(null, {
-        validators: [
-          Validators.required
-        ]
-      })
-    });
-  }
+    this.selectedCustomerId = this.getCustomerId();
+    if (this.selectedCustomerId !== 'empty') {
+      this.getCustomerData(this.getCustomerId());
+    }
 
-  addAddress() {
-    this.addressArray.push(this.addAddressGroup());
-  }
-
-  removeAddress(index: number) {
-    this.addressArray.removeAt(index);
-    this.addressArray.markAsDirty();
-    this.addressArray.markAsTouched();
-  }
-
-  get addressArray() {
-    return this.form.get('addresses') as FormArray;
-  }
-
-  getAddresseFormGroup(index: any): FormGroup {
-    return this.addressArray.controls[index] as FormGroup;
+    this.searchTechnician.valueChanges
+      .pipe(
+        debounceTime(300),
+        tap(() => this.preLoading = true),
+        startWith(''),
+        switchMap((value) => {
+          return this.technicianService.search({name: value})
+          .pipe(
+            finalize(() => this.preLoading = false),
+          );
+        })
+      ).subscribe((users) => {
+        this.filteredOptions = users.results;
+      });
   }
 
   get formCtrls() {
@@ -246,11 +252,14 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
     if (this.form.invalid) {
       return;
     }
+    console.log(this.form.value.customerId);
     this.isLoading = true;
     const newRepair = {
       owners: [{
         ownerId: this.authenticationService.getUserId()
       }],
+      customerId: this.form.value.customerId,
+      technicianId: this.form.value.technicianId,
       phoneInfo: {
         brand: this.form.value.brand,
         model: this.form.value.model,
@@ -260,7 +269,6 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
       complaint: this.form.value.chiefCompliant,
       actionTaken: this.form.value.actionTaken,
       warranty: this.form.value.warranty,
-      technician: this.authenticationService.getUserId(),
       amountPaid: this.form.value.amountPaid
     };
 
@@ -273,35 +281,14 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
     };
 
     if (!this.formId) {
-      const userData = {
-        name: {
-          firstname: this.form.value.firstname,
-          midlename: this.form.value.midlename,
-          lastname: this.form.value.lastname
-        },
-        gender: this.form.value.gender,
-        birthdate: this.form.value.birthdate,
-        contact: this.form.value.contact,
-        current: this.form.value.current,
-        addresses: this.form.value.addresses
-      };
-
-      this.userService.insert(userData).subscribe((userResponse) => {
-        const customerData = {
-          userId: userResponse.id,
-          description: 'request job for unit: ' + newRepair.phoneInfo.brand + ' with serial num: ' + newRepair.phoneInfo.serialNumber
-        };
-        this.customerService.insert(customerData).subscribe((customerResponse) => {
-          const patchRepair = { ...newRepair, customerId:  customerResponse.customerId };
-          this.repairsService.insert(patchRepair).subscribe(() => {
-            this.translate.get('common.created-message', {s: 'Repair'}
-            ).subscribe((norifResMessgae: string) => {
-              this.notificationService.success(norifResMessgae);
-            });
-            this.form.reset();
-            this.router.navigate(['/secure/repairs']);
-          });
+      this.repairsService.insert(newRepair).subscribe(() => {
+        this.translate.get('common.created-message', {s: 'Repair'}
+        ).subscribe((norifResMessgae: string) => {
+          this.notificationService.success(norifResMessgae);
         });
+        this.form.reset();
+        sessionStorage.removeItem('customerId');
+        this.router.navigate(['/secure/repairs']);
       });
     } else {
       this.repairsService.update(updateRepair).subscribe(() => {
@@ -309,9 +296,21 @@ export class RepairFormComponent implements OnInit, AfterViewInit {
         ).subscribe((norifResMessgae: string) => {
           this.notificationService.success(norifResMessgae);
         });
+        sessionStorage.removeItem('customerId');
         this.router.navigate(['/secure/repairs']);
       });
     }
   }
 
+  displayFn(technician: TechnicianLookup) {
+    return technician && technician.name ? technician.name : technician;
+  }
+
+  getTechnician(event: MatAutocompleteSelectedEvent) {
+    this.formCtrls.technicianId.setValue(event.option.value.id);
+  }
+
+  ngOnDestroy() {
+    this.onRemoveCustomerId();
+  }
 }

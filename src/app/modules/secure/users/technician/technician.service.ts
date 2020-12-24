@@ -1,11 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Technician } from './technician';
 
 const BACKEND_URL = environment.apiUrl + '/technicians';
+
+export class TechnicianLookup {
+  constructor(public id: string, public name: string) {}
+}
+
+export interface Technicians {
+  total: number;
+  results: TechnicianLookup[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -55,5 +65,19 @@ export class TechnicianService {
 
   delete(technicianId: string) {
     return this.http.delete<{ message: string }>(BACKEND_URL + '/' + technicianId);
+  }
+
+  search(filter: {name: string} = {name: ''}): Observable<Technicians> {
+    return this.http.get<Technicians>(BACKEND_URL + '/lookup')
+    .pipe(
+      tap((response: Technicians) => {
+        response.results = response.results.map(
+            technician => new TechnicianLookup(technician.id, technician.name)
+          ).filter(
+            technician => technician.name.includes(filter.name)
+          );
+        return response;
+      })
+    );
   }
 }

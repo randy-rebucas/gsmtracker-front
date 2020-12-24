@@ -12,17 +12,35 @@
                 <mat-icon class="material-icons">person_outline</mat-icon>
                 Customer Detail
             </ng-template>
-            <div *ngIf="selectedCustomerId; then thenCustomer else elseCustomer"></div>
+            <div *ngIf="selectedCustomerId !== 'empty'; then thenCustomer else elseCustomer"></div>
             <ng-template #thenCustomer>
-                {{selectedCustomerId}}
+                <mat-card class="customer-card">
+                    <mat-card-header>
+                        <mat-card-title>{{customer?.name.firstname}} {{customer?.name.midlename}} {{customer?.name.lastname}}</mat-card-title>
+                        <mat-card-subtitle>Created: {{customer?.createdAt | date}}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <address *ngFor="let address of customer?.addresses; index as i; first as isFirst">
+                            {{address.address1}} <br/>
+                            {{address.address2}} <br/>
+                            {{address.province}}, {{address.city}} <br/>
+                            {{address.postalCode}} {{address.country}}
+                        </address>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button type="button" mat-stroked-button color="primary" (click)="openCustomerLookup()">Change</button> &nbsp;
+                        <button type="button" mat-flat-button color="warn" (click)="onRemoveCustomerId()">Remove</button>
+                    </mat-card-actions>
+                </mat-card>
             </ng-template>
             <ng-template #elseCustomer>
                 <div class="customer-option">
-                    <button mat-fab color="primary" aria-label="Customer Lookup">
+                    <button type="button" mat-fab color="primary" (click)="openCustomerLookup()" aria-label="Customer Lookup">
                         <mat-icon>search</mat-icon>
-                      </button>
+                    </button>
                     <p>or</p>
-                    <button mat-stroked-button><mat-icon>add</mat-icon> Add new Customer</button>
+                    <button type="button" mat-stroked-button (click)="openCustomerForm()">
+                    <mat-icon>add</mat-icon> Add new Customer</button>
                 </div>
             </ng-template>
         </mat-tab>
@@ -128,21 +146,11 @@
                         </div>
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>{{ 'technicians.technician' | translate }}</mat-label>
-                    <input matInput formControlName="technician">
-                    <mat-error *ngIf="formCtrls.technician.errors">
-                        <div *ngIf="formCtrls.technician.errors.required">
-                            {{ 'validation.required' | translate:{'s':'technician'} }}
-                        </div>
-                        <div *ngIf="formCtrls.technician.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'technician'} }}
-                        </div>
-                    </mat-error>
-                </mat-form-field>
+
                 <mat-form-field appearance="outline">
                     <mat-label>{{ 'repairs.amount-paid' | translate }}</mat-label>
-                    <input matInput formControlName="amountPaid">
+                    <input matInput type="number" formControlName="amountPaid" class="right-align">
+                    <span matSuffix>.00</span>
                     <mat-error *ngIf="formCtrls.amountPaid.errors">
                         <div *ngIf="formCtrls.amountPaid.errors.required">
                             {{ 'validation.required' | translate:{'s':'amount paid'} }}
@@ -152,7 +160,45 @@
                         </div>
                     </mat-error>
                 </mat-form-field>
+                <mat-form-field appearance="outline" *ngIf="technicianOptionShow">
+                    <mat-label>Find Technician</mat-label>
+                    <input type="text" matInput [formControl]="searchTechnician" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getTechnician($event)">
+                        <mat-option *ngIf="preLoading" class="is-loading"></mat-option>
+                        <ng-container *ngIf="!preLoading">
+                            <mat-option *ngFor="let option of filteredOptions" [value]="option">
+                                <span>{{ option.name }}</span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="formCtrls.technicianId.errors">
+                        <div *ngIf="formCtrls.technicianId.errors.required">
+                            {{ 'validation.required' | translate:{'s':'technician'} }}
+                        </div>
+                        <div *ngIf="formCtrls.technicianId.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'technician'} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
             </div>
+            <mat-card class="technician-card" *ngIf="selectedTechnicianId">
+                <mat-card-header>
+                    <mat-card-title>{{technician?.name.firstname}} {{technician?.name.midlename}} {{technician?.name.lastname}}</mat-card-title>
+                    <mat-card-subtitle>Created: {{technician?.createdAt | date}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <address *ngFor="let address of technician?.addresses; index as i; first as isFirst">
+                        {{address.address1}} <br/>
+                        {{address.address2}} <br/>
+                        {{address.province}}, {{address.city}} <br/>
+                        {{address.postalCode}} {{address.country}}
+                    </address>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button type="button" mat-stroked-button color="primary" (click)="toggleTechnicianOption()">{{technicianOptionShow ? 'Cancel' : 'Change'}}</button>
+                </mat-card-actions>
+            </mat-card>
+            <br/>
             <button type="submit" mat-raised-button color="primary" cdkFocusInitial>Submit</button>
         </mat-tab>
     </mat-tab-group>

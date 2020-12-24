@@ -8,7 +8,7 @@
             <app-upload [sourceId]="userId" [imagePreview]="user?.image" [size]="100"></app-upload>
         </div>
         <div class="profile-detail">
-            <mat-form-field *ngIf="!isChangeEmail">
+            <mat-form-field appearance="outline" *ngIf="!isChangeEmail">
                 <mat-label>{{ 'authentication.email' | translate }} </mat-label>
                 <input matInput value="{{authenticationService.getUserEmail()}}" readonly>
                 <button mat-icon-button matSuffix matTooltip="{{ 'basic.change-email' | translate }}" (click)="changeEmail()">
@@ -47,7 +47,7 @@
                 <button type="submit" mat-button color="primary">Update</button>
             </form>
 
-            <mat-form-field *ngIf="!isChangePass">
+            <mat-form-field appearance="outline" *ngIf="!isChangePass">
                 <mat-label>{{ 'authentication.password' | translate }} </mat-label>
                 <input matInput value="********" readonly>
                 <button mat-icon-button matSuffix matTooltip="{{ 'basic.change-pass' | translate }}" (click)="changePass()">
@@ -85,7 +85,7 @@
             <form [formGroup]="form" class="profile-form" (submit)="onSubmit()">
                 <h2 class="mat-subheading-2">{{ 'basic.basic-information' | translate }}</h2>
                 <div class="form-field-block">
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>{{ 'basic.firstname' | translate }}</mat-label>
                         <input matInput formControlName="firstname" uppercase>
                         <mat-error *ngIf="formCtrls.firstname.errors">
@@ -97,7 +97,7 @@
                             </div>
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>{{ 'basic.middlename' | translate }}</mat-label>
                         <input matInput formControlName="midlename">
                         <mat-error *ngIf="formCtrls.midlename.errors">
@@ -109,7 +109,7 @@
                             </div>
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>{{ 'basic.lastname' | translate }}</mat-label>
                         <input matInput formControlName="lastname">
                         <mat-error *ngIf="formCtrls.lastname.errors">
@@ -123,7 +123,7 @@
                     </mat-form-field>
                 </div>
                 <div class="form-field-block">
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>{{ 'basic.contact' | translate }}</mat-label>
                         <input matInput formControlName="contact">
                         <mat-error *ngIf="formCtrls.contact.errors">
@@ -141,7 +141,7 @@
                             </div>
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>{{ 'basic.gender' | translate }}</mat-label>
                         <mat-select formControlName="gender">
                             <mat-option value="{{ 'basic.gender-option.male' | translate }}">{{ 'basic.gender-option.male' | translate }}</mat-option>
@@ -153,7 +153,7 @@
                             </div>
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>{{ 'basic.birthdate' | translate }}</mat-label>
                         <input matInput readonly [matDatepicker]="picker" formControlName="birthdate">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -169,10 +169,14 @@
                     <div *ngFor="let address of addressArray.controls; let i = index;" class="addressGroup">
                         <ng-container [formGroupName]="i">
                             <div [formGroup]="address">
-                                <div class="form-field-block">
+                                <div class="form-field-block-custom">
                                     <mat-checkbox formControlName="current">{{ 'basic.set-current' | translate }}</mat-checkbox>
+                                    <div class="action">
+                                        <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                                        <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                                    </div>
                                 </div>
-                                <mat-form-field>
+                                <mat-form-field appearance="outline">
                                     <mat-label>{{ 'basic.street-line1' | translate }}</mat-label>
                                     <input matInput formControlName="address1">
                                     <mat-error *ngIf="getAddresseFormGroup(i).controls['address1'].errors">
@@ -185,7 +189,7 @@
                                     </mat-error>
                                 </mat-form-field>
 
-                                <mat-form-field>
+                                <mat-form-field appearance="outline">
                                     <mat-label>{{ 'basic.street-line2' | translate }}</mat-label>
                                     <input matInput formControlName="address2">
                                     <mat-error *ngIf="getAddresseFormGroup(i).controls['address2'].errors">
@@ -199,7 +203,7 @@
                                 </mat-form-field>
 
                                 <div class="form-field-block">
-                                    <mat-form-field>
+                                    <mat-form-field appearance="outline">
                                         <mat-label>{{ 'basic.city' | translate }}</mat-label>
                                         <input matInput formControlName="city">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['city'].errors">
@@ -211,7 +215,7 @@
                                             </div>
                                         </mat-error>
                                     </mat-form-field>
-                                    <mat-form-field>
+                                    <mat-form-field appearance="outline">
                                         <mat-label>{{ 'basic.province' | translate }}</mat-label>
                                         <input matInput formControlName="province">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['province'].errors">
@@ -225,7 +229,7 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="form-field-block">
-                                    <mat-form-field>
+                                    <mat-form-field appearance="outline">
                                         <mat-label>{{ 'basic.postal-code' | translate }}</mat-label>
                                         <input matInput formControlName="postalCode">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors">
@@ -240,7 +244,7 @@
                                             </div>
                                         </mat-error>
                                     </mat-form-field>
-                                    <mat-form-field>
+                                    <mat-form-field appearance="outline">
                                         <mat-label>{{ 'basic.country' | translate }}</mat-label>
                                         <input matInput formControlName="country">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['country'].errors">
@@ -251,16 +255,13 @@
                                     </mat-form-field>
                                 </div>
 
-                                <div class="action">
-                                    <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
-                                    <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
-                                </div>
+
                             </div>
                         </ng-container>
                     </div>
                 </ng-container>
 
-                <h2 class="mat-subheading-2">{{ 'physicians.additional-info' | translate }} </h2>
+                <!-- <h2 class="mat-subheading-2">{{ 'physicians.additional-info' | translate }} </h2>
                 <mat-form-field>
                     <mat-label>{{ 'physicians.bio' | translate }}</mat-label>
                     <textarea matInput formControlName="bio"></textarea>
@@ -272,7 +273,7 @@
                             {{ 'validation.maxLength' | translate:{'s':'1500', 'ctrl': 'bio'} }}
                         </div>
                     </mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
             </form>
         </div>
     </div>

@@ -117,7 +117,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = '40%';
+    dialogConfig.width = '45%';
     // set modal attribute
     this.translate.get('common.profile').subscribe((language) => {
       dialogConfig.data = {

@@ -50,13 +50,16 @@ export class RepairsService {
     return { repairs: repairData.repairs.map(repair => {
       const customerFirstname = repair.customerId.userId.name.firstname;
       const customerLastname = repair.customerId.userId.name.lastname;
+
+      const technicianFirstname = repair.technicianId.userId.name.firstname;
+      const technicianLastname = repair.technicianId.userId.name.lastname;
       return {
         id: repair._id,
         customer: customerLastname.concat(', ', customerFirstname.toString()),
         phoneInfo: repair.phoneInfo,
         complaint: repair.complaint,
         actionTaken: repair.actionTaken,
-        technicians: repair.technicians,
+        technician: technicianLastname.concat(', ', technicianFirstname.toString()),
         amountPaid: repair.amountPaid,
         created: repair.createdAt,
         updated: repair.updatedAt,
