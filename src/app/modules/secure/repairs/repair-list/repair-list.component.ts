@@ -165,7 +165,6 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       ).subscribe(
         data => {
-          console.log(data);
           this.dataSource = new MatTableDataSource(this.setOwnerShip(data));
         }
       );

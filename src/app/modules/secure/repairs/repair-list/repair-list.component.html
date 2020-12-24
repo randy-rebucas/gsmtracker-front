@@ -131,9 +131,7 @@
                 <button mat-icon-button (click)="onUpdate(element.id)" matTooltip="{{ 'common.edit' | translate }}" *ngIf="element.isOwned">
           <mat-icon>create</mat-icon>
         </button>
-                <button mat-icon-button (click)="onGenerateQr(element.id)" matTooltip="{{ 'common.qr-code' | translate }}" *ngIf="element.isOwned">
-          <mat-icon>crop_free</mat-icon>
-        </button>
+
             </ng-container>
         </mat-cell>
     </ng-container>
