@@ -16,6 +16,7 @@ import { debounceTime, finalize, startWith, switchMap, tap } from 'rxjs/operator
 import { TechnicianService } from '../../users/technician/technician.service';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Technician } from '../../users/technician/technician';
+import { Observable } from 'rxjs';
 
 export interface TechnicianLookup {
   id: string;
@@ -42,6 +43,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   public selectedTechnicianId: string;
   public searchTechnician = new FormControl();
   public technicianOptionShow: boolean;
+  public isNew: boolean;
   @ViewChild(MatAutocompleteTrigger) matAuto: MatAutocompleteTrigger;
 
   constructor(
@@ -58,6 +60,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.formId = this.activatedRoute.snapshot.params.formId;
     this.initCheck = true;
+    this.isNew = true;
   }
 
   ngOnInit() {
@@ -202,6 +205,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.formId) {
+      this.isNew = false;
       this.repairsService.get(this.formId).subscribe((repairResponse) => {
         this.setCustomerId(repairResponse.customerId._id);
         this.getCustomerData(repairResponse.customerId._id);
@@ -308,6 +312,20 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getTechnician(event: MatAutocompleteSelectedEvent) {
     this.formCtrls.technicianId.setValue(event.option.value.id);
+  }
+
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    // && !this.isConfirmed
+    if (this.form.dirty) {
+      let confirmMessage;
+      this.translate.get('common.disregard-changes')
+      .subscribe((translation) => {
+        confirmMessage = translation;
+      });
+      return confirm(confirmMessage);
+    }
+
+    return true;
   }
 
   ngOnDestroy() {

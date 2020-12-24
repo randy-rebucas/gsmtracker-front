@@ -160,7 +160,7 @@
                         </div>
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field appearance="outline" *ngIf="technicianOptionShow">
+                <mat-form-field appearance="outline" *ngIf="technicianOptionShow || isNew">
                     <mat-label>Find Technician</mat-label>
                     <input type="text" matInput [formControl]="searchTechnician" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getTechnician($event)">

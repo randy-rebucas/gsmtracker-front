@@ -35,14 +35,15 @@ import { CustomerLookupComponent } from '../users/customer/customer-lookup/custo
         { path: '', redirectTo: 'all', pathMatch: 'full' },
         { path: 'all', component: RepairListComponent },
         { path: 'list', component: RepairListComponent },
-        { path: 'form', component: RepairFormComponent },
-        { path: 'form/:formId', component: RepairFormComponent },
+        { path: 'form', component: RepairFormComponent, canDeactivate: [CanDeactivateGuard] },
+        { path: 'form/:formId', component: RepairFormComponent, canDeactivate: [CanDeactivateGuard] },
       ] }
     ])
   ],
   providers: [
     DatePipe,
-    TitleCasePipe
+    TitleCasePipe,
+    CanDeactivateGuard
   ],
   entryComponents: [
     CustomerFormComponent,
