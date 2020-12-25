@@ -31,15 +31,12 @@ import { RouterModule } from '@angular/router';
     SharedModule,
     FlexLayoutModule,
     RouterModule.forChild([
-      { path: '', component: TechnicianComponent, children: [
-        { path: '', redirectTo: 'list', pathMatch: 'full' },
-        { path: 'list', component: TechnicianListComponent },
-        { path: 'form', component: TechnicianFormComponent },
-      ] }
+      { path: '', component: TechnicianComponent }
     ])
   ],
   entryComponents: [
-    TechnicianLookupComponent
+    TechnicianLookupComponent,
+    TechnicianFormComponent
   ]
 })
 export class TechnicianModule { }

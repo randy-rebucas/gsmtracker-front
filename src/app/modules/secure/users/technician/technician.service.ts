@@ -20,39 +20,58 @@ export interface Technicians {
   providedIn: 'root'
 })
 export class TechnicianService {
-  private technicianUpdated = new Subject<{ technicians: Technician[] }>();
+  private technicianUpdated = new Subject<{ technicians: Technician[], counts: number }>();
+  private selectedSub = new Subject<any>();
 
   constructor(
     private http: HttpClient
   ) { }
 
   getAll(userId: string) {
-    const queryParams = `?labelOwner=${userId}`;
-    this.http.get<{message: string, technicians: any }>(BACKEND_URL + queryParams).pipe(
-      map(technicianData => {
-        return {
-          technicians: technicianData.technicians.map(response => {
-            return {
-              id: response._id,
-              technicians: response.description
-            };
-          })
-        };
+    const queryParams = `?ownerId=${userId}`;
+    this.http.get<{message: string, technicians: any, counts: number }>(BACKEND_URL + queryParams)
+    .pipe(
+      map(userData => {
+        console.log(userData);
+        return this.getMap(userData);
       })
     )
     .subscribe((transformData) => {
-      this.technicianUpdated.next({
-        technicians: [...transformData.technicians]
-      });
+      this.technicianSub(transformData);
     });
+  }
+
+  technicianSub(transformData) {
+    this.technicianUpdated.next({
+      technicians: [...transformData.technicians],
+      counts: transformData.max
+    });
+  }
+
+  getMap(technicianData) {
+    return { technicians: technicianData.technicians.map(technician => {
+      const technicianFirstname = technician.userId.name.firstname;
+      const technicianLastname = technician.userId.name.lastname;
+
+      const address1 = technician.userId.addresses[0].address1;
+      const address2 = technician.userId.addresses[0].address2;
+
+      return {
+        id: technician._id,
+        gender: technician.userId.gender,
+        name: technicianLastname.concat(', ', technicianFirstname.toString()),
+        contact: technician.userId.contact,
+        address: address2.concat(', ', address1.toString())
+      };
+    }), max: technicianData.counts};
   }
 
   getUpdateListener() {
     return this.technicianUpdated.asObservable();
   }
 
-  get(technicianId: string) {
-    return this.http.get<any>(BACKEND_URL + '/' + technicianId);
+  get(technicianrId: string) {
+    return this.http.get<any>(BACKEND_URL + '/' + technicianrId);
   }
 
   insert(newTechnician: any) {
@@ -63,8 +82,16 @@ export class TechnicianService {
     return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedTechnician._id, updatedTechnician);
   }
 
-  delete(technicianId: string) {
-    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + technicianId);
+  delete(technicianrId: string) {
+    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + technicianrId);
+  }
+
+  setSelectedItem(selectedItem: any) {
+    this.selectedSub.next(selectedItem);
+  }
+
+  getSelectedItem() {
+    return this.selectedSub.asObservable();
   }
 
   search(filter: {name: string} = {name: ''}): Observable<Technicians> {

@@ -111,7 +111,20 @@
         "counts": "Customer ({{s}})"
     },
     "technicians": {
-        "technician": "Technician"
+        "title": "Technicians",
+        "create-technician": "Create technician",
+        "update-technician": "Update technician",
+        "technician-information": "Technician Information",
+        "technician": "Technician",
+        "find-technician": "Find technician",
+        "select-action-menu": "Select action menu",
+        "select-action": "Selection action",
+        "all": "All",
+        "none": "None",
+        "action": "Action",
+        "more-action": "More Action",
+        "num-selected": "{{s}} Selected",
+        "counts": "Technician ({{s}})"
     },
     "owners": {
         "title": "Owners",
