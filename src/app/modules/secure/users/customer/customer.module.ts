@@ -31,15 +31,12 @@ import { CustomerComponent } from './customer.component';
     SharedModule,
     FlexLayoutModule,
     RouterModule.forChild([
-      { path: '', component: CustomerComponent, children: [
-        { path: '', redirectTo: 'list', pathMatch: 'full' },
-        { path: 'list', component: CustomerListComponent },
-        { path: 'form', component: CustomerFormComponent },
-      ] }
+      { path: '', component: CustomerComponent }
     ])
   ],
   entryComponents: [
-    CustomerLookupComponent
+    CustomerLookupComponent,
+    CustomerFormComponent
   ]
 })
 export class CustomerModule { }

@@ -256,7 +256,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.form.invalid) {
       return;
     }
-    console.log(this.form.value.customerId);
+
     this.isLoading = true;
     const newRepair = {
       owners: [{
@@ -315,7 +315,6 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
-    // && !this.isConfirmed
     if (this.form.dirty) {
       let confirmMessage;
       this.translate.get('common.disregard-changes')

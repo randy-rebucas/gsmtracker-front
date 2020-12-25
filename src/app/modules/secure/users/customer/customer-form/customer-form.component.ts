@@ -1,6 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { CustomerService } from '../customer.service';
 
@@ -9,19 +12,39 @@ import { CustomerService } from '../customer.service';
   templateUrl: './customer-form.component.html',
   styleUrls: ['./customer-form.component.scss']
 })
-export class CustomerFormComponent implements OnInit {
+export class CustomerFormComponent implements OnInit, AfterViewInit {
   public form: FormGroup;
+  public customerId: string;
+  public userId: string;
+  public buttonLabel: string;
+  public dialogTitle: string;
   public startDate = new Date(1990, 0, 1);
   constructor(
     private userService: UserService,
     private customerService: CustomerService,
+    private translate: TranslateService,
+    private notificationService: NotificationService,
     private formBuilder: FormBuilder,
+    private authenticationService: AuthenticationService,
     public dialogRef: MatDialogRef<CustomerFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string
-  ) { }
+    @Inject(MAT_DIALOG_DATA) data
+  ) {
+    this.customerId = data.id;
+  }
 
   ngOnInit(): void {
+    this.translate.get((this.customerId) ? 'common.update' : 'common.submit'
+    ).subscribe((norifResMessgae: string) => {
+      this.buttonLabel = norifResMessgae;
+    });
+
+    this.translate.get((this.customerId) ? 'customers.update-customers' : 'customers.create-customers'
+    ).subscribe((norifResMessgae: string) => {
+      this.dialogTitle = norifResMessgae;
+    });
+
     this.form = this.formBuilder.group({
+      ownerId: new FormControl(null),
       firstname: new FormControl(null, {
         validators: [
           Validators.required,
@@ -58,6 +81,31 @@ export class CustomerFormComponent implements OnInit {
       }),
       addresses: this.formBuilder.array([this.addAddressGroup()])
     });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.customerId) {
+      this.customerService.get(this.customerId).subscribe((customerResponse) => {
+        console.log(customerResponse);
+        this.userId = customerResponse.userId._id;
+        this.form.patchValue({
+          ownerId: customerResponse.ownerId,
+          firstname: customerResponse.userId.name.firstname,
+          midlename: customerResponse.userId.name.midlename,
+          lastname: customerResponse.userId.name.lastname,
+          birthdate: customerResponse.userId.birthdate,
+          contact: customerResponse.userId.contact,
+          gender: customerResponse.userId.gender,
+          bio: customerResponse.userId.description
+        });
+        const addressControl = this.form.controls.addresses as FormArray;
+        const address = customerResponse.userId.addresses;
+        for (let i = 1; i < address.length; i++) {
+          addressControl.push(this.addAddressGroup());
+        }
+        this.form.patchValue({addresses: address});
+      });
+    }
   }
 
   addAddressGroup() {
@@ -125,7 +173,7 @@ export class CustomerFormComponent implements OnInit {
   }
 
   onSubmit() {
-    const userData = {
+    const newCustomer = {
       name: {
         firstname: this.form.value.firstname,
         midlename: this.form.value.midlename,
@@ -138,13 +186,38 @@ export class CustomerFormComponent implements OnInit {
       addresses: this.form.value.addresses
     };
 
-    this.userService.insert(userData).subscribe((userResponse) => {
-      const customerData = {
-        userId: userResponse.id
-      };
-      this.customerService.insert(customerData).subscribe((customerResponse) => {
-        this.dialogRef.close({ data: customerResponse.customerId });
+    const updatedCustomer = {
+      ...{ _id: this.customerId }, ...{ ownerId: this.form.value.ownerId }
+    };
+
+    const updatedUser = {
+      ...{ _id: this.userId }, ...newCustomer
+    };
+
+    if (!this.customerId) {
+      this.userService.insert(newCustomer).subscribe((userResponse) => {
+        const customerData = {
+          userId: userResponse.id,
+          ownerId: this.authenticationService.getUserId()
+        };
+        this.customerService.insert(customerData).subscribe((customerResponse) => {
+          this.translate.get('common.created-message', {s: 'Customer'}
+          ).subscribe((norifResMessgae: string) => {
+            this.notificationService.success(norifResMessgae);
+          });
+          this.dialogRef.close({ data: customerResponse.customerId });
+        });
       });
-    });
+    } else {
+      this.userService.update(updatedUser).subscribe(() => {
+        this.customerService.update(updatedCustomer).subscribe(() => {
+          this.translate.get('common.updated-message', {s: 'Customer'}
+          ).subscribe((norifResMessgae: string) => {
+            this.notificationService.success(norifResMessgae);
+          });
+          this.dialogRef.close({ data: this.customerId });
+        });
+      });
+    }
   }
 }

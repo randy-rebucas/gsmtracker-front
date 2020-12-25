@@ -20,31 +20,49 @@ export interface Customers {
   providedIn: 'root'
 })
 export class CustomerService {
-  private customerUpdated = new Subject<{ customers: Customer[] }>();
+  private customerUpdated = new Subject<{ customers: Customer[], counts: number }>();
+  private selectedSub = new Subject<any>();
 
   constructor(
     private http: HttpClient
   ) { }
 
   getAll(userId: string) {
-    const queryParams = `?labelOwner=${userId}`;
-    this.http.get<{message: string, customers: any }>(BACKEND_URL + queryParams).pipe(
-      map(customerData => {
-        return {
-          customers: customerData.customers.map(resCustomer => {
-            return {
-              id: resCustomer._id,
-              customers: resCustomer.description
-            };
-          })
-        };
+    const queryParams = `?ownerId=${userId}`;
+    this.http.get<{message: string, customers: any, counts: number }>(BACKEND_URL + queryParams)
+    .pipe(
+      map(userData => {
+        return this.getMap(userData);
       })
     )
     .subscribe((transformData) => {
-      this.customerUpdated.next({
-        customers: [...transformData.customers]
-      });
+      this.customerSub(transformData);
     });
+  }
+
+  customerSub(transformData) {
+    this.customerUpdated.next({
+      customers: [...transformData.customers],
+      counts: transformData.max
+    });
+  }
+
+  getMap(customerData) {
+    return { customers: customerData.customers.map(customer => {
+      const customerFirstname = customer.userId.name.firstname;
+      const customerLastname = customer.userId.name.lastname;
+
+      const address1 = customer.userId.addresses[0].address1;
+      const address2 = customer.userId.addresses[0].address2;
+
+      return {
+        id: customer._id,
+        gender: customer.userId.gender,
+        name: customerLastname.concat(', ', customerFirstname.toString()),
+        contact: customer.userId.contact,
+        address: address2.concat(', ', address1.toString())
+      };
+    }), max: customerData.counts};
   }
 
   getUpdateListener() {
@@ -65,6 +83,14 @@ export class CustomerService {
 
   delete(customerId: string) {
     return this.http.delete<{ message: string }>(BACKEND_URL + '/' + customerId);
+  }
+
+  setSelectedItem(selectedItem: any) {
+    this.selectedSub.next(selectedItem);
+  }
+
+  getSelectedItem() {
+    return this.selectedSub.asObservable();
   }
 
   search(filter: {name: string} = {name: ''}): Observable<Customers> {

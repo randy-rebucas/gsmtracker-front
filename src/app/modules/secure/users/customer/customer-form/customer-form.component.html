@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Customer</h2>
+<h2 mat-dialog-title>{{ dialogTitle | titlecase}}</h2>
 <mat-dialog-content>
     <!-- *ngIf="!isLoading" -->
     <form [formGroup]="form" class="customer-form" (submit)="onSubmit()">
@@ -168,8 +168,10 @@
                             <div class="form-field-block">
                                 <mat-checkbox formControlName="current">{{ 'basic.set-current' | translate }}</mat-checkbox>
                             </div>
-                            <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
-                            <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                            <div class="form-action">
+                                <button mat-icon-button *ngIf="addressArray.controls.length < 2" (click)="addAddress()" type="button"><mat-icon>add</mat-icon></button>
+                                <button mat-icon-button color="warn" *ngIf="addressArray.controls.length > 1" (click)="removeAddress(i)" type="button"><mat-icon>delete_outline</mat-icon></button>
+                            </div>
                         </div>
                     </div>
                 </ng-container>
@@ -178,6 +180,6 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button type="button" mat-button mat-dialog-close>Cancel</button>
-    <button type="button" mat-button (click)="onSubmit()" cdkFocusInitial>Submit</button>
+    <button type="button" mat-button mat-dialog-close>{{ 'common.cancel' | translate }}</button>
+    <button type="button" mat-button (click)="onSubmit()" cdkFocusInitial>{{buttonLabel}}</button>
 </mat-dialog-actions>

@@ -139,10 +139,6 @@
     <ng-container matColumnDef="expandedDetail">
         <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
             <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                <!-- actionTaken
-                complaint
-release
-warranty -->
                 <mat-card class="address-card">
                     <mat-card-header>
                         <mat-card-title>Phone Information</mat-card-title>

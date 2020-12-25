@@ -1,1 +1,97 @@
-<p>customer-list works!</p>
+<div fxLayout="row" id="header-list">
+    <div fxFlex="40%" fxFlexAlign="start">
+        <mat-form-field>
+            <mat-label>{{ 'customers.find-customer' | translate }}</mat-label>
+            <input matInput (keyup)="applyFilter($event.target.value)" autocomplete="off">
+        </mat-form-field>
+    </div>
+    <div fxFlex="40%" fxFlexOffset="20%" fxFlexAlign="end" style="text-align: right;">
+        <button type="button" mat-flat-button color="primary" (click)="onOpenForm(null)"><mat-icon>add</mat-icon> {{ 'customers.create-customers' | translate }}</button>
+    </div>
+</div>
+
+<mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
+    <ng-container matColumnDef="view-action">
+        <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"></mat-checkbox>
+            <button mat-icon-button (click)="onReset()" matTooltip="Refresh">
+            <mat-icon>replay</mat-icon>
+          </button>
+
+            <button mat-icon-button [matMenuTriggerFor]="menuAction" aria-label="" matTooltip="{{ 'customers.more-action' | translate }}">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+            <mat-menu #menuAction="matMenu">
+                <button mat-menu-item (click)="onDelete()">
+            <mat-icon>delete_outline</mat-icon>
+            <span>{{ 'common.delete' | translate }}</span>
+          </button>
+            </mat-menu>
+
+            <label style="flex: 1 1 auto; text-align: right;"><b>{{ 'customers.num-selected' | translate:{'s':this.selection.selected.length} }}</b></label>
+        </mat-header-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="customer-counts">
+        <mat-header-cell *matHeaderCellDef>{{ 'customers.counts' | translate:{'s':length} }}</mat-header-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="isCheckboxChange(row)" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> {{ 'basic.name' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.name | titlecase }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="gender">
+        <mat-header-cell *matHeaderCellDef> {{ 'basic.gender' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="contact">
+        <mat-header-cell *matHeaderCellDef> {{ 'basic.contact' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.contact}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+        <mat-header-cell *matHeaderCellDef> {{ 'basic.address' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.address }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef> {{ 'basic.action' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <ng-container>
+                <button mat-icon-button (click)="onOpenForm(element.id)" matTooltip="{{ 'common.edit' | translate }}">
+                    <mat-icon>create</mat-icon>
+                </button>
+            </ng-container>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnsToDisplay" [class.header-row]="selection.hasValue()"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="['view-action']" [class.header-row]="!selection.hasValue()"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="['customer-counts']" class="sub-header"></mat-header-row>
+
+    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" (click)="isCheckboxChange(element)" class="element-row"></mat-row>
+
+    <ng-container matColumnDef="loading">
+        <mat-footer-cell *matFooterCellDef colspan="8">
+            <p class="mat-body">{{ 'common.loading' | translate:{'s':'customer'} }}</p>
+        </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="noData">
+        <mat-footer-cell *matFooterCellDef colspan="8">
+            <p class="mat-body">{{ 'common.no-data' | translate:{'s':'customer'} }}</p>
+        </mat-footer-cell>
+    </ng-container>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': dataSource != null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(dataSource != null && length == 0)}"></mat-footer-row>
+</mat-table>
+<mat-paginator [length]="length" [pageSize]="perPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"></mat-paginator>

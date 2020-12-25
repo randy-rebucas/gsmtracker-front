@@ -1,4 +1,25 @@
 mat-dialog-content {
+    .customer-form {
+        .form-field-block {
+            display: flex;
+            justify-content: flex-start;
+            mat-form-field {
+                width: 100%;
+                margin: 0 5px;
+            }
+        }
+        .addressGroup {
+            mat-form-field {
+                width: 100%;
+            }
+            .action {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 10px;
+            }
+        }
+    }
     &::-webkit-scrollbar {
         height: 4px;
         width: 4px;
