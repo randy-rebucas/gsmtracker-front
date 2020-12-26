@@ -86,3 +86,18 @@ mat-row:hover {
 div#header-list button {
     margin-bottom: 1.25em;
 }
+
+mat-card {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    box-shadow: unset !important;
+    border-radius: 0 !important;
+    margin-bottom: 10px;
+}
+
+mat-card p {
+    margin: unset;
+}

@@ -10,6 +10,8 @@ import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { SettingsService } from 'src/app/shared/services/settings.service';
 import { SubSink } from 'subsink';
 import { TechnicianFormComponent } from '../technician-form/technician-form.component';
@@ -27,7 +29,8 @@ export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit
   public pageSizeOptions: any;
   public isLoading: boolean;
   public userId: string;
-
+  private ids: any = [];
+  public innerTranslate: string;
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
     'select',
@@ -47,6 +50,8 @@ export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
     private translate: TranslateService,
+    private dialogService: DialogService,
+    private notificationService: NotificationService,
     private appConfigurationService: AppConfigurationService,
     private titleService: Title,
     private dialog: MatDialog,
@@ -72,6 +77,13 @@ export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit
     .subscribe((res: string) => {
       this.titleService.setTitle(res);
     });
+
+    this.subs.sink = this.translate.get([
+      'technicians.technician'
+    ]).subscribe((translate: string) => {
+        this.innerTranslate = translate['technicians.technician'];
+      }
+    );
 
     this.onReset();
   }
@@ -99,7 +111,8 @@ export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit
         })
       ).subscribe(
         data => {
-          this.dataSource = new MatTableDataSource(data);
+          this.dataSource = new MatTableDataSource(this.setOwnerShip(data));
+          console.log(this.dataSource);
         }
       );
 
@@ -116,7 +129,17 @@ export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  onUpdate(customerId: string) {}
+  setOwnerShip(data) {
+    const newTechnicians = [];
+    data.forEach(technician => {
+      const ownerShip = {
+        isOwned : technician.ownerId === this.userId,
+        isOwner : technician.shopOwnerId === this.userId
+      };
+      newTechnicians.push({...technician, ...ownerShip});
+    });
+    return newTechnicians;
+  }
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -207,6 +230,57 @@ export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit
         this.getQuery(this.userId);
       }
     });
+  }
+
+  onAddSelf() {
+    const technicianData = {
+      userId: this.userId,
+      ownerId: this.userId,
+      description: 'shop owner as technician',
+      isVerified: true
+    };
+    this.subs.sink = this.technicianService.insert(technicianData).subscribe(() => {
+      this.subs.sink = this.translate.get('common.created-message', {s: this.innerTranslate }
+      ).subscribe((norifResMessgae: string) => {
+        this.notificationService.success(norifResMessgae);
+        this.getQuery(this.userId);
+      });
+    });
+  }
+
+  filterSelection() {
+    return this.selection.selected.filter((select) => {
+      return select.isOwned === true && select.isOwner !== true;
+    });
+  }
+
+  onDelete() {
+    console.log(this.filterSelection());
+    if (this.filterSelection().length) {
+      this.subs.sink = this.translate.get('common.confirm-delete-message', {s: this.filterSelection().length})
+      .subscribe((confirmMessage: string) => {
+        this.subs.sink = this.dialogService.openConfirmDialog(confirmMessage)
+        .afterClosed().subscribe(dialogRes => {
+          if (dialogRes) {
+
+            this.filterSelection().forEach(element => {
+              this.ids.push(element.id);
+            });
+            this.technicianService.deleteMany(this.ids).subscribe((res) => {
+
+              this.subs.sink = this.translate.get('common.deleted-message', {s: this.innerTranslate }).subscribe((msg: string) => {
+                this.notificationService.success(msg);
+              });
+              this.getQuery(this.userId);
+            });
+          }
+        });
+      });
+    } else {
+      this.subs.sink = this.translate.get('common.not-permitted-message').subscribe((res: string) => {
+        this.notificationService.warn(res);
+      });
+    }
   }
 
   ngOnDestroy() {

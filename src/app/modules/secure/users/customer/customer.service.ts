@@ -60,7 +60,8 @@ export class CustomerService {
         gender: customer.userId.gender,
         name: customerLastname.concat(', ', customerFirstname.toString()),
         contact: customer.userId.contact,
-        address: address2.concat(', ', address1.toString())
+        address: address2.concat(', ', address1.toString()),
+        ownerId: customer.ownerId
       };
     }), max: customerData.counts};
   }
@@ -81,8 +82,9 @@ export class CustomerService {
     return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedCustomer._id, updatedCustomer);
   }
 
-  delete(customerId: string) {
-    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + customerId);
+  deleteMany(customerIds: []) {
+    const queryParams = `?customerIds=${customerIds}`;
+    return this.http.delete<{ message: string }>(BACKEND_URL + queryParams);
   }
 
   setSelectedItem(selectedItem: any) {

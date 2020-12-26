@@ -9,7 +9,10 @@
         <button type="button" mat-flat-button color="primary" (click)="onOpenForm(null)"><mat-icon>add</mat-icon> {{ 'technicians.create-technician' | translate }}</button>
     </div>
 </div>
-
+<mat-card *ngIf="length < 1">
+    <p>Add me as a Technician.</p>
+    <button mat-icon-button color="primary" (click)="onAddSelf()" type="button"><mat-icon>add</mat-icon></button>
+</mat-card>
 <mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
     <ng-container matColumnDef="view-action">
         <mat-header-cell *matHeaderCellDef>
@@ -39,7 +42,7 @@
     <ng-container matColumnDef="select">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()" (change)="isCheckboxChange(row)" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+            <mat-checkbox (click)="$event.stopPropagation()" *ngIf="!row.isOwner" (change)="isCheckboxChange(row)" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
             </mat-checkbox>
         </mat-cell>
     </ng-container>

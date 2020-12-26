@@ -25,14 +25,13 @@ export class TechnicianService {
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) {}
 
   getAll(userId: string) {
     const queryParams = `?ownerId=${userId}`;
     this.http.get<{message: string, technicians: any, counts: number }>(BACKEND_URL + queryParams)
     .pipe(
       map(userData => {
-        console.log(userData);
         return this.getMap(userData);
       })
     )
@@ -49,6 +48,7 @@ export class TechnicianService {
   }
 
   getMap(technicianData) {
+    console.log(technicianData);
     return { technicians: technicianData.technicians.map(technician => {
       const technicianFirstname = technician.userId.name.firstname;
       const technicianLastname = technician.userId.name.lastname;
@@ -61,7 +61,9 @@ export class TechnicianService {
         gender: technician.userId.gender,
         name: technicianLastname.concat(', ', technicianFirstname.toString()),
         contact: technician.userId.contact,
-        address: address2.concat(', ', address1.toString())
+        address: address2.concat(', ', address1.toString()),
+        ownerId: technician.ownerId,
+        shopOwnerId: technician.userId._id
       };
     }), max: technicianData.counts};
   }
@@ -82,8 +84,9 @@ export class TechnicianService {
     return this.http.put<{ message: string }>(BACKEND_URL + '/' + updatedTechnician._id, updatedTechnician);
   }
 
-  delete(technicianrId: string) {
-    return this.http.delete<{ message: string }>(BACKEND_URL + '/' + technicianrId);
+  deleteMany(technicianIds: []) {
+    const queryParams = `?technicianIds=${technicianIds}`;
+    return this.http.delete<{ message: string }>(BACKEND_URL + queryParams);
   }
 
   setSelectedItem(selectedItem: any) {

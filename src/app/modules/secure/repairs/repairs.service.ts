@@ -96,7 +96,6 @@ export class RepairsService {
   deleteMany(repairIds: []) {
     const queryParams = `?repairIds=${repairIds}`;
     return this.http.delete<{ message: string }>(BACKEND_URL + queryParams);
-    // return this.http.delete<{ message: string }>(BACKEND_URL + '/' + repairIds);
   }
 
   checkOwner(ownerId: string, repairId: string) {
