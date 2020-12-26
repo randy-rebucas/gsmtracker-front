@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +11,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { SettingsService } from 'src/app/shared/services/settings.service';
+import { SubSink } from 'subsink';
 import { TechnicianFormComponent } from '../technician-form/technician-form.component';
 import { TechnicianService } from '../technician.service';
 
@@ -19,7 +20,7 @@ import { TechnicianService } from '../technician.service';
   templateUrl: './technician-list.component.html',
   styleUrls: ['./technician-list.component.scss']
 })
-export class TechnicianListComponent implements OnInit, AfterViewInit {
+export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit {
   public length: number;
   public perPage: number;
   public currentPage: number;
@@ -41,6 +42,7 @@ export class TechnicianListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  private subs = new SubSink();
   constructor(
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
@@ -61,12 +63,12 @@ export class TechnicianListComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
 
     this.settingsService.getSetting(this.userId);
-    this.settingsService.getSettingListener()
+    this.subs.sink = this.settingsService.getSettingListener()
     .subscribe((setting) => {
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
     });
 
-    this.translate.get('technicians.title')
+    this.subs.sink = this.translate.get('technicians.title')
     .subscribe((res: string) => {
       this.titleService.setTitle(res);
     });
@@ -78,7 +80,7 @@ export class TechnicianListComponent implements OnInit, AfterViewInit {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    merge(this.sort.sortChange, this.paginator.page)
+    this.subs.sink = merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -101,7 +103,7 @@ export class TechnicianListComponent implements OnInit, AfterViewInit {
         }
       );
 
-    this.translate.get([
+    this.subs.sink = this.translate.get([
       'paginator.item-per-page',
       'paginator.next-page',
       'paginator.previous-page'
@@ -192,9 +194,9 @@ export class TechnicianListComponent implements OnInit, AfterViewInit {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '45%';
     // set modal attribute
-    this.translate.get('customers.update-customer').subscribe((language) => {
+    this.translate.get((userId) ? 'technicians.update-technician' : 'technicians.create-technician').subscribe((translate) => {
       dialogConfig.data = {
-        title: language,
+        title: translate,
         id: userId
       };
     });
@@ -205,6 +207,10 @@ export class TechnicianListComponent implements OnInit, AfterViewInit {
         this.getQuery(this.userId);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
 }

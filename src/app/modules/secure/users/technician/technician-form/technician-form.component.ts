@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { SubSink } from 'subsink';
 import { TechnicianService } from '../technician.service';
 
 @Component({
@@ -12,13 +13,17 @@ import { TechnicianService } from '../technician.service';
   templateUrl: './technician-form.component.html',
   styleUrls: ['./technician-form.component.scss']
 })
-export class TechnicianFormComponent implements OnInit, AfterViewInit {
+export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit {
   public form: FormGroup;
   public technicianId: string;
   public userId: string;
   public buttonLabel: string;
   public dialogTitle: string;
+  public innerTranslate: string;
   public startDate = new Date(1990, 0, 1);
+
+  private subs = new SubSink();
+
   constructor(
     private userService: UserService,
     private technicianService: TechnicianService,
@@ -30,17 +35,17 @@ export class TechnicianFormComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.technicianId = data.id;
+    this.dialogTitle = data.title;
   }
 
   ngOnInit(): void {
-    this.translate.get((this.technicianId) ? 'common.update' : 'common.submit'
-    ).subscribe((norifResMessgae: string) => {
-      this.buttonLabel = norifResMessgae;
-    });
-
-    this.translate.get((this.technicianId) ? 'technicians.update-technician' : 'technicians.create-technician'
-    ).subscribe((norifResMessgae: string) => {
-      this.dialogTitle = norifResMessgae;
+    this.subs.sink = this.translate.get([
+      (this.technicianId) ? 'common.update' : 'common.submit',
+      'technicians.technician'
+    ]
+    ).subscribe((translate: string) => {
+      this.buttonLabel = translate[(this.technicianId) ? 'common.update' : 'common.submit'];
+      this.innerTranslate = translate['technicians.technician'];
     });
 
     this.form = this.formBuilder.group({
@@ -85,7 +90,7 @@ export class TechnicianFormComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.technicianId) {
-      this.technicianService.get(this.technicianId).subscribe((technicianResponse) => {
+      this.subs.sink = this.technicianService.get(this.technicianId).subscribe((technicianResponse) => {
         console.log(technicianResponse);
         this.userId = technicianResponse.userId._id;
         this.form.patchValue({
@@ -195,15 +200,15 @@ export class TechnicianFormComponent implements OnInit, AfterViewInit {
     };
 
     if (!this.technicianId) {
-      this.userService.insert(newTechnician).subscribe((userResponse) => {
+      this.subs.sink = this.userService.insert(newTechnician).subscribe((userResponse) => {
         const technicianData = {
           userId: userResponse.id,
           ownerId: this.authenticationService.getUserId(),
           description: 'a person works in shop.',
           isVerified: true
         };
-        this.technicianService.insert(technicianData).subscribe((technicianResponse) => {
-          this.translate.get('common.created-message', {s: 'Technician'}
+        this.subs.sink = this.technicianService.insert(technicianData).subscribe((technicianResponse) => {
+          this.subs.sink = this.translate.get('common.created-message', {s: this.innerTranslate }
           ).subscribe((norifResMessgae: string) => {
             this.notificationService.success(norifResMessgae);
           });
@@ -211,10 +216,9 @@ export class TechnicianFormComponent implements OnInit, AfterViewInit {
         });
       });
     } else {
-      this.userService.update(updatedUser).subscribe(() => {
-        this.technicianService.update(updatedTechnician).subscribe(() => {
-          this.translate.get('common.updated-message', {s: 'Technician'}
-          ).subscribe((norifResMessgae: string) => {
+      this.subs.sink = this.userService.update(updatedUser).subscribe(() => {
+        this.subs.sink = this.technicianService.update(updatedTechnician).subscribe(() => {
+          this.translate.get('common.updated-message', { s: this.innerTranslate } ).subscribe((norifResMessgae: string) => {
             this.notificationService.success(norifResMessgae);
           });
           this.dialogRef.close({ data: this.technicianId });
@@ -223,4 +227,7 @@ export class TechnicianFormComponent implements OnInit, AfterViewInit {
     }
   }
 
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }

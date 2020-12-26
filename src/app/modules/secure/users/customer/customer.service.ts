@@ -93,8 +93,8 @@ export class CustomerService {
     return this.selectedSub.asObservable();
   }
 
-  search(filter: {name: string} = {name: ''}): Observable<Customers> {
-    return this.http.get<Customers>(BACKEND_URL + '/lookup')
+  search(filter: {name: string} = {name: ''}, ownerId: string): Observable<Customers> {
+    return this.http.get<Customers>(BACKEND_URL + '/lookup/' + ownerId)
     .pipe(
       tap((response: Customers) => {
         response.results = response.results.map(

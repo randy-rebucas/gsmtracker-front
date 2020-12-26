@@ -94,8 +94,8 @@ export class TechnicianService {
     return this.selectedSub.asObservable();
   }
 
-  search(filter: {name: string} = {name: ''}): Observable<Technicians> {
-    return this.http.get<Technicians>(BACKEND_URL + '/lookup')
+  search(filter: {name: string} = {name: ''}, ownerId: string): Observable<Technicians> {
+    return this.http.get<Technicians>(BACKEND_URL + '/lookup/' + ownerId)
     .pipe(
       tap((response: Technicians) => {
         response.results = response.results.map(

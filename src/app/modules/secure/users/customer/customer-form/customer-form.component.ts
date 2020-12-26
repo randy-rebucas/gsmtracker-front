@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { SubSink } from 'subsink';
 import { CustomerService } from '../customer.service';
 
 @Component({
@@ -12,13 +13,16 @@ import { CustomerService } from '../customer.service';
   templateUrl: './customer-form.component.html',
   styleUrls: ['./customer-form.component.scss']
 })
-export class CustomerFormComponent implements OnInit, AfterViewInit {
+export class CustomerFormComponent implements OnInit, OnDestroy, AfterViewInit {
   public form: FormGroup;
   public customerId: string;
   public userId: string;
   public buttonLabel: string;
   public dialogTitle: string;
+  public innerTranslate: string;
   public startDate = new Date(1990, 0, 1);
+  private subs = new SubSink();
+
   constructor(
     private userService: UserService,
     private customerService: CustomerService,
@@ -30,17 +34,19 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) data
   ) {
     this.customerId = data.id;
+    this.dialogTitle = data.title;
+    console.log(data);
   }
 
   ngOnInit(): void {
-    this.translate.get((this.customerId) ? 'common.update' : 'common.submit'
-    ).subscribe((norifResMessgae: string) => {
-      this.buttonLabel = norifResMessgae;
-    });
-
-    this.translate.get((this.customerId) ? 'customers.update-customers' : 'customers.create-customers'
-    ).subscribe((norifResMessgae: string) => {
-      this.dialogTitle = norifResMessgae;
+    this.subs.sink = this.translate.get([
+      (this.customerId) ? 'common.update' : 'common.submit',
+      'customers.customer'
+    ]
+    ).subscribe((translate: string) => {
+      console.log(translate);
+      this.buttonLabel = translate[(this.customerId) ? 'common.update' : 'common.submit'];
+      this.innerTranslate = translate['customers.customer'];
     });
 
     this.form = this.formBuilder.group({
@@ -85,7 +91,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.customerId) {
-      this.customerService.get(this.customerId).subscribe((customerResponse) => {
+      this.subs.sink = this.customerService.get(this.customerId).subscribe((customerResponse) => {
         console.log(customerResponse);
         this.userId = customerResponse.userId._id;
         this.form.patchValue({
@@ -195,13 +201,13 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
     };
 
     if (!this.customerId) {
-      this.userService.insert(newCustomer).subscribe((userResponse) => {
+      this.subs.sink = this.userService.insert(newCustomer).subscribe((userResponse) => {
         const customerData = {
           userId: userResponse.id,
           ownerId: this.authenticationService.getUserId()
         };
-        this.customerService.insert(customerData).subscribe((customerResponse) => {
-          this.translate.get('common.created-message', {s: 'Customer'}
+        this.subs.sink = this.customerService.insert(customerData).subscribe((customerResponse) => {
+          this.translate.get('common.created-message', {s: this.innerTranslate}
           ).subscribe((norifResMessgae: string) => {
             this.notificationService.success(norifResMessgae);
           });
@@ -209,9 +215,9 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         });
       });
     } else {
-      this.userService.update(updatedUser).subscribe(() => {
-        this.customerService.update(updatedCustomer).subscribe(() => {
-          this.translate.get('common.updated-message', {s: 'Customer'}
+      this.subs.sink = this.userService.update(updatedUser).subscribe(() => {
+        this.subs.sink = this.customerService.update(updatedCustomer).subscribe(() => {
+          this.translate.get('common.updated-message', {s: this.innerTranslate }
           ).subscribe((norifResMessgae: string) => {
             this.notificationService.success(norifResMessgae);
           });
@@ -219,5 +225,9 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         });
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }

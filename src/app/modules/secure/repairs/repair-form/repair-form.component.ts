@@ -17,6 +17,7 @@ import { TechnicianService } from '../../users/technician/technician.service';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Technician } from '../../users/technician/technician';
 import { Observable } from 'rxjs';
+import { SubSink } from 'subsink';
 
 export interface TechnicianLookup {
   id: string;
@@ -40,12 +41,18 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   public customer: Customer;
   public technician: Technician;
   public selectedCustomerId: string;
+  public hasCustomer: boolean;
   public selectedTechnicianId: string;
   public searchTechnician = new FormControl();
   public technicianOptionShow: boolean;
   public isNew: boolean;
+  public userId: string;
+  public cancel: string;
+  public change: string;
+  public innerTranslate: string;
   @ViewChild(MatAutocompleteTrigger) matAuto: MatAutocompleteTrigger;
 
+  private subs = new SubSink();
   constructor(
     private translate: TranslateService,
     private notificationService: NotificationService,
@@ -61,9 +68,24 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.formId = this.activatedRoute.snapshot.params.formId;
     this.initCheck = true;
     this.isNew = true;
+    this.selectedCustomerId = 'empty';
+    this.hasCustomer = false;
+    this.technicianOptionShow = false;
+    this.userId = this.authenticationService.getUserId();
   }
 
   ngOnInit() {
+    this.subs.sink = this.translate.get([
+      'common.cancel',
+      'common.change',
+      'repairs.repair'
+    ]).subscribe((translate: string) => {
+        this.cancel = translate['common.cancel'];
+        this.change = translate['common.change'];
+        this.innerTranslate = translate['repairs.repair'];
+      }
+    );
+
     this.form = this.formBuilder.group({
       repairId: new FormControl(null),
       customerId: new FormControl(null),
@@ -124,17 +146,14 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '40%';
     // set modal title
-    this.translate.get([
-      'repairs.print-repairs'
-    ]).subscribe((translate) => {
+    this.subs.sink = this.translate.get('customers.customer-lookup').subscribe((translate) => {
       dialogConfig.data = {
-        // title: translate['repairs.print-repairs']
-        title: 'Customer Lookup'
+        title: translate
       };
     });
 
     const dialogRef = this.dialog.open(CustomerLookupComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(result => {
+    this.subs.sink = dialogRef.afterClosed().subscribe(result => {
       if (result.data) {
         this.setCustomerId(result.data);
         this.getCustomerData(this.getCustomerId());
@@ -148,17 +167,14 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '40%';
     // set modal title
-    this.translate.get([
-      'repairs.print-repairs'
-    ]).subscribe((translate) => {
+    this.subs.sink = this.translate.get('customers.create-customers').subscribe((translate) => {
       dialogConfig.data = {
-        // title: translate['repairs.print-repairs']
-        title: 'Customer'
+        title: translate
       };
     });
 
     const dialogRef = this.dialog.open(CustomerFormComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(result => {
+    this.subs.sink = dialogRef.afterClosed().subscribe(result => {
       if (result.data) {
         this.setCustomerId(result.data);
         this.getCustomerData(this.getCustomerId());
@@ -168,7 +184,8 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onRemoveCustomerId() {
     sessionStorage.removeItem('customerId');
-    this.getCustomerId();
+    this.hasCustomer = false;
+    this.selectedCustomerId = 'empty';
   }
 
   setCustomerId(customerId: string) {
@@ -183,7 +200,8 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getCustomerData(customerId: string) {
-    this.customerService.get(customerId).subscribe((customerResponse) => {
+    this.subs.sink = this.customerService.get(customerId).subscribe((customerResponse) => {
+      this.hasCustomer = true;
       this.selectedCustomerId = customerResponse._id;
       this.formCtrls.customerId.setValue(customerResponse._id);
       this.customer = customerResponse.userId;
@@ -195,8 +213,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getTechnicianData(technicianId: string) {
-    this.technicianService.get(technicianId).subscribe((technicianResponse) => {
-      console.log(technicianResponse);
+    this.subs.sink = this.technicianService.get(technicianId).subscribe((technicianResponse) => {
       this.selectedTechnicianId = technicianResponse._id;
       this.formCtrls.technicianId.setValue(technicianResponse._id);
       this.technician = technicianResponse.userId;
@@ -206,7 +223,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.formId) {
       this.isNew = false;
-      this.repairsService.get(this.formId).subscribe((repairResponse) => {
+      this.subs.sink = this.repairsService.get(this.formId).subscribe((repairResponse) => {
         this.setCustomerId(repairResponse.customerId._id);
         this.getCustomerData(repairResponse.customerId._id);
         this.selectedTechnicianId = repairResponse.technicianId;
@@ -232,13 +249,13 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getCustomerData(this.getCustomerId());
     }
 
-    this.searchTechnician.valueChanges
+    this.subs.sink = this.searchTechnician.valueChanges
       .pipe(
         debounceTime(300),
         tap(() => this.preLoading = true),
         startWith(''),
         switchMap((value) => {
-          return this.technicianService.search({name: value})
+          return this.technicianService.search({name: value}, this.userId)
           .pipe(
             finalize(() => this.preLoading = false),
           );
@@ -285,8 +302,8 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     if (!this.formId) {
-      this.repairsService.insert(newRepair).subscribe(() => {
-        this.translate.get('common.created-message', {s: 'Repair'}
+      this.subs.sink = this.repairsService.insert(newRepair).subscribe(() => {
+        this.subs.sink = this.translate.get('common.created-message', {s: this.innerTranslate }
         ).subscribe((norifResMessgae: string) => {
           this.notificationService.success(norifResMessgae);
         });
@@ -295,8 +312,8 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
         this.router.navigate(['/secure/repairs']);
       });
     } else {
-      this.repairsService.update(updateRepair).subscribe(() => {
-        this.translate.get('common.updated-message', {s: 'Repair'}
+      this.subs.sink = this.repairsService.update(updateRepair).subscribe(() => {
+        this.subs.sink = this.translate.get('common.updated-message', {s: this.innerTranslate }
         ).subscribe((norifResMessgae: string) => {
           this.notificationService.success(norifResMessgae);
         });
@@ -317,7 +334,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (this.form.dirty) {
       let confirmMessage;
-      this.translate.get('common.disregard-changes')
+      this.subs.sink = this.translate.get('common.disregard-changes')
       .subscribe((translation) => {
         confirmMessage = translation;
       });
@@ -329,5 +346,6 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.onRemoveCustomerId();
+    this.subs.unsubscribe();
   }
 }

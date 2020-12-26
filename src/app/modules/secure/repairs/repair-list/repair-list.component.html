@@ -141,20 +141,20 @@
             <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                 <mat-card class="address-card">
                     <mat-card-header>
-                        <mat-card-title>Phone Information</mat-card-title>
-                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                        <mat-card-title>{{ 'repairs.phone-information' | translate }}</mat-card-title>
+                        <mat-card-subtitle>{{ 'repairs.phone-information-description' | translate }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <p>Brand: <span>{{element.phoneInfo.brand}}</span></p>
-                        <p>Models: <span>{{element.phoneInfo.model}}</span></p>
-                        <p>Serial #: <span>{{element.phoneInfo.serialNumber}}</span></p>
-                        <p>Other: <span>{{element.phoneInfo.others}}</span></p>
+                        <p>{{ 'mobiles.brand' | translate }}: <span>{{element.phoneInfo.brand}}</span></p>
+                        <p>{{ 'mobiles.model' | translate }}: <span>{{element.phoneInfo.model}}</span></p>
+                        <p>{{ 'mobiles.serial-number' | translate }}: <span>{{element.phoneInfo.serialNumber}}</span></p>
+                        <p>{{ 'mobiles.other' | translate }}: <span>{{element.phoneInfo.others}}</span></p>
                     </mat-card-content>
                 </mat-card>
                 <mat-card class="record-card">
                     <mat-card-header>
-                        <mat-card-title>Complaint</mat-card-title>
-                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                        <mat-card-title>{{ 'repairs.complaint' | translate}} </mat-card-title>
+                        <mat-card-subtitle>{{ 'repairs.complaint-description' | translate}}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
                         <p>{{element.complaint}}</p>
@@ -162,8 +162,8 @@
                 </mat-card>
                 <mat-card class="physicians-card">
                     <mat-card-header>
-                        <mat-card-title>Action Taken</mat-card-title>
-                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                        <mat-card-title>{{ 'repairs.action-taken' | translate }}</mat-card-title>
+                        <mat-card-subtitle>{{ 'repairs.action-taken-description' | translate }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
                         <p>{{element.actionTaken}}</p>
@@ -171,12 +171,12 @@
                 </mat-card>
                 <mat-card class="record-card">
                     <mat-card-header>
-                        <mat-card-title>Service Details</mat-card-title>
-                        <!-- <mat-card-subtitle></mat-card-subtitle> -->
+                        <mat-card-title>{{ 'repairs.job-detail' | translate }}</mat-card-title>
+                        <mat-card-subtitle>{{ 'repairs.job-detail-description' | translate }}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <p>{{element.warranty}}</p>
-                        <p *ngIf="element.release">Release: {{element.release}} </p>
+                        <p>{{ 'basic.warranty' | translate }}: {{element.warranty}}</p>
+                        <p>{{ 'basic.amount' | translate }}: {{element.amountPaid | currency:'PHP':'symbol-narrow'}}</p>
                     </mat-card-content>
                 </mat-card>
             </div>

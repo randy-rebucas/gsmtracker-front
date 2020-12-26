@@ -27,6 +27,7 @@ import { RepairsService } from '../repairs.service';
 import { RepairFormComponent } from '../repair-form/repair-form.component';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import 'rxjs/add/operator/filter';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-repair-list',
@@ -60,6 +61,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   labelsSub: Subscription;
   setting: Settings;
   settingsData: any;
+  innerTranslate: string;
 
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
@@ -78,6 +80,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  private subs = new SubSink();
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -108,23 +111,30 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.option = this.activatedRoute.snapshot.url[0].path;
 
     this.settingsService.getSetting(this.userId);
-    this.settingsService.getSettingListener()
+    this.subs.sink = this.settingsService.getSettingListener()
     .subscribe((setting) => {
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
     });
 
-    this.translate.get(this.option === 'list' ? 'repairs.my-repairs' : 'repairs.all-repairs')
+    this.subs.sink = this.translate.get([
+      'repairs.repair'
+    ]).subscribe((translate: string) => {
+        this.innerTranslate = translate['repairs.repair'];
+      }
+    );
+
+    this.subs.sink = this.translate.get(this.option === 'list' ? 'repairs.my-repairs' : 'repairs.all-repairs')
     .subscribe((res: string) => {
       this.titleService.setTitle(res);
     });
 
     this.labelsService.getAll(this.userId);
-    this.labelsSub = this.labelsService.getLabels()
+    this.subs.sink = this.labelsSub = this.labelsService.getLabels()
       .subscribe((res) => {
       this.labels = res.labels;
     });
 
-    this.labelsService.getSelectedLabel().subscribe((label) => {
+    this.subs.sink = this.labelsService.getSelectedLabel().subscribe((label) => {
       this.labelPicked = label;
       this.filterLabel(label);
     });
@@ -133,7 +143,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getLogo(settingId: string) {
-    this.uploadService.get(settingId).subscribe((setting) => {
+    this.subs.sink = this.uploadService.get(settingId).subscribe((setting) => {
       console.log(setting);
     });
   }
@@ -146,7 +156,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    merge(this.sort.sortChange, this.paginator.page)
+    this.subs.sink = merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -274,7 +284,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '25%';
-    this.translate.get([
+    this.subs.sink = this.translate.get([
       'repairs.export-repairs'
     ]).subscribe((translate) => {
       dialogConfig.data = {
@@ -292,7 +302,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '25%';
     // set modal title
-    this.translate.get([
+    this.subs.sink = this.translate.get([
       'repairs.print-repairs'
     ]).subscribe((translate) => {
       dialogConfig.data = {
@@ -313,8 +323,9 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   onDelete() {
     // check for allowed record lenght
     if (this.filterSelection().length) {
-      this.translate.get('common.confirm-delete-message', {s: this.filterSelection().length}).subscribe((confirmMessage: string) => {
-        this.dialogService.openConfirmDialog(confirmMessage)
+      this.subs.sink = this.translate.get('common.confirm-delete-message', {s: this.filterSelection().length})
+      .subscribe((confirmMessage: string) => {
+        this.subs.sink = this.dialogService.openConfirmDialog(confirmMessage)
         .afterClosed().subscribe(dialogRes => {
           if (dialogRes) {
 
@@ -323,7 +334,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
             });
             this.repairsService.deleteMany(this.ids).subscribe((res) => {
 
-              this.translate.get('common.deleted-message', {s: 'Patient'}).subscribe((msg: string) => {
+              this.subs.sink = this.translate.get('common.deleted-message', {s: this.innerTranslate }).subscribe((msg: string) => {
                 this.notificationService.success(msg);
               });
               this.getQuery(this.perPage, this.currentPage, this.labelPicked, (this.option === 'list') ? this.userId : '');
@@ -332,7 +343,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
     } else {
-      this.translate.get('common.not-permitted-message').subscribe((res: string) => {
+      this.subs.sink = this.translate.get('common.not-permitted-message').subscribe((res: string) => {
         this.notificationService.warn(res);
       });
     }
@@ -347,7 +358,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     // set modal attribute
-    this.translate.get([
+    this.subs.sink = this.translate.get([
       'labels.create-labels',
       'common.submit'
     ]).subscribe((translate) => {
@@ -358,7 +369,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     });
 
-    this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
+    this.subs.sink = this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
         this.translate.get('common.created-message',
           {s: 'Label'}
@@ -385,7 +396,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.filterSelection().forEach(element => {
       this.repairsService.setLabel(element.id, this.labelSelected).subscribe(() => {
         this.getQuery(this.perPage, this.currentPage, this.labelPicked, (this.option === 'list') ? this.userId : '');
-        this.translate.get('common.updated-message',
+        this.subs.sink = this.translate.get('common.updated-message',
           {s: 'Label'}
         ).subscribe((norifResMessgae: string) => {
           this.notificationService.success(norifResMessgae);
@@ -402,6 +413,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.labelsSub.unsubscribe();
+    this.subs.unsubscribe();
   }
 
 }

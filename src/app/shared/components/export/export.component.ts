@@ -78,73 +78,66 @@ export class ExportComponent implements OnInit, OnDestroy {
     this.selectedOption = (event.value === 'option') ? 'my-repair' : '';
   }
 
-  doExport(patients: any) {
+  doExport(repairs: any) {
     const csvOptions = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true,
       showTitle: false,
-      title: 'Patients',
+      title: 'Repairs',
       useBom: true,
       noDownload: false,
       headers: [
-        'Firstname',
-        'Midlename',
-        'Lastname',
-        'Contact',
-        'Gender',
-        'Birthdate',
-        'Created',
-        'Address',
-        'City',
-        'Province',
-        'Country',
-        'Postal'
+        'Customer',
+        'Phone',
+        'Technician',
+        'created'
       ]
     };
 
     const repairList = [];
-    for (const iterator of patients) {
-      const dataObj = {
-        fullname: iterator.firstname,
-        midlename: iterator.midlename,
-        lastname: iterator.lastname,
-        contact: iterator.contact,
-        gender: iterator.gender,
-        birthdate: this.datePipe.transform(iterator.birthdate, 'yyyy-MM-dd'),
-        created: this.datePipe.transform(iterator.created, 'yyyy-MM-dd')
-      };
+    for (const iterator of repairs) {
+      console.log(iterator);
+      // const dataObj = {
+      //   fullname: iterator.firstname,
+      //   midlename: iterator.midlename,
+      //   lastname: iterator.lastname,
+      //   contact: iterator.contact,
+      //   gender: iterator.gender,
+      //   birthdate: this.datePipe.transform(iterator.birthdate, 'yyyy-MM-dd'),
+      //   created: this.datePipe.transform(iterator.created, 'yyyy-MM-dd')
+      // };
 
-      let addressObj = {};
-      if (iterator.address.length > 1 ) {
-        iterator.address.forEach(el => {
-          if (el.current) {
-            addressObj = {
-              address: el.address1 + ' ' + el.address2,
-              city: el.city,
-              province: el.province,
-              country: el.country,
-              postalCode: el.postalCode
-            };
-          }
-        });
-      } else {
-        addressObj = {
-          address: iterator.address[0].address1 + ' ' + iterator.address[0].address2,
-          city: iterator.address[0].city,
-          province: iterator.address[0].province,
-          country: iterator.address[0].country,
-          postalCode: iterator.address[0].postalCode
-        };
-      }
+      // let addressObj = {};
+      // if (iterator.address.length > 1 ) {
+      //   iterator.address.forEach(el => {
+      //     if (el.current) {
+      //       addressObj = {
+      //         address: el.address1 + ' ' + el.address2,
+      //         city: el.city,
+      //         province: el.province,
+      //         country: el.country,
+      //         postalCode: el.postalCode
+      //       };
+      //     }
+      //   });
+      // } else {
+      //   addressObj = {
+      //     address: iterator.address[0].address1 + ' ' + iterator.address[0].address2,
+      //     city: iterator.address[0].city,
+      //     province: iterator.address[0].province,
+      //     country: iterator.address[0].country,
+      //     postalCode: iterator.address[0].postalCode
+      //   };
+      // }
 
-      const mergeObj = {...dataObj, ...addressObj};
+      // const mergeObj = {...dataObj, ...addressObj};
 
-      repairList.push(mergeObj);
+      // repairList.push(mergeObj);
     }
     // tslint:disable-next-line: no-unused-expression
-    new AngularCsv(repairList, 'Repair', csvOptions);
+    // new AngularCsv(repairList, 'Repair', csvOptions);
   }
 
   onExport() {

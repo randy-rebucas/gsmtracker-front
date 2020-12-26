@@ -1,7 +1,7 @@
-<h2 mat-dialog-title>Customer Lookup</h2>
+<h2 mat-dialog-title>{{ dialogTitle}}</h2>
 <mat-dialog-content>
     <mat-form-field appearance="outline">
-        <mat-label>Find Customer</mat-label>
+        <mat-label>{{ 'customers.find-customer' | translate }}</mat-label>
         <input type="text" matInput [formControl]="searchCustomer" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getCustomer($event)">
             <mat-option *ngIf="preLoading" class="is-loading"></mat-option>
@@ -14,5 +14,5 @@
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button type="button" mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+    <button type="button" mat-button mat-dialog-close cdkFocusInitial>{{ 'common.cancel' | translate }}</button>
 </mat-dialog-actions>

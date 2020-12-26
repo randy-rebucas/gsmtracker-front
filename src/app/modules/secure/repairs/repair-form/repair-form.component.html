@@ -2,22 +2,20 @@
     <mat-spinner [diameter]="50"></mat-spinner>
 </div>
 <form [formGroup]="form" class="repair-form" (submit)="onSave()" *ngIf="!isLoading">
-    <h2>Repair form (Job Order)</h2>
+    <h2>{{ 'repairs.repair-form' | translate }}</h2>
     <mat-tab-group class="custom-tabs">
         <mat-tab>
             <ng-template mat-tab-label>
-                <!-- <span class="material-icons">
-                    person_outline
-                    </span> -->
                 <mat-icon class="material-icons">person_outline</mat-icon>
-                Customer Detail
+                {{ 'customers.cutomer-information' | translate }}
             </ng-template>
-            <div *ngIf="selectedCustomerId !== 'empty'; then thenCustomer else elseCustomer"></div>
+            <div *ngIf="hasCustomer; then thenCustomer else elseCustomer"></div>
+
             <ng-template #thenCustomer>
                 <mat-card class="customer-card">
                     <mat-card-header>
                         <mat-card-title>{{customer?.name.firstname}} {{customer?.name.midlename}} {{customer?.name.lastname}}</mat-card-title>
-                        <mat-card-subtitle>Created: {{customer?.createdAt | date}}</mat-card-subtitle>
+                        <mat-card-subtitle>{{ 'common.created' | translate }}: {{customer?.createdAt | date}}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
                         <address *ngFor="let address of customer?.addresses; index as i; first as isFirst">
@@ -28,8 +26,8 @@
                         </address>
                     </mat-card-content>
                     <mat-card-actions>
-                        <button type="button" mat-stroked-button color="primary" (click)="openCustomerLookup()">Change</button> &nbsp;
-                        <button type="button" mat-flat-button color="warn" (click)="onRemoveCustomerId()">Remove</button>
+                        <button type="button" mat-stroked-button color="primary" (click)="openCustomerLookup()">{{ 'common.change' | translate }}</button> &nbsp;
+                        <button type="button" mat-flat-button color="warn" (click)="onRemoveCustomerId()">{{ 'common.remove' | translate }}</button>
                     </mat-card-actions>
                 </mat-card>
             </ng-template>
@@ -40,7 +38,7 @@
                     </button>
                     <p>or</p>
                     <button type="button" mat-stroked-button (click)="openCustomerForm()">
-                    <mat-icon>add</mat-icon> Add new Customer</button>
+                    <mat-icon>add</mat-icon> {{ 'repairs.add-new-customer' | translate }}</button>
                 </div>
             </ng-template>
         </mat-tab>
@@ -48,7 +46,7 @@
         <mat-tab>
             <ng-template mat-tab-label>
                 <mat-icon class="material-icons">fact_check</mat-icon>
-                Unit/Complaint Detail
+                {{ 'repairs.unit-complaint' | translate }}
             </ng-template>
             <div class="form-field-block">
                 <mat-form-field appearance="outline">
@@ -56,10 +54,10 @@
                     <input matInput formControlName="brand" uppercase>
                     <mat-error *ngIf="formCtrls.brand.errors">
                         <div *ngIf="formCtrls.brand.errors.required">
-                            {{ 'validation.required' | translate:{'s':'brand'} }}
+                            {{ 'validation.required' | translate:{'s':'mobiles.brand' | translate } }}
                         </div>
                         <div *ngIf="formCtrls.brand.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'brand'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'15', 'ctrl': 'mobiles.brand' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
@@ -68,10 +66,10 @@
                     <input matInput formControlName="serialNumber">
                     <mat-error *ngIf="formCtrls.serialNumber.errors">
                         <div *ngIf="formCtrls.serialNumber.errors.required">
-                            {{ 'validation.required' | translate:{'s':'serialNumber'} }}
+                            {{ 'validation.required' | translate:{'s':'mobiles.serial-number' | translate} }}
                         </div>
                         <div *ngIf="formCtrls.serialNumber.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'serialNumber'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'mobiles.serial-number' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
@@ -82,10 +80,10 @@
                     <input matInput formControlName="model" uppercase>
                     <mat-error *ngIf="formCtrls.model.errors">
                         <div *ngIf="formCtrls.model.errors.required">
-                            {{ 'validation.required' | translate:{'s':'model'} }}
+                            {{ 'validation.required' | translate:{'s':'mobiles.model' | translate} }}
                         </div>
                         <div *ngIf="formCtrls.model.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'model'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'mobiles.model' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
@@ -94,23 +92,23 @@
                     <input matInput formControlName="other">
                     <mat-error *ngIf="formCtrls.other.errors">
                         <div *ngIf="formCtrls.other.errors.required">
-                            {{ 'validation.required' | translate:{'s':'other'} }}
+                            {{ 'validation.required' | translate:{'s':'mobiles.other' | translate} }}
                         </div>
                         <div *ngIf="formCtrls.other.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'150', 'ctrl': 'other'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'150', 'ctrl': 'mobiles.other' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
             </div>
             <mat-form-field appearance="outline">
-                <mat-label>Complaint</mat-label>
+                <mat-label>{{ 'repairs.complaint' | translate }}</mat-label>
                 <textarea formControlName="chiefCompliant" matInput rows="5" placeholder=""></textarea>
                 <mat-error *ngIf="formCtrls.chiefCompliant.errors">
                     <div *ngIf="formCtrls.chiefCompliant.errors.required">
-                        {{ 'validation.required' | translate:{'s':'chief complain'} }}
+                        {{ 'validation.required' | translate:{'s':'repairs.complaint' | translate} }}
                     </div>
                     <div *ngIf="formCtrls.chiefCompliant.errors.maxlength">
-                        {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'chief complain'} }}
+                        {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'repairs.complaint' | translate} }}
                     </div>
                 </mat-error>
             </mat-form-field>
@@ -118,17 +116,17 @@
         <mat-tab>
             <ng-template mat-tab-label>
                 <mat-icon class="material-icons">read_more</mat-icon>
-                Job Detail
+                {{ 'repairs.job-detail' | translate }} Job Detail
             </ng-template>
             <mat-form-field appearance="outline">
-                <mat-label>Action Taken</mat-label>
+                <mat-label>{{ 'repairs.action-taken' | translate }}</mat-label>
                 <textarea formControlName="actionTaken" matInput rows="5" placeholder=""></textarea>
                 <mat-error *ngIf="formCtrls.actionTaken.errors">
                     <div *ngIf="formCtrls.actionTaken.errors.required">
-                        {{ 'validation.required' | translate:{'s':'action taken'} }}
+                        {{ 'validation.required' | translate:{'s':'repairs.action-taken' | translate} }}
                     </div>
                     <div *ngIf="formCtrls.actionTaken.errors.maxlength">
-                        {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'action taken'} }}
+                        {{ 'validation.maxLength' | translate:{'s':'3000', 'ctrl': 'repairs.action-taken' | translate} }}
                     </div>
                 </mat-error>
             </mat-form-field>
@@ -139,10 +137,10 @@
                     <input matInput formControlName="warranty" uppercase>
                     <mat-error *ngIf="formCtrls.warranty.errors">
                         <div *ngIf="formCtrls.warranty.errors.required">
-                            {{ 'validation.required' | translate:{'s':'warranty'} }}
+                            {{ 'validation.required' | translate:{'s':'repairs.warranty' | translate} }}
                         </div>
                         <div *ngIf="formCtrls.warranty.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'warranty'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'repairs.warranty' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
@@ -153,15 +151,15 @@
                     <span matSuffix>.00</span>
                     <mat-error *ngIf="formCtrls.amountPaid.errors">
                         <div *ngIf="formCtrls.amountPaid.errors.required">
-                            {{ 'validation.required' | translate:{'s':'amount paid'} }}
+                            {{ 'validation.required' | translate:{'s':'repairs.amount-paid' | translate} }}
                         </div>
                         <div *ngIf="formCtrls.amountPaid.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'amount paid'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'repairs.amount-paid' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline" *ngIf="technicianOptionShow || isNew">
-                    <mat-label>Find Technician</mat-label>
+                    <mat-label>{{ 'technicians.find-technician' | translate }}</mat-label>
                     <input type="text" matInput [formControl]="searchTechnician" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getTechnician($event)">
                         <mat-option *ngIf="preLoading" class="is-loading"></mat-option>
@@ -173,10 +171,10 @@
                     </mat-autocomplete>
                     <mat-error *ngIf="formCtrls.technicianId.errors">
                         <div *ngIf="formCtrls.technicianId.errors.required">
-                            {{ 'validation.required' | translate:{'s':'technician'} }}
+                            {{ 'validation.required' | translate:{'s':'technicians.technician' | translate} }}
                         </div>
                         <div *ngIf="formCtrls.technicianId.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'technician'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'technicians.technician' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
@@ -184,7 +182,7 @@
             <mat-card class="technician-card" *ngIf="selectedTechnicianId">
                 <mat-card-header>
                     <mat-card-title>{{technician?.name.firstname}} {{technician?.name.midlename}} {{technician?.name.lastname}}</mat-card-title>
-                    <mat-card-subtitle>Created: {{technician?.createdAt | date}}</mat-card-subtitle>
+                    <mat-card-subtitle>{{ 'common.created' | translate }}: {{technician?.createdAt | date}}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
                     <address *ngFor="let address of technician?.addresses; index as i; first as isFirst">
@@ -195,11 +193,11 @@
                     </address>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button type="button" mat-stroked-button color="primary" (click)="toggleTechnicianOption()">{{technicianOptionShow ? 'Cancel' : 'Change'}}</button>
+                    <button type="button" mat-stroked-button color="primary" (click)="toggleTechnicianOption()">{{ technicianOptionShow ? cancel : change }}</button>
                 </mat-card-actions>
             </mat-card>
             <br/>
-            <button type="submit" mat-raised-button color="primary" cdkFocusInitial>Submit</button>
+            <button type="submit" mat-raised-button color="primary" cdkFocusInitial>{{ 'common.submit' | translate }}</button>
         </mat-tab>
     </mat-tab-group>
 

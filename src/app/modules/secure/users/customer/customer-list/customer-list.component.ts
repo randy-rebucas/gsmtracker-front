@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +11,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { SettingsService } from 'src/app/shared/services/settings.service';
+import { SubSink } from 'subsink';
 import { CustomerFormComponent } from '../customer-form/customer-form.component';
 import { CustomerService } from '../customer.service';
 
@@ -20,7 +21,7 @@ import { CustomerService } from '../customer.service';
   templateUrl: './customer-list.component.html',
   styleUrls: ['./customer-list.component.scss']
 })
-export class CustomerListComponent implements OnInit, AfterViewInit {
+export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   public length: number;
   public perPage: number;
   public currentPage: number;
@@ -42,6 +43,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  private subs = new SubSink();
   constructor(
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
@@ -62,12 +64,12 @@ export class CustomerListComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
 
     this.settingsService.getSetting(this.userId);
-    this.settingsService.getSettingListener()
+    this.subs.sink = this.settingsService.getSettingListener()
     .subscribe((setting) => {
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
     });
 
-    this.translate.get('customers.customer')
+    this.subs.sink = this.translate.get('customers.customer')
     .subscribe((res: string) => {
       this.titleService.setTitle(res);
     });
@@ -79,7 +81,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    merge(this.sort.sortChange, this.paginator.page)
+    this.subs.sink = merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -102,7 +104,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit {
         }
       );
 
-    this.translate.get([
+    this.subs.sink = this.translate.get([
       'paginator.item-per-page',
       'paginator.next-page',
       'paginator.previous-page'
@@ -193,19 +195,22 @@ export class CustomerListComponent implements OnInit, AfterViewInit {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '45%';
     // set modal attribute
-    this.translate.get('customers.update-customer').subscribe((language) => {
+    this.subs.sink = this.translate.get((userId) ? 'customers.update-customers' : 'customers.create-customers').subscribe((translate) => {
       dialogConfig.data = {
-        title: language,
+        title: translate,
         id: userId
       };
     });
 
     const dialogRef = this.dialog.open(CustomerFormComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(result => {
+    this.subs.sink = dialogRef.afterClosed().subscribe(result => {
       if (result.data) {
         this.getQuery(this.userId);
       }
     });
   }
 
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 }

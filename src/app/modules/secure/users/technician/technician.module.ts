@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TechnicianListComponent } from './technician-list/technician-list.component';
 import { TechnicianFormComponent } from './technician-form/technician-form.component';
-import { TechnicianLookupComponent } from './technician-lookup/technician-lookup.component';
 import { TechnicianComponent } from './technician.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,8 +17,7 @@ import { RouterModule } from '@angular/router';
   declarations: [
     TechnicianComponent,
     TechnicianListComponent,
-    TechnicianFormComponent,
-    TechnicianLookupComponent
+    TechnicianFormComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +33,6 @@ import { RouterModule } from '@angular/router';
     ])
   ],
   entryComponents: [
-    TechnicianLookupComponent,
     TechnicianFormComponent
   ]
 })
