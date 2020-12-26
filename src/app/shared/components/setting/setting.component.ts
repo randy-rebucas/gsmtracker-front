@@ -1,7 +1,5 @@
 import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSelectChange } from '@angular/material/select';
@@ -9,10 +7,11 @@ import { MatSelectChange } from '@angular/material/select';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { AppConfigurationService } from 'src/app/configs/app-configuration.service';
-import { Settings } from '../../interfaces/settings';
 import { SettingsService } from '../../services/settings.service';
 import { UploadService } from '../../services/upload.service';
 import { CountriesService } from '../../services/countries.service';
+
+import { Settings } from '../../interfaces/settings';
 import { SubSink } from 'subsink';
 
 interface Currency {
@@ -26,25 +25,19 @@ interface Currency {
   styleUrls: ['./setting.component.scss']
 })
 export class SettingComponent implements OnInit, OnDestroy, AfterContentInit {
-  selected: string;
-
   public form: FormGroup;
-  times = [];
-  setting: Settings;
-  imagePath: any;
-  private userId: string;
-  private subs = new SubSink();
-  currencies: Currency[] = [
+  public setting: Settings;
+  public imagePath: any;
+  public innerTranslate: string;
+  public countries: any[] = [];
+  public currencies: Currency[] = [
     {value: 'PHP', viewValue: 'PHP'},
     {value: 'USD', viewValue: 'USD'},
     {value: 'SAR', viewValue: 'SR'}
   ];
-  states: any[] = [];
-  countries: any[] = [];
-  cities: any[] = [];
+  private userId: string;
+  private subs = new SubSink();
 
-  selectedCountry: any;
-  public innerTranslate: string;
   constructor(
     public dialogRef: MatDialogRef<SettingComponent>,
     private translate: TranslateService,
@@ -54,30 +47,23 @@ export class SettingComponent implements OnInit, OnDestroy, AfterContentInit {
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService,
     private country: CountriesService,
-    private fb: FormBuilder
+    private formBuilder: FormBuilder
   ) {
     translate.setDefaultLang(appConfigurationService.language); // default language
     this.userId = this.authenticationService.getUserId();
   }
 
   ngOnInit(): void {
-    this.subs.sink = this.translate.get([
-      'settings.title'
-    ]).subscribe((translate: string) => {
-        this.innerTranslate = translate['settings.title'];
-      }
-    );
-    this.getCountries();
-  }
+    this.subs.sink = this.translate.get('settings.title').subscribe((translate: string) => {
+        this.innerTranslate = translate;
+    });
 
-  getCountries() {
     const newCountries = [];
     this.subs.sink = this.country.allCountries().
     subscribe((countries) => {
       for (const key in countries) {
           if (Object.prototype.hasOwnProperty.call(countries, key)) {
             const element = countries[key];
-            // console.log(element);
             newCountries.push({value: element.name, viewValue: element.name});
           }
         }
@@ -95,7 +81,7 @@ export class SettingComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this.form = this.fb.group({
+    this.form = this.formBuilder.group({
       shopname: new FormControl(null, {
         validators: [
           Validators.required,
@@ -116,25 +102,25 @@ export class SettingComponent implements OnInit, OnDestroy, AfterContentInit {
 
     this.settingsService.getSetting(this.userId);
     this.subs.sink = this.settingsService.getSettingListener()
-    .subscribe((setting) => {
-      this.setting = setting;
-      this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
+    .subscribe((settingResponse) => {
 
-      if (setting) {
-        this.uploadService.get(setting?._id).subscribe((res) => {
+      this.setting = settingResponse;
+      this.translate.use((settingResponse) ? settingResponse.language : this.appConfigurationService.language);
+
+      if (settingResponse) {
+        this.uploadService.get(settingResponse?._id).subscribe((res) => {
           this.imagePath = res.image;
         });
       }
 
       this.form.patchValue({
-        shopname: (setting) ? setting.shopName : this.appConfigurationService.title,
-        shopowner: (setting) ? setting.shopOwner : this.appConfigurationService.owner,
-        language: (setting) ? setting.language : this.appConfigurationService.language,
-        currency: (setting) ? setting.currency : this.appConfigurationService.currency,
-        country: (setting) ? setting.country : this.appConfigurationService.country,
-        updates:  (setting) ? setting.updates : true
+        shopname: (settingResponse) ? settingResponse.shopName : this.appConfigurationService.title,
+        shopowner: (settingResponse) ? settingResponse.shopOwner : this.appConfigurationService.owner,
+        language: (settingResponse) ? settingResponse.language : this.appConfigurationService.language,
+        currency: (settingResponse) ? settingResponse.currency : this.appConfigurationService.currency,
+        country: (settingResponse) ? settingResponse.country : this.appConfigurationService.country,
+        updates:  (settingResponse) ? settingResponse.updates : true
       });
-
     });
   }
 

@@ -62,7 +62,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   setting: Settings;
   settingsData: any;
   innerTranslate: string;
-
+  selectedCurrency: string;
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
     'select',
@@ -189,6 +189,19 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paginator._intl.nextPageLabel = translation['paginator.next-page'];
       this.paginator._intl.previousPageLabel = translation['paginator.previous-page'];
       // this.paginator._intl.getRangeLabel = matRangeLabelIntl;
+    });
+
+    this.settingsService.getSetting(this.userId);
+    this.subs.sink = this.settingsService.getSettingListener()
+    .pipe(
+      switchMap(setting => {
+        this.setting = setting;
+        return this.uploadService.get(setting._id);
+      })
+    )
+    .subscribe((mergeRes) => {
+      const settingResponse = { ...this.setting, ...mergeRes };
+      this.selectedCurrency = settingResponse.currency;
     });
   }
 

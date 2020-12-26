@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -79,6 +79,6 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     ExportComponent,
     PrintComponent
   ],
-  providers: [DatePipe]
+  providers: [DatePipe, CurrencyPipe]
 })
 export class SharedModule { }

@@ -153,14 +153,13 @@
                                 </mat-error>
                             </mat-form-field>
                             <mat-form-field appearance="outline">
-                                <mat-label>{{ 'basic.country' | translate }}</mat-label>
-                                <input matInput formControlName="country">
-                                <mat-error *ngIf="getAddresseFormGroup(i).controls['country'].errors">
-                                    <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.required">
-                                        {{ 'validation.required' | translate:{'s':'basic.country' | translate } }}
-                                    </div>
-                                </mat-error>
+                                <mat-label>{{ 'settings.locale-option.country' | translate }}</mat-label>
+                                <mat-select formControlName="country" (selectionChange)="selectCountry($event)">
+                                    <mat-option [value]="option.value" *ngFor="let option of countries">{{ option.viewValue }}</mat-option>
+                                </mat-select>
                             </mat-form-field>
+
+
                         </div>
 
                         <div class="action">

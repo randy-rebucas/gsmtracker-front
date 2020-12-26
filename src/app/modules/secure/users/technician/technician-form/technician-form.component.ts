@@ -2,8 +2,13 @@ import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/co
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { switchMap } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { Settings } from 'src/app/shared/interfaces/settings';
+import { CountriesService } from 'src/app/shared/services/countries.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { SettingsService } from 'src/app/shared/services/settings.service';
+import { UploadService } from 'src/app/shared/services/upload.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { SubSink } from 'subsink';
 import { TechnicianService } from '../technician.service';
@@ -21,7 +26,8 @@ export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit
   public dialogTitle: string;
   public innerTranslate: string;
   public startDate = new Date(1990, 0, 1);
-
+  public countries: any[] = [];
+  public setting: Settings;
   private subs = new SubSink();
 
   constructor(
@@ -29,6 +35,9 @@ export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit
     private technicianService: TechnicianService,
     private translate: TranslateService,
     private notificationService: NotificationService,
+    private country: CountriesService,
+    private settingsService: SettingsService,
+    private uploadService: UploadService,
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
     public dialogRef: MatDialogRef<TechnicianFormComponent>,
@@ -36,6 +45,7 @@ export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit
   ) {
     this.technicianId = data.id;
     this.dialogTitle = data.title;
+    this.userId = this.authenticationService.getUserId();
   }
 
   ngOnInit(): void {
@@ -86,12 +96,22 @@ export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit
       }),
       addresses: this.formBuilder.array([this.addAddressGroup()])
     });
+
+    const newCountries = [];
+    this.subs.sink = this.country.allCountries().subscribe((countries) => {
+      for (const key in countries) {
+        if (Object.prototype.hasOwnProperty.call(countries, key)) {
+          const element = countries[key];
+          newCountries.push({value: element.name, viewValue: element.name});
+        }
+      }
+      this.countries = newCountries;
+    });
   }
 
   ngAfterViewInit(): void {
     if (this.technicianId) {
       this.subs.sink = this.technicianService.get(this.technicianId).subscribe((technicianResponse) => {
-        console.log(technicianResponse);
         this.userId = technicianResponse.userId._id;
         this.form.patchValue({
           ownerId: technicianResponse.ownerId,
@@ -110,7 +130,36 @@ export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit
         }
         this.form.patchValue({addresses: address});
       });
+    } else {
+
+      this.settingsService.getSetting(this.userId);
+      this.subs.sink = this.settingsService.getSettingListener()
+      .pipe(
+        switchMap(setting => {
+          this.setting = setting;
+          return this.uploadService.get(setting._id);
+        })
+      )
+      .subscribe((mergeRes) => {
+        const settingResponse = { ...this.setting, ...mergeRes };
+
+        const addressControl = this.form.controls.addresses as FormArray;
+        const address = [{
+          address1: null,
+          address2: null,
+          city: null,
+          country: settingResponse.country,
+          current: false,
+          postalCode: null,
+          province: null
+        }];
+        for (let i = 1; i < address.length; i++) {
+          addressControl.push(this.addAddressGroup());
+        }
+        this.form.patchValue({addresses: address});
+      });
     }
+
   }
 
   addAddressGroup() {

@@ -7,15 +7,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./prompt.component.scss']
 })
 export class PromptComponent implements OnInit {
-  message: string;
-  title: string;
+  dialogMessage: string;
+  dialogTitle: string;
 
   constructor(
     public dialogRef: MatDialogRef<PromptComponent>,
     @Inject(MAT_DIALOG_DATA) data
   ) {
-    this.title = data.title;
-    this.message = data.message;
+    this.dialogTitle = data.title;
+    this.dialogMessage = data.message;
   }
 
   ngOnInit(): void {

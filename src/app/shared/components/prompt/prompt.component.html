@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>{{ title }}</h2>
-<mat-dialog-content>{{ message }}</mat-dialog-content>
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+<mat-dialog-content>{{ dialogMessage }}</mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>{{ 'common.close' | translate }}</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>{{ 'common.yes' | translate }}</button>
+    <button mat-button mat-dialog-close>{{ 'common.close' | translate }}</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>{{ 'common.yes' | translate }}</button>
 </mat-dialog-actions>

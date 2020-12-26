@@ -48,7 +48,6 @@ export class TechnicianService {
   }
 
   getMap(technicianData) {
-    console.log(technicianData);
     return { technicians: technicianData.technicians.map(technician => {
       const technicianFirstname = technician.userId.name.firstname;
       const technicianLastname = technician.userId.name.lastname;

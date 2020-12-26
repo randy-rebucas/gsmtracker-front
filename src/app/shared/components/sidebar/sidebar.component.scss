@@ -1,7 +1,8 @@
-:host {
-    .mat-icon {
-        vertical-align: middle;
-        margin-right: 20px;
+app-sidebar {
+    button {
+        margin: 0 10px 10px !important;
+        width: 94%;
+        border-radius: 20px !important;
     }
     .profile-card {
         padding: 10px 20px;
@@ -27,42 +28,50 @@
             }
         }
     }
-}
-
-mat-nav-list {
-  height: 350px;
-  overflow: overlay;
-}
-
-mat-nav-list::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,.26);
-}
-
-mat-nav-list::-webkit-scrollbar {
-  height: 4px;
-  width: 4px;
-}
-
-.arrow-up mat-icon {
-    transform: rotateZ(-180deg);
-}
-
-mat-icon {
-    transition: .15s transform;
-}
-
-a.mat-list-item span {
-    flex-grow: 2;
-}
-
-.action {
-    flex-grow: 1;
-    text-align: right;
-}
-
-.loading {
-    animation: progress 2s ease-in-out infinite;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .2), transparent);
+    mat-nav-list {
+        height: 350px;
+        overflow: overlay;
+        a.mat-list-item {
+            .mat-list-item-content {
+                .action {
+                    flex-grow: 1;
+                    text-align: right;
+                    visibility: hidden;
+                }
+                mat-icon {
+                    transition: .15s transform;
+                }
+                &:hover {
+                    .action {
+                        visibility: visible;
+                    }
+                }
+            }
+            span {
+                flex-grow: 2;
+            }
+            &.arrow-up {
+                mat-icon {
+                    transform: rotateZ(-180deg);
+                }
+            }
+        }
+        &::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, .26);
+        }
+        &::-webkit-scrollbar {
+            height: 4px;
+            width: 4px;
+        }
+    }
+    .mat-icon {
+        vertical-align: middle;
+        margin-right: 20px;
+    }
+    .loading {
+        animation: progress 2s ease-in-out infinite;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .2), transparent);
+    }
 }
 
 @keyframes progress {
@@ -72,18 +81,4 @@ a.mat-list-item span {
     100% {
         background-position: calc(200px + 100%) 0;
     }
-}
-
-.action {
-  visibility: hidden;
-}
-
-::ng-deep .mat-list-item-content:hover .action {
-  visibility: visible;
-}
-
-mat-nav-list.mat-nav-list.mat-list-base {
-  position: relative;
-  z-index: 9;
-  background: #fff;
 }

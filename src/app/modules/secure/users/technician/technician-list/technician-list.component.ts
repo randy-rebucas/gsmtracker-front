@@ -112,7 +112,6 @@ export class TechnicianListComponent implements OnInit, OnDestroy, AfterViewInit
       ).subscribe(
         data => {
           this.dataSource = new MatTableDataSource(this.setOwnerShip(data));
-          console.log(this.dataSource);
         }
       );
 

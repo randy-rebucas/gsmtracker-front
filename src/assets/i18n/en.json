@@ -149,6 +149,9 @@
         "new-password": "New Passwordd",
         "new-email": "New email"
     },
+    "exports": {
+        "selected": "Selected repairs ({{s}})"
+    },
     "settings": {
         "title": "Settings",
         "heading": "Heading",
@@ -190,6 +193,9 @@
         "ok": "Ok",
         "no": "No",
         "yes": "Yes",
+        "option": "Option",
+        "selected": "Selected",
+        "select": "Select",
         "request": "Request",
         "create": "Create",
         "edit": "Edit",

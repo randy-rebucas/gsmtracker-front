@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subscription, Observable, forkJoin } from 'rxjs';
@@ -18,6 +18,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { RepairFormComponent } from 'src/app/modules/secure/repairs/repair-form/repair-form.component';
 import { UserService } from '../../services/user.service';
 import { RepairsService } from 'src/app/modules/secure/repairs/repairs.service';
+import { Settings } from '../../interfaces/settings';
+import { SubSink } from 'subsink';
 
 export interface Label {
   label: string;
@@ -26,31 +28,36 @@ export interface Label {
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SidebarComponent implements OnInit, OnDestroy {
-
   public perPage: number;
   public currentPage: number;
   public imagePath: any;
-  defaultImage: any;
-  imagePreview: any;
-  fullname: string;
-  email: string;
-  userData: any;
-  user: any;
-  showLabel: boolean;
-  labels: any[];
-  labelsSub: Subscription;
-  userSub: Subscription;
+  public defaultImage: any;
+  public imagePreview: any;
+  public fullname: string;
+  public email: string;
+  public userData: any;
+  public user: any;
+  public showLabel: boolean;
+  public labels: any[];
+  public isLoading: boolean;
 
-  isLoading: boolean;
-  userId: string;
-  setting: any;
-
+  public setting: Settings;
   public selection = new SelectionModel<any>(true, []);
-  selectedItem: any[];
+  public selectedItem: any[];
+  public importTitle: string;
+  public exportTitle: string;
+  public printTitle: string;
+  public profileTitle: string;
+  public dialogLabelTitle: string;
+  public dialogLabelButton: string;
+  public innerLabelTransalate: string;
 
+  private userId: string;
+  private subs = new SubSink();
   constructor(
     private translate: TranslateService,
     private settingsService: SettingsService,
@@ -72,37 +79,51 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.translate.get([
+      'repairs.import-repairs',
+      'repairs.export-repairs',
+      'repairs.print-repairs',
+      'common.profile',
+      'labels.title'
+    ]).subscribe((translate) => {
+      this.importTitle = translate['repairs.import-repairs'];
+      this.exportTitle = translate['repairs.export-repairs'];
+      this.printTitle = translate['repairs.print-repairs'];
+      this.profileTitle = translate['common.profile'];
+      this.innerLabelTransalate = translate['labels.title'];
+    });
+
     this.settingsService.getSetting(this.userId);
-    this.settingsService.getSettingListener()
+    this.subs.sink = this.settingsService.getSettingListener()
     .subscribe((setting) => {
       this.translate.use((setting) ? setting.language : this.appConfigurationService.language);
       this.setting = setting;
     });
 
     this.labelsService.getAll(this.userId);
-    this.labelsSub = this.labelsService.getLabels()
+    this.subs.sink = this.labelsService.getLabels()
       .subscribe((res) => {
       this.labels = res.labels;
     });
 
-    this.uploadService.getProfilePicture().subscribe((image) => {
+    this.subs.sink = this.uploadService.getProfilePicture().subscribe((image) => {
       this.imagePreview = image;
     });
 
     this.email = this.authenticationService.getUserEmail();
 
-    this.getData(this.userId).subscribe((resData) => {
+    this.subs.sink = this.getData(this.userId).subscribe((resData) => {
       this.isLoading = false;
       const merge = {...resData[0], ...resData[1], ...resData[2]};
       this.fullname = merge.name.firstname + ' ' + merge.name.lastname;
       this.imagePreview = merge.image;
     });
 
-    this.userSub = this.userService.getSubListener().subscribe((userListener) => {
+    this.subs.sink = this.userService.getSubListener().subscribe((userListener) => {
       this.fullname = userListener.name.firstname + ' ' + userListener.name.midlename + ' ' + userListener.name.lastname;
     });
 
-    this.repairsService.getSelectedItem().subscribe((res) => {
+    this.subs.sink = this.repairsService.getSelectedItem().subscribe((res) => {
       this.selectedItem = res;
     });
   }
@@ -119,12 +140,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.autoFocus = true;
     dialogConfig.width = '45%';
     // set modal attribute
-    this.translate.get('common.profile').subscribe((language) => {
-      dialogConfig.data = {
-        title: language,
-        id: this.userId
-      };
-    });
+    dialogConfig.data = {
+      title: this.profileTitle,
+      id: this.userId
+    };
 
     this.dialog.open(ProfileComponent, dialogConfig);
   }
@@ -134,49 +153,46 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   onCreateLabel(labelId?: string) {
-    let modalTitle = '';
-    let modalBtn = '';
-    this.translate.get((labelId) ? 'labels.update-labels' : 'labels.create-labels').subscribe((res: string) => {
-      modalTitle = res;
-    });
-    this.translate.get((labelId) ? 'common.update' : 'common.submit').subscribe((res: string) => {
-      modalBtn = res;
+    this.subs.sink = this.translate.get([
+      (labelId) ? 'labels.update-labels' : 'labels.create-labels',
+      (labelId) ? 'common.update' : 'common.submit'
+    ]).subscribe((translate: string) => {
+      this.dialogLabelTitle = translate[(labelId) ? 'labels.update-labels' : 'labels.create-labels'];
+      this.dialogLabelButton = translate[(labelId) ? 'common.update' : 'common.submit'];
     });
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: modalTitle,
-      btn: modalBtn,
+      title: this.dialogLabelTitle,
+      btn: this.dialogLabelButton,
       id: labelId
     };
-    this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
+    this.subs.sink = this.dialog.open(LabelComponent, dialogConfig).afterClosed().subscribe((result) => {
       if (result) {
-        let norifResMessgae = '';
-        this.translate.get(
+        this.subs.sink = this.translate.get(
           (result === 'update') ? 'common.updated-message' : 'common.created-message',
-          {s: 'Label'}
-        ).subscribe((res: string) => {
-          norifResMessgae = res;
+          {s: this.innerLabelTransalate}
+        ).subscribe((translate: string) => {
+          this.notificationService.success(translate);
+          this.labelsService.getAll(this.userId);
         });
-        this.notificationService.success(norifResMessgae);
-        this.labelsService.getAll(this.userId);
       }
     });
   }
 
   onDeleteLabel(labelId?: string) {
-    this.labelsService.delete(labelId).subscribe(() => {
-      this.translate.get('common.deleted-message', {s: 'Label'})
-      .subscribe((norifResMessgae: string) => {
-        this.notificationService.success(norifResMessgae);
+    this.subs.sink = this.labelsService.delete(labelId).subscribe(() => {
+      this.subs.sink = this.translate.get('common.deleted-message', {s: this.innerLabelTransalate})
+      .subscribe((translate: string) => {
+        this.notificationService.success(translate);
         this.labelsService.getAll(this.userId);
       });
     });
   }
 
-  onDialogOpen() {
+  onCreateNew() {
     this.router.navigate(['/secure/repairs/form']);
   }
 
@@ -185,13 +201,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '25%';
-    this.translate.get([
-      'patients.import-patients'
-    ]).subscribe((translate) => {
-      dialogConfig.data = {
-        title: translate['patients.import-patients']
-      };
-    });
+    dialogConfig.data = {
+      title: this.importTitle
+    };
+
     this.dialog.open(ImportComponent, dialogConfig);
   }
 
@@ -200,14 +213,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '25%';
-    this.translate.get([
-      'repairs.export-repairs'
-    ]).subscribe((translate) => {
-      dialogConfig.data = {
-        title: translate['repairs.export-repairs'],
-        selectedItem: this.selectedItem
-      };
-    });
+    dialogConfig.data = {
+      title: this.exportTitle,
+      selectedItem: this.selectedItem
+    };
+
     this.dialog.open(ExportComponent, dialogConfig);
   }
 
@@ -216,14 +226,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = '25%';
-    this.translate.get([
-      'repairs.print-repairs'
-    ]).subscribe((translate) => {
-      dialogConfig.data = {
-        title: translate['repairs.print-repairs'],
-        selectedItem: this.selectedItem
-      };
-    });
+    dialogConfig.data = {
+      title: this.printTitle,
+      selectedItem: this.selectedItem
+    };
+
     this.dialog.open(PrintComponent, dialogConfig);
   }
 
@@ -232,7 +239,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.userSub.unsubscribe();
-    this.labelsSub.unsubscribe();
+    this.subs.unsubscribe();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, LOCALE_ID, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatSelectChange } from '@angular/material/select';
@@ -11,17 +11,18 @@ import { UploadService } from '../../services/upload.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { RepairsService } from 'src/app/modules/secure/repairs/repairs.service';
 import { AngularCsv } from 'angular7-csv/dist/Angular-csv';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, formatCurrency, getCurrencySymbol } from '@angular/common';
+import { SubSink } from 'subsink';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-export',
   templateUrl: './export.component.html',
   styleUrls: ['./export.component.scss']
 })
-export class ExportComponent implements OnInit, OnDestroy {
+export class ExportComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedOption: string;
   userId: string;
-  labelsSub: Subscription;
   labels: any[];
   setting: Settings;
   imagePath: any;
@@ -29,24 +30,58 @@ export class ExportComponent implements OnInit, OnDestroy {
   items: any;
   itemCount: number;
   optionPicked: string;
-  title: string;
+  dialogTitle: string;
+  selectedCurrency: string;
+  innerMyRepair: string;
+  innerRepair: string;
+  innerCustomer: string;
+  innerPhone: string;
+  innerTechnician: string;
+  innerCreated: string;
+  innerWarranty: string;
+  innerAmount: any;
+  private subs = new SubSink();
 
   constructor(
+    private currencyPipe: CurrencyPipe,
     private labelsService: LabelsService,
     private settingsService: SettingsService,
     private uploadService: UploadService,
+    private translate: TranslateService,
     private authenticationService: AuthenticationService,
     private repairsService: RepairsService,
     private datePipe: DatePipe,
     public dialogRef: MatDialogRef < ExportComponent >,
+    @Inject(LOCALE_ID) private locale: string,
     @Inject(MAT_DIALOG_DATA) data
   ) {
-    this.title = data.title;
+    this.dialogTitle = data.title;
     this.items = data.selectedItem;
     this.userId = this.authenticationService.getUserId();
   }
 
   ngOnInit(): void {
+    this.subs.sink = this.translate.get([
+      'repairs.my-repairs',
+      'repairs.title',
+      'customers.title',
+      'basic.phone',
+      'technicians.title',
+      'basic.created',
+      'repairs.warranty',
+      'repairs.amount-paid'
+    ])
+    .subscribe(translat => {
+      this.innerMyRepair = translat['repairs.my-repairs'];
+      this.innerRepair = translat['repairs.title'];
+      this.innerCustomer = translat['customers.title'];
+      this.innerPhone = translat['basic.phone'];
+      this.innerWarranty = translat['repairs.warranty'];
+      this.innerAmount = translat['repairs.amount-paid'];
+      this.innerTechnician = translat['technicians.title'];
+      this.innerCreated = translat['basic.created'];
+    });
+
     // set option
     this.optionPicked = (this.items) ? 'selected' : 'option';
     // count selected items
@@ -55,13 +90,15 @@ export class ExportComponent implements OnInit, OnDestroy {
     this.selectedOption = (this.items) ? '' : 'my-repair';
 
     this.labelsService.getAll(this.userId);
-    this.labelsSub = this.labelsService.getLabels()
+    this.subs.sink = this.labelsService.getLabels()
       .subscribe((res) => {
       this.labels = res.labels;
     });
+  }
 
+  ngAfterViewInit() {
     this.settingsService.getSetting(this.userId);
-    this.settingsService.getSettingListener()
+    this.subs.sink = this.settingsService.getSettingListener()
     .pipe(
       switchMap(setting => {
         this.setting = setting;
@@ -69,7 +106,9 @@ export class ExportComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe((mergeRes) => {
-      this.settingsData = { ...this.setting, ...mergeRes };
+      const settingResponse = { ...this.setting, ...mergeRes };
+      console.log(settingResponse);
+      this.selectedCurrency = settingResponse.currency;
     });
   }
 
@@ -85,59 +124,36 @@ export class ExportComponent implements OnInit, OnDestroy {
       decimalseparator: '.',
       showLabels: true,
       showTitle: false,
-      title: 'Repairs',
+      title: this.innerRepair,
       useBom: true,
       noDownload: false,
       headers: [
-        'Customer',
-        'Phone',
-        'Technician',
-        'created'
+        this.innerCustomer,
+        this.innerPhone,
+        this.innerWarranty,
+        this.innerAmount,
+        this.innerTechnician,
+        this.innerCreated
       ]
     };
 
     const repairList = [];
     for (const iterator of repairs) {
-      console.log(iterator);
-      // const dataObj = {
-      //   fullname: iterator.firstname,
-      //   midlename: iterator.midlename,
-      //   lastname: iterator.lastname,
-      //   contact: iterator.contact,
-      //   gender: iterator.gender,
-      //   birthdate: this.datePipe.transform(iterator.birthdate, 'yyyy-MM-dd'),
-      //   created: this.datePipe.transform(iterator.created, 'yyyy-MM-dd')
-      // };
-
-      // let addressObj = {};
-      // if (iterator.address.length > 1 ) {
-      //   iterator.address.forEach(el => {
-      //     if (el.current) {
-      //       addressObj = {
-      //         address: el.address1 + ' ' + el.address2,
-      //         city: el.city,
-      //         province: el.province,
-      //         country: el.country,
-      //         postalCode: el.postalCode
-      //       };
-      //     }
-      //   });
-      // } else {
-      //   addressObj = {
-      //     address: iterator.address[0].address1 + ' ' + iterator.address[0].address2,
-      //     city: iterator.address[0].city,
-      //     province: iterator.address[0].province,
-      //     country: iterator.address[0].country,
-      //     postalCode: iterator.address[0].postalCode
-      //   };
-      // }
-
-      // const mergeObj = {...dataObj, ...addressObj};
-
-      // repairList.push(mergeObj);
+      // console.log(iterator);
+      const phoneBrand = iterator.phoneInfo.brand;
+      const phoneModel = iterator.phoneInfo.model;
+      const dataObj = {
+        customerName: iterator.customer,
+        phone: phoneModel.concat(', ', phoneBrand),
+        warranty: iterator.warranty,
+        technician: iterator.technician,
+        amountPaid: formatCurrency(iterator.amountPaid, this.locale, getCurrencySymbol(this.selectedCurrency, 'narrow')),
+        created: this.datePipe.transform(iterator.created, 'yyyy-MM-dd'),
+      };
+      repairList.push(dataObj);
     }
     // tslint:disable-next-line: no-unused-expression
-    // new AngularCsv(repairList, 'Repair', csvOptions);
+    new AngularCsv(repairList, 'Repairs', csvOptions);
   }
 
   onExport() {
@@ -147,7 +163,7 @@ export class ExportComponent implements OnInit, OnDestroy {
       // set label filter
       const hasLabel = (this.selectedOption !== 'my-repair') ? this.selectedOption : '';
       this.repairsService.getAll(null, null, hasLabel, this.userId);
-      this.repairsService.getUpdateListener().subscribe((repair) => {
+      this.subs.sink = this.repairsService.getUpdateListener().subscribe((repair) => {
         this.doExport(repair.repairs);
       });
     }
@@ -158,6 +174,6 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.labelsSub.unsubscribe();
+    this.subs.unsubscribe();
   }
 }

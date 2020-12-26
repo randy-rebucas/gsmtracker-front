@@ -19,7 +19,7 @@ export interface Practices {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  public title: string;
+  public dialogTitle: string;
   public userId: string;
   public user: any;
   public isLoading: boolean;
@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
     private dialogRef: MatDialogRef < ProfileComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
-    this.title = data.title;
+    this.dialogTitle = data.title;
     this.userId = data.id;
   }
 

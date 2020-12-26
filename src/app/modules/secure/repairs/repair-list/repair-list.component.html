@@ -121,7 +121,7 @@
 
     <ng-container matColumnDef="amount">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.amount' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.amountPaid | currency:'PHP':'symbol-narrow'}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.amountPaid | currency:selectedCurrency:'symbol-narrow'}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="action">
@@ -176,7 +176,7 @@
                     </mat-card-header>
                     <mat-card-content>
                         <p>{{ 'basic.warranty' | translate }}: {{element.warranty}}</p>
-                        <p>{{ 'basic.amount' | translate }}: {{element.amountPaid | currency:'PHP':'symbol-narrow'}}</p>
+                        <p>{{ 'basic.amount' | translate }}: {{element.amountPaid | currency:selectedCurrency:'symbol-narrow'}}</p>
                     </mat-card-content>
                 </mat-card>
             </div>

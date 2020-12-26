@@ -1,8 +1,9 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LabelsService } from '../../services/labels.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
+import { SubSink } from 'subsink';
 
 
 @Component({
@@ -10,23 +11,23 @@ import { AuthenticationService } from 'src/app/modules/authentication/authentica
   templateUrl: './label.component.html',
   styleUrls: ['./label.component.scss']
 })
-export class LabelComponent implements OnInit {
-  form: FormGroup;
-  title: string;
-  labelId: string;
-  btn: string;
-  setting: any;
-  userId: string;
+export class LabelComponent implements OnInit, OnDestroy {
+  public form: FormGroup;
+  public dialogTitle: string;
+  public dialogButton: string;
+  public labelId: string;
+  public userId: string;
   @ViewChild('labelInput', {static: true}) labelInput: any;
 
+  private subs = new SubSink();
   constructor(
     private authenticationService: AuthenticationService,
     private labelsService: LabelsService,
     public dialogRef: MatDialogRef < LabelComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
-    this.title = data.title;
-    this.btn = data.btn;
+    this.dialogTitle = data.title;
+    this.dialogButton = data.btn;
     this.labelId = data.id;
     this.userId = this.authenticationService.getUserId();
   }
@@ -35,7 +36,7 @@ export class LabelComponent implements OnInit {
     this.labelInput.nativeElement.focus();
 
     if (this.labelId) {
-      this.labelsService.get(this.labelId).subscribe(res => {
+      this.subs.sink = this.labelsService.get(this.labelId).subscribe(res => {
         this.form.patchValue({
           label: res.label,
         });
@@ -59,24 +60,26 @@ export class LabelComponent implements OnInit {
       label: this.form.value.label
     };
 
-    const labelId = {
-      _id: this.labelId,
-    };
-
     const updatePatient = {
-      ...newLabel, ...labelId
+      ...newLabel, ...{
+        _id: this.labelId,
+      }
     };
 
     if (!this.labelId) {
-      this.labelsService.insert(newLabel).subscribe((res) => {
+      this.subs.sink = this.labelsService.insert(newLabel).subscribe((res) => {
         this.form.reset();
         this.dialogRef.close('new');
       });
     } else {
-      this.labelsService.update(updatePatient).subscribe(() => {
+      this.subs.sink = this.labelsService.update(updatePatient).subscribe(() => {
         this.form.reset();
         this.dialogRef.close('update');
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }
