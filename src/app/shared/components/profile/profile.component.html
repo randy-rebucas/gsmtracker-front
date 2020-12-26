@@ -17,34 +17,34 @@
             </mat-form-field>
             <form [formGroup]="formChangeEmail" class="auth-form" id="change-email" (submit)="onChangeEmail()" *ngIf="isChangeEmail">
                 <mat-form-field>
-                    <mat-label>Previous Password</mat-label>
+                    <mat-label>{{ 'profile.previous-password' | translate }}</mat-label>
                     <input matInput type="password" formControlName="oldPass">
                     <mat-error *ngIf="emailFormCtrls.oldPass.errors">
                         <div *ngIf="emailFormCtrls.oldPass.errors.required">
-                            {{ 'validation.required' | translate:{'s':'old password'} }}
+                            {{ 'validation.required' | translate:{'s':'profile.previous-password' | translate} }}
                         </div>
                         <div *ngIf="emailFormCtrls.oldPass.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'profile.previous-password' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>New email</mat-label>
+                    <mat-label>{{ 'profile.new-email' | translate }}</mat-label>
                     <input matInput formControlName="newEmail">
                     <mat-error *ngIf="emailFormCtrls.newEmail.errors">
                         <div *ngIf="emailFormCtrls.newEmail.errors.required">
-                            {{ 'validation.required' | translate:{'s':'email'} }}
+                            {{ 'validation.required' | translate:{'s':'profile.new-email' | translate} }}
                         </div>
                         <div *ngIf="emailFormCtrls.newEmail.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'email'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'profile.new-email' | translate} }}
                         </div>
                         <div *ngIf="emailFormCtrls.newEmail.errors.email">
-                            {{ 'validation.invalid' | translate:{'s':'email'} }}
+                            {{ 'validation.invalid' | translate:{'s':'profile.new-email' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
-                <button type="button" mat-button (click)="changeEmail()">Cancel</button>
-                <button type="submit" mat-button color="primary">Update</button>
+                <button type="button" mat-button (click)="changeEmail()">{{ 'common.cancel' | translate }}</button>
+                <button type="submit" mat-button color="primary">{{ 'common.update' | translate }}</button>
             </form>
 
             <mat-form-field appearance="outline" *ngIf="!isChangePass">
@@ -56,31 +56,31 @@
             </mat-form-field>
             <form [formGroup]="formChangePass" class="auth-form" id="change-pass" (submit)="onChangePass()" *ngIf="isChangePass">
                 <mat-form-field>
-                    <mat-label>Previous Password</mat-label>
+                    <mat-label>{{ 'profile.previous-password' | translate }}</mat-label>
                     <input matInput type="password" formControlName="oldPass">
                     <mat-error *ngIf="passFormCtrls.oldPass.errors">
                         <div *ngIf="passFormCtrls.oldPass.errors.required">
-                            {{ 'validation.required' | translate:{'s':'old password'} }}
+                            {{ 'validation.required' | translate:{'s':'profile.previous-password' | translate} }}
                         </div>
                         <div *ngIf="passFormCtrls.oldPass.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'old password'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'profile.previous-password' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>New Password</mat-label>
+                    <mat-label>{{ 'profile.new-password' | translate }}</mat-label>
                     <input matInput type="password" formControlName="newPass">
                     <mat-error *ngIf="passFormCtrls.newPass.errors">
                         <div *ngIf="passFormCtrls.newPass.errors.required">
-                            {{ 'validation.required' | translate:{'s':'new password'} }}
+                            {{ 'validation.required' | translate:{'s':'profile.new-password' | translate} }}
                         </div>
                         <div *ngIf="passFormCtrls.newPass.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'new password'} }}
+                            {{ 'validation.maxLength' | translate:{'s':'10', 'ctrl': 'profile.new-password' | translate} }}
                         </div>
                     </mat-error>
                 </mat-form-field>
-                <button type="button" mat-button (click)="changePass()">Cancel</button>
-                <button type="submit" mat-button color="primary">Update</button>
+                <button type="button" mat-button (click)="changePass()">{{ 'common.cancel' | translate }}</button>
+                <button type="submit" mat-button color="primary">{{ 'common.update' | translate }}</button>
             </form>
             <form [formGroup]="form" class="profile-form" (submit)="onSubmit()">
                 <h2 class="mat-subheading-2">{{ 'basic.basic-information' | translate }}</h2>
@@ -90,10 +90,10 @@
                         <input matInput formControlName="firstname" uppercase>
                         <mat-error *ngIf="formCtrls.firstname.errors">
                             <div *ngIf="formCtrls.firstname.errors.required">
-                                {{ 'validation.required' | translate:{'s':'firstname'} }}
+                                {{ 'validation.required' | translate:{'s':'basic.firstname' | translate} }}
                             </div>
                             <div *ngIf="formCtrls.firstname.errors.maxlength">
-                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'basic.firstname' | translate} }}
                             </div>
                         </mat-error>
                     </mat-form-field>
@@ -102,10 +102,10 @@
                         <input matInput formControlName="midlename">
                         <mat-error *ngIf="formCtrls.midlename.errors">
                             <div *ngIf="formCtrls.midlename.errors.required">
-                                {{ 'validation.required' | translate:{'s':'lastname'} }}
+                                {{ 'validation.required' | translate:{'s':'basic.middlename' | translate} }}
                             </div>
                             <div *ngIf="formCtrls.midlename.errors.maxlength">
-                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'basic.middlename' | translate} }}
                             </div>
                         </mat-error>
                     </mat-form-field>
@@ -114,10 +114,10 @@
                         <input matInput formControlName="lastname">
                         <mat-error *ngIf="formCtrls.lastname.errors">
                             <div *ngIf="formCtrls.lastname.errors.required">
-                                {{ 'validation.required' | translate:{'s':'lastname'} }}
+                                {{ 'validation.required' | translate:{'s':'basic.lastname' | translate} }}
                             </div>
                             <div *ngIf="formCtrls.lastname.errors.maxlength">
-                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'lastname'} }}
+                                {{ 'validation.maxLength' | translate:{'s':'30', 'ctrl': 'basic.lastname' | translate} }}
                             </div>
                         </mat-error>
                     </mat-form-field>
@@ -128,16 +128,16 @@
                         <input matInput formControlName="contact">
                         <mat-error *ngIf="formCtrls.contact.errors">
                             <div *ngIf="formCtrls.contact.errors.required">
-                                {{ 'validation.required' | translate:{'s':'contact'} }}
+                                {{ 'validation.required' | translate:{'s':'basic.contact' | translate} }}
                             </div>
                             <div *ngIf="formCtrls.contact.errors.maxlength">
-                                {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'contact'} }}
+                                {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'basic.contact' | translate} }}
                             </div>
                             <div *ngIf="formCtrls.contact.errors.minlength">
-                                {{ 'validation.minLength' | translate:{'s':'9', 'ctrl': 'contact'} }}
+                                {{ 'validation.minLength' | translate:{'s':'9', 'ctrl': 'basic.contact' | translate} }}
                             </div>
                             <div *ngIf="formCtrls.contact.errors.pattern">
-                                {{ 'validation.pattern' | translate:{'s': 'contact'} }}
+                                {{ 'validation.pattern' | translate:{'s': 'basic.contact' | translate} }}
                             </div>
                         </mat-error>
                     </mat-form-field>
@@ -149,7 +149,7 @@
                         </mat-select>
                         <mat-error *ngIf="formCtrls.gender.errors">
                             <div *ngIf="formCtrls.gender.errors.required">
-                                {{ 'validation.required' | translate:{'s':'gender'} }}
+                                {{ 'validation.required' | translate:{'s':'basic.gender' | translate} }}
                             </div>
                         </mat-error>
                     </mat-form-field>
@@ -160,7 +160,7 @@
                         <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
                         <mat-error *ngIf="formCtrls.birthdate.errors">
                             <div *ngIf="formCtrls.birthdate.errors.required">
-                                {{ 'validation.required' | translate:{'s':'birthdate'} }}
+                                {{ 'validation.required' | translate:{'s':'basic.birthdate' | translate} }}
                             </div>
                         </mat-error>
                     </mat-form-field>
@@ -181,10 +181,10 @@
                                     <input matInput formControlName="address1">
                                     <mat-error *ngIf="getAddresseFormGroup(i).controls['address1'].errors">
                                         <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.required">
-                                            {{ 'validation.required' | translate:{'s':'address1'} }}
+                                            {{ 'validation.required' | translate:{'s':'basic.street-line1' | translate} }}
                                         </div>
                                         <div *ngIf="getAddresseFormGroup(i).controls['address1'].errors.maxlength">
-                                            {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address1'} }}
+                                            {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'basic.street-line1' | translate} }}
                                         </div>
                                     </mat-error>
                                 </mat-form-field>
@@ -194,10 +194,10 @@
                                     <input matInput formControlName="address2">
                                     <mat-error *ngIf="getAddresseFormGroup(i).controls['address2'].errors">
                                         <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.required">
-                                            {{ 'validation.required' | translate:{'s':'address2'} }}
+                                            {{ 'validation.required' | translate:{'s':'basic.street-line2' | translate} }}
                                         </div>
                                         <div *ngIf="getAddresseFormGroup(i).controls['address2'].errors.maxlength">
-                                            {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl': 'address2'} }}
+                                            {{ 'validation.maxLength' | translate:{'s':'250', 'ctrl':'basic.street-line2' | translate} }}
                                         </div>
                                     </mat-error>
                                 </mat-form-field>
@@ -208,10 +208,10 @@
                                         <input matInput formControlName="city">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['city'].errors">
                                             <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.required">
-                                                {{ 'validation.required' | translate:{'s':'province'} }}
+                                                {{ 'validation.required' | translate:{'s':'basic.city' | translate} }}
                                             </div>
                                             <div *ngIf="getAddresseFormGroup(i).controls['city'].errors.maxlength">
-                                                {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'city'} }}
+                                                {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'basic.city' | translate} }}
                                             </div>
                                         </mat-error>
                                     </mat-form-field>
@@ -220,10 +220,10 @@
                                         <input matInput formControlName="province">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['province'].errors">
                                             <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.required">
-                                                {{ 'validation.required' | translate:{'s':'province'} }}
+                                                {{ 'validation.required' | translate:{'s':'basic.province' | translate} }}
                                             </div>
                                             <div *ngIf="getAddresseFormGroup(i).controls['province'].errors.maxlength">
-                                                {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'province'} }}
+                                                {{ 'validation.maxLength' | translate:{'s':'50', 'ctrl': 'basic.province' | translate} }}
                                             </div>
                                         </mat-error>
                                     </mat-form-field>
@@ -234,13 +234,13 @@
                                         <input matInput formControlName="postalCode">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors">
                                             <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.required">
-                                                {{ 'validation.required' | translate:{'s':'postal code'} }}
+                                                {{ 'validation.required' | translate:{'s':'basic.postal-code' | translate} }}
                                             </div>
                                             <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.maxlength">
-                                                {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'postal code'} }}
+                                                {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'basic.postal-code' | translate} }}
                                             </div>
                                             <div *ngIf="getAddresseFormGroup(i).controls['postalCode'].errors.pattern">
-                                                {{ 'validation.pattern' | translate:{'s': 'postal code'} }}
+                                                {{ 'validation.pattern' | translate:{'s': 'basic.postal-code' | translate} }}
                                             </div>
                                         </mat-error>
                                     </mat-form-field>
@@ -249,7 +249,7 @@
                                         <input matInput formControlName="country">
                                         <mat-error *ngIf="getAddresseFormGroup(i).controls['country'].errors">
                                             <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.required">
-                                                {{ 'validation.required' | translate:{'s':'country'} }}
+                                                {{ 'validation.required' | translate:{'s':'basic.country' | translate} }}
                                             </div>
                                         </mat-error>
                                     </mat-form-field>
@@ -261,19 +261,6 @@
                     </div>
                 </ng-container>
 
-                <!-- <h2 class="mat-subheading-2">{{ 'physicians.additional-info' | translate }} </h2>
-                <mat-form-field>
-                    <mat-label>{{ 'physicians.bio' | translate }}</mat-label>
-                    <textarea matInput formControlName="bio"></textarea>
-                    <mat-error *ngIf="formCtrls.bio.errors">
-                        <div *ngIf="formCtrls.bio.errors.required">
-                            {{ 'validation.required' | translate:{'s':'bio'} }}
-                        </div>
-                        <div *ngIf="formCtrls.bio.errors.maxlength">
-                            {{ 'validation.maxLength' | translate:{'s':'1500', 'ctrl': 'bio'} }}
-                        </div>
-                    </mat-error>
-                </mat-form-field> -->
             </form>
         </div>
     </div>

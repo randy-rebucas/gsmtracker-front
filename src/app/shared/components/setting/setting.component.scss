@@ -1,184 +1,125 @@
-.wrapper {
-    flex-grow: 1;
-    margin: 1em 0 3em;
+mat-dialog-content {
+    .normal-form {
+        .shop-info {
+            display: flex;
+            flex-direction: row;
+        }
+        .shop-logo {
+            margin-right: 1em;
+            width: 15%;
+        }
+        .shop-detail {
+            flex-grow: 1;
+            mat-form-field {
+                width: 100%;
+            }
+        }
+        .form-field-block {
+            display: flex;
+            flex-grow: 1;
+            flex-direction: row;
+            flex-basis: auto;
+            justify-content: space-between;
+            mat-form-field {
+                width: 100%;
+                margin: 0 10px;
+            }
+        }
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            margin: 15px 0;
+            .radio-button {
+                margin: 5px;
+            }
+        }
+    }
+    .danger-zone {
+        padding: 10px;
+    }
+    &::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, .26);
+    }
 }
 
-
-mat-form-field {
-    width: 100%;
-}
-
-
-mat-form-field.time {
-    width: 48%;
-    flex-direction: row;
-}
-
-.form-field-block {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: row;
-    flex-basis: auto;
-}
-
-.mat-form-field-flex .mat-form-field-infix ngx-material-timepicker-toggle button {
-    position: absolute !important;
-    right: 0;
-    top: 0;
-}
-
-.action-button {
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-
-mat-form-field.contact {
-    width: 48%;
-}
-
-.image-preview {
-    position: relative;
-    border: 2px solid transparent;
-}
-
-.image-preview:hover {
-    border: 2px solid #dcdcdc;
-}
-
-.image-preview button {
-    position: absolute;
-    right: 0;
-    visibility: hidden;
-}
-
-.image-preview:hover button {
-    visibility: visible;
-}
-
-.image-preview img {
-    width: 100%;
-}
-
-div#general-wrapper {
-    display: flex;
-    width: 60%;
-    justify-content: flex-start;
-}
-
-div#general-wrapper>div {
-    margin-right: 2em;
-}
-
-.rxpad-output {
-    border: 1px solid #dcdcdc;
-    min-height: 745px;
-    -webkit-box-shadow: -10px 10px 54px 0px rgba(224, 224, 224, 0.95);
-    -moz-box-shadow: -10px 10px 54px 0px rgba(224, 224, 224, 0.95);
-    box-shadow: -10px 10px 54px 0px rgba(224, 224, 224, 0.95);
-    position: relative;
-}
-
-.rxpad-output table {
-    width: 100%;
-    padding: 1em;
-}
-
-.rxpad-output .rxhead {
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
-
-.rxpad-output .rxhead h3 {
-    text-align: center;
-    font-weight: 400;
-    font-family: initial;
-    font-style: italic;
-    font-size: 28px;
-}
-
-.rxpad-output .rxhead h3 small {
-    font-style: initial;
-}
-
-.rxpad-output .rxhead table tr td:first-child {
-    width: 70%;
-}
-
-.rxhead table tr td {
-    font-family: monospace;
-    font-size: 14px;
-}
-
-.rxpad-output .rxfooter {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-
-.rxfooter table tr td {
-    font-family: monospace;
-    font-size: 14px;
-}
-
-.rxpad-output .rxfooter table tr td {
-    width: 50%;
-}
-
-.rxpad-output .rxfooter table tr td:last-child {
-    text-align: right;
-}
-
-.rxpad-output .rxbody {
-    position: absolute;
-    width: 100%;
-    top: 45%;
-}
-
-.rxpad-output .rxbody table tr td {
-    vertical-align: top;
-}
-
-.rxpad-output .rxbody table tr td span {
-    font-style: italic;
-}
-
-.rxpad-output .rxbody table tr td:last-child {
-    text-align: right;
-}
-
+// .wrapper {
+//     flex-grow: 1;
+//     margin: 1em 0 3em;
+// }
+// mat-form-field {
+//     width: 100%;
+// }
+// mat-form-field.time {
+//     width: 48%;
+//     flex-direction: row;
+// }
+// .form-field-block {
+//     display: flex;
+//     flex-grow: 1;
+//     flex-direction: row;
+//     flex-basis: auto;
+// }
+// .mat-form-field-flex .mat-form-field-infix ngx-material-timepicker-toggle button {
+//     position: absolute !important;
+//     right: 0;
+//     top: 0;
+// }
+// .action-button {
+//     position: absolute;
+//     right: 0;
+//     top: 0;
+// }
+// mat-form-field.contact {
+//     width: 48%;
+// }
+// .image-preview {
+//     position: relative;
+//     border: 2px solid transparent;
+// }
+// .image-preview:hover {
+//     border: 2px solid #dcdcdc;
+// }
+// .image-preview button {
+//     position: absolute;
+//     right: 0;
+//     visibility: hidden;
+// }
+// .image-preview:hover button {
+//     visibility: visible;
+// }
+// .image-preview img {
+//     width: 100%;
+// }
+// div#general-wrapper {
+//     display: flex;
+//     width: 60%;
+//     justify-content: flex-start;
+// }
 //-----------
-.radio-group,
-.toggle-group {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
-}
-
-.radio-button {
-    margin: 5px;
-}
-
-mat-slide-toggle {
-    margin: 5px;
-}
-
-.rx-block-wrapper {
-    background: #efefef;
-    padding: 1em;
-}
-
-.shop-info {
-  display: flex;
-  flex-direction: row;
-}
-
-.shop-logo {
-  margin-right: 1em;
-  width: 15%;
-}
-
-.shop-detail {
-  flex-grow: 1;
-}
+// .radio-group,
+// .toggle-group {
+//     display: flex;
+//     flex-direction: column;
+//     margin: 15px 0;
+// }
+// .radio-button {
+//     margin: 5px;
+// }
+// mat-slide-toggle {
+//     margin: 5px;
+// }
+// .shop-info {
+//     display: flex;
+//     flex-direction: row;
+// }
+// .shop-logo {
+//     margin-right: 1em;
+//     width: 15%;
+// }
+// .shop-detail {
+//     flex-grow: 1;
+// }

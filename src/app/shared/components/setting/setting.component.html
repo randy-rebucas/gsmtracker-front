@@ -3,32 +3,57 @@
     <form [formGroup]="form" class="normal-form" (submit)="onSubmit()">
         <h3>{{ 'settings.shop-details' | translate }}</h3>
         <div class="shop-info">
-          <div class="shop-logo" *ngIf="setting?._id">
-            <app-upload [sourceId]="setting?._id" [imagePreview]="imagePath" [size]="100" [defaultImage]="'/assets/images/clinic-blank.png'" [responseListener]="false"></app-upload>
-          </div>
-          <div class="shop-detail">
-            <mat-form-field>
-              <mat-label>{{ 'settings.shopname' | translate }}</mat-label>
-              <input matInput type="text" formControlName="shopname">
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>{{ 'settings.shopowner' | translate }}</mat-label>
-              <input matInput type="text" formControlName="shopowner">
-            </mat-form-field>
-          </div>
+            <div class="shop-logo" *ngIf="setting?._id">
+                <app-upload [sourceId]="setting?._id" [imagePreview]="imagePath" [size]="100" [defaultImage]="'/assets/images/clinic-blank.png'" [responseListener]="false"></app-upload>
+            </div>
+            <div class="shop-detail">
+                <mat-form-field>
+                    <mat-label>{{ 'settings.shopname' | translate }}</mat-label>
+                    <input matInput type="text" formControlName="shopname">
+                    <mat-error *ngIf="formCtrls.shopname.errors">
+                        <div *ngIf="formCtrls.shopname.errors.required">
+                            {{ 'validation.required' | translate:{'s':'settings.shopname' | translate} }}
+                        </div>
+                        <div *ngIf="formCtrls.shopname.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'150', 'ctrl': 'settings.shopname' | translate} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'settings.shopowner' | translate }}</mat-label>
+                    <input matInput type="text" formControlName="shopowner">
+                    <mat-error *ngIf="formCtrls.shopowner.errors">
+                        <div *ngIf="formCtrls.shopowner.errors.required">
+                            {{ 'validation.required' | translate:{'s':'settings.shopowner' | translate} }}
+                        </div>
+                        <div *ngIf="formCtrls.shopowner.errors.maxlength">
+                            {{ 'validation.maxLength' | translate:{'s':'150', 'ctrl': 'settings.shopowner' | translate} }}
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
         </div>
 
         <h3>{{ 'settings.language' | translate }}</h3>
-        <mat-radio-group formControlName="language" aria-label="Select an language" class="radio-group">
+        <mat-radio-group formControlName="language" class="radio-group">
             <mat-radio-button value="en" class="radio-button">{{ 'settings.language-option.en' | translate }}</mat-radio-button>
             <mat-radio-button value="de" class="radio-button">{{ 'settings.language-option.de' | translate }}</mat-radio-button>
             <mat-radio-button value="ar" class="radio-button">{{ 'settings.language-option.ar' | translate }}</mat-radio-button>
         </mat-radio-group>
+        <div class="form-field-block">
+            <mat-form-field>
+                <mat-label>{{ 'settings.currency' | translate }}</mat-label>
+                <mat-select formControlName="currency" (selectionChange)="selectCurrency($event)">
+                    <mat-option [value]="option.value" *ngFor="let option of currencies">{{ option.viewValue }}</mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <h3>{{ 'settings.notifications' | translate }}</h3>
-        <div class="toggle-group">
-            <mat-slide-toggle formControlName="appointments" class="toggle">{{ 'settings.new-canceled-appointment' | translate }}</mat-slide-toggle>
-            <mat-slide-toggle formControlName="updates" class="toggle">{{ 'settings.update-features' | translate }}</mat-slide-toggle>
+            <mat-form-field>
+                <mat-label>{{ 'settings.locale-option.country' | translate }}</mat-label>
+                <mat-select formControlName="country" (selectionChange)="selectCountry($event)">
+                    <mat-option [value]="option.value" *ngFor="let option of countries">{{ option.viewValue }}</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
     </form>
     <div class="danger-zone">

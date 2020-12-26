@@ -10,6 +10,8 @@ export class AppConfigurationService {
   version: string;
   tag: string;
   language: string;
+  currency: string;
+  country: string;
   constructor(
     private httpClient: HttpClient
   ) { }
@@ -27,6 +29,8 @@ export class AppConfigurationService {
         version: '1.0.0',
         tag: '-technicians record book!',
         language: 'en',
+        currency: 'PHP',
+        country: 'Philippines',
         perPage: 10,
         currentPage: 1,
         pageSizeOptions: [10, 20, 40, 80, 150, 300]

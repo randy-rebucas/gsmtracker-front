@@ -143,6 +143,12 @@
     "notifications": {
         "title": "Notifications"
     },
+    "profile": {
+        "title": "Profile",
+        "previous-password": "Previous Password",
+        "new-password": "New Passwordd",
+        "new-email": "New email"
+    },
     "settings": {
         "title": "Settings",
         "heading": "Heading",
@@ -152,6 +158,13 @@
         "shopowner": "Shop Owner",
         "language": "Language",
         "language-tip": "Current language",
+        "currency": "Current currency",
+        "locale": "Locale",
+        "locale-option": {
+            "country": "Country",
+            "state": "State",
+            "city": "City"
+        },
         "language-option": {
             "en": "English",
             "de": "Deutsch(German)",
@@ -161,7 +174,8 @@
         "new-canceled-appointment": "New/Canceled Appointment",
         "update-features": "Updates/Features",
         "delete-account-note": "Delete account and cancel any associated subscriptions. This action is permanent.",
-        "delete-account": "Delete Account"
+        "delete-account": "Delete Account",
+        "response-success": "Settings update successful!"
     },
     "help": {
         "title": "Help",
