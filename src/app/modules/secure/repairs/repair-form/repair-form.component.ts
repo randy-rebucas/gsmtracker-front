@@ -67,10 +67,10 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.formId = this.activatedRoute.snapshot.params.formId;
     this.initCheck = true;
-    this.isNew = true;
+    this.isNew = false;
+    this.technicianOptionShow = false;
     this.selectedCustomerId = 'empty';
     this.hasCustomer = false;
-    this.technicianOptionShow = false;
     this.userId = this.authenticationService.getUserId();
   }
 
@@ -222,15 +222,19 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.formId) {
-      this.isNew = false;
+      this.isNew = true;
       this.subs.sink = this.repairsService.get(this.formId).subscribe((repairResponse) => {
-        this.setCustomerId(repairResponse.customerId._id);
-        this.getCustomerData(repairResponse.customerId._id);
-        this.selectedTechnicianId = repairResponse.technicianId;
-        this.getTechnicianData(repairResponse.technicianId);
+        if (repairResponse.customerId) {
+          this.setCustomerId(repairResponse.customerId._id);
+          this.getCustomerData(repairResponse.customerId._id);
+        }
+        if (repairResponse.technicianId) {
+          this.selectedTechnicianId = repairResponse.technicianId;
+          this.getTechnicianData(repairResponse.technicianId);
+        }
         this.form.patchValue({
           repairId: repairResponse._id,
-          customerId: repairResponse.customerId._id,
+          customerId: (repairResponse.customerId) ? repairResponse.customerId._id : null,
           brand: repairResponse.phoneInfo.brand,
           serialNumber: repairResponse.phoneInfo.serialNumber,
           model: repairResponse.phoneInfo.model,
@@ -238,7 +242,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
           chiefCompliant: repairResponse.complaint,
           actionTaken: repairResponse.actionTaken,
           warranty: repairResponse.warranty,
-          technician: repairResponse.technicianId,
+          technician: (repairResponse.technicianId) ? repairResponse.technicianId : null,
           amountPaid: repairResponse.amountPaid
         });
       });

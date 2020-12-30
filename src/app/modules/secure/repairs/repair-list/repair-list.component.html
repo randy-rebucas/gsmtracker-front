@@ -84,7 +84,7 @@
     <ng-container matColumnDef="select">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()" (change)="isCheckboxChange(row)" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="isCheckboxChange(row)" [disabled]="!row.isOwned" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
             </mat-checkbox>
         </mat-cell>
     </ng-container>
@@ -117,7 +117,7 @@
     <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.status' | translate }} </mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <mat-slide-toggle [checked]="isChecked(element.status)" (change)="onChangeStatus(element.id, element.status)">{{ isChecked() ? 'Done': 'Pending'}}</mat-slide-toggle>
+            <mat-slide-toggle [checked]="isChecked(element.status)" [disabled]="!element.isOwned" (change)="onChangeStatus(element.id, element.status)">{{ isChecked(element.status) ? 'Done': 'Pending'}}</mat-slide-toggle>
         </mat-cell>
     </ng-container>
 
@@ -189,7 +189,7 @@
     <mat-header-row *matHeaderRowDef="['view-action']" [class.header-row]="!selection.hasValue()"></mat-header-row>
     <mat-header-row *matHeaderRowDef="['repair-counts']" class="sub-header"></mat-header-row>
 
-    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" (click)="isCheckboxChange(element)" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></mat-row>
+    <mat-row matRipple *matRowDef="let element; columns: columnsToDisplay;" class="element-row" [class.expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></mat-row>
     <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
 
     <ng-container matColumnDef="loading">
