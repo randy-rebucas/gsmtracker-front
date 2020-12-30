@@ -116,7 +116,9 @@
 
     <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef> {{ 'basic.status' | translate }} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
+        <mat-cell *matCellDef="let element">
+            <mat-slide-toggle [checked]="isChecked(element.status)" (change)="onChangeStatus(element.id, element.status)">{{ isChecked() ? 'Done': 'Pending'}}</mat-slide-toggle>
+        </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="amount">

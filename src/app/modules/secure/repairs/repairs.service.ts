@@ -47,19 +47,32 @@ export class RepairsService {
   }
 
   getMap(repairData) {
-    return { repairs: repairData.repairs.map(repair => {
-      const customerFirstname = repair.customerId.userId.name.firstname;
-      const customerLastname = repair.customerId.userId.name.lastname;
 
-      const technicianFirstname = repair.technicianId.userId.name.firstname;
-      const technicianLastname = repair.technicianId.userId.name.lastname;
+    return { repairs: repairData.repairs.map(repair => {
+      let customerName;
+      let technicianName;
+      if (repair.customerId) {
+        const customerFirstname = repair.customerId.userId.name.firstname;
+        const customerLastname = repair.customerId.userId.name.lastname;
+        customerName = customerLastname.concat(', ', customerFirstname.toString());
+      } else {
+        customerName = '--no customer--';
+      }
+
+      if (repair.technicianId) {
+        const technicianFirstname = repair.technicianId.userId.name.firstname;
+        const technicianLastname = repair.technicianId.userId.name.lastname;
+        technicianName = technicianLastname.concat(', ', technicianFirstname.toString());
+      } else {
+        technicianName = '--no technician--';
+      }
       return {
         id: repair._id,
-        customer: customerLastname.concat(', ', customerFirstname.toString()),
+        customer: customerName,
         phoneInfo: repair.phoneInfo,
         complaint: repair.complaint,
         actionTaken: repair.actionTaken,
-        technician: technicianLastname.concat(', ', technicianFirstname.toString()),
+        technician: technicianName,
         amountPaid: repair.amountPaid,
         created: repair.createdAt,
         updated: repair.updatedAt,

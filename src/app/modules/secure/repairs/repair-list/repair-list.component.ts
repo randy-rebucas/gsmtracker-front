@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
@@ -10,7 +10,6 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { DatePipe } from '@angular/common';
 
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { LabelComponent } from 'src/app/shared/components/label/label.component';
@@ -21,13 +20,12 @@ import { AppConfigurationService } from 'src/app/configs/app-configuration.servi
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Settings } from 'src/app/shared/interfaces/settings';
 import { PrintComponent } from 'src/app/shared/components/print/print.component';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ExportComponent } from 'src/app/shared/components/export/export.component';
 import { RepairsService } from '../repairs.service';
-import { RepairFormComponent } from '../repair-form/repair-form.component';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import 'rxjs/add/operator/filter';
 import { SubSink } from 'subsink';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-repair-list',
@@ -63,6 +61,8 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   settingsData: any;
   innerTranslate: string;
   selectedCurrency: string;
+  public statusListener = new FormControl();
+
   public dataSource: MatTableDataSource<any>;
   public columnsToDisplay: string[] = [
     'select',
@@ -79,7 +79,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   public expandedElement: any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-
+  // isChecked: boolean;
   private subs = new SubSink();
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -104,7 +104,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.labelSelected = [];
     this.labelPicked = '';
     this.userId = this.authenticationService.getUserId();
-
+    // this.isChecked = true;
   }
 
   ngOnInit() {
@@ -140,6 +140,19 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.onReset();
+  }
+
+  isChecked(status: string) {
+    return (status === 'pending') ? false : true;
+  }
+
+  onChangeStatus(repairId: string, initialStatus: string) {
+    const updateRepair = {
+      _id: repairId,
+      status: (initialStatus === 'pending') ? 'done' : 'pending'
+    };
+
+    this.subs.sink = this.repairsService.update(updateRepair).subscribe();
   }
 
   getLogo(settingId: string) {
