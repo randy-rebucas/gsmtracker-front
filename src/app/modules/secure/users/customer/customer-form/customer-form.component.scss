@@ -1,3 +1,8 @@
+.mat-dialog-title {
+    display: flex;
+    justify-content: space-between;
+}
+
 mat-dialog-content {
     .customer-form {
         .form-field-block {

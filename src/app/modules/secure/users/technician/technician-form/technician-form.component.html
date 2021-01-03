@@ -1,4 +1,9 @@
-<h2 mat-dialog-title>{{ dialogTitle | titlecase}}</h2>
+<h2 mat-dialog-title>
+    {{ dialogTitle | titlecase}}
+    <button type="button" mat-button mat-dialog-close><span class="material-icons">
+        clear
+        </span></button>
+</h2>
 <mat-dialog-content>
     <!-- *ngIf="!isLoading" -->
     <form [formGroup]="form" class="technician-form" (submit)="onSubmit()">
@@ -45,6 +50,9 @@
                 <mat-label>{{ 'basic.contact' | translate }}</mat-label>
                 <input matInput formControlName="contact">
                 <mat-error *ngIf="formCtrls.contact.errors">
+                    <div *ngIf="formCtrls.contact.errors.required">
+                        {{ 'validation.required' | translate:{'s':'basic.contact' | translate} }}
+                    </div>
                     <div *ngIf="formCtrls.contact.errors.maxlength">
                         {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'basic.contact' | translate} }}
                     </div>
@@ -155,7 +163,7 @@
                             </mat-form-field>
                             <mat-form-field appearance="outline">
                                 <mat-label>{{ 'settings.locale-option.country' | translate }}</mat-label>
-                                <mat-select formControlName="country" (selectionChange)="selectCountry($event)">
+                                <mat-select formControlName="country">
                                     <mat-option [value]="option.value" *ngFor="let option of countries">{{ option.viewValue }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -174,9 +182,6 @@
                 </ng-container>
             </div>
         </ng-container>
+        <button type="submit" mat-button cdkFocusInitial>{{buttonLabel}}</button>
     </form>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button type="button" mat-button mat-dialog-close>{{ 'common.cancel' | translate }}</button>
-    <button type="button" mat-button (click)="onSubmit()" cdkFocusInitial>{{buttonLabel}}</button>
-</mat-dialog-actions>

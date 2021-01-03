@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
@@ -89,6 +90,7 @@ export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit
       }),
       contact: new FormControl(null, {
         validators: [
+          Validators.required,
           Validators.pattern('^[0-9]*$'),
           Validators.minLength(9),
           Validators.maxLength(11)
@@ -226,7 +228,17 @@ export class TechnicianFormComponent implements OnInit, OnDestroy, AfterViewInit
     return this.form.controls;
   }
 
+  get address1() {
+    return this.getAddresseFormGroup('address1');
+  }
+
   onSubmit() {
+    // console.log(this.addressArray.controls[0].get('address1').hasError);
+    // console.log(this.addressArray.controls[0].get('address1').errors);
+    if (this.form.invalid) {
+      return;
+    }
+
     const newTechnician = {
       name: {
         firstname: this.form.value.firstname,

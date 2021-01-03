@@ -49,11 +49,12 @@ export class TechnicianService {
 
   getMap(technicianData) {
     return { technicians: technicianData.technicians.map(technician => {
+
       const technicianFirstname = technician.userId.name.firstname;
       const technicianLastname = technician.userId.name.lastname;
-      const addresses = technician.userId.addresses;
+
       let technicianAddress = null;
-      if (addresses.lenght) {
+      if (technician.userId.addresses.length > 0) {
         const address1 = technician.userId.addresses[0].address1;
         const address2 = technician.userId.addresses[0].address2;
         technicianAddress = address2.concat(', ', address1.toString());

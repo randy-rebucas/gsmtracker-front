@@ -253,6 +253,12 @@
                                             </div>
                                         </mat-error>
                                     </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>{{ 'settings.locale-option.country' | translate }}</mat-label>
+                                        <mat-select formControlName="country">
+                                            <mat-option [value]="option.value" *ngFor="let option of countries">{{ option.viewValue }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
                                 </div>
 
 

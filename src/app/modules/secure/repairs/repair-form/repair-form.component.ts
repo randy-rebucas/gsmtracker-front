@@ -88,8 +88,14 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.form = this.formBuilder.group({
       repairId: new FormControl(null),
-      customerId: new FormControl(null),
-      technicianId: new FormControl(null),
+      customerId: new FormControl(null, {
+        validators: [
+          Validators.required]
+      }),
+      technicianId: new FormControl(null, {
+        validators: [
+          Validators.required]
+      }),
       brand: new FormControl(null, {
         validators: [
           Validators.required,

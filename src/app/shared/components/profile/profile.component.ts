@@ -7,6 +7,8 @@ import { UploadService } from '../../services/upload.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
 import { UserService } from '../../services/user.service';
+import { SubSink } from 'subsink';
+import { CountriesService } from '../../services/countries.service';
 
 export interface Practices {
   value: string;
@@ -30,7 +32,8 @@ export class ProfileComponent implements OnInit {
   public formChangePass: FormGroup;
   public formChangeEmail: FormGroup;
   public startDate = new Date(1990, 0, 1);
-
+  public countries: any[] = [];
+  private subs = new SubSink();
   constructor(
     private formBuilder: FormBuilder,
     private translate: TranslateService,
@@ -38,6 +41,7 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService,
+    private country: CountriesService,
     private dialogRef: MatDialogRef < ProfileComponent >,
     @Inject(MAT_DIALOG_DATA) data
   ) {
@@ -144,6 +148,19 @@ export class ProfileComponent implements OnInit {
       }
       this.form.patchValue({addresses: address});
     });
+
+    const newCountries = [];
+    this.subs.sink = this.country.allCountries().
+    subscribe((countries) => {
+      for (const key in countries) {
+          if (Object.prototype.hasOwnProperty.call(countries, key)) {
+            const element = countries[key];
+            newCountries.push({value: element.name, viewValue: element.name});
+          }
+        }
+      this.countries = newCountries;
+      }
+    );
   }
 
   getData(userId: any): Observable<any> {

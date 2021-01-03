@@ -1,4 +1,9 @@
-<h2 mat-dialog-title>{{ dialogTitle | titlecase}}</h2>
+<h2 mat-dialog-title>
+    {{ dialogTitle | titlecase}}
+    <button type="button" mat-button mat-dialog-close><span class="material-icons">
+        clear
+        </span></button>
+</h2>
 <mat-dialog-content>
     <form [formGroup]="form" class="customer-form" (submit)="onSubmit()">
         <div class="form-field-block">
@@ -44,6 +49,9 @@
                 <mat-label>{{ 'basic.contact' | translate }}</mat-label>
                 <input matInput formControlName="contact">
                 <mat-error *ngIf="formCtrls.contact.errors">
+                    <div *ngIf="formCtrls.contact.errors.required">
+                        {{ 'validation.required' | translate:{'s':'basic.contact' | translate} }}
+                    </div>
                     <div *ngIf="formCtrls.contact.errors.maxlength">
                         {{ 'validation.maxLength' | translate:{'s':'11', 'ctrl': 'basic.contact' | translate } }}
                     </div>
@@ -79,9 +87,11 @@
                 </mat-error>
             </mat-form-field>
         </div>
+
         <ng-container formArrayName="addresses" *ngIf="addressArray.length > 0">
             <div *ngFor="let address of addressArray.controls; let i = index;" class="addressGroup">
                 <ng-container [formGroupName]="i">
+
                     <div [formGroup]="address">
 
                         <mat-form-field appearance="outline">
@@ -154,9 +164,20 @@
                             </mat-form-field>
                             <mat-form-field appearance="outline">
                                 <mat-label>{{ 'settings.locale-option.country' | translate }}</mat-label>
-                                <mat-select formControlName="country" (selectionChange)="selectCountry($event)">
+                                <mat-select formControlName="country">
                                     <mat-option [value]="option.value" *ngFor="let option of countries">{{ option.viewValue }}</mat-option>
                                 </mat-select>
+                                <mat-error *ngIf="getAddresseFormGroup(i).controls['country'].errors">
+                                    <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.required">
+                                        {{ 'validation.required' | translate:{'s':'settings.locale-option.country' | translate} }}
+                                    </div>
+                                    <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.maxlength">
+                                        {{ 'validation.maxLength' | translate:{'s':'6', 'ctrl': 'settings.locale-option.country' | translate} }}
+                                    </div>
+                                    <div *ngIf="getAddresseFormGroup(i).controls['country'].errors.pattern">
+                                        {{ 'validation.pattern' | translate:{'s': 'settings.locale-option.country' | translate} }}
+                                    </div>
+                                </mat-error>
                             </mat-form-field>
 
 
@@ -175,9 +196,6 @@
                 </ng-container>
             </div>
         </ng-container>
+        <button type="submit" mat-button cdkFocusInitial>{{buttonLabel}}</button>
     </form>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button type="button" mat-button mat-dialog-close>{{ 'common.cancel' | translate }}</button>
-    <button type="button" mat-button (click)="onSubmit()" cdkFocusInitial>{{buttonLabel}}</button>
-</mat-dialog-actions>

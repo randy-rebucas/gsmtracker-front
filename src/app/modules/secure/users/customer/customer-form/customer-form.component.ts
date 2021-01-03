@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/modules/authentication/authentication.service';
@@ -90,6 +91,7 @@ export class CustomerFormComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       contact: new FormControl(null, {
         validators: [
+          Validators.required,
           Validators.pattern('^[0-9]*$'),
           Validators.minLength(9),
           Validators.maxLength(11)
@@ -227,6 +229,11 @@ export class CustomerFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSubmit() {
+
+    if (this.form.invalid) {
+      return;
+    }
+
     const newCustomer = {
       name: {
         firstname: this.form.value.firstname,

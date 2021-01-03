@@ -51,9 +51,9 @@ export class CustomerService {
     return { customers: customerData.customers.map(customer => {
       const customerFirstname = customer.userId.name.firstname;
       const customerLastname = customer.userId.name.lastname;
-      const addresses = customer.userId.addresses;
+
       let customerAddress = null;
-      if (addresses.lenght) {
+      if (customer.userId.addresses.length > 0) {
         const address1 = customer.userId.addresses[0].address1;
         const address2 = customer.userId.addresses[0].address2;
         customerAddress = address2.concat(', ', address1.toString());
