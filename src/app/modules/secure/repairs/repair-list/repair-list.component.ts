@@ -26,6 +26,7 @@ import { AuthenticationService } from 'src/app/modules/authentication/authentica
 import 'rxjs/add/operator/filter';
 import { SubSink } from 'subsink';
 import { FormControl } from '@angular/forms';
+import { Repairs } from '../repairs';
 
 @Component({
   selector: 'app-repair-list',
@@ -142,29 +143,6 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onReset();
   }
 
-  isChecked(status: string) {
-    return (status === 'pending') ? false : true;
-  }
-
-  onChangeStatus(repairId: string, initialStatus: string) {
-    const updateRepair = {
-      _id: repairId,
-      status: (initialStatus === 'pending') ? 'done' : 'pending'
-    };
-
-    this.subs.sink = this.repairsService.update(updateRepair).subscribe();
-  }
-
-  getLogo(settingId: string) {
-    this.subs.sink = this.uploadService.get(settingId).subscribe((setting) => {
-      console.log(setting);
-    });
-  }
-
-  filterLabel(labelId: string) {
-    this.getQuery(this.perPage, this.currentPage, labelId, (this.option === 'list') ? this.userId : '');
-  }
-
   ngAfterViewInit() {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -177,6 +155,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
           return this.repairsService.getUpdateListener();
         }),
         map(data => {
+          console.log(data);
           // Flip flag to show that loading has finished.
           this.isLoading = false;
           this.length = data.counts;
@@ -189,6 +168,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
       ).subscribe(
         data => {
           this.dataSource = new MatTableDataSource(this.setOwnerShip(data));
+          console.log(this.dataSource);
         }
       );
 
@@ -218,7 +198,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  setOwnerShip(data) {
+  setOwnerShip(data: any[]) {
     const newRepairs = [];
     data.forEach(repair => {
       const ownerShip = {
@@ -227,6 +207,29 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
       newRepairs.push({...repair, ...ownerShip});
     });
     return newRepairs;
+  }
+
+  isChecked(status: string) {
+    return (status === 'pending') ? false : true;
+  }
+
+  onChangeStatus(repairId: string, initialStatus: string) {
+    const updateRepair = {
+      _id: repairId,
+      status: (initialStatus === 'pending') ? 'done' : 'pending'
+    };
+
+    this.subs.sink = this.repairsService.update(updateRepair).subscribe();
+  }
+
+  getLogo(settingId: string) {
+    this.subs.sink = this.uploadService.get(settingId).subscribe((setting) => {
+      console.log(setting);
+    });
+  }
+
+  filterLabel(labelId: string) {
+    this.getQuery(this.perPage, this.currentPage, labelId, (this.option === 'list') ? this.userId : '');
   }
 
   getQuery(perPage: number, currentPage: number, label: string, userId: string) {
@@ -288,6 +291,7 @@ export class RepairListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onChangedPage(pageData: PageEvent) {
+    console.log(pageData);
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.perPage = pageData.pageSize;

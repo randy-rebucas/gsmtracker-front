@@ -24,7 +24,7 @@ export class RepairsService {
   ) { }
 
   getAll(perPage: number, currentPage: number, label?: string, userId?: string) {
-    const queryParams = `?pagesize=${perPage}&page=${currentPage}&labelId=${label}&userId=${userId}`;
+    const queryParams = `?pagesize=${perPage}&page=${currentPage}&userId=${userId}&labelId=${label}`;
     this.http.get<{message: string, repairs: any, counts: number }>(
       BACKEND_URL + queryParams
     )

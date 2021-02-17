@@ -4,8 +4,13 @@ export interface Labels {
   label: string;
 }
 
+export interface Owners {
+  ownerId: string;
+}
+
 export interface Repairs {
   id: string;
+  owners: Owners[];
   customer: string;
   phoneInfo: {
     brand: string;

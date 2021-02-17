@@ -229,6 +229,7 @@ export class RepairFormComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.formId) {
       this.isNew = true;
+      this.technicianOptionShow = true;
       this.subs.sink = this.repairsService.get(this.formId).subscribe((repairResponse) => {
         if (repairResponse.customerId) {
           this.setCustomerId(repairResponse.customerId._id);

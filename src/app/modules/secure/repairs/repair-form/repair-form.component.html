@@ -158,7 +158,7 @@
                         </div>
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field appearance="outline" *ngIf="technicianOptionShow || isNew">
+                <mat-form-field appearance="outline" *ngIf="technicianOptionShow || !formId">
                     <mat-label>{{ 'technicians.find-technician' | translate }}</mat-label>
                     <input type="text" matInput [formControl]="searchTechnician" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="getTechnician($event)">
